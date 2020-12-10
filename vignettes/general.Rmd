@@ -1,0 +1,21 @@
+---
+title: "Brenda"
+output: rmarkdown::html_vignette
+author: "Vanessa"
+date: "2020"
+vignette: >
+  %\VignetteIndexEntry{Brenda}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Search for a BRENDA tissue ontology
+```{r}
+devtools::load_all(".")
+BRENDASearch("MDA")
+```
+

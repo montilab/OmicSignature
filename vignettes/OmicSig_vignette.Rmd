@@ -1,0 +1,292 @@
+---
+title: "OmicSig-vignette"
+output: rmarkdown::html_vignette
+author: "Vanessa Mengze Li"
+date: "Nov 22nd 2020"
+vignette: >
+  %\VignetteIndexEntry{OmicSig-vignette}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r message=FALSE, warning=FALSE}
+devtools::load_all(".")
+library(dplyr)
+```
+
+## Create an OmicSignature Object 
+An `OmicSignature` object contains three parts:  
+ - **metadata**, a list contains metadata fields;  
+ - **signature**, a dataframe with feature symbols and directions, and scores if applicable;  
+ - **difexp**, optional, a dataframe from differential expression analysis result.  
+
+The example provided below is from an experiment for Myc gene reduce in mice. 
+Signatures was extracted by comparing the liver of treatment and control when 
+mice is 24-month old. This is a bi-directional signature example, which contains 
+up and down regulated features (genes).
+
+### Specify metadata
+To be saved into a OmicSignature object, the required **metadata** fields are:  
+**"signature_name", "organism", "platform", "direction_type", "phenotype"**.  
+We can also specify other criterias such as adj_p (fdr corrected p-value) and log fold change cutoff of 
+the signature, and provide key words of our experiment to make the description 
+more complete.  
+One option is to create metadata list by hand, similar as follows:
+```
+metadata <- list(
+  "signature_name" = Myc_reduce_mice_liver_24m,
+  "organism" = "Mus Musculus",
+  "sample_type" = "liver",
+  "phenotype" = "Myc_reduce",
+  "direction_type" = "bi-directional",
+  "platform" = "GPL6246",
+  "fdr_cutoff" = 0.05,
+  "score_cutoff" = 7,
+  "keywords" = c("Myc", "KO", "longevity"),
+  "PMID" = 25619689,
+  "year" = 2015
+)
+```
+Or use our build-in function `createMetadata` (recommended):
+```{r}
+metadata <- createMetadata(
+  signature_name = "Myc_reduce_mice_liver_24m",
+  organism = "Mus Musculus",
+  sample_type = "liver",
+  phenotype = "Myc_reduce",
+  direction_type = "bi-directional",
+  platform = "GPL6246",
+  fdr_cutoff = 0.05,
+  score_cutoff = 7,
+  keywords = c("Myc", "KO", "longevity"),
+  PMID = 25619689,
+  year = 2015)
+```
+
+If "sample_type" is not a BRENDA ontology name or "platform" is not a valid GEO 
+platform accession ID, you will receive warnings. See more info below.
+
+#### Additional info for "sample_type" and "platform"
+If your signature was generated from a cell line or tissue sample, we highly 
+recommended you to specify the 
+**cell or tissue name using the standard BRENDA ontology term**. 
+e.g. "SUM-149PT cell", and not "SUM 149 PT".  
+You can find the correct ontology term by using function `BRENDASearch()`.  
+For example, search for ontology terms contain "SUM" and "cell":
+```{r}
+BRENDASearch("SUM cell")
+```
+
+In addition, we use GEO platform accession ID, e.g. "GPL6246", 
+in our *SigRepo database*. If your data was downloaded from GEO, 
+you can usually find it in the website. 
+If you are not sure about your GEO platform accession ID, 
+you can search by using function `GEOPlatformSearch()`.  
+For example, search for platform names contains "illumina" and species name contains "homo":
+```{r}
+GEOPlatformSearch("illumina", species = "homo")
+```
+
+#### Additional info for "direction_type"
+`direction_type` is either:  
+ - "uni-directional". You only have a list of significant feature names but don't know if they are up or down regulated in the treatment group, or directional infomation is not applicable.  
+ - "bi-directional". In most cases significant features can be grouped into "up" and "down" regulated features. For example, when comparing treatment group with control group, some features will be higher ("up", or "+") and some will be lower ("down" or "-") in treatment.  
+ - "multi-directional". Used when comparing multiple sampels together, usually using ANOVA. In this case, the "direction" column in signature table should be group name.  
+
+#### Add more info in metadata
+In this example, we are working with mouse strain C57BL/6. We can add this information into our `metadata`.  
+`metadata` is just a list. Add new terms into this list like you normally do.
+```{r}
+metadata$"animal_strain" = "C57BL/6"
+```
+
+### Differential expression analysis result `difexp`
+A differential expression analysis matrix is **optional** but **highly recommended** if you have it.  
+The differential expression analysis in this example was performed using a standard 
+pipeline from lm package. Available columns are logFC, AveExpr, t score, P.Value, 
+adj.P.Val, B score, Probe.ID, gene_symbol and gene_name.  
+
+```{r}
+difexp <- read.table(file.path(system.file("extdata", package = "OmicSignature"), "difmatrix_Myc_mice_liver_24m_raw.txt"),
+  header = TRUE, sep = "\t", stringsAsFactors = FALSE
+)
+head(difexp)
+```
+To be saved into a OmicSignature object, the required columns for
+**differential expression matrix** are:  
+**"id", "symbol", "score", "adj_p"**.  
+"id" is used as an unique identifier in case there are duplicated gene symbols. Frequently used id including probe ID, ENSEMBL ID, or unique numbers.  
+
+Modify the column names to match the requirement.  
+Our build-in function `replaceDifexpCol()` is designed to replace some 
+frequently-used alternative column names. You can also change the column names manully.
+```{r}
+colnames(difexp) <- replaceDifexpCol(colnames(difexp))
+head(difexp)
+```
+
+
+### Create signature
+This is a bi-directional signature example. It contains up and down regulated 
+genes.  
+There are multiple ways to get signatures from a differential expression 
+analysis matrix. One way is to use `filter()` from `dplyr` package.  
+In this example, we previously specified the `score_cutoff` and `fdr_cutoff` 
+when creating the metadata. We can use them here.
+```{r}
+temp_upsig <- cbind(
+  filter(difexp, score > metadata$score_cutoff & adj_p < metadata$fdr_cutoff) %>% pull(symbol),
+  filter(difexp, score > metadata$score_cutoff & adj_p < metadata$fdr_cutoff) %>% pull(score),
+  "+"
+)
+head(temp_upsig)
+
+temp_dnsig <- cbind(
+  dplyr::filter(difexp, score < (-1) * metadata$score_cutoff & adj_p < metadata$fdr_cutoff) %>% pull(symbol),
+  dplyr::filter(difexp, score < (-1) * metadata$score_cutoff & adj_p < metadata$fdr_cutoff) %>% pull(score),
+  "-"
+)
+head(temp_dnsig)
+```
+(note: if you see numbers instead of gene symbol name in the first column, please check if the "symbol" column in your difexp matrix is "character" and not accidentally be "factor")  
+
+
+To be stored into OmicSignature object, **signature** need to be a **dataframe** with column **"signature_symbol"**.  
+If the signature is "bi-directional" or "multi-directional" (specified in 
+`direction_type` in `metadata` list), then column **"signature_direction"** is 
+also required. "uni-directional" type does not require this column.  
+An **optional column "signature_score"** is used when feature scores are available.  
+
+```{r}
+signatures <- data.frame(rbind(temp_upsig, temp_dnsig))
+colnames(signatures) <- c("signature_symbol", "signature_score", "signature_direction")
+```
+
+Our function `standardizeSigDF()` can help you to remove duplicate rows, empty symbols in the signature dataframe, if any.
+```{r}
+signatures <- standardizeSigDF(signatures)
+head(signatures)
+tail(signatures)
+```
+
+
+### Create OmicSignature object
+We have everything we need now.  
+Use `OmicSignature$new()` to create a new OmicSignature R6 object.  
+```{r}
+OmicObj <- OmicSignature$new(
+  metadata = metadata,
+  signature = signatures,
+  difexp = difexp
+)
+```
+
+Use `print()` to see its information:
+```{r}
+print(OmicObj)
+```
+
+You can also ask the program to print the messages while creating the 
+OmicSignature Object. By default, `print_message` is set to be `FALSE`.
+```{r}
+OmicObj <- OmicSignature$new(
+  metadata = metadata,
+  signature = signatures,
+  difexp = difexp,
+  print_message = TRUE
+)
+```
+
+### Extract new signatures from the `OmicSignature` object
+Previously we created the signature using abs(logfc) > 1 and adj_p < 0.005.
+Now we can use new criterias to extract new signatures conveniently from 
+the OmicSignature Object.  
+For example, extract all features with a t-score with absolute value 
+higher than 20 and adj_p less than 0.001:
+```{r}
+OmicObj$extract.signature("abs(score) > 20; adj_p < 0.001")
+```
+
+## Write OmicSignature Object into a .json file
+Besides save the OmicSignature object as an `.rds` file, we can also save it as 
+a `.json` text file:
+```
+writeJson(OmicObj, "Myc_reduce_mice_liver_24m.json")
+```
+
+We can also read in a OmicSignature object from a `.json` file.  
+The following two examples are from the same Myc reduce study in mice, with muscle and adipose tissue.  
+```{r}
+OmicObj1 <- readJson(file.path(system.file("extdata", package = "OmicSignature"), "Myc_reduce_mice_muscle_24m_obj.json"))
+OmicObj2 <- readJson(file.path(system.file("extdata", package = "OmicSignature"), "Myc_reduce_mice_adipose_24m_obj.json"))
+```
+
+## Create an OmicSignatureCollection Object
+An `OmicSignatureCollection` object contains two parts:  
+ - metadata  
+ - OmicSigList, a list of OmicSignature Objects  
+
+### Specify metadata for the collection
+The required fields for **metadata** are:  
+**"collection_name", "description"**. We can also add additional 
+fields.  
+```{r}
+ColMeta <- list(
+  "collection_name" = "Myc_mice_collection",
+  "description" = "A collection for Myc reduced mice 24 month",
+  "organism" = "Mus Musculus",
+  "author" = "me"
+)
+```
+
+Create an `OmicSignatureCollection` object.  
+Use `OmicSignatureCollection$new()` and provide our metadata and a list of 
+`OmicSignature` objects: 
+```{r}
+OmicCol <- OmicSignatureCollection$new(
+  OmicSigList = list(OmicObj, OmicObj1, OmicObj2),
+  metadata = ColMeta,
+  print_message = FALSE
+)
+```
+By default, `print_message` is set to `FALSE`. You can change it to `TRUE` to 
+see the messages. During the creation of OmicSignatureCollection object, all 
+input `OmicSignature` objects will be re-created to make sure they are all valid.  
+
+### See a summary of the metadata of the OmicSignature objects in the Collection
+`$metadataSummary()` will print out the metadata fields in all _OmicSignature_ 
+objects stored in the _OmicSignatureCollection_.  
+When parameter "only_shared" is set to be `TRUE`, only shared metadata fields 
+among all _OmicSignature_ objects will be included. Otherwise, all metadata 
+fields will be included.
+```{r}
+OmicCol$metadataSummary(only_shared = TRUE)
+```
+
+### Extract new signatures from the `OmicSignatureCollection` object
+We can extract new signatures from the `OmicSignatureCollection` object using 
+new criterias.  
+By default, the features are ranked by score.  
+By default, `bind` is set to be `TRUE` to output results from all *OmicSignature* 
+objects as a single dataframe.  
+For example, extract all features with a absolute score > 20 and adj_p < 0.001.  
+```
+OmicCol$extract.signature("abs(score) > 20 & adj_p < 0.001", bind = TRUE)
+```
+
+If `bind` is set to be `FALSE`, the output of each *OmicSignature* objects are 
+provided individually as one element in a list.
+```{r}
+OmicCol$extract.signature("abs(score) > 20 & adj_p < 0.001", bind = FALSE)
+```
+
+Thank you! Please contact vmli@bu.edu if you have any questions.
+
+--
