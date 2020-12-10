@@ -1,7 +1,7 @@
 ---
 title: "README"
 author: "Vanessa"
-date: "10/8/2020"
+date: "12/10/2020"
 output: github_document
 ---
 
@@ -11,19 +11,15 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # OmicSignature
 
-### last update
+### Last update
 11/22/2020
 
-### installation
+### Installation
 `devtools::install_github(repo = "Vanessa104/OmicSignature")`  
 
-### description
+### Description
 R6 object OmicSignature and OmicSignatureCollection to store high-throughput experiment yield signaturess.  
-See vignettes [https://vanessa104.github.io/omicsignature/].  
+Please go to https://vanessa104.github.io/OmicSignature/articles/OmicSig_vignette.html to view OmicSignature vignette.  
 
-### development notes
-Run `roxygen2::roxygenize()` to update help documentation
-Run `devtools::build_vignettes()` to build vig.
-Run `devtools::check()` to makes sure the package builds and all tests pass
-Run `BiocCheck::BiocCheck()` if you’re really ambitious
-Run `pkgdown::build_site()` to update the usage documentation / package landing site
+### Contact
+Please contact `vmli at bu.edu` for questions and suggestions!
