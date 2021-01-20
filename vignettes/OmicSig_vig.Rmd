@@ -1,10 +1,10 @@
 ---
-title: "OmicSig-vignette"
+title: "OmicSignature"
 output: rmarkdown::html_vignette
 author: "Vanessa Mengze Li"
 date: "Nov 22nd 2020"
 vignette: >
-  %\VignetteIndexEntry{OmicSig-vignette}
+  %\VignetteIndexEntry{OmicSignature}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -67,7 +67,8 @@ metadata <- createMetadata(
   score_cutoff = 7,
   keywords = c("Myc", "KO", "longevity"),
   PMID = 25619689,
-  year = 2015)
+  year = 2015
+)
 ```
 
 If "sample_type" is not a BRENDA ontology name or "platform" is not a valid GEO 
@@ -104,7 +105,7 @@ GEOPlatformSearch("illumina", species = "homo")
 In this example, we are working with mouse strain C57BL/6. We can add this information into our `metadata`.  
 `metadata` is just a list. Add new terms into this list like you normally do.
 ```{r}
-metadata$"animal_strain" = "C57BL/6"
+metadata$"animal_strain" <- "C57BL/6"
 ```
 
 ### Differential expression analysis result `difexp`
@@ -222,69 +223,9 @@ writeJson(OmicObj, "Myc_reduce_mice_liver_24m.json")
 ```
 
 We can also read in a OmicSignature object from a `.json` file.  
-The following two examples are from the same Myc reduce study in mice, with muscle and adipose tissue.  
-```{r}
+The following example is from the same Myc reduce study in mice, with muscle and adipose tissue.  
+```
 OmicObj1 <- readJson(file.path(system.file("extdata", package = "OmicSignature"), "Myc_reduce_mice_muscle_24m_obj.json"))
-OmicObj2 <- readJson(file.path(system.file("extdata", package = "OmicSignature"), "Myc_reduce_mice_adipose_24m_obj.json"))
-```
-
-## Create an OmicSignatureCollection Object
-An `OmicSignatureCollection` object contains two parts:  
- - metadata  
- - OmicSigList, a list of OmicSignature Objects  
-
-### Specify metadata for the collection
-The required fields for **metadata** are:  
-**"collection_name", "description"**. We can also add additional 
-fields.  
-```{r}
-ColMeta <- list(
-  "collection_name" = "Myc_mice_collection",
-  "description" = "A collection for Myc reduced mice 24 month",
-  "organism" = "Mus Musculus",
-  "author" = "me"
-)
-```
-
-Create an `OmicSignatureCollection` object.  
-Use `OmicSignatureCollection$new()` and provide our metadata and a list of 
-`OmicSignature` objects: 
-```{r}
-OmicCol <- OmicSignatureCollection$new(
-  OmicSigList = list(OmicObj, OmicObj1, OmicObj2),
-  metadata = ColMeta,
-  print_message = FALSE
-)
-```
-By default, `print_message` is set to `FALSE`. You can change it to `TRUE` to 
-see the messages. During the creation of OmicSignatureCollection object, all 
-input `OmicSignature` objects will be re-created to make sure they are all valid.  
-
-### See a summary of the metadata of the OmicSignature objects in the Collection
-`$metadataSummary()` will print out the metadata fields in all _OmicSignature_ 
-objects stored in the _OmicSignatureCollection_.  
-When parameter "only_shared" is set to be `TRUE`, only shared metadata fields 
-among all _OmicSignature_ objects will be included. Otherwise, all metadata 
-fields will be included.
-```{r}
-OmicCol$metadataSummary(only_shared = TRUE)
-```
-
-### Extract new signatures from the `OmicSignatureCollection` object
-We can extract new signatures from the `OmicSignatureCollection` object using 
-new criterias.  
-By default, the features are ranked by score.  
-By default, `bind` is set to be `TRUE` to output results from all *OmicSignature* 
-objects as a single dataframe.  
-For example, extract all features with a absolute score > 20 and adj_p < 0.001.  
-```
-OmicCol$extract.signature("abs(score) > 20 & adj_p < 0.001", bind = TRUE)
-```
-
-If `bind` is set to be `FALSE`, the output of each *OmicSignature* objects are 
-provided individually as one element in a list.
-```{r}
-OmicCol$extract.signature("abs(score) > 20 & adj_p < 0.001", bind = FALSE)
 ```
 
 Thank you! Please contact vmli@bu.edu if you have any questions.

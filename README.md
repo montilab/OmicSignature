@@ -20,8 +20,7 @@ Contact: Vanessa Mengze Li `vmli@bu.edu`
 
 ### Description
 
-R6 object OmicSignature and OmicSignatureCollection to store high-throughput experiment yield signaturess.
-Please go to <https://montilab.github.io/OmicSignature/articles/OmicSig_vignette.html> to view OmicSignature vignette.
+R6 object `OmicSignature` and `OmicSignatureCollection` to store high-throughput experiment yield signaturess.
 
 ### Contact
 

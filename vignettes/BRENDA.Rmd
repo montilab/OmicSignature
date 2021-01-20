@@ -1,10 +1,10 @@
 ---
-title: "Brenda"
+title: "BRENDA"
 output: rmarkdown::html_vignette
 author: "Vanessa"
 date: "2020"
 vignette: >
-  %\VignetteIndexEntry{Brenda}
+  %\VignetteIndexEntry{BRENDA}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -12,6 +12,8 @@ vignette: >
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
+
+We use BRENDA tissue ontology to indicate the tissue or cell-line of a signature. 
 
 ## Search for a BRENDA tissue ontology
 ```{r}
