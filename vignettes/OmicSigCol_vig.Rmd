@@ -81,7 +81,7 @@ By default, the features are ranked by score.
 By default, `bind` is set to be `TRUE` to output results from all *OmicSignature* 
 objects as a single dataframe.  
 For example, extract all features with a absolute score > 20 and adj_p < 0.001.  
-```
+```{r}
 OmicCol$extract.signature("abs(score) > 20 & adj_p < 0.001", bind = TRUE)
 ```
 

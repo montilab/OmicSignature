@@ -200,7 +200,7 @@ OmicSignature <-
 
         # check if sample_type is a valid BRENDA term
         if (!is.null(metadata$sample_type)) {
-          tempSampleType <- try(SigRepoR::BRENDACurrentName(metadata$sample_type), silent = T)
+          tempSampleType <- try(BRENDACurrentName(metadata$sample_type), silent = T)
           if (is(tempSampleType, "character")) {
             metadata$sample_type <- tempSampleType[2]
           } else {
