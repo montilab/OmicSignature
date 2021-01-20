@@ -77,14 +77,10 @@ OmicCol$metadataSummary(only_shared = TRUE)
 ### Extract new signatures from the `OmicSignatureCollection` object
 We can extract new signatures from the `OmicSignatureCollection` object using 
 new criterias.  
+For example, extract all features with a absolute score > 20 and adj_p < 0.001.  
 By default, the features are ranked by score.  
 By default, `bind` is set to be `TRUE` to output results from all *OmicSignature* 
 objects as a single dataframe.  
-For example, extract all features with a absolute score > 20 and adj_p < 0.001.  
-```{r}
-OmicCol$extract.signature("abs(score) > 20 & adj_p < 0.001", bind = TRUE)
-```
-
 If `bind` is set to be `FALSE`, the output of each *OmicSignature* objects are 
 provided individually as one element in a list.
 ```{r}
