@@ -5,13 +5,13 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>OmicSig-vignette • OmicSignature</title>
+<title>OmicSignature • OmicSignature</title>
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../bootstrap-toc.css">
 <script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
-<script src="../pkgdown.js"></script><meta property="og:title" content="OmicSig-vignette">
+<script src="../pkgdown.js"></script><meta property="og:title" content="OmicSignature">
 <meta property="og:description" content="OmicSignature">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
@@ -39,7 +39,7 @@
       <ul class="nav navbar-nav">
 <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -54,10 +54,13 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="../articles/OmicSig_vignette.html">OmicSig-vignette</a>
+      <a href="../articles/BRENDA.html">BRENDA</a>
     </li>
     <li>
-      <a href="../articles/general.html">Brenda</a>
+      <a href="../articles/OmicSigCol_vig.html">OmicSignatureCollection</a>
+    </li>
+    <li>
+      <a href="../articles/OmicSig_vig.html">OmicSignature</a>
     </li>
   </ul>
 </li>
@@ -72,17 +75,16 @@
 
       
 
-      </header><script src="OmicSig_vignette_files/accessible-code-block-0.0.1/empty-anchor.js"></script><link href="OmicSig_vignette_files/anchor-sections-1.0/anchor-sections.css" rel="stylesheet">
-<script src="OmicSig_vignette_files/anchor-sections-1.0/anchor-sections.js"></script><div class="row">
+      </header><script src="OmicSig_vig_files/header-attrs-2.6/header-attrs.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1 data-toc-skip>OmicSig-vignette</h1>
+      <h1 data-toc-skip>OmicSignature</h1>
                         <h4 class="author">Vanessa Mengze Li</h4>
             
             <h4 class="date">Nov 22nd 2020</h4>
       
       
-      <div class="hidden name"><code>OmicSig_vignette.Rmd</code></div>
+      <div class="hidden name"><code>OmicSig_vig.Rmd</code></div>
 
     </div>
 
@@ -131,7 +133,8 @@ One option is to create metadata list by hand, similar as follows:</p>
   score_cutoff <span class="op">=</span> <span class="fl">7</span>,
   keywords <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Myc"</span>, <span class="st">"KO"</span>, <span class="st">"longevity"</span><span class="op">)</span>,
   PMID <span class="op">=</span> <span class="fl">25619689</span>,
-  year <span class="op">=</span> <span class="fl">2015</span><span class="op">)</span></code></pre></div>
+  year <span class="op">=</span> <span class="fl">2015</span>
+<span class="op">)</span></code></pre></div>
 <p>If “sample_type” is not a BRENDA ontology name or “platform” is not a valid GEO platform accession ID, you will receive warnings. See more info below.</p>
 <div id="additional-info-for-sample_type-and-platform" class="section level4">
 <h4 class="hasAnchor">
@@ -186,7 +189,7 @@ For example, search for platform names contains “illumina” and species name 
 <a href="#add-more-info-in-metadata" class="anchor"></a>Add more info in metadata</h4>
 <p>In this example, we are working with mouse strain C57BL/6. We can add this information into our <code>metadata</code>.<br><code>metadata</code> is just a list. Add new terms into this list like you normally do.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">metadata</span><span class="op">$</span><span class="st">"animal_strain"</span> <span class="op">=</span> <span class="st">"C57BL/6"</span></code></pre></div>
+<code class="sourceCode R"><span class="va">metadata</span><span class="op">$</span><span class="st">"animal_strain"</span> <span class="op">&lt;-</span> <span class="st">"C57BL/6"</span></code></pre></div>
 </div>
 </div>
 <div id="differential-expression-analysis-result-difexp" class="section level3">
@@ -385,119 +388,10 @@ For example, extract all features with a t-score with absolute value higher than
 <p>Besides save the OmicSignature object as an <code>.rds</code> file, we can also save it as a <code>.json</code> text file:</p>
 <pre><code><a href="../reference/writeJson.html">writeJson(OmicObj, "Myc_reduce_mice_liver_24m.json")</a></code></pre>
 <p>We can also read in a OmicSignature object from a <code>.json</code> file.<br>
-The following two examples are from the same Myc reduce study in mice, with muscle and adipose tissue.</p>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">OmicObj1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/readJson.html">readJson</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, package <span class="op">=</span> <span class="st">"OmicSignature"</span><span class="op">)</span>, <span class="st">"Myc_reduce_mice_muscle_24m_obj.json"</span><span class="op">)</span><span class="op">)</span>
-<span class="co">#&gt; Warning in private$checkMetadata(metadata, v = print_message): sample_type in metadata is not a valid BRENDA ontology term.</span>
-<span class="co">#&gt; Please consider using BRENDASearch() function to </span>
-<span class="co">#&gt;              search for the correct BRENDA ontology term to use.</span>
-<span class="co">#&gt;   [Success] OmicSignature object Myc_reduce_mice_muscle_24m created.</span>
-<span class="va">OmicObj2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/readJson.html">readJson</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, package <span class="op">=</span> <span class="st">"OmicSignature"</span><span class="op">)</span>, <span class="st">"Myc_reduce_mice_adipose_24m_obj.json"</span><span class="op">)</span><span class="op">)</span>
-<span class="co">#&gt; Warning in private$checkMetadata(metadata, v = print_message): sample_type in metadata is not a valid BRENDA ontology term.</span>
-<span class="co">#&gt; Please consider using BRENDASearch() function to </span>
-<span class="co">#&gt;              search for the correct BRENDA ontology term to use.</span>
-<span class="co">#&gt;   [Success] OmicSignature object Myc_reduce_mice_adipose_24m created.</span></code></pre></div>
-</div>
-<div id="create-an-omicsignaturecollection-object" class="section level2">
-<h2 class="hasAnchor">
-<a href="#create-an-omicsignaturecollection-object" class="anchor"></a>Create an OmicSignatureCollection Object</h2>
-<p>An <code>OmicSignatureCollection</code> object contains two parts:<br>
-- metadata<br>
-- OmicSigList, a list of OmicSignature Objects</p>
-<div id="specify-metadata-for-the-collection" class="section level3">
-<h3 class="hasAnchor">
-<a href="#specify-metadata-for-the-collection" class="anchor"></a>Specify metadata for the collection</h3>
-<p>The required fields for <strong>metadata</strong> are:<br><strong>“collection_name”, “description”</strong>. We can also add additional fields.</p>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">ColMeta</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>
-  <span class="st">"collection_name"</span> <span class="op">=</span> <span class="st">"Myc_mice_collection"</span>,
-  <span class="st">"description"</span> <span class="op">=</span> <span class="st">"A collection for Myc reduced mice 24 month"</span>,
-  <span class="st">"organism"</span> <span class="op">=</span> <span class="st">"Mus Musculus"</span>,
-  <span class="st">"author"</span> <span class="op">=</span> <span class="st">"me"</span>
-<span class="op">)</span></code></pre></div>
-<p>Create an <code>OmicSignatureCollection</code> object.<br>
-Use <code>OmicSignatureCollection$new()</code> and provide our metadata and a list of <code>OmicSignature</code> objects:</p>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">OmicCol</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/OmicSignatureCollection.html">OmicSignatureCollection</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>
-  OmicSigList <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">OmicObj</span>, <span class="va">OmicObj1</span>, <span class="va">OmicObj2</span><span class="op">)</span>,
-  metadata <span class="op">=</span> <span class="va">ColMeta</span>,
-  print_message <span class="op">=</span> <span class="cn">FALSE</span>
-<span class="op">)</span>
-<span class="co">#&gt;   [Success] OmicSignature Collection Myc_mice_collection created.</span></code></pre></div>
-<p>By default, <code>print_message</code> is set to <code>FALSE</code>. You can change it to <code>TRUE</code> to see the messages. During the creation of OmicSignatureCollection object, all input <code>OmicSignature</code> objects will be re-created to make sure they are all valid.</p>
-</div>
-<div id="see-a-summary-of-the-metadata-of-the-omicsignature-objects-in-the-collection" class="section level3">
-<h3 class="hasAnchor">
-<a href="#see-a-summary-of-the-metadata-of-the-omicsignature-objects-in-the-collection" class="anchor"></a>See a summary of the metadata of the OmicSignature objects in the Collection</h3>
-<p><code>$metadataSummary()</code> will print out the metadata fields in all <em>OmicSignature</em> objects stored in the <em>OmicSignatureCollection</em>.<br>
-When parameter “only_shared” is set to be <code>TRUE</code>, only shared metadata fields among all <em>OmicSignature</em> objects will be included. Otherwise, all metadata fields will be included.</p>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">OmicCol</span><span class="op">$</span><span class="fu">metadataSummary</span><span class="op">(</span>only_shared <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
-<span class="co">#&gt;                Myc_reduce_mice_liver_24m   Myc_reduce_mice_muscle_24m  </span>
-<span class="co">#&gt; covariates     "none"                      "none"                      </span>
-<span class="co">#&gt; direction_type "bi-directional"            "bi-directional"            </span>
-<span class="co">#&gt; fdr_cutoff     0.05                        0.05                        </span>
-<span class="co">#&gt; keywords       character,3                 character,3                 </span>
-<span class="co">#&gt; organism       "Mus Musculus"              "Mus Musculus"              </span>
-<span class="co">#&gt; phenotype      "Myc_reduce"                "Myc_reduce"                </span>
-<span class="co">#&gt; platform       "GPL6246"                   "GPL6246"                   </span>
-<span class="co">#&gt; PMID           25619689                    25619689                    </span>
-<span class="co">#&gt; sample_type    "liver"                     "muscle"                    </span>
-<span class="co">#&gt; score_cutoff   7                           7                           </span>
-<span class="co">#&gt; signature_name "Myc_reduce_mice_liver_24m" "Myc_reduce_mice_muscle_24m"</span>
-<span class="co">#&gt; year           2015                        2015                        </span>
-<span class="co">#&gt;                Myc_reduce_mice_adipose_24m  </span>
-<span class="co">#&gt; covariates     "none"                       </span>
-<span class="co">#&gt; direction_type "bi-directional"             </span>
-<span class="co">#&gt; fdr_cutoff     0.05                         </span>
-<span class="co">#&gt; keywords       character,3                  </span>
-<span class="co">#&gt; organism       "Mus Musculus"               </span>
-<span class="co">#&gt; phenotype      "Myc_reduce"                 </span>
-<span class="co">#&gt; platform       "GPL6246"                    </span>
-<span class="co">#&gt; PMID           25619689                     </span>
-<span class="co">#&gt; sample_type    "adipose tissue"             </span>
-<span class="co">#&gt; score_cutoff   7                            </span>
-<span class="co">#&gt; signature_name "Myc_reduce_mice_adipose_24m"</span>
-<span class="co">#&gt; year           2015</span></code></pre></div>
-</div>
-<div id="extract-new-signatures-from-the-omicsignaturecollection-object" class="section level3">
-<h3 class="hasAnchor">
-<a href="#extract-new-signatures-from-the-omicsignaturecollection-object" class="anchor"></a>Extract new signatures from the <code>OmicSignatureCollection</code> object</h3>
-<p>We can extract new signatures from the <code>OmicSignatureCollection</code> object using new criterias.<br>
-By default, the features are ranked by score.<br>
-By default, <code>bind</code> is set to be <code>TRUE</code> to output results from all <em>OmicSignature</em> objects as a single dataframe.<br>
-For example, extract all features with a absolute score &gt; 20 and adj_p &lt; 0.001.</p>
-<pre><code>OmicCol$extract.signature("abs(score) &gt; 20 &amp; adj_p &lt; 0.001", bind = TRUE)</code></pre>
-<p>If <code>bind</code> is set to be <code>FALSE</code>, the output of each <em>OmicSignature</em> objects are provided individually as one element in a list.</p>
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">OmicCol</span><span class="op">$</span><span class="fu">extract.signature</span><span class="op">(</span><span class="st">"abs(score) &gt; 20 &amp; adj_p &lt; 0.001"</span>, bind <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
-<span class="co">#&gt;   Warning: OmicSignature Myc_reduce_mice_muscle_24m does not have diffexp matrix or does not have the specified column. </span>
-<span class="co">#&gt;   Warning: OmicSignature Myc_reduce_mice_adipose_24m does not have diffexp matrix or does not have the specified column.</span>
-<span class="co">#&gt; $Myc_reduce_mice_liver_24m</span>
-<span class="co">#&gt;           symbol     score direction</span>
-<span class="co">#&gt; 1           Saa1 -35.29997         -</span>
-<span class="co">#&gt; 2           Cpa1  34.62008         +</span>
-<span class="co">#&gt; 3        Sult3a1 -31.75527         -</span>
-<span class="co">#&gt; 4         Isyna1 -29.93255         -</span>
-<span class="co">#&gt; 5           Zg16  28.51562         +</span>
-<span class="co">#&gt; 6          Chil1 -25.41318         -</span>
-<span class="co">#&gt; 7  2210010C04Rik  24.54446         +</span>
-<span class="co">#&gt; 8           Saa2 -23.81452         -</span>
-<span class="co">#&gt; 9          Cidec  23.39573         +</span>
-<span class="co">#&gt; 10        Amy2a5  22.91294         +</span>
-<span class="co">#&gt; 11       Sult1e1 -22.76345         -</span>
-<span class="co">#&gt; 12           Pf4  21.71260         +</span>
-<span class="co">#&gt; 13          Orm3 -21.25088         -</span>
-<span class="co">#&gt; 14          Cpb1  20.98057         +</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; $Myc_reduce_mice_muscle_24m</span>
-<span class="co">#&gt; NULL</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; $Myc_reduce_mice_adipose_24m</span>
-<span class="co">#&gt; NULL</span></code></pre></div>
+The following example is from the same Myc reduce study in mice, with muscle and adipose tissue.</p>
+<pre><code>OmicObj1 &lt;- readJson(file.path(system.file("extdata", package = "OmicSignature"), "Myc_reduce_mice_muscle_24m_obj.json"))</code></pre>
 <p>Thank you! Please contact <a href="mailto:vmli@bu.edu" class="email">vmli@bu.edu</a> if you have any questions.</p>
 <p>–</p>
-</div>
 </div>
   </div>
 
