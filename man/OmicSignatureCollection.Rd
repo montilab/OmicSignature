@@ -53,7 +53,7 @@ Create an OmicSignatureCollection object
 \subsection{Method \code{print()}}{
 Print an OmicSignatureCollection object
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{OmicSignatureCollection$print(...)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{OmicSignatureCollection$print()}\if{html}{\out{</div>}}
 }
 
 }

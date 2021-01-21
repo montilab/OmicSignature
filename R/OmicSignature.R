@@ -37,7 +37,7 @@ OmicSignature <-
       #' @description
       #' Print an OmicSignature object
       #' @export
-      print = function(...) {
+      print = function() {
         cat("Signature Object: \n")
         cat("  Metadata: \n")
         sh <- mapply(function(k, v) {
@@ -137,7 +137,7 @@ OmicSignature <-
         } else if ("q_value" %in% colnames(difexp)) {
           difexpColRequired <- c("id", "symbol", "score", "q_value")
         }
-        
+
         difexpColMissing <- setdiff(difexpColRequired, colnames(difexp))
         difexpColAdditional <- setdiff(colnames(difexp), difexpColRequired)
 
@@ -206,7 +206,7 @@ OmicSignature <-
           } else {
             warning(paste(
               "sample_type in metadata is not a valid BRENDA ontology term.",
-              "Please consider using BRENDASearch() function to 
+              "Please consider using BRENDASearch() function to
             	search for the correct BRENDA ontology term to use.",
               sep = "\n"
             ))
@@ -217,7 +217,7 @@ OmicSignature <-
         if (!metadata$platform %in% GEOplatform$Accession) {
           warning(paste(
             "platform in metadata is not a valid GEO platform accession.",
-            "Please consider using GEOSearch() function to 
+            "Please consider using GEOSearch() function to
             	search for the correct platform assession to use.",
             sep = "\n"
           ))
@@ -362,7 +362,7 @@ OmicSignatureCollection <- R6Class(
     #' @description
     #' Print an OmicSignatureCollection object
     #' @export
-    print = function(...) {
+    print = function() {
       cat("Signature Collection: \n")
       cat("  Metadata: \n")
       sh <- mapply(function(k, v) {
@@ -392,7 +392,7 @@ OmicSignatureCollection <- R6Class(
     extract.signature = function(conditions, bind = TRUE) {
       a <- mapply(function(x) {
         try_temp <- try(x$extract.signature(conditions), silent = T)
-        if (class(try_temp) == "try-error") {
+        if (is(try_temp, "try-error")) {
           cat(paste(
             "  Warning: OmicSignature", x$metadata$signature_name,
             "does not have diffexp matrix or does not have the specified column. \n"
@@ -401,17 +401,22 @@ OmicSignatureCollection <- R6Class(
         }
         return(try_temp)
       }, private$.OmicSigList)
-      if (class(a) == "matrix") {
-        rownames(a) <- sapply(X = private$.OmicSigList, function(x) {
-          print(x$metadata$signature_name)
+
+      # 'a' should be a matrix, each column is one signature, rows are score, symbol, direction
+      # process it into a list; each signature is a dataframe as an element in the list
+      if (is(a, "matrix")) {
+        colnames(a) <- sapply(X = private$.OmicSigList, function(x) {
+          x$metadata$signature_name
         })
         a <- apply(a, 2, function(x) {
           data.frame(matrix(unlist(x), nrow = length(x[[1]]), byrow = F), stringsAsFactors = F)
         })
       }
-      if (class(a) == "list") {
+
+      # change the column names of the dataframes
+      if (is(a, "list")) {
         a <- lapply(a, function(x) {
-          if (class(x) == "data.frame" && nrow(x) > 0) {
+          if (is(x, "data.frame") && nrow(x) > 0) {
             colnames(x) <- c("symbol", "score", "direction")
             x$direction <- as.character(x$direction)
           } else {
@@ -420,8 +425,10 @@ OmicSignatureCollection <- R6Class(
           return(x)
         })
       }
+
+      # bind them into a single dataframe if asked to
       if (bind) {
-        res <- bind_rows(a, .id = "sig_name")
+        res <- bind_rows(a, .id = "sig_name") # save names(a) as a column sig_name
         if (is(res, "data.frame") && nrow(res) > 0) {
           colnames(res) <- c("sig_name", "symbol", "score", "direction")
           res <- res[order(res$score, decreasing = T), ]

@@ -55,7 +55,7 @@ Create a new OmicSignature object
 \subsection{Method \code{print()}}{
 Print an OmicSignature object
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{OmicSignature$print(...)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{OmicSignature$print()}\if{html}{\out{</div>}}
 }
 
 }
