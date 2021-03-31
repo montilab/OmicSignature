@@ -1,8 +1,8 @@
 {
   "direction_type": ["bi-directional"],
-  "fdr_cutoff": [0.05],
+  "adj_p_cutoff": [0.05],
   "keywords": ["Myc", "KO", "longevity"],
-  "logFC_cutoff": [0],
+  "logfc_cutoff": [0],
   "organism": ["Mus Musculus"],
   "phenotype": ["Myc_reduce"],
   "platform": ["GPL6246"],

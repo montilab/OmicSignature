@@ -2,7 +2,7 @@
 title: "OmicSignature"
 output: rmarkdown::html_vignette
 author: "Vanessa Mengze Li"
-date: "Nov 22nd 2020"
+date: "03/31/2021"
 vignette: >
   %\VignetteIndexEntry{OmicSignature}
   %\VignetteEngine{knitr::rmarkdown}
@@ -47,7 +47,7 @@ metadata <- list(
   "phenotype" = "Myc_reduce",
   "direction_type" = "bi-directional",
   "platform" = "GPL6246",
-  "fdr_cutoff" = 0.05,
+  "adj_p_cutoff" = 0.05,
   "score_cutoff" = 7,
   "keywords" = c("Myc", "KO", "longevity"),
   "PMID" = 25619689,
@@ -63,7 +63,7 @@ metadata <- createMetadata(
   phenotype = "Myc_reduce",
   direction_type = "bi-directional",
   platform = "GPL6246",
-  fdr_cutoff = 0.05,
+  adj_p_cutoff = 0.05,
   score_cutoff = 7,
   keywords = c("Myc", "KO", "longevity"),
   PMID = 25619689,
@@ -134,27 +134,27 @@ head(difexp)
 ```
 
 
-### Create signature
+### Create signature by hand
 This is a bi-directional signature example. It contains up and down regulated 
 genes.  
 There are multiple ways to get signatures from a differential expression 
 analysis matrix. One way is to use `filter()` from `dplyr` package.  
-In this example, we previously specified the `score_cutoff` and `fdr_cutoff` 
+In this example, we previously specified the `score_cutoff` and `adj_p_cutoff` 
 when creating the metadata. We can use them here.
 ```{r}
-temp_upsig <- cbind(
-  filter(difexp, score > metadata$score_cutoff & adj_p < metadata$fdr_cutoff) %>% pull(symbol),
-  filter(difexp, score > metadata$score_cutoff & adj_p < metadata$fdr_cutoff) %>% pull(score),
+tempUpSig <- cbind(
+  filter(difexp, score > metadata$score_cutoff & adj_p < metadata$adj_p_cutoff) %>% pull(symbol),
+  filter(difexp, score > metadata$score_cutoff & adj_p < metadata$adj_p_cutoff) %>% pull(score),
   "+"
 )
-head(temp_upsig)
+head(tempUpSig)
 
-temp_dnsig <- cbind(
-  dplyr::filter(difexp, score < (-1) * metadata$score_cutoff & adj_p < metadata$fdr_cutoff) %>% pull(symbol),
-  dplyr::filter(difexp, score < (-1) * metadata$score_cutoff & adj_p < metadata$fdr_cutoff) %>% pull(score),
+tempDnSig <- cbind(
+  dplyr::filter(difexp, score < (-1) * metadata$score_cutoff & adj_p < metadata$adj_p_cutoff) %>% pull(symbol),
+  dplyr::filter(difexp, score < (-1) * metadata$score_cutoff & adj_p < metadata$adj_p_cutoff) %>% pull(score),
   "-"
 )
-head(temp_dnsig)
+head(tempDnSig)
 ```
 (note: if you see numbers instead of gene symbol name in the first column, please check if the "symbol" column in your difexp matrix is "character" and not accidentally be "factor")  
 
@@ -166,7 +166,7 @@ also required. "uni-directional" type does not require this column.
 An **optional column "signature_score"** is used when feature scores are available.  
 
 ```{r}
-signatures <- data.frame(rbind(temp_upsig, temp_dnsig))
+signatures <- data.frame(rbind(tempUpSig, tempDnSig))
 colnames(signatures) <- c("signature_symbol", "signature_score", "signature_direction")
 ```
 
@@ -205,6 +205,26 @@ OmicObj <- OmicSignature$new(
 )
 ```
 
+## Create OmicSignature from difexp and metadata
+You can also by-pass the generating signature process. Instead, simply provide 
+cutoffs in metadata, and use `OmicSigFromDifexp()` function to extract 
+signatures from difexp according to those criteria. 
+```{r}
+OmicObj1 <- OmicSigFromDifexp(difexp, metadata)
+```
+
+It gives the same signature as we did by hand above. See the top signatures: 
+```{r}
+head(OmicObj1$signature %>% dplyr::arrange(desc(abs(signature_score))))
+dim(OmicObj1$signature)
+```
+
+```{r}
+head(OmicObj$signature %>% dplyr::arrange(desc(abs(signature_score))))
+dim(OmicObj$signature)
+```
+
+
 ### Extract new signatures from the `OmicSignature` object
 Previously we created the signature using abs(logfc) > 1 and adj_p < 0.005.
 Now we can use new criterias to extract new signatures conveniently from 
@@ -212,7 +232,7 @@ the OmicSignature Object.
 For example, extract all features with a t-score with absolute value 
 higher than 20 and adj_p less than 0.001:
 ```{r}
-OmicObj$extract.signature("abs(score) > 20; adj_p < 0.001")
+OmicObj$extractSignature("abs(score) > 20; adj_p < 0.001")
 ```
 
 ## Write OmicSignature Object into a .json file

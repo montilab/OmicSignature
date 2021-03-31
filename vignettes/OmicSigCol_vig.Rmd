@@ -2,7 +2,7 @@
 title: "OmicSignatureCollection"
 output: rmarkdown::html_vignette
 author: "Vanessa Mengze Li"
-date: "Nov 22nd 2020"
+date: "03/31/2021"
 vignette: >
   %\VignetteIndexEntry{OmicSignatureCollection}
   %\VignetteEngine{knitr::rmarkdown}
@@ -39,8 +39,8 @@ OmicObj3 <- readJson(file.path(system.file("extdata", package = "OmicSignature")
 
 ### Specify metadata for the collection
 The required fields for **metadata** are:  
-**"collection_name", "description"**. We can also add additional 
-fields.  
+**"collection_name", "description"**.  
+We can also add additional fields.  
 ```{r}
 ColMeta <- list(
   "collection_name" = "Myc_mice_collection",
@@ -82,15 +82,13 @@ By default, the features are ranked by score.
 By default, `bind` is set to be `TRUE` to output results from all *OmicSignature* 
 objects as a single dataframe.  
 ```{r}
-OmicCol$extract.signature("abs(score) > 25 & adj_p < 0.001")
+OmicCol$extractSignature("abs(score) > 25 & adj_p < 0.05")
 ```
 
 If `bind` is set to be `FALSE`, the output of each *OmicSignature* objects are 
 provided individually as one element in a list.
 ```{r}
-OmicCol$extract.signature("abs(score) > 25 & adj_p < 0.001", bind = F)
+OmicCol$extractSignature("abs(score) > 25 & adj_p < 0.05", bind = F)
 ```
-
-Thank you! Please contact vmli@bu.edu if you have any questions.
 
 --

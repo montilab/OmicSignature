@@ -13,7 +13,8 @@ LazyData: true
 RoxygenNote: 7.1.1
 Imports:
 	dplyr,
-	magrittr,
+	rlang,
+        magrittr,
 	ontologyIndex,
 	methods,
 	knitr,
