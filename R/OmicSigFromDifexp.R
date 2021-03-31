@@ -1,9 +1,6 @@
 #### OmicSigFromDifexp() ####
 #' @title create an OmicSignature object from differential expsignaturession matrix
 #' updated 03/2021
-#' @description
-#' example usages:
-#'
 #' @param difexp Differential expsignaturession matrix
 #' @param metadata Metadata for the OmicSignature object. If `criteria` is `NULL`,
 #' the criterias to extract signatures will need to be provided in metadata.
@@ -11,13 +8,15 @@
 #' `logfc_cutoff`, `score_cutoff`, `adj_p_cutoff`, `p_value_cutoff`.
 #' @param criteria A character string to specify criterias used to extract
 #' signatures from difexp. e.g. "logfc > 5; score > 10". Alternatively,
-#' they can be provided in metadata fields
+#' they can be provided in metadata fields: list("logfc_cutoff" = 5, "score_cutoff" = 10)
 #' @importFrom dplyr filter select mutate arrange pull desc %>%
 #' @importFrom rlang parse_exprs
 #' @return OmicSignature object
 #' @export
 
 OmicSigFromDifexp <- function(difexp, metadata, criteria = NULL) {
+  symbol <- NULL # not functional; define these only to pass R CMD check
+  score <- NULL # R CMD wrongly view them as variables when used in dplyr functions
   if (is.null(criteria)) {
     criteria <- c()
     if (!is.null(metadata$logfc_cutoff)) {

@@ -14,15 +14,14 @@ RoxygenNote: 7.1.1
 Imports:
 	dplyr,
 	rlang,
-        magrittr,
 	ontologyIndex,
 	methods,
-	knitr,
 	limma,
 	R6,
 	jsonlite
 Suggests:
 	rmarkdown,
+        knitr,
 	pkgdown,
 	devtools
 VignetteBuilder: knitr

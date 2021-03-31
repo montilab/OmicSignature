@@ -17,11 +17,12 @@ They can be specified in metadata fields as one or more of the followings:
 
 \item{criteria}{A character string to specify criterias used to extract
 signatures from difexp. e.g. "logfc > 5; score > 10". Alternatively,
-they can be provided in metadata fields}
+they can be provided in metadata fields: list("logfc_cutoff" = 5, "score_cutoff" = 10)}
 }
 \value{
 OmicSignature object
 }
 \description{
-example usages:
+create an OmicSignature object from differential expsignaturession matrix
+updated 03/2021
 }
