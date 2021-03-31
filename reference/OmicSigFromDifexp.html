@@ -6,8 +6,8 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>template for creating a metadata list for an OmicSignature R6 object
-updated 09/2020 — createMetadata • OmicSignature</title>
+<title>create an OmicSignature object from differential expsignaturession matrix
+updated 03/2021 — OmicSigFromDifexp • OmicSignature</title>
 
 
 <!-- jquery -->
@@ -40,10 +40,10 @@ updated 09/2020 — createMetadata • OmicSignature</title>
 
 
 
-<meta property="og:title" content="template for creating a metadata list for an OmicSignature R6 object
-updated 09/2020 — createMetadata" />
-<meta property="og:description" content="template for creating a metadata list for an OmicSignature R6 object
-updated 09/2020" />
+<meta property="og:title" content="create an OmicSignature object from differential expsignaturession matrix
+updated 03/2021 — OmicSigFromDifexp" />
+<meta property="og:description" content="create an OmicSignature object from differential expsignaturession matrix
+updated 03/2021" />
 
 
 
@@ -124,131 +124,44 @@ updated 09/2020" />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>template for creating a metadata list for an OmicSignature R6 object
-updated 09/2020</h1>
+    <h1>create an OmicSignature object from differential expsignaturession matrix
+updated 03/2021</h1>
     
-    <div class="hidden name"><code>createMetadata.Rd</code></div>
+    <div class="hidden name"><code>OmicSigFromDifexp.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>template for creating a metadata list for an OmicSignature R6 object
-updated 09/2020</p>
+    <p>create an OmicSignature object from differential expsignaturession matrix
+updated 03/2021</p>
     </div>
 
-    <pre class="usage"><span class='fu'>createMetadata</span><span class='op'>(</span>
-  <span class='va'>signature_name</span>,
-  <span class='va'>organism</span>,
-  phenotype <span class='op'>=</span> <span class='st'>"unknown"</span>,
-  covariates <span class='op'>=</span> <span class='st'>"none"</span>,
-  <span class='va'>platform</span>,
-  <span class='va'>direction_type</span>,
-  sample_type <span class='op'>=</span> <span class='cn'>NULL</span>,
-  signature_collection <span class='op'>=</span> <span class='cn'>NULL</span>,
-  author <span class='op'>=</span> <span class='cn'>NULL</span>,
-  year <span class='op'>=</span> <span class='cn'>NULL</span>,
-  PMID <span class='op'>=</span> <span class='cn'>NULL</span>,
-  keywords <span class='op'>=</span> <span class='cn'>NULL</span>,
-  description <span class='op'>=</span> <span class='cn'>NULL</span>,
-  category_num <span class='op'>=</span> <span class='cn'>NULL</span>,
-  logFC_cutoff <span class='op'>=</span> <span class='cn'>NULL</span>,
-  p_value_cutoff <span class='op'>=</span> <span class='cn'>NULL</span>,
-  adj_p_cutoff <span class='op'>=</span> <span class='cn'>NULL</span>,
-  score_cutoff <span class='op'>=</span> <span class='cn'>NULL</span>,
-  cutoff_description <span class='op'>=</span> <span class='cn'>NULL</span>,
-  other <span class='op'>=</span> <span class='cn'>NULL</span>
-<span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>OmicSigFromDifexp</span><span class='op'>(</span><span class='va'>difexp</span>, <span class='va'>metadata</span>, criteria <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>signature_name</th>
-      <td><p>name of the signature.</p></td>
+      <th>difexp</th>
+      <td><p>Differential expsignaturession matrix</p></td>
     </tr>
     <tr>
-      <th>organism</th>
-      <td><p>organism. e.g. "Homo Sapiens", "Mus Musculus".</p></td>
+      <th>metadata</th>
+      <td><p>Metadata for the OmicSignature object. If `criteria` is `NULL`,
+the criterias to extract signatures will need to be provided in metadata.
+They can be specified in metadata fields as one or more of the followings:
+`logfc_cutoff`, `score_cutoff`, `adj_p_cutoff`, `p_value_cutoff`.</p></td>
     </tr>
     <tr>
-      <th>phenotype</th>
-      <td><p>the phenotype of the signature. e.g. "Gene KO", "Ketodiet", "Parkinson disease", "unknown".</p></td>
-    </tr>
-    <tr>
-      <th>covariates</th>
-      <td><p>optional but highly recommended. any covariates used in the study. e.g. a signature of aging with covariate "gender".</p></td>
-    </tr>
-    <tr>
-      <th>platform</th>
-      <td><p>GEO platform. e.g. "GPL11154" is for Illumina HiSeq 2000 Homo sapiens, "GPL570" is for Affymetrix Human Genome U133 Plus 2.0 Array</p></td>
-    </tr>
-    <tr>
-      <th>direction_type</th>
-      <td><p>the direction information of the signature.
-"uni" or "uni-directional" if signature has only one direction or no direction infomation.
-"bi" or "bi-directional" if signature contains "up" and "down" regulated features.
-"multi" or "multi-directional" if the signature contains more categories.</p></td>
-    </tr>
-    <tr>
-      <th>sample_type</th>
-      <td><p>optional but highly recommended. a cell line or tissue from BRENDA ontology.</p></td>
-    </tr>
-    <tr>
-      <th>signature_collection</th>
-      <td><p>optional. collection of which the signature belongs to.</p></td>
-    </tr>
-    <tr>
-      <th>author</th>
-      <td><p>optional. the author name if the signature is from a published article.</p></td>
-    </tr>
-    <tr>
-      <th>year</th>
-      <td><p>optional. the year when the signature was created or published.</p></td>
-    </tr>
-    <tr>
-      <th>PMID</th>
-      <td><p>optional. the PubMed ID if the signature is from a published article.</p></td>
-    </tr>
-    <tr>
-      <th>keywords</th>
-      <td><p>optional. key words for the signature. examples are "longevity", "perturbation". "drug".</p></td>
-    </tr>
-    <tr>
-      <th>description</th>
-      <td><p>optional. free text to describe the signature.</p></td>
-    </tr>
-    <tr>
-      <th>category_num</th>
-      <td><p>optional, specifically used for multi-directional signature to specify how many categories or class the signature contains.</p></td>
-    </tr>
-    <tr>
-      <th>logFC_cutoff</th>
-      <td><p>optional. log fold change cutoff used to generate the signature, if applicable.</p></td>
-    </tr>
-    <tr>
-      <th>p_value_cutoff</th>
-      <td><p>optional. p value cutoff used to generate the signature, if applicable.</p></td>
-    </tr>
-    <tr>
-      <th>adj_p_cutoff</th>
-      <td><p>optional. adjusted p-value, e.g. fdr, cutoff used to generate the signature, if applicable.</p></td>
-    </tr>
-    <tr>
-      <th>score_cutoff</th>
-      <td><p>optional. score cutoff used to generate the signature, if applicable.</p></td>
-    </tr>
-    <tr>
-      <th>cutoff_description</th>
-      <td><p>optional. discription of the cutoff, if applicable.</p></td>
-    </tr>
-    <tr>
-      <th>other</th>
-      <td><p>optional. a `list` to specify any other user-defined metadata fields.</p></td>
+      <th>criteria</th>
+      <td><p>A character string to specify criterias used to extract
+signatures from difexp. e.g. "logfc &gt; 5; score &gt; 10". Alternatively,
+they can be provided in metadata fields: list("logfc_cutoff" = 5, "score_cutoff" = 10)</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>a metadata list to create an OmicSignature R6 object</p>
+    <p>OmicSignature object</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

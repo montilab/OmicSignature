@@ -54,7 +54,7 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="../articles/BRENDA.html">BRENDA</a>
+      <a href="../articles/BRENDA.html">BRENDA &amp; GEO platform</a>
     </li>
     <li>
       <a href="../articles/OmicSigCol_vig.html">OmicSignatureCollection</a>
@@ -75,13 +75,13 @@
 
       
 
-      </header><script src="OmicSigCol_vig_files/header-attrs-2.6/header-attrs.js"></script><div class="row">
+      </header><script src="OmicSigCol_vig_files/header-attrs-2.7/header-attrs.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>OmicSignatureCollection</h1>
                         <h4 class="author">Vanessa Mengze Li</h4>
             
-            <h4 class="date">Nov 22nd 2020</h4>
+            <h4 class="date">03/31/2021</h4>
       
       
       <div class="hidden name"><code>OmicSigCol_vig.Rmd</code></div>
@@ -115,7 +115,8 @@
 <div id="specify-metadata-for-the-collection" class="section level3">
 <h3 class="hasAnchor">
 <a href="#specify-metadata-for-the-collection" class="anchor"></a>Specify metadata for the collection</h3>
-<p>The required fields for <strong>metadata</strong> are:<br><strong>“collection_name”, “description”</strong>. We can also add additional fields.</p>
+<p>The required fields for <strong>metadata</strong> are:<br><strong>“collection_name”, “description”</strong>.<br>
+We can also add additional fields.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">ColMeta</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>
   <span class="st">"collection_name"</span> <span class="op">=</span> <span class="st">"Myc_mice_collection"</span>,
@@ -142,11 +143,11 @@ When parameter “only_shared” is set to be <code>TRUE</code>, only shared met
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">OmicCol</span><span class="op">$</span><span class="fu">metadataSummary</span><span class="op">(</span>only_shared <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
 <span class="co">#&gt;                Myc_reduce_mice_adipose_24m   Myc_reduce_mice_muscle_24m  </span>
+<span class="co">#&gt; adj_p_cutoff   0.05                          0.05                        </span>
 <span class="co">#&gt; covariates     "none"                        "none"                      </span>
 <span class="co">#&gt; direction_type "bi-directional"              "bi-directional"            </span>
-<span class="co">#&gt; fdr_cutoff     0.05                          0.05                        </span>
 <span class="co">#&gt; keywords       character,3                   character,3                 </span>
-<span class="co">#&gt; logFC_cutoff   0                             0                           </span>
+<span class="co">#&gt; logfc_cutoff   0                             0                           </span>
 <span class="co">#&gt; organism       "Mus Musculus"                "Mus Musculus"              </span>
 <span class="co">#&gt; phenotype      "Myc_reduce"                  "Myc_reduce"                </span>
 <span class="co">#&gt; platform       "GPL6246"                     "GPL6246"                   </span>
@@ -156,11 +157,11 @@ When parameter “only_shared” is set to be <code>TRUE</code>, only shared met
 <span class="co">#&gt; signature_name "Myc_reduce_mice_adipose_24m" "Myc_reduce_mice_muscle_24m"</span>
 <span class="co">#&gt; year           2015                          2015                        </span>
 <span class="co">#&gt;                Myc_reduce_mice_liver_24m  </span>
+<span class="co">#&gt; adj_p_cutoff   0.05                       </span>
 <span class="co">#&gt; covariates     "none"                     </span>
 <span class="co">#&gt; direction_type "bi-directional"           </span>
-<span class="co">#&gt; fdr_cutoff     0.05                       </span>
 <span class="co">#&gt; keywords       character,3                </span>
-<span class="co">#&gt; logFC_cutoff   0                          </span>
+<span class="co">#&gt; logfc_cutoff   0                          </span>
 <span class="co">#&gt; organism       "Mus Musculus"             </span>
 <span class="co">#&gt; phenotype      "Myc_reduce"               </span>
 <span class="co">#&gt; platform       "GPL6246"                  </span>
@@ -178,29 +179,30 @@ For example, extract all features with a absolute score &gt; 25 and adj_p &lt; 0
 By default, the features are ranked by score.<br>
 By default, <code>bind</code> is set to be <code>TRUE</code> to output results from all <em>OmicSignature</em> objects as a single dataframe.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">OmicCol</span><span class="op">$</span><span class="fu">extract.signature</span><span class="op">(</span><span class="st">"abs(score) &gt; 25 &amp; adj_p &lt; 0.001"</span><span class="op">)</span>
+<code class="sourceCode R"><span class="va">OmicCol</span><span class="op">$</span><span class="fu">extractSignature</span><span class="op">(</span><span class="st">"abs(score) &gt; 25 &amp; adj_p &lt; 0.05"</span><span class="op">)</span>
 <span class="co">#&gt;                       sig_name    symbol    score direction</span>
 <span class="co">#&gt; 1  Myc_reduce_mice_adipose_24m    Crisp1  85.2374         +</span>
 <span class="co">#&gt; 2  Myc_reduce_mice_adipose_24m    Akr1b7  49.0361         +</span>
 <span class="co">#&gt; 3  Myc_reduce_mice_adipose_24m      Pcp4  40.2846         +</span>
 <span class="co">#&gt; 5  Myc_reduce_mice_adipose_24m    Spink8  36.2846         +</span>
-<span class="co">#&gt; 14   Myc_reduce_mice_liver_24m      Cpa1  34.6201         +</span>
+<span class="co">#&gt; 15   Myc_reduce_mice_liver_24m      Cpa1  34.6201         +</span>
 <span class="co">#&gt; 6  Myc_reduce_mice_adipose_24m       Kap  30.6262         +</span>
 <span class="co">#&gt; 7  Myc_reduce_mice_adipose_24m     Ces5a  30.0132         +</span>
-<span class="co">#&gt; 17   Myc_reduce_mice_liver_24m      Zg16  28.5156         +</span>
+<span class="co">#&gt; 18   Myc_reduce_mice_liver_24m      Zg16  28.5156         +</span>
 <span class="co">#&gt; 9  Myc_reduce_mice_adipose_24m    Defb26  27.7851         +</span>
+<span class="co">#&gt; 13  Myc_reduce_mice_muscle_24m       Alb  27.7297         +</span>
 <span class="co">#&gt; 10 Myc_reduce_mice_adipose_24m      Smcp  27.3482         +</span>
 <span class="co">#&gt; 11 Myc_reduce_mice_adipose_24m   Sprr2a2  27.2045         +</span>
 <span class="co">#&gt; 12 Myc_reduce_mice_adipose_24m Serpina1f  25.5037         +</span>
 <span class="co">#&gt; 4  Myc_reduce_mice_adipose_24m      Mmp7 -36.8727         -</span>
-<span class="co">#&gt; 13   Myc_reduce_mice_liver_24m      Saa1    -35.3         -</span>
-<span class="co">#&gt; 15   Myc_reduce_mice_liver_24m   Sult3a1 -31.7553         -</span>
-<span class="co">#&gt; 16   Myc_reduce_mice_liver_24m    Isyna1 -29.9326         -</span>
+<span class="co">#&gt; 14   Myc_reduce_mice_liver_24m      Saa1    -35.3         -</span>
+<span class="co">#&gt; 16   Myc_reduce_mice_liver_24m   Sult3a1 -31.7553         -</span>
+<span class="co">#&gt; 17   Myc_reduce_mice_liver_24m    Isyna1 -29.9326         -</span>
 <span class="co">#&gt; 8  Myc_reduce_mice_adipose_24m   Ighv3-5 -29.0765         -</span>
-<span class="co">#&gt; 18   Myc_reduce_mice_liver_24m     Chil1 -25.4132         -</span></code></pre></div>
+<span class="co">#&gt; 19   Myc_reduce_mice_liver_24m     Chil1 -25.4132         -</span></code></pre></div>
 <p>If <code>bind</code> is set to be <code>FALSE</code>, the output of each <em>OmicSignature</em> objects are provided individually as one element in a list.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">OmicCol</span><span class="op">$</span><span class="fu">extract.signature</span><span class="op">(</span><span class="st">"abs(score) &gt; 25 &amp; adj_p &lt; 0.001"</span>, bind <span class="op">=</span> <span class="cn">F</span><span class="op">)</span>
+<code class="sourceCode R"><span class="va">OmicCol</span><span class="op">$</span><span class="fu">extractSignature</span><span class="op">(</span><span class="st">"abs(score) &gt; 25 &amp; adj_p &lt; 0.05"</span>, bind <span class="op">=</span> <span class="cn">F</span><span class="op">)</span>
 <span class="co">#&gt; $Myc_reduce_mice_adipose_24m</span>
 <span class="co">#&gt;       symbol    score direction</span>
 <span class="co">#&gt; 1     Crisp1  85.2374         +</span>
@@ -217,7 +219,8 @@ By default, <code>bind</code> is set to be <code>TRUE</code> to output results f
 <span class="co">#&gt; 12 Serpina1f  25.5037         +</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $Myc_reduce_mice_muscle_24m</span>
-<span class="co">#&gt; NULL</span>
+<span class="co">#&gt;   symbol   score direction</span>
+<span class="co">#&gt; 1    Alb 27.7297         +</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $Myc_reduce_mice_liver_24m</span>
 <span class="co">#&gt;    symbol    score direction</span>
@@ -227,7 +230,6 @@ By default, <code>bind</code> is set to be <code>TRUE</code> to output results f
 <span class="co">#&gt; 4  Isyna1 -29.9326         -</span>
 <span class="co">#&gt; 5    Zg16  28.5156         +</span>
 <span class="co">#&gt; 6   Chil1 -25.4132         -</span></code></pre></div>
-<p>Thank you! Please contact <a href="mailto:vmli@bu.edu" class="email">vmli@bu.edu</a> if you have any questions.</p>
 <p>–</p>
 </div>
 </div>
