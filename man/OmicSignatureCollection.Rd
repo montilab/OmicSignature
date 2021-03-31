@@ -21,7 +21,7 @@ In cluding metadata, OmicSigList which is a list of OmicSignature object.
 \itemize{
 \item \href{#method-new}{\code{OmicSignatureCollection$new()}}
 \item \href{#method-print}{\code{OmicSignatureCollection$print()}}
-\item \href{#method-extract.signature}{\code{OmicSignatureCollection$extract.signature()}}
+\item \href{#method-extractSignature}{\code{OmicSignatureCollection$extractSignature()}}
 \item \href{#method-metadataSummary}{\code{OmicSignatureCollection$metadataSummary()}}
 \item \href{#method-clone}{\code{OmicSignatureCollection$clone()}}
 }
@@ -58,11 +58,11 @@ Print an OmicSignatureCollection object
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-extract.signature"></a>}}
-\if{latex}{\out{\hypertarget{method-extract.signature}{}}}
-\subsection{Method \code{extract.signature()}}{
+\if{html}{\out{<a id="method-extractSignature"></a>}}
+\if{latex}{\out{\hypertarget{method-extractSignature}{}}}
+\subsection{Method \code{extractSignature()}}{
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{OmicSignatureCollection$extract.signature(conditions, bind = TRUE)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{OmicSignatureCollection$extractSignature(conditions, bind = TRUE)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{

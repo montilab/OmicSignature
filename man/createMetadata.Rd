@@ -22,7 +22,7 @@ createMetadata(
   category_num = NULL,
   logFC_cutoff = NULL,
   p_value_cutoff = NULL,
-  fdr_cutoff = NULL,
+  adj_p_cutoff = NULL,
   score_cutoff = NULL,
   cutoff_description = NULL,
   other = NULL
@@ -64,7 +64,7 @@ createMetadata(
 
 \item{p_value_cutoff}{optional. p value cutoff used to generate the signature, if applicable.}
 
-\item{fdr_cutoff}{optional. fdr cutoff used to generate the signature, if applicable.}
+\item{adj_p_cutoff}{optional. adjusted p-value, e.g. fdr, cutoff used to generate the signature, if applicable.}
 
 \item{score_cutoff}{optional. score cutoff used to generate the signature, if applicable.}
 

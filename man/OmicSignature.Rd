@@ -6,14 +6,29 @@
 \description{
 a R6 object to store signatures generated from experiments. In cluding metadata, signature, and an optional differential expression matrix.
 }
+\section{Public fields}{
+\if{html}{\out{<div class="r6-fields">}}
+\describe{
+\item{\code{metadata.}}{a list to describe the metadata}
+
+\item{\code{signature.}}{a dataframe contains symbol, score (optional) and direction (optional)}
+
+\item{\code{difexp.}}{a dataframe for differential expression result}
+
+\item{\code{deleteDifexp.}}{a function to delete difexp from the object}
+}
+\if{html}{\out{</div>}}
+}
 \section{Active bindings}{
 \if{html}{\out{<div class="r6-active-bindings">}}
 \describe{
-\item{\code{metadata}}{a list to describe the metadata}
+\item{\code{metadata.}}{a list to describe the metadata}
 
-\item{\code{signature}}{a dataframe contains symbol, score (optional) and direction (optional)}
+\item{\code{signature.}}{a dataframe contains symbol, score (optional) and direction (optional)}
 
-\item{\code{difexp}}{a dataframe for differential expression result}
+\item{\code{difexp.}}{a dataframe for differential expression result}
+
+\item{\code{deleteDifexp.}}{a function to delete difexp from the object}
 }
 \if{html}{\out{</div>}}
 }
@@ -22,7 +37,7 @@ a R6 object to store signatures generated from experiments. In cluding metadata,
 \itemize{
 \item \href{#method-new}{\code{OmicSignature$new()}}
 \item \href{#method-print}{\code{OmicSignature$print()}}
-\item \href{#method-extract.signature}{\code{OmicSignature$extract.signature()}}
+\item \href{#method-extractSignature}{\code{OmicSignature$extractSignature()}}
 \item \href{#method-clone}{\code{OmicSignature$clone()}}
 }
 }
@@ -60,11 +75,11 @@ Print an OmicSignature object
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-extract.signature"></a>}}
-\if{latex}{\out{\hypertarget{method-extract.signature}{}}}
-\subsection{Method \code{extract.signature()}}{
+\if{html}{\out{<a id="method-extractSignature"></a>}}
+\if{latex}{\out{\hypertarget{method-extractSignature}{}}}
+\subsection{Method \code{extractSignature()}}{
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{OmicSignature$extract.signature(conditions)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{OmicSignature$extractSignature(conditions)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{

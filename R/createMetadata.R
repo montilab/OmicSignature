@@ -20,7 +20,7 @@
 #' @param category_num optional, specifically used for multi-directional signature to specify how many categories or class the signature contains.
 #' @param logFC_cutoff optional. log fold change cutoff used to generate the signature, if applicable.
 #' @param p_value_cutoff optional. p value cutoff used to generate the signature, if applicable.
-#' @param fdr_cutoff optional. fdr cutoff used to generate the signature, if applicable.
+#' @param adj_p_cutoff optional. adjusted p-value, e.g. fdr, cutoff used to generate the signature, if applicable.
 #' @param score_cutoff optional. score cutoff used to generate the signature, if applicable.
 #' @param cutoff_description optional. discription of the cutoff, if applicable.
 #' @param other optional. a `list` to specify any other user-defined metadata fields.
@@ -32,7 +32,7 @@ createMetadata <- function(signature_name, organism, phenotype = "unknown",
                            author = NULL, year = NULL, PMID = NULL,
                            keywords = NULL, description = NULL, category_num = NULL,
                            logFC_cutoff = NULL, p_value_cutoff = NULL,
-                           fdr_cutoff = NULL, score_cutoff = NULL,
+                           adj_p_cutoff = NULL, score_cutoff = NULL,
                            cutoff_description = NULL, other = NULL) {
   organism <- tools::toTitleCase(organism)
 
@@ -82,7 +82,7 @@ createMetadata <- function(signature_name, organism, phenotype = "unknown",
     "description" = description,
     "logFC_cutoff" = logFC_cutoff,
     "p_value_cutoff" = p_value_cutoff,
-    "fdr_cutoff" = fdr_cutoff,
+    "adj_p_cutoff" = adj_p_cutoff,
     "score_cutoff" = score_cutoff,
     "cutoff_description" = cutoff_description
   )
