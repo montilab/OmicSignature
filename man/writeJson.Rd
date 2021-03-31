@@ -3,7 +3,7 @@
 \name{writeJson}
 \alias{writeJson}
 \title{write OmicSignature object into json txt format
-updated 01/2020}
+updated 03/2021}
 \usage{
 writeJson(OmicObj, file)
 }
@@ -17,5 +17,5 @@ a "finished" message
 }
 \description{
 write OmicSignature object into json txt format
-updated 01/2020
+updated 03/2021
 }

@@ -3,7 +3,7 @@
 \name{readJson}
 \alias{readJson}
 \title{read an OmicSignature object from json txt file created by writeJson()
-updated 01/2020}
+updated 03/2021}
 \usage{
 readJson(filename)
 }
@@ -15,5 +15,5 @@ OmicSignature object
 }
 \description{
 read an OmicSignature object from json txt file created by writeJson()
-updated 01/2020
+updated 03/2021
 }
