@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>BRENDA &amp; GEO platform • OmicSignature</title>
-<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
+<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/spacelab/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../bootstrap-toc.css">
 <script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
@@ -38,13 +38,7 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
 <li>
-  <a href="../index.html">
-    <span class="fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
-<li>
-  <a href="../reference/index.html">Reference</a>
+  <a href="../index.html">Home</a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
@@ -54,18 +48,39 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="../articles/BRENDA.html">BRENDA &amp; GEO platform</a>
+      <a href="../articles/ObjectStructure.html">Structure of OmicSignature &amp; OmicSignatureCollection</a>
     </li>
     <li>
-      <a href="../articles/OmicSigCol_vig.html">OmicSignatureCollection</a>
+      <a href="../articles/BRENDA.html">BRENDA ontology &amp; GEO platform ID</a>
+    </li>
+    <li class="dropdown-header">---- OmicSignature object ----</li>
+    <li>
+      <a href="../articles/CreateOmS.html">Create OmicSignature from differential matrix</a>
     </li>
     <li>
-      <a href="../articles/OmicSig_vig.html">OmicSignature</a>
+      <a href="../articles/FunOmS.html">Functionalities, imports and exports</a>
+    </li>
+    <li class="dropdown-header">---- OmicSignatureCollection object ----</li>
+    <li>
+      <a href="../articles/CreateOmSC.html">Create OmicSignatureCollection</a>
+    </li>
+    <li>
+      <a href="../articles/FunOmSC.html">Functionalities of OmicSignatureCollection</a>
     </li>
   </ul>
 </li>
+<li>
+  <a href="../reference/index.html">Reference</a>
+</li>
       </ul>
-<ul class="nav navbar-nav navbar-right"></ul>
+<ul class="nav navbar-nav navbar-right">
+<li>
+  <a href="https://github.com/montilab/OmicSignature">
+    <span class="fas fa-github"></span>
+     
+  </a>
+</li>
+      </ul>
 </div>
 <!--/.nav-collapse -->
   </div>
@@ -90,7 +105,10 @@
 
     
     
-<p>We use BRENDA tissue ontology to indicate the tissue or cell-line of a signature, and GEO platform accession id for platform records. The record was last updated <strong>09/2020</strong>, so some newest ontology and platform may not be included.</p>
+<p><font color="#000000"></font></p>
+<p>We use BRENDA tissue ontology to indicate the tissue or cell-line of a signature, and GEO platform accession id for platform records.<br>
+The record was last updated <strong>09/2020</strong>, so some newest ontology and platform may not be included.<br>
+If you are not sure which BRENDA tissue ontology or GEO platform accession id to use, you can search for them as shown below.</p>
 <div id="search-for-a-brenda-tissue-ontology" class="section level2">
 <h2 class="hasAnchor">
 <a href="#search-for-a-brenda-tissue-ontology" class="anchor"></a>Search for a BRENDA tissue ontology</h2>
@@ -129,7 +147,7 @@
 <h2 class="hasAnchor">
 <a href="#search-for-a-geo-platform" class="anchor"></a>Search for a GEO platform</h2>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/GEOPlatformSearch.html">GEOPlatformSearch</a></span><span class="op">(</span><span class="st">"Illumina HiSeq 4000"</span>,species <span class="op">=</span> <span class="st">"Homo Sapiens"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="../reference/GEOPlatformSearch.html">GEOPlatformSearch</a></span><span class="op">(</span><span class="st">"Illumina HiSeq 4000"</span>, species <span class="op">=</span> <span class="st">"Homo Sapiens"</span><span class="op">)</span></code></pre></div>
 <pre><code>##      Accession
 ## 633   GPL28185
 ## 881   GPL27803
@@ -210,6 +228,9 @@
 ##      Samples.Count Series.Count Contact Release.Date
 ## 2422             8            2     GEO Aug 20, 2018</code></pre>
 <p>Set <code>contain_all = T</code> to show results include all search terms. Set <code>contain_all = FALSE</code> to show results include any of the search terms.</p>
+</div>
+<div id="section" class="section level2">
+<h2></h2>
 </div>
   </div>
 
