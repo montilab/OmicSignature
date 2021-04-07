@@ -2,7 +2,7 @@
 title: "Structure of OmicSignature & OmicSignatureCollection"
 output: rmarkdown::html_vignette
 author: "Vanessa Mengze Li"
-date: "Nov 22nd 2020"
+date: "04/06/2021"
 vignette: >
   %\VignetteIndexEntry{Structure of OmicSignature & OmicSignatureCollection}
   %\VignetteEngine{knitr::rmarkdown}
@@ -15,7 +15,6 @@ knitr::opts_chunk$set(
   comment = "#>"
 )
 ```
-<font color = "#000000">
 
 ## Structure of OmicSignature object
 An `OmicSignature` object contains three parts:  
@@ -23,19 +22,23 @@ An `OmicSignature` object contains three parts:
  - **signature**, a dataframe with feature symbols and directions, and scores if applicable;  
  - **difexp**, optional, a dataframe from differential expression analysis result.  
 
-![Structure of OmicSignature object](../doc/Omic_structure.png)
+![Structure of OmicSignature object](figs/Omic_structure.png)
 
 ## Structure of OmicSignatureCollection object
 An `OmicSignatureCollection` object contains two parts:  
  - metadata  
  - OmicSigList, a list of OmicSignature Objects  
 
-![Structure of OmicSignatureCollection object](../doc/OmicCol_structure.png)
+![Structure of OmicSignatureCollection object](figs/OmicCol_structure.png)
 
 
 ## Main functionalities
 
-![Main functionalities](../doc/Omic_OmicCol_func1.png)
+![Main functionalities](figs/Omic_OmicCol_func1.png)
 
 
-</font>
+## Quick Cheat-Sheet of main functionalities
+![Main functionalities](figs/Omic_OmicCol_func2.png)
+
+--
+
