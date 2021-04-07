@@ -50,15 +50,15 @@
 <li>
       <a href="../articles/ObjectStructure.html">Structure of OmicSignature &amp; OmicSignatureCollection</a>
     </li>
-    <li>
-      <a href="../articles/BRENDA.html">BRENDA ontology &amp; GEO platform ID</a>
-    </li>
     <li class="dropdown-header">---- OmicSignature object ----</li>
     <li>
-      <a href="../articles/CreateOmS.html">Create OmicSignature from differential matrix</a>
+      <a href="../articles/CreateOmS.html">Create OmicSignature</a>
     </li>
     <li>
       <a href="../articles/FunOmS.html">Functionalities, imports and exports</a>
+    </li>
+    <li>
+      <a href="../articles/BRENDA.html">BRENDA ontology &amp; GEO platform ID</a>
     </li>
     <li class="dropdown-header">---- OmicSignatureCollection object ----</li>
     <li>
@@ -73,14 +73,7 @@
   <a href="../reference/index.html">Reference</a>
 </li>
       </ul>
-<ul class="nav navbar-nav navbar-right">
-<li>
-  <a href="https://github.com/montilab/OmicSignature">
-    <span class="fas fa-github"></span>
-     
-  </a>
-</li>
-      </ul>
+<ul class="nav navbar-nav navbar-right"></ul>
 </div>
 <!--/.nav-collapse -->
   </div>
@@ -106,17 +99,9 @@
     
     
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org//reference/load_all.html">load_all</a></span><span class="op">(</span><span class="st">"."</span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org//reference/load_all.html">load_all</a></span><span class="op">(</span><span class="st">"."</span><span class="op">)</span></code></pre></div>
 <p><font color="#000000"></font></p>
-<div id="structure-of-an-omicsignature-object" class="section level2">
-<h2 class="hasAnchor">
-<a href="#structure-of-an-omicsignature-object" class="anchor"></a>Structure of an OmicSignature Object</h2>
-<p>An <code>OmicSignature</code> object contains three parts:<br>
-- <strong>metadata</strong>, a list contains metadata fields;<br>
-- <strong>signature</strong>, a dataframe with feature symbols and directions, and scores if applicable;<br>
-- <strong>difexp</strong>, optional, a dataframe from differential expression analysis result.</p>
-</div>
+<p><img src="figs/Omic_OmicCol_func1.png" width="60%" height="60%"></p>
 <div id="read-an-omicsignature-object-from-a-json-file" class="section level2">
 <h2 class="hasAnchor">
 <a href="#read-an-omicsignature-object-from-a-json-file" class="anchor"></a>Read an <code>OmicSignature</code> object from a json file</h2>
@@ -129,12 +114,38 @@
 <a href="#write-an-omicsignature-object-into-a-json-file" class="anchor"></a>Write an <code>OmicSignature</code> object into a json file</h2>
 <pre><code><a href="../reference/writeJson.html">writeJson(OmicObj, "Myc_reduce_mice_liver_24m.json")</a></code></pre>
 </div>
+<div id="print-and-see-the-metadata" class="section level2">
+<h2 class="hasAnchor">
+<a href="#print-and-see-the-metadata" class="anchor"></a>Print and see the metadata</h2>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">OmicObj</span>
+<span class="co">#&gt; Signature Object: </span>
+<span class="co">#&gt;   Metadata: </span>
+<span class="co">#&gt;     adj_p_cutoff = 0.05 </span>
+<span class="co">#&gt;     covariates = none </span>
+<span class="co">#&gt;     direction_type = bi-directional </span>
+<span class="co">#&gt;     keywords = Myc, KO, longevity </span>
+<span class="co">#&gt;     logfc_cutoff = 0 </span>
+<span class="co">#&gt;     organism = Mus Musculus </span>
+<span class="co">#&gt;     phenotype = Myc_reduce </span>
+<span class="co">#&gt;     platform = GPL6246 </span>
+<span class="co">#&gt;     PMID = 25619689 </span>
+<span class="co">#&gt;     sample_type = liver </span>
+<span class="co">#&gt;     score_cutoff = 7 </span>
+<span class="co">#&gt;     signature_name = Myc_reduce_mice_liver_24m </span>
+<span class="co">#&gt;     year = 2015 </span>
+<span class="co">#&gt;   signature: </span>
+<span class="co">#&gt;     - (152)</span>
+<span class="co">#&gt;     + (194)</span>
+<span class="co">#&gt;   Differential Expression Data: </span>
+<span class="co">#&gt;     27359 x 9</span></code></pre></div>
+</div>
 <div id="extract-new-signatures-from-the-omicsignature-object" class="section level2">
 <h2 class="hasAnchor">
 <a href="#extract-new-signatures-from-the-omicsignature-object" class="anchor"></a>Extract new signatures from the <code>OmicSignature</code> object</h2>
 <p>We can use new criterias to extract new signatures conveniently from the OmicSignature Object, <strong>if it has difexp matrix included</strong>.<br>
 For example, extract all features with a t-score with absolute value higher than 20 and adj_p less than 0.001:</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">OmicObj</span><span class="op">$</span><span class="fu">extractSignature</span><span class="op">(</span><span class="st">"abs(score) &gt; 20; adj_p &lt; 0.001"</span><span class="op">)</span>
 <span class="co">#&gt;           symbol    score direction</span>
 <span class="co">#&gt; 1           Saa1 -35.3000         -</span>

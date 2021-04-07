@@ -50,15 +50,15 @@
 <li>
       <a href="../articles/ObjectStructure.html">Structure of OmicSignature &amp; OmicSignatureCollection</a>
     </li>
-    <li>
-      <a href="../articles/BRENDA.html">BRENDA ontology &amp; GEO platform ID</a>
-    </li>
     <li class="dropdown-header">---- OmicSignature object ----</li>
     <li>
-      <a href="../articles/CreateOmS.html">Create OmicSignature from differential matrix</a>
+      <a href="../articles/CreateOmS.html">Create OmicSignature</a>
     </li>
     <li>
       <a href="../articles/FunOmS.html">Functionalities, imports and exports</a>
+    </li>
+    <li>
+      <a href="../articles/BRENDA.html">BRENDA ontology &amp; GEO platform ID</a>
     </li>
     <li class="dropdown-header">---- OmicSignatureCollection object ----</li>
     <li>
@@ -73,14 +73,7 @@
   <a href="../reference/index.html">Reference</a>
 </li>
       </ul>
-<ul class="nav navbar-nav navbar-right">
-<li>
-  <a href="https://github.com/montilab/OmicSignature">
-    <span class="fas fa-github"></span>
-     
-  </a>
-</li>
-      </ul>
+<ul class="nav navbar-nav navbar-right"></ul>
 </div>
 <!--/.nav-collapse -->
   </div>
@@ -109,17 +102,8 @@
 <code class="sourceCode R"><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org//reference/load_all.html">load_all</a></span><span class="op">(</span><span class="st">"."</span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span><span class="op">)</span></code></pre></div>
 <p><font color="#000000"></font></p>
-<div id="create-an-omicsignaturecollection-object" class="section level2">
-<h2 class="hasAnchor">
-<a href="#create-an-omicsignaturecollection-object" class="anchor"></a>Create an OmicSignatureCollection Object</h2>
-<p>This object contains several <code>OmicSignature</code> objects to facilitate further analysis.</p>
-<p>An <code>OmicSignatureCollection</code> object contains two parts:<br>
-- metadata<br>
-- OmicSigList, a list of OmicSignature Objects</p>
-<div id="first-create-an-omicsignaturecollection-object" class="section level3">
-<h3 class="hasAnchor">
-<a href="#first-create-an-omicsignaturecollection-object" class="anchor"></a>First create an <code>OmicSignatureCollection</code> object</h3>
-<p>This is the same code in “Create OmicSignatureCollection” section.</p>
+<p><img src="figs/Omic_OmicCol_func1.png" width="60%" height="60%"></p>
+<p>First create an <code>OmicSignatureCollection</code> object. This is the same code in <a href="https://montilab.github.io/OmicSignature/articles/CreateOmSC.html">“Create OmicSignatureCollection”</a> section.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">OmicObj1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/readJson.html">readJson</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, package <span class="op">=</span> <span class="st">"OmicSignature"</span><span class="op">)</span>, <span class="st">"Myc_reduce_mice_adipose_24m_obj.json"</span><span class="op">)</span><span class="op">)</span>
 <span class="co">#&gt;   [Success] OmicSignature object Myc_reduce_mice_adipose_24m created.</span>
@@ -139,11 +123,10 @@
   print_message <span class="op">=</span> <span class="cn">FALSE</span>
 <span class="op">)</span>
 <span class="co">#&gt;   [Success] OmicSignature Collection Myc_mice_collection created.</span></code></pre></div>
-</div>
-</div>
-<div id="see-a-summary-of-the-metadata-of-the-omicsignature-objects-in-the-collection" class="section level2">
+<div id="print-a-summary-of-the-metadata-in-the-omicsignaturecollection" class="section level2">
 <h2 class="hasAnchor">
-<a href="#see-a-summary-of-the-metadata-of-the-omicsignature-objects-in-the-collection" class="anchor"></a>See a summary of the metadata of the OmicSignature objects in the Collection</h2>
+<a href="#print-a-summary-of-the-metadata-in-the-omicsignaturecollection" class="anchor"></a>Print a summary of the metadata in the <code>OmicSignatureCollection</code>
+</h2>
 <p><code>$metadataSummary()</code> will print out the metadata fields in all <em>OmicSignature</em> objects stored in the <em>OmicSignatureCollection</em>.<br>
 When parameter “only_shared” is set to be <code>TRUE</code>, only shared metadata fields among all <em>OmicSignature</em> objects will be included. Otherwise, all metadata fields will be included.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
@@ -180,8 +163,7 @@ When parameter “only_shared” is set to be <code>TRUE</code>, only shared met
 <div id="extract-new-signatures-from-the-omicsignaturecollection-object" class="section level2">
 <h2 class="hasAnchor">
 <a href="#extract-new-signatures-from-the-omicsignaturecollection-object" class="anchor"></a>Extract new signatures from the <code>OmicSignatureCollection</code> object</h2>
-<p>We can extract new signatures from the <code>OmicSignatureCollection</code> object using new criterias.<br>
-For example, extract all features with a absolute score &gt; 25 and adj_p &lt; 0.001.<br>
+<p>For example, extract all features with a absolute score &gt; 25 and adj_p &lt; 0.001 from all the <code>OmicSignature</code> object stored in this Collection.<br>
 By default, the features are ranked by score.<br>
 By default, <code>bind</code> is set to be <code>TRUE</code> to output results from all <em>OmicSignature</em> objects as a single dataframe.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
