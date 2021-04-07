@@ -22,15 +22,12 @@ library(dplyr)
 ```
 <font color = "#000000">
 
-## Create an OmicSignatureCollection Object
-This object contains several `OmicSignature` objects to facilitate further analysis.  
+```{r echo=FALSE, out.height="60%", out.width="60%"}
+knitr::include_graphics("figs/Omic_OmicCol_func1.png")
+```
 
-An `OmicSignatureCollection` object contains two parts:  
- - metadata  
- - OmicSigList, a list of OmicSignature Objects  
-
-### First create an `OmicSignatureCollection` object
-This is the same code in "Create OmicSignatureCollection" section. 
+First create an `OmicSignatureCollection` object. 
+This is the same code in ["Create OmicSignatureCollection"](https://montilab.github.io/OmicSignature/articles/CreateOmSC.html) section. 
 ```{r}
 OmicObj1 <- readJson(file.path(system.file("extdata", package = "OmicSignature"), "Myc_reduce_mice_adipose_24m_obj.json"))
 OmicObj2 <- readJson(file.path(system.file("extdata", package = "OmicSignature"), "Myc_reduce_mice_muscle_24m_obj.json"))
@@ -48,7 +45,7 @@ OmicCol <- OmicSignatureCollection$new(
 )
 ```
 
-## See a summary of the metadata of the OmicSignature objects in the Collection
+## Print a summary of the metadata in the `OmicSignatureCollection`  
 `$metadataSummary()` will print out the metadata fields in all _OmicSignature_ 
 objects stored in the _OmicSignatureCollection_.  
 When parameter "only_shared" is set to be `TRUE`, only shared metadata fields 
@@ -59,9 +56,7 @@ OmicCol$metadataSummary(only_shared = TRUE)
 ```
 
 ## Extract new signatures from the `OmicSignatureCollection` object
-We can extract new signatures from the `OmicSignatureCollection` object using 
-new criterias.  
-For example, extract all features with a absolute score > 25 and adj_p < 0.001.  
+For example, extract all features with a absolute score > 25 and adj_p < 0.001 from all the `OmicSignature` object stored in this Collection.    
 By default, the features are ranked by score.  
 By default, `bind` is set to be `TRUE` to output results from all *OmicSignature* 
 objects as a single dataframe.  

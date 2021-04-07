@@ -18,15 +18,12 @@ knitr::opts_chunk$set(
 
 ```{r message=FALSE, warning=FALSE}
 devtools::load_all(".")
-library(dplyr)
 ```
 <font color = "#000000">
 
-## Structure of an OmicSignature Object 
-An `OmicSignature` object contains three parts:  
- - **metadata**, a list contains metadata fields;  
- - **signature**, a dataframe with feature symbols and directions, and scores if applicable;  
- - **difexp**, optional, a dataframe from differential expression analysis result.  
+```{r echo=FALSE, out.height="60%", out.width="60%"}
+knitr::include_graphics("figs/Omic_OmicCol_func1.png")
+```
 
 ## Read an `OmicSignature` object from a json file
 ```{r}
@@ -38,11 +35,18 @@ OmicObj <- readJson(file.path(system.file("extdata", package = "OmicSignature"),
 writeJson(OmicObj, "Myc_reduce_mice_liver_24m.json")
 ```
 
+## Print and see the metadata
+```{r}
+OmicObj
+```
+
+
 ## Extract new signatures from the `OmicSignature` object
 We can use new criterias to extract new signatures conveniently from 
 the OmicSignature Object, **if it has difexp matrix included**.  
 For example, extract all features with a t-score with absolute value 
-higher than 20 and adj_p less than 0.001:
+higher than 20 and adj_p less than 0.001:  
+
 ```{r}
 OmicObj$extractSignature("abs(score) > 20; adj_p < 0.001")
 ```

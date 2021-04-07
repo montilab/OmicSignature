@@ -22,23 +22,25 @@ An `OmicSignature` object contains three parts:
  - **signature**, a dataframe with feature symbols and directions, and scores if applicable;  
  - **difexp**, optional, a dataframe from differential expression analysis result.  
 
-![Structure of OmicSignature object](figs/Omic_structure.png)
+```{r echo=FALSE, out.height="60%", out.width="60%"}
+knitr::include_graphics("figs/Omic_structure.png")
+```
+
 
 ## Structure of OmicSignatureCollection object
 An `OmicSignatureCollection` object contains two parts:  
  - metadata  
  - OmicSigList, a list of OmicSignature Objects  
 
-![Structure of OmicSignatureCollection object](figs/OmicCol_structure.png)
-
-
-## Main functionalities
-
-![Main functionalities](figs/Omic_OmicCol_func1.png)
+```{r echo=FALSE, out.height="60%", out.width="60%"}
+knitr::include_graphics("figs/OmicCol_structure.png")
+```
 
 
 ## Quick Cheat-Sheet of main functionalities
-![Main functionalities](figs/Omic_OmicCol_func2.png)
+```{r echo=FALSE, out.height="60%", out.width="60%"}
+knitr::include_graphics("figs/Omic_OmicCol_func2.png")
+```
 
 --
 

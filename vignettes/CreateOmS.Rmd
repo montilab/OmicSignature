@@ -22,21 +22,34 @@ library(dplyr)
 ```
 <font color = "#000000">
 
-## Create an OmicSignature Object 
+## 1. Enssentials to create an OmicSignature Object 
 An `OmicSignature` object contains three parts:  
- - **metadata**, a list contains metadata fields;  
- - **signature**, a dataframe with feature symbols and directions, and scores if applicable;  
- - **difexp**, optional, a dataframe from differential expression analysis result.  
+ - **metadata**, a list contains metadata fields.  
+  the required fields are: **"signature_name", "organism", "platform", "direction_type", "phenotype"**.  
+ - **signature**, a dataframe with columns:  
+  **"signature_symbol"**, **"signature_direction"**, and **"signature_score"** (optional).  
+ - **difexp** (optional) a dataframe of differential expression analysis result.  
+  the required columns are **"id", "symbol", "score", "adj_p"**.  
 
+Once you have the componants above, you can create your own object:  
+```
+OmicObj <- OmicSignature$new(
+  metadata = metadata,
+  signature = signatures,
+  difexp = difexp
+)
+```
+
+Or, you can **read an `OmicSignature` saved in .json format using `readJson()`.** 
+See in ["Functionalities, imports and exports"](https://montilab.github.io/OmicSignature/articles/FunOmS.html) section. 
+
+## 2. Create an OmicSignature Object Step-by-Step
 The example provided below is from an experiment for Myc gene reduce in mice. 
 Signatures was extracted by comparing the liver of treatment and control when 
 mice is 24-month old. This is a bi-directional signature example, which contains 
 up and down regulated features (genes).
 
-**If you already have a .json file, you can read it in by using function `readJson()`.**  
-See more in the "Functionalities, imports and exports" section. 
-
-### Specify metadata
+### 2.1. Metadata
 To be saved into a OmicSignature object, the required **metadata** fields are:  
 **"signature_name", "organism", "platform", "direction_type", "phenotype"**.  
 Other criteria such as adj_p (fdr corrected p-value), log fold change cutoff of 
@@ -59,7 +72,8 @@ metadata <- list(
   "year" = 2015
 )
 ```
-Or use build-in function `createMetadata()` (recommended):
+
+Or use build-in function `createMetadata()` (recommended). The function can help remind you what attributes to include. 
 ```{r}
 metadata <- createMetadata(
   signature_name = "Myc_reduce_mice_liver_24m",
@@ -77,22 +91,22 @@ metadata <- createMetadata(
 ```
 
 **If "sample_type" is NOT a BRENDA ontology term or "platform" is NOT a valid GEO platform accession ID, you will receive warnings.**  
-See more info in "BRENDA ontology & GEO platform ID" section.  
+See how to search for the correct term to use in ["BRENDA ontology & GEO platform ID"](https://montilab.github.io/OmicSignature/articles/BRENDA.html) section.  
 
-#### Additional info for "direction_type"
+#### 2.1.1 Additional info for "direction_type"
 `direction_type` is either:  
  - "uni-directional". You only have a list of significant feature names but don't know if they are up or down regulated in the treatment group, or directional infomation is not applicable.  
  - "bi-directional". In most cases significant features can be grouped into "up" and "down" regulated features. For example, when comparing treatment group with control group, some features will be higher ("up", or "+") and some will be lower ("down" or "-") in treatment.  
  - "multi-directional". Used when comparing multiple sampels together, usually using ANOVA. In this case, the "direction" column in signature table should be group name.  
 
-#### Add more info in metadata
+#### 2.1.2 Add more info in metadata
 In this example, we are working with mouse strain C57BL/6. We can add this information into our `metadata`.  
 `metadata` is just a list. Add new terms into this list like you normally do.
 ```{r}
 metadata$"animal_strain" <- "C57BL/6"
 ```
 
-### Differential expression analysis result `difexp`
+### 2.2. Differential expression analysis result (difexp)
 A differential expression analysis matrix is **optional** but **highly recommended** if you have it.  
 The differential expression analysis in this example was performed using a standard 
 pipeline from lm package. Available columns are logFC, AveExpr, t score, P.Value, 
@@ -118,13 +132,11 @@ head(difexp)
 ```
 
 
-### Create signature by hand
-This is a bi-directional signature example. It contains up and down regulated 
-genes.  
-There are multiple ways to get signatures from a differential expression 
-analysis matrix. One way is to use `filter()` from `dplyr` package.  
+### 2.3. Signature 
+Here we will create a signature by hand. This is a bi-directional signature example. 
+It contains up and down regulated genes. One way is to use `filter()` from `dplyr` package.  
 In this example, we previously specified the `score_cutoff` and `adj_p_cutoff` 
-when creating the metadata. We can use them here.
+when creating the metadata. 
 ```{r}
 tempUpSig <- cbind(
   filter(difexp, score > metadata$score_cutoff & adj_p < metadata$adj_p_cutoff) %>% pull(symbol),
@@ -162,7 +174,7 @@ tail(signatures)
 ```
 
 
-### Create OmicSignature object
+### 2.4. Create our `OmicSignature` object
 We have everything we need now.  
 Use `OmicSignature$new()` to create a new OmicSignature R6 object.  
 ```{r}
@@ -190,23 +202,17 @@ OmicObj <- OmicSignature$new(
 ```
 
 
-## Create OmicSignature from difexp and metadata
-You can also by-pass the generating signature process. Instead, simply provide 
-cutoffs in metadata, and use `OmicSigFromDifexp()` function to extract 
-signatures from difexp according to those criteria. 
+## 3. Create an `OmicSignature` more conveniently from `difexp` and `metadata`
+You can by-pass the generating signature process once you are an expert. Simply provide 
+cutoffs in metadata, and `OmicSigFromDifexp()` will extract signatures from the 
+`difexp` provided according to those criteria, and create the `OmicSignature` object for you. 
 ```{r}
 OmicObj1 <- OmicSigFromDifexp(difexp, metadata)
 ```
 
-It gives the same signature as we did by hand before. See the top signatures: 
+See the top signatures: 
 ```{r}
 head(OmicObj1$signature %>% dplyr::arrange(desc(abs(signature_score))))
-dim(OmicObj1$signature)
-```
-
-```{r}
-head(OmicObj$signature %>% dplyr::arrange(desc(abs(signature_score))))
-dim(OmicObj$signature)
 ```
 
 </font>
