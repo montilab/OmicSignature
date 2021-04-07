@@ -22,6 +22,8 @@ An `OmicSignature` object contains three parts:
  - **signature**, a dataframe with feature symbols and directions, and scores if applicable;  
  - **difexp**, optional, a dataframe from differential expression analysis result.  
 
+See [here](https://montilab.github.io/OmicSignature/articles/CreateOmS.html) about how to create one. 
+
 ```{r echo=FALSE, out.height="60%", out.width="60%"}
 knitr::include_graphics("figs/Omic_structure.png")
 ```
@@ -31,6 +33,8 @@ knitr::include_graphics("figs/Omic_structure.png")
 An `OmicSignatureCollection` object contains two parts:  
  - metadata  
  - OmicSigList, a list of OmicSignature Objects  
+
+See [here](https://montilab.github.io/OmicSignature/articles/CreateOmSC.html) about how to create one. 
 
 ```{r echo=FALSE, out.height="60%", out.width="60%"}
 knitr::include_graphics("figs/OmicCol_structure.png")

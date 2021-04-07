@@ -46,10 +46,10 @@ OmicCol <- OmicSignatureCollection$new(
 ```
 
 ## Print a summary of the metadata in the `OmicSignatureCollection`  
-`$metadataSummary()` will print out the metadata fields in all _OmicSignature_ 
-objects stored in the _OmicSignatureCollection_.  
+`$metadataSummary()` will print out the metadata fields in all `OmicSignature` 
+objects stored in the `OmicSignatureCollection`.  
 When parameter "only_shared" is set to be `TRUE`, only shared metadata fields 
-among all _OmicSignature_ objects will be included. Otherwise, all metadata 
+among all `OmicSignature` objects will be included. Otherwise, all metadata 
 fields will be included.
 ```{r}
 OmicCol$metadataSummary(only_shared = TRUE)
@@ -58,13 +58,13 @@ OmicCol$metadataSummary(only_shared = TRUE)
 ## Extract new signatures from the `OmicSignatureCollection` object
 For example, extract all features with a absolute score > 25 and adj_p < 0.001 from all the `OmicSignature` object stored in this Collection.    
 By default, the features are ranked by score.  
-By default, `bind` is set to be `TRUE` to output results from all *OmicSignature* 
+By default, `bind` is set to be `TRUE` to output results from all `OmicSignature` 
 objects as a single dataframe.  
 ```{r}
 OmicCol$extractSignature("abs(score) > 25 & adj_p < 0.05")
 ```
 
-If `bind` is set to be `FALSE`, the output of each *OmicSignature* objects are 
+If `bind` is set to be `FALSE`, the output of each `OmicSignature` objects are 
 provided individually as one element in a list.
 ```{r}
 OmicCol$extractSignature("abs(score) > 25 & adj_p < 0.05", bind = F)

@@ -22,14 +22,16 @@ library(dplyr)
 ```
 <font color = "#000000">
 
-## 1. Enssentials to create an OmicSignature Object 
+## 1. Components to create an OmicSignature Object 
 An `OmicSignature` object contains three parts:  
  - **metadata**, a list contains metadata fields.  
-  the required fields are: **"signature_name", "organism", "platform", "direction_type", "phenotype"**.  
- - **signature**, a dataframe with columns:  
-  **"signature_symbol"**, **"signature_direction"**, and **"signature_score"** (optional).  
- - **difexp** (optional) a dataframe of differential expression analysis result.  
-  the required columns are **"id", "symbol", "score", "adj_p"**.  
+  required fields: **"signature_name", "organism", "platform", "direction_type", "phenotype"**.  
+ - **signature**, a dataframe for signature info.  
+  required columns: **"signature_symbol"**, **"signature_direction"**  
+  optional column: **"signature_score"**  
+  "signature_symbol" should be a subset of "symbol" in difexp.  
+ - **difexp** (optional), a dataframe of differential expression analysis result.  
+  required columns: **"id", "symbol", "score", "adj_p"**.  
 
 Once you have the componants above, you can create your own object:  
 ```
@@ -40,8 +42,7 @@ OmicObj <- OmicSignature$new(
 )
 ```
 
-Or, you can **read an `OmicSignature` saved in .json format using `readJson()`.** 
-See in ["Functionalities, imports and exports"](https://montilab.github.io/OmicSignature/articles/FunOmS.html) section. 
+Or, you can read an `OmicSignature` saved in .json format using `readJson()`. See ["here"](https://montilab.github.io/OmicSignature/articles/FunOmS.html). 
 
 ## 2. Create an OmicSignature Object Step-by-Step
 The example provided below is from an experiment for Myc gene reduce in mice. 
@@ -205,9 +206,36 @@ OmicObj <- OmicSignature$new(
 ## 3. Create an `OmicSignature` more conveniently from `difexp` and `metadata`
 You can by-pass the generating signature process once you are an expert. Simply provide 
 cutoffs in metadata, and `OmicSigFromDifexp()` will extract signatures from the 
-`difexp` provided according to those criteria, and create the `OmicSignature` object for you. 
+`difexp` provided according to those criteria, and create the `OmicSignature` object for you.  
+
+Provide `adj_p_cutoff` and `score_cutoff` in `metadata`:
+```
+metadata <- createMetadata(
+  signature_name = "Myc_reduce_mice_liver_24m",
+  organism = "Mus Musculus",
+  sample_type = "liver",
+  phenotype = "Myc_reduce",
+  direction_type = "bi-directional",
+  platform = "GPL6246",
+  adj_p_cutoff = 0.05,
+  score_cutoff = 7,
+  keywords = c("Myc", "KO", "longevity"),
+  PMID = 25619689,
+  year = 2015
+)
+```
+
+Read `difexp`:
+```
+difexp <- read.table(file.path(system.file("extdata", package = "OmicSignature"), "difmatrix_Myc_mice_liver_24m_raw.txt"),
+  header = TRUE, sep = "\t", stringsAsFactors = FALSE
+)
+colnames(difexp) <- replaceDifexpCol(colnames(difexp))
+```
+
 ```{r}
 OmicObj1 <- OmicSigFromDifexp(difexp, metadata)
+OmicObj1
 ```
 
 See the top signatures: 

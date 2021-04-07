@@ -29,8 +29,9 @@ An `OmicSignatureCollection` object contains two parts:
  - metadata  
  - OmicSigList, a list of OmicSignature Objects  
 
-### Import OmicSignature objects
-Use `read.json()` function to read `OmicSignature` objects we want to put in the collection.  
+### 1. Import OmicSignature objects
+Use `read.json()` function to read `OmicSignature` objects we want to put in the collection, or create them by hand. See [here](https://montilab.github.io/OmicSignature/articles/CreateOmS.html) for details to create them.  
+
 ```{r}
 OmicObj1 <- readJson(file.path(system.file("extdata", package = "OmicSignature"), "Myc_reduce_mice_adipose_24m_obj.json"))
 OmicObj2 <- readJson(file.path(system.file("extdata", package = "OmicSignature"), "Myc_reduce_mice_muscle_24m_obj.json"))
@@ -38,7 +39,7 @@ OmicObj3 <- readJson(file.path(system.file("extdata", package = "OmicSignature")
 ```
 
 
-### Specify metadata for the collection
+### 2. Metadata for the collection
 The required fields for **metadata** are:  
 **"collection_name", "description"**.  
 We can also add additional fields.  
@@ -51,7 +52,7 @@ ColMeta <- list(
 )
 ```
 
-### Create an `OmicSignatureCollection` object.  
+### 3. Create an `OmicSignatureCollection` object.  
 Use `OmicSignatureCollection$new()` and provide our metadata and a list of 
 `OmicSignature` objects: 
 ```{r}
