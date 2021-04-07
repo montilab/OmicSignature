@@ -17,6 +17,10 @@
 OmicSigFromDifexp <- function(difexp, metadata, criteria = NULL) {
   symbol <- NULL # not functional; define these only to pass R CMD check
   score <- NULL # R CMD wrongly view them as variables when used in dplyr functions
+  if (!is.null(metadata$fdr_cutoff)) {
+    metadata$adj_p_cutoff <- metadata$fdr_cutoff
+    metadata$fdr_cutoff <- NULL
+  }
   if (is.null(criteria)) {
     criteria <- c()
     if (!is.null(metadata$logfc_cutoff)) {
