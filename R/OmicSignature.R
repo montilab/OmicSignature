@@ -19,12 +19,18 @@ OmicSignature <-
       #' @param print_message use TRUE if want to see all messages printed
       #' @export
       initialize = function(metadata, signature, difexp = NULL, print_message = FALSE) {
-        if (!is.null(difexp)) {
-          difexp <- private$checkDifexp(difexp, v = print_message)
-        }
         private$.metadata <- private$checkMetadata(metadata, v = print_message)
         private$.signature <- private$checkSignature(signature, signatureType = metadata$direction_type, v = print_message)
-        private$.difexp <- difexp
+        if (!is.null(difexp)) {
+          difexp <- private$checkDifexp(difexp, v = print_message)
+          private$.difexp <- difexp
+          if (!all(signature$signature_symbol %in% difexp$symbol)) {
+            stop(paste(
+              "Some features in signature$signature_symbol are not included in difexp$symbol. Examples:",
+              paste(head(setdiff(signature$signature_symbol, difexp$symbol)), collapse = " ")
+            ))
+          }
+        }
         cat(paste(
           "  [Success] OmicSignature object",
           private$.metadata$signature_name, "created.\n"
@@ -269,6 +275,7 @@ OmicSignature <-
         if (nrow(signature) == 0) {
           stop("Signature is empty.")
         }
+
         ## check if signature_symbol and signature_score (lv2 or lv3) exists:
         if (!c("signature_symbol") %in% colnames(signature)) {
           stop("Signature dataframe does not contain \"signature_symbol\" column.")
