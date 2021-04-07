@@ -8,11 +8,12 @@ OmicSignature
 
 ### 
 
-Contact: Vanessa Mengze Li `vmli@bu.edu`
+Contact: Vanessa Mengze Li
+`vmli@bu.edu`
 
 ### Last update
 
-12/10/2020
+04/06/2021
 
 ### Installation
 
@@ -20,8 +21,5 @@ Contact: Vanessa Mengze Li `vmli@bu.edu`
 
 ### Description
 
-R6 object `OmicSignature` and `OmicSignatureCollection` to store high-throughput experiment yield signaturess.
+R6 object `OmicSignature` and `OmicSignatureCollection` to store high-throughput experiment yield signaturess.  
 
-### Contact
-
-Please contact `vmli at bu.edu` for questions and suggestions!

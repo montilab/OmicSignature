@@ -4,7 +4,7 @@ output: rmarkdown::html_vignette
 author: "Vanessa Mengze Li"
 date: "03/31/2021"
 vignette: >
-  %\VignetteIndexEntry{BRENDA}
+  %\VignetteIndexEntry{BRENDA & GEO platform}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -12,8 +12,11 @@ vignette: >
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
+<font color = "#000000">
 
-We use BRENDA tissue ontology to indicate the tissue or cell-line of a signature, and GEO platform accession id for platform records. The record was last updated **09/2020**, so some newest ontology and platform may not be included. 
+We use BRENDA tissue ontology to indicate the tissue or cell-line of a signature, and GEO platform accession id for platform records.  
+The record was last updated **09/2020**, so some newest ontology and platform may not be included.  
+If you are not sure which BRENDA tissue ontology or GEO platform accession id to use, you can search for them as shown below.  
 
 ## Search for a BRENDA tissue ontology
 ```{r}
@@ -23,7 +26,7 @@ BRENDASearch("MDA")
 
 ## Search for a GEO platform
 ```{r}
-GEOPlatformSearch("Illumina HiSeq 4000",species = "Homo Sapiens")
+GEOPlatformSearch("Illumina HiSeq 4000", species = "Homo Sapiens")
 ```
 
 Show only accession id:
@@ -37,4 +40,5 @@ GEOPlatformSearch(c("Drosophila melanogaster", "Illumina HiSeq 4000"), species =
 ```
 Set `contain_all = T` to show results include all search terms. Set `contain_all = FALSE` to show results include any of the search terms. 
 
-
+</font>
+--

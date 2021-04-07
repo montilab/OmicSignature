@@ -1,0 +1,32 @@
+url: https://montilab.github.io/OmicSignature
+
+template:
+  params:
+    bootswatch: spacelab
+
+navbar:
+  title: "OmicSignature"
+  left:
+    - text: "Home"
+      href: index.html
+    - text: "Articles"
+      menu:
+      - text: "Structure of OmicSignature & OmicSignatureCollection"
+        href: articles/ObjectStructure.html
+      - text: "BRENDA ontology & GEO platform ID"
+        href: articles/BRENDA.html
+      - text: "---- OmicSignature object ----"
+      - text: "Create OmicSignature from differential matrix"
+        href: articles/CreateOmS.html
+      - text: "Functionalities, imports and exports"
+        href: articles/FunOmS.html
+      - text: "---- OmicSignatureCollection object ----"
+      - text: "Create OmicSignatureCollection"
+        href: articles/CreateOmSC.html
+      - text: "Functionalities of OmicSignatureCollection"
+        href: articles/FunOmSC.html
+    - text: "Reference"
+      href: reference/index.html
+  right:
+    - icon: fa-github
+      href: https://github.com/montilab/OmicSignature

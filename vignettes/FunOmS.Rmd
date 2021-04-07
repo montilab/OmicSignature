@@ -1,0 +1,51 @@
+---
+title: "Functionalities of OmicSignature"
+output: rmarkdown::html_vignette
+author: "Vanessa Mengze Li"
+date: "03/31/2021"
+vignette: >
+  %\VignetteIndexEntry{Functionalities of OmicSignature}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r message=FALSE, warning=FALSE}
+devtools::load_all(".")
+library(dplyr)
+```
+<font color = "#000000">
+
+## Structure of an OmicSignature Object 
+An `OmicSignature` object contains three parts:  
+ - **metadata**, a list contains metadata fields;  
+ - **signature**, a dataframe with feature symbols and directions, and scores if applicable;  
+ - **difexp**, optional, a dataframe from differential expression analysis result.  
+
+## Read an `OmicSignature` object from a json file
+```{r}
+OmicObj <- readJson(file.path(system.file("extdata", package = "OmicSignature"), "Myc_reduce_mice_liver_24m_obj.json"))
+```
+
+## Write an `OmicSignature` object into a json file
+```
+writeJson(OmicObj, "Myc_reduce_mice_liver_24m.json")
+```
+
+## Extract new signatures from the `OmicSignature` object
+We can use new criterias to extract new signatures conveniently from 
+the OmicSignature Object, **if it has difexp matrix included**.  
+For example, extract all features with a t-score with absolute value 
+higher than 20 and adj_p less than 0.001:
+```{r}
+OmicObj$extractSignature("abs(score) > 20; adj_p < 0.001")
+```
+
+</font>
+--

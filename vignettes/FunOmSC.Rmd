@@ -1,10 +1,10 @@
 ---
-title: "OmicSignatureCollection"
+title: "Functionalities of OmicSignatureCollection"
 output: rmarkdown::html_vignette
 author: "Vanessa Mengze Li"
 date: "03/31/2021"
 vignette: >
-  %\VignetteIndexEntry{OmicSignatureCollection}
+  %\VignetteIndexEntry{Functionalities of OmicSignatureCollection}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -20,6 +20,7 @@ knitr::opts_chunk$set(
 devtools::load_all(".")
 library(dplyr)
 ```
+<font color = "#000000">
 
 ## Create an OmicSignatureCollection Object
 This object contains several `OmicSignature` objects to facilitate further analysis.  
@@ -28,43 +29,26 @@ An `OmicSignatureCollection` object contains two parts:
  - metadata  
  - OmicSigList, a list of OmicSignature Objects  
 
-### Import OmicSignature objects
-Use `read.json()` function to read `OmicSignature` objects we want to put in the collection.  
+### First create an `OmicSignatureCollection` object
+This is the same code in "Create OmicSignatureCollection" section. 
 ```{r}
 OmicObj1 <- readJson(file.path(system.file("extdata", package = "OmicSignature"), "Myc_reduce_mice_adipose_24m_obj.json"))
 OmicObj2 <- readJson(file.path(system.file("extdata", package = "OmicSignature"), "Myc_reduce_mice_muscle_24m_obj.json"))
 OmicObj3 <- readJson(file.path(system.file("extdata", package = "OmicSignature"), "Myc_reduce_mice_liver_24m_obj.json"))
-```
-
-
-### Specify metadata for the collection
-The required fields for **metadata** are:  
-**"collection_name", "description"**.  
-We can also add additional fields.  
-```{r}
 ColMeta <- list(
   "collection_name" = "Myc_mice_collection",
   "description" = "A collection for Myc reduced mice 24 month",
   "organism" = "Mus Musculus",
   "author" = "me"
 )
-```
-
-Create an `OmicSignatureCollection` object.  
-Use `OmicSignatureCollection$new()` and provide our metadata and a list of 
-`OmicSignature` objects: 
-```{r}
 OmicCol <- OmicSignatureCollection$new(
   OmicSigList = list(OmicObj1, OmicObj2, OmicObj3),
   metadata = ColMeta,
   print_message = FALSE
 )
 ```
-By default, `print_message` is set to `FALSE`. You can change it to `TRUE` to 
-see the messages. During the creation of OmicSignatureCollection object, all 
-input `OmicSignature` objects will be re-created to make sure they are all valid.  
 
-### See a summary of the metadata of the OmicSignature objects in the Collection
+## See a summary of the metadata of the OmicSignature objects in the Collection
 `$metadataSummary()` will print out the metadata fields in all _OmicSignature_ 
 objects stored in the _OmicSignatureCollection_.  
 When parameter "only_shared" is set to be `TRUE`, only shared metadata fields 
@@ -74,7 +58,7 @@ fields will be included.
 OmicCol$metadataSummary(only_shared = TRUE)
 ```
 
-### Extract new signatures from the `OmicSignatureCollection` object
+## Extract new signatures from the `OmicSignatureCollection` object
 We can extract new signatures from the `OmicSignatureCollection` object using 
 new criterias.  
 For example, extract all features with a absolute score > 25 and adj_p < 0.001.  
@@ -91,4 +75,5 @@ provided individually as one element in a list.
 OmicCol$extractSignature("abs(score) > 25 & adj_p < 0.05", bind = F)
 ```
 
+</font>
 --
