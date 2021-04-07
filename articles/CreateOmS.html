@@ -102,22 +102,25 @@
 <code class="sourceCode R"><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org//reference/load_all.html">load_all</a></span><span class="op">(</span><span class="st">"."</span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span><span class="op">)</span></code></pre></div>
 <p><font color="#000000"></font></p>
-<div id="enssentials-to-create-an-omicsignature-object" class="section level2">
+<div id="components-to-create-an-omicsignature-object" class="section level2">
 <h2 class="hasAnchor">
-<a href="#enssentials-to-create-an-omicsignature-object" class="anchor"></a>1. Enssentials to create an OmicSignature Object</h2>
+<a href="#components-to-create-an-omicsignature-object" class="anchor"></a>1. Components to create an OmicSignature Object</h2>
 <p>An <code>OmicSignature</code> object contains three parts:<br>
 - <strong>metadata</strong>, a list contains metadata fields.<br>
-the required fields are: <strong>“signature_name”, “organism”, “platform”, “direction_type”, “phenotype”</strong>.<br>
-- <strong>signature</strong>, a dataframe with columns:<br><strong>“signature_symbol”</strong>, <strong>“signature_direction”</strong>, and <strong>“signature_score”</strong> (optional).<br>
-- <strong>difexp</strong> (optional) a dataframe of differential expression analysis result.<br>
-the required columns are <strong>“id”, “symbol”, “score”, “adj_p”</strong>.</p>
+required fields: <strong>“signature_name”, “organism”, “platform”, “direction_type”, “phenotype”</strong>.<br>
+- <strong>signature</strong>, a dataframe for signature info.<br>
+required columns: <strong>“signature_symbol”</strong>, <strong>“signature_direction”</strong><br>
+optional column: <strong>“signature_score”</strong><br>
+“signature_symbol” should be a subset of “symbol” in difexp.<br>
+- <strong>difexp</strong> (optional), a dataframe of differential expression analysis result.<br>
+required columns: <strong>“id”, “symbol”, “score”, “adj_p”</strong>.</p>
 <p>Once you have the componants above, you can create your own object:</p>
 <pre><code>OmicObj &lt;- OmicSignature$new(
   metadata = metadata,
   signature = signatures,
   difexp = difexp
 )</code></pre>
-<p>Or, you can <strong>read an <code>OmicSignature</code> saved in .json format using <code><a href="../reference/readJson.html">readJson()</a></code>.</strong> See in <a href="https://montilab.github.io/OmicSignature/articles/FunOmS.html">“Functionalities, imports and exports”</a> section.</p>
+<p>Or, you can read an <code>OmicSignature</code> saved in .json format using <code><a href="../reference/readJson.html">readJson()</a></code>. See <a href="https://montilab.github.io/OmicSignature/articles/FunOmS.html">“here”</a>.</p>
 </div>
 <div id="create-an-omicsignature-object-step-by-step" class="section level2">
 <h2 class="hasAnchor">
@@ -339,13 +342,53 @@ Use <code>OmicSignature$new()</code> to create a new OmicSignature R6 object.</p
 <a href="#create-an-omicsignature-more-conveniently-from-difexp-and-metadata" class="anchor"></a>3. Create an <code>OmicSignature</code> more conveniently from <code>difexp</code> and <code>metadata</code>
 </h2>
 <p>You can by-pass the generating signature process once you are an expert. Simply provide cutoffs in metadata, and <code><a href="../reference/OmicSigFromDifexp.html">OmicSigFromDifexp()</a></code> will extract signatures from the <code>difexp</code> provided according to those criteria, and create the <code>OmicSignature</code> object for you.</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<p>Provide <code>adj_p_cutoff</code> and <code>score_cutoff</code> in <code>metadata</code>:</p>
+<pre><code>metadata &lt;- createMetadata(
+  signature_name = "Myc_reduce_mice_liver_24m",
+  organism = "Mus Musculus",
+  sample_type = "liver",
+  phenotype = "Myc_reduce",
+  direction_type = "bi-directional",
+  platform = "GPL6246",
+  adj_p_cutoff = 0.05,
+  score_cutoff = 7,
+  keywords = c("Myc", "KO", "longevity"),
+  PMID = 25619689,
+  year = 2015
+)</code></pre>
+<p>Read <code>difexp</code>:</p>
+<pre><code>difexp &lt;- read.table(file.path(system.file("extdata", package = "OmicSignature"), "difmatrix_Myc_mice_liver_24m_raw.txt"),
+  header = TRUE, sep = "\t", stringsAsFactors = FALSE
+)
+colnames(difexp) &lt;- replaceDifexpCol(colnames(difexp))</code></pre>
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">OmicObj1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/OmicSigFromDifexp.html">OmicSigFromDifexp</a></span><span class="op">(</span><span class="va">difexp</span>, <span class="va">metadata</span><span class="op">)</span>
 <span class="co">#&gt; -- criterias used to extract signatures:  abs(score) &gt; 7; adj_p &lt; 0.05 . </span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt;   [Success] OmicSignature object Myc_reduce_mice_liver_24m created.</span></code></pre></div>
+<span class="co">#&gt;   [Success] OmicSignature object Myc_reduce_mice_liver_24m created.</span>
+<span class="va">OmicObj1</span>
+<span class="co">#&gt; Signature Object: </span>
+<span class="co">#&gt;   Metadata: </span>
+<span class="co">#&gt;     adj_p_cutoff = 0.05 </span>
+<span class="co">#&gt;     animal_strain = C57BL/6 </span>
+<span class="co">#&gt;     covariates = none </span>
+<span class="co">#&gt;     direction_type = bi-directional </span>
+<span class="co">#&gt;     keywords = Myc, KO, longevity </span>
+<span class="co">#&gt;     organism = Mus Musculus </span>
+<span class="co">#&gt;     phenotype = Myc_reduce </span>
+<span class="co">#&gt;     platform = GPL6246 </span>
+<span class="co">#&gt;     PMID = 25619689 </span>
+<span class="co">#&gt;     sample_type = liver </span>
+<span class="co">#&gt;     score_cutoff = 7 </span>
+<span class="co">#&gt;     signature_name = Myc_reduce_mice_liver_24m </span>
+<span class="co">#&gt;     year = 2015 </span>
+<span class="co">#&gt;   signature: </span>
+<span class="co">#&gt;     - (152)</span>
+<span class="co">#&gt;     + (194)</span>
+<span class="co">#&gt;   Differential Expression Data: </span>
+<span class="co">#&gt;     27359 x 9</span></code></pre></div>
 <p>See the top signatures:</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">OmicObj1</span><span class="op">$</span><span class="va">signature</span> <span class="op">%&gt;%</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/desc.html">desc</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">abs</a></span><span class="op">(</span><span class="va">signature_score</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
 <span class="co">#&gt;   signature_symbol signature_score signature_direction</span>
 <span class="co">#&gt; 1             Saa1       -35.29997                   -</span>

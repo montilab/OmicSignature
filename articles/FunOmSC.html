@@ -127,8 +127,8 @@
 <h2 class="hasAnchor">
 <a href="#print-a-summary-of-the-metadata-in-the-omicsignaturecollection" class="anchor"></a>Print a summary of the metadata in the <code>OmicSignatureCollection</code>
 </h2>
-<p><code>$metadataSummary()</code> will print out the metadata fields in all <em>OmicSignature</em> objects stored in the <em>OmicSignatureCollection</em>.<br>
-When parameter “only_shared” is set to be <code>TRUE</code>, only shared metadata fields among all <em>OmicSignature</em> objects will be included. Otherwise, all metadata fields will be included.</p>
+<p><code>$metadataSummary()</code> will print out the metadata fields in all <code>OmicSignature</code> objects stored in the <code>OmicSignatureCollection</code>.<br>
+When parameter “only_shared” is set to be <code>TRUE</code>, only shared metadata fields among all <code>OmicSignature</code> objects will be included. Otherwise, all metadata fields will be included.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">OmicCol</span><span class="op">$</span><span class="fu">metadataSummary</span><span class="op">(</span>only_shared <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
 <span class="co">#&gt;                Myc_reduce_mice_adipose_24m   Myc_reduce_mice_muscle_24m  </span>
@@ -165,7 +165,7 @@ When parameter “only_shared” is set to be <code>TRUE</code>, only shared met
 <a href="#extract-new-signatures-from-the-omicsignaturecollection-object" class="anchor"></a>Extract new signatures from the <code>OmicSignatureCollection</code> object</h2>
 <p>For example, extract all features with a absolute score &gt; 25 and adj_p &lt; 0.001 from all the <code>OmicSignature</code> object stored in this Collection.<br>
 By default, the features are ranked by score.<br>
-By default, <code>bind</code> is set to be <code>TRUE</code> to output results from all <em>OmicSignature</em> objects as a single dataframe.</p>
+By default, <code>bind</code> is set to be <code>TRUE</code> to output results from all <code>OmicSignature</code> objects as a single dataframe.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">OmicCol</span><span class="op">$</span><span class="fu">extractSignature</span><span class="op">(</span><span class="st">"abs(score) &gt; 25 &amp; adj_p &lt; 0.05"</span><span class="op">)</span>
 <span class="co">#&gt;                       sig_name    symbol    score direction</span>
@@ -188,7 +188,7 @@ By default, <code>bind</code> is set to be <code>TRUE</code> to output results f
 <span class="co">#&gt; 17   Myc_reduce_mice_liver_24m    Isyna1 -29.9326         -</span>
 <span class="co">#&gt; 8  Myc_reduce_mice_adipose_24m   Ighv3-5 -29.0765         -</span>
 <span class="co">#&gt; 19   Myc_reduce_mice_liver_24m     Chil1 -25.4132         -</span></code></pre></div>
-<p>If <code>bind</code> is set to be <code>FALSE</code>, the output of each <em>OmicSignature</em> objects are provided individually as one element in a list.</p>
+<p>If <code>bind</code> is set to be <code>FALSE</code>, the output of each <code>OmicSignature</code> objects are provided individually as one element in a list.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">OmicCol</span><span class="op">$</span><span class="fu">extractSignature</span><span class="op">(</span><span class="st">"abs(score) &gt; 25 &amp; adj_p &lt; 0.05"</span>, bind <span class="op">=</span> <span class="cn">F</span><span class="op">)</span>
 <span class="co">#&gt; $Myc_reduce_mice_adipose_24m</span>
