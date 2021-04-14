@@ -158,12 +158,12 @@ updated 09/2020</p>
   keywords <span class='op'>=</span> <span class='cn'>NULL</span>,
   description <span class='op'>=</span> <span class='cn'>NULL</span>,
   category_num <span class='op'>=</span> <span class='cn'>NULL</span>,
-  logFC_cutoff <span class='op'>=</span> <span class='cn'>NULL</span>,
+  logfc_cutoff <span class='op'>=</span> <span class='cn'>NULL</span>,
   p_value_cutoff <span class='op'>=</span> <span class='cn'>NULL</span>,
   adj_p_cutoff <span class='op'>=</span> <span class='cn'>NULL</span>,
   score_cutoff <span class='op'>=</span> <span class='cn'>NULL</span>,
   cutoff_description <span class='op'>=</span> <span class='cn'>NULL</span>,
-  other <span class='op'>=</span> <span class='cn'>NULL</span>
+  <span class='va'>...</span>
 <span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -229,7 +229,7 @@ updated 09/2020</p>
       <td><p>optional, specifically used for multi-directional signature to specify how many categories or class the signature contains.</p></td>
     </tr>
     <tr>
-      <th>logFC_cutoff</th>
+      <th>logfc_cutoff</th>
       <td><p>optional. log fold change cutoff used to generate the signature, if applicable.</p></td>
     </tr>
     <tr>
@@ -249,8 +249,8 @@ updated 09/2020</p>
       <td><p>optional. discription of the cutoff, if applicable.</p></td>
     </tr>
     <tr>
-      <th>other</th>
-      <td><p>optional. a `list` to specify any other user-defined metadata fields.</p></td>
+      <th>...</th>
+      <td><p>additional user-defined metadata fields.</p></td>
     </tr>
     </table>
 
