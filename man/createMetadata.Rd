@@ -20,12 +20,12 @@ createMetadata(
   keywords = NULL,
   description = NULL,
   category_num = NULL,
-  logFC_cutoff = NULL,
+  logfc_cutoff = NULL,
   p_value_cutoff = NULL,
   adj_p_cutoff = NULL,
   score_cutoff = NULL,
   cutoff_description = NULL,
-  other = NULL
+  ...
 )
 }
 \arguments{
@@ -60,7 +60,7 @@ createMetadata(
 
 \item{category_num}{optional, specifically used for multi-directional signature to specify how many categories or class the signature contains.}
 
-\item{logFC_cutoff}{optional. log fold change cutoff used to generate the signature, if applicable.}
+\item{logfc_cutoff}{optional. log fold change cutoff used to generate the signature, if applicable.}
 
 \item{p_value_cutoff}{optional. p value cutoff used to generate the signature, if applicable.}
 
@@ -70,7 +70,7 @@ createMetadata(
 
 \item{cutoff_description}{optional. discription of the cutoff, if applicable.}
 
-\item{other}{optional. a `list` to specify any other user-defined metadata fields.}
+\item{...}{additional user-defined metadata fields.}
 }
 \value{
 a metadata list to create an OmicSignature R6 object

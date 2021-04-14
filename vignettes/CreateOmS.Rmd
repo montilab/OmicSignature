@@ -31,7 +31,7 @@ An `OmicSignature` object contains three parts:
   optional column: **"signature_score"**  
   "signature_symbol" should be a subset of "symbol" in difexp.  
  - **difexp** (optional), a dataframe of differential expression analysis result.  
-  required columns: **"id", "symbol", "score", "adj_p"**.  
+  required columns: **"id", "symbol", "score", "p_value"**.  
 
 Once you have the componants above, you can create your own object:  
 ```
@@ -53,7 +53,7 @@ up and down regulated features (genes).
 ### 2.1. Metadata
 To be saved into a OmicSignature object, the required **metadata** fields are:  
 **"signature_name", "organism", "platform", "direction_type", "phenotype"**.  
-Other criteria such as adj_p (fdr corrected p-value), log fold change cutoff of 
+Other criteria such as adj_p (adjusted p-value), log fold change cutoff of 
 the signature, and additional key words of the experiment will make the information more complete.  
 
 One option is to create metadata list by hand:
@@ -74,20 +74,27 @@ metadata <- list(
 )
 ```
 
-Or use build-in function `createMetadata()` (recommended). The function can help remind you what attributes to include. 
+Or use build-in function `createMetadata()` (recommended). The function remind 
+you what attributes to include. You can also provide your own customized attributes.  
+Click [here](https://montilab.github.io/OmicSignature/reference/createMetadata.html) 
+to see a full list of built in attributes.  
 ```{r}
 metadata <- createMetadata(
-  signature_name = "Myc_reduce_mice_liver_24m",
-  organism = "Mus Musculus",
-  sample_type = "liver",
-  phenotype = "Myc_reduce",
-  direction_type = "bi-directional",
-  platform = "GPL6246",
+  # examples of build-in attributes:
+  signature_name = "Myc_reduce_mice_liver_24m", # required
+  organism = "Mus Musculus", # required
+  phenotype = "Myc_reduce", # required
+  direction_type = "bi-directional", # required
+  platform = "GPL6246", # required; must be GEO platform ID
+  sample_type = "liver", # must be BRENDA ontology
   adj_p_cutoff = 0.05,
   score_cutoff = 7,
   keywords = c("Myc", "KO", "longevity"),
   PMID = 25619689,
-  year = 2015
+  year = 2015,
+  
+  # example of cursomized attributes:
+  animal_strain = "C57BL/6"
 )
 ```
 
@@ -99,13 +106,6 @@ See how to search for the correct term to use in ["BRENDA ontology & GEO platfor
  - "uni-directional". You only have a list of significant feature names but don't know if they are up or down regulated in the treatment group, or directional infomation is not applicable.  
  - "bi-directional". In most cases significant features can be grouped into "up" and "down" regulated features. For example, when comparing treatment group with control group, some features will be higher ("up", or "+") and some will be lower ("down" or "-") in treatment.  
  - "multi-directional". Used when comparing multiple sampels together, usually using ANOVA. In this case, the "direction" column in signature table should be group name.  
-
-#### 2.1.2 Add more info in metadata
-In this example, we are working with mouse strain C57BL/6. We can add this information into our `metadata`.  
-`metadata` is just a list. Add new terms into this list like you normally do.
-```{r}
-metadata$"animal_strain" <- "C57BL/6"
-```
 
 ### 2.2. Differential expression analysis result (difexp)
 A differential expression analysis matrix is **optional** but **highly recommended** if you have it.  
@@ -121,7 +121,7 @@ head(difexp)
 ```
 To be saved into a OmicSignature object, the required columns for
 **differential expression matrix** are:  
-**"id", "symbol", "score", "adj_p"**.  
+**"id", "symbol", "score", "p_value"**.  
 "id" is used as an unique identifier in case there are duplicated gene symbols. Frequently used id including probe ID, ENSEMBL ID, or unique numbers.  
 
 Modify the column names to match the requirement.  
@@ -208,30 +208,8 @@ You can by-pass the generating signature process once you are an expert. Simply 
 cutoffs in metadata, and `OmicSigFromDifexp()` will extract signatures from the 
 `difexp` provided according to those criteria, and create the `OmicSignature` object for you.  
 
-Provide `adj_p_cutoff` and `score_cutoff` in `metadata`:
-```
-metadata <- createMetadata(
-  signature_name = "Myc_reduce_mice_liver_24m",
-  organism = "Mus Musculus",
-  sample_type = "liver",
-  phenotype = "Myc_reduce",
-  direction_type = "bi-directional",
-  platform = "GPL6246",
-  adj_p_cutoff = 0.05,
-  score_cutoff = 7,
-  keywords = c("Myc", "KO", "longevity"),
-  PMID = 25619689,
-  year = 2015
-)
-```
-
-Read `difexp`:
-```
-difexp <- read.table(file.path(system.file("extdata", package = "OmicSignature"), "difmatrix_Myc_mice_liver_24m_raw.txt"),
-  header = TRUE, sep = "\t", stringsAsFactors = FALSE
-)
-colnames(difexp) <- replaceDifexpCol(colnames(difexp))
-```
+Remember to provide cutoffs, e.g. `adj_p_cutoff` and `score_cutoff` in `metadata`, 
+and make sure your input `difexp` has those columns.  
 
 ```{r}
 OmicObj1 <- OmicSigFromDifexp(difexp, metadata)
