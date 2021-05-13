@@ -98,14 +98,16 @@ metadata <- createMetadata(
 )
 ```
 
-**If "sample_type" is NOT a BRENDA ontology term or "platform" is NOT a valid GEO platform accession ID, you will get warnings.**  
-See how to search for the correct term to use in ["BRENDA ontology & GEO platform ID"](https://montilab.github.io/OmicSignature/articles/BRENDA.html) section.  
+**Note**: If "sample_type" is NOT a BRENDA ontology term or "platform" is NOT a valid GEO platform accession ID, you will get warnings. See how to search for the correct term to use in ["BRENDA ontology & GEO platform ID"](https://montilab.github.io/OmicSignature/articles/BRENDA.html) section.  
 
 #### 2.1.1 Additional info for "direction_type"
 `direction_type` is one of:  
- - "uni-directional". You only have a list of significant feature names but don't know if they are up or down regulated in the treatment group, or directional information is not applicable.  
- - "bi-directional". In most cases significant features can be grouped into "up" and "down" regulated features. For example, when comparing treatment _vs._ control groups, some features will be higher ("up", or "+") and some will be lower ("down" or "-") in treatment.  
- - "multi-directional". Used with multi-valued categorical phenotypes (e.g., "low" _vs._ "medium" _vs._ "high"), usually analyzed by ANOVA. In this case, the "direction" column in signature table should be the phenotype's value name (e.g., "low").  
+ 
+- "uni-directional". You only have a list of significant feature names but don't know if they are up or down regulated in the treatment group, or directional information is not applicable.  
+
+- "bi-directional". In most cases significant features can be grouped into "up" and "down" regulated features. For example, when comparing treatment _vs._ control groups, some features will be higher ("up", or "+") and some will be lower ("down" or "-") in treatment.  
+
+- "multi-directional". Used with multi-valued categorical phenotypes (e.g., "low" _vs._ "medium" _vs._ "high"), usually analyzed by ANOVA. In this case, the "direction" column in signature table should be the phenotype's value name (e.g., "low").  
 
 ### 2.2. Differential expression analysis result (difexp)
 A differential expression analysis matrix is **optional** but **highly recommended** if you have it.  
@@ -199,7 +201,6 @@ OmicObj <- OmicSignature$new(
   print_message = TRUE
 )
 ```
-
 
 ## 3. Create an `OmicSignature` more conveniently from `difexp` and `metadata`
 You can by-pass the generating signature process once you are an expert. Simply provide 
