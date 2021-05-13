@@ -33,7 +33,7 @@ An `OmicSignature` object contains three parts:
   optional column: "**signature_score**"  
   "signature_symbol" should be a subset of "symbol" in difexp (if present).  
 
-- **difexp** (optional), a dataframe of differential expression analysis result.  
+- **difexp** (optional), a dataframe of differential expression analysis results.  
   required columns: "**id**", "**symbol**", "**score**", "**p_value**".  
 
 Once you have the componants above, you can create your own object:  
