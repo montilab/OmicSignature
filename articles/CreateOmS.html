@@ -165,15 +165,16 @@ Click <a href="https://montilab.github.io/OmicSignature/reference/createMetadata
   <span class="co"># example of cursomized attributes:</span>
   animal_strain <span class="op">=</span> <span class="st">"C57BL/6"</span>
 <span class="op">)</span></code></pre></div>
-<p><strong>If “sample_type” is NOT a BRENDA ontology term or “platform” is NOT a valid GEO platform accession ID, you will get warnings.</strong><br>
-See how to search for the correct term to use in <a href="https://montilab.github.io/OmicSignature/articles/BRENDA.html">“BRENDA ontology &amp; GEO platform ID”</a> section.</p>
+<p><strong>Note</strong>: If “sample_type” is NOT a BRENDA ontology term or “platform” is NOT a valid GEO platform accession ID, you will get warnings. See how to search for the correct term to use in <a href="https://montilab.github.io/OmicSignature/articles/BRENDA.html">“BRENDA ontology &amp; GEO platform ID”</a> section.</p>
 <div id="additional-info-for-direction_type" class="section level4">
 <h4 class="hasAnchor">
 <a href="#additional-info-for-direction_type" class="anchor"></a>2.1.1 Additional info for “direction_type”</h4>
-<p><code>direction_type</code> is one of:<br>
-- “uni-directional”. You only have a list of significant feature names but don’t know if they are up or down regulated in the treatment group, or directional information is not applicable.<br>
-- “bi-directional”. In most cases significant features can be grouped into “up” and “down” regulated features. For example, when comparing treatment <em>vs.</em> control groups, some features will be higher (“up”, or “+”) and some will be lower (“down” or “-”) in treatment.<br>
-- “multi-directional”. Used with multi-valued categorical phenotypes (e.g., “low” <em>vs.</em> “medium” <em>vs.</em> “high”), usually analyzed by ANOVA. In this case, the “direction” column in signature table should be the phenotype’s value name (e.g., “low”).</p>
+<p><code>direction_type</code> is one of:</p>
+<ul>
+<li><p>“uni-directional”. You only have a list of significant feature names but don’t know if they are up or down regulated in the treatment group, or directional information is not applicable.</p></li>
+<li><p>“bi-directional”. In most cases significant features can be grouped into “up” and “down” regulated features. For example, when comparing treatment <em>vs.</em> control groups, some features will be higher (“up”, or “+”) and some will be lower (“down” or “-”) in treatment.</p></li>
+<li><p>“multi-directional”. Used with multi-valued categorical phenotypes (e.g., “low” <em>vs.</em> “medium” <em>vs.</em> “high”), usually analyzed by ANOVA. In this case, the “direction” column in signature table should be the phenotype’s value name (e.g., “low”).</p></li>
+</ul>
 </div>
 </div>
 <div id="differential-expression-analysis-result-difexp" class="section level3">
