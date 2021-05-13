@@ -109,14 +109,14 @@ metadata <- createMetadata(
 
 - "multi-directional". Used with multi-valued categorical phenotypes (e.g., "low" _vs._ "medium" _vs._ "high"), usually analyzed by ANOVA. In this case, the "direction" column in signature table should be the phenotype's value name (e.g., "low").  
 
-### 2.2. Differential expression analysis result (difexp)
+### 2.2. Diffanal results (difexp)
 A differential expression analysis matrix is **optional** but **highly recommended** if you have it.  
 
 To be saved into a OmicSignature object, the matrix' required columns are:  
 "**id**", "**symbol**", "**score**", "**p_value**".  
 "id" is used as an unique identifier in case there are duplicated gene symbols. Frequently used id's include probe ID, ENSEMBL ID, or unique numbers.  
 
-Here we show an example of how to derive the `difexp` object from a dfferential expression analysis based on the `limma` package. Columns include logFC, AveExpr, t score, P.Value, adj.P.Val, B score, Probe.ID, gene_symbol and gene_name.  
+Here we show an example of how to derive the `difexp` object from the results of a differential expression analysis based on the `limma` package. Output columns include logFC, AveExpr, t score, P.Value, adj.P.Val, B score, Probe.ID, gene_symbol, and gene_name.  
 
 ```{r}
 difexp <- read.table(file.path(system.file("extdata", package = "OmicSignature"), "difmatrix_Myc_mice_liver_24m_raw.txt"),
@@ -134,38 +134,22 @@ head(difexp)
 ```
 
 ### 2.3. Signature 
-Here we will create a signature by hand. This is a bi-directional signature example. 
-It contains up and down regulated genes. One way is to use `filter()` from `dplyr` package.  
-In this example, we previously specified the `score_cutoff` and `adj_p_cutoff` 
-when creating the metadata. 
-```{r}
-tempUpSig <- cbind(
-  filter(difexp, score > metadata$score_cutoff & adj_p < metadata$adj_p_cutoff) %>% pull(symbol),
-  filter(difexp, score > metadata$score_cutoff & adj_p < metadata$adj_p_cutoff) %>% pull(score),
-  "+"
-)
-head(tempUpSig)
+Here we create a bi-directional signature manually from the difexp object, using the `filter()` function from the `dplyr` package. In this example, we use the `score_cutoff` and `adj_p_cutoff` previously specified
+in the metadata. 
 
-tempDnSig <- cbind(
-  dplyr::filter(difexp, score < (-1) * metadata$score_cutoff & adj_p < metadata$adj_p_cutoff) %>% pull(symbol),
-  dplyr::filter(difexp, score < (-1) * metadata$score_cutoff & adj_p < metadata$adj_p_cutoff) %>% pull(score),
-  "-"
-)
-head(tempDnSig)
+```{r}
+signatures <- difexp %>%
+  dplyr::filter(abs(score) > metadata$score_cutoff & adj_p < metadata$adj_p_cutoff) %>%
+  dplyr::select(symbol,score) %>%
+  dplyr::mutate(signature_direction=ifelse(score>0,"+","-")) %>% 
+  dplyr::rename(signature_symbol="symbol", signature_score="score")
+head(signatures)
 ```
 (note: if you see numbers instead of gene symbol name in the first column, please check if the "symbol" column in your difexp matrix is "character" and not accidentally be "factor")  
 
-
-To be stored into OmicSignature object, **signature** need to be a **dataframe** with column **"signature_symbol"**.  
-If the signature is "bi-directional" or "multi-directional" (specified in 
-`direction_type` in `metadata` list), then column **"signature_direction"** is 
-also required. "uni-directional" type does not require this column.  
-An **optional column "signature_score"** is used when feature scores are available.  
-
-```{r}
-signatures <- data.frame(rbind(tempUpSig, tempDnSig))
-colnames(signatures) <- c("signature_symbol", "signature_score", "signature_direction")
-```
+To be stored into OmicSignature object, **signature** need to be a **dataframe** with column **"signature_symbol"**. Also, if the signature is "bi-directional" or "multi-directional" (specified in 
+`direction_type` in `metadata` list), then the column **"signature_direction"** is 
+also required. "uni-directional" type does not require this column. The optional column "signature_score" is used when feature scores are available.  
 
 Our function `standardizeSigDF()` can help you to remove duplicate rows, empty symbols in the signature dataframe, if any.
 ```{r}
@@ -174,8 +158,7 @@ head(signatures)
 tail(signatures)
 ```
 
-
-### 2.4. Create our `OmicSignature` object
+### 2.4. Create `OmicSignature` object
 We have everything we need now.  
 Use `OmicSignature$new()` to create a new OmicSignature R6 object.  
 ```{r}
@@ -202,7 +185,7 @@ OmicObj <- OmicSignature$new(
 )
 ```
 
-## 3. Create an `OmicSignature` more conveniently from `difexp` and `metadata`
+## 3. Create an `OmicSignature` from `difexp` and `metadata`
 You can by-pass the generating signature process once you are an expert. Simply provide 
 cutoffs in metadata, and `OmicSigFromDifexp()` will extract signatures from the 
 `difexp` provided according to those criteria, and create the `OmicSignature` object for you.  
