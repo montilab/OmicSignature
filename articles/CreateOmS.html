@@ -106,14 +106,14 @@
 <h2 class="hasAnchor">
 <a href="#components-to-create-an-omicsignature-object" class="anchor"></a>1. Components to create an OmicSignature Object</h2>
 <p>An <code>OmicSignature</code> object contains three parts:<br>
-- <strong>metadata</strong>, a list contains metadata fields.<br>
-required fields: <strong>“signature_name”, “organism”, “platform”, “direction_type”, “phenotype”</strong>.<br>
-- <strong>signature</strong>, a dataframe for signature info.<br>
-required columns: <strong>“signature_symbol”</strong>, <strong>“signature_direction”</strong><br>
-optional column: <strong>“signature_score”</strong><br>
-“signature_symbol” should be a subset of “symbol” in difexp.<br>
+- <strong>metadata</strong>, a list containing metadata fields.<br>
+required fields: “<strong>signature_name</strong>”, “<strong>organism</strong>”, “<strong>platform</strong>”, “<strong>direction_type</strong>”, “<strong>phenotype</strong>”.<br>
+- <strong>signature</strong>, a dataframe.<br>
+required columns: “<strong>signature_symbol</strong>”, “<strong>signature_direction</strong>”<br>
+optional column: “<strong>signature_score</strong>”<br>
+“signature_symbol” should be a subset of “symbol” in difexp (if present).<br>
 - <strong>difexp</strong> (optional), a dataframe of differential expression analysis result.<br>
-required columns: <strong>“id”, “symbol”, “score”, “p_value”</strong>.</p>
+required columns: “<strong>id</strong>”, “<strong>symbol</strong>”, “<strong>score</strong>”, “<strong>p_value</strong>”.</p>
 <p>Once you have the componants above, you can create your own object:</p>
 <pre><code>OmicObj &lt;- OmicSignature$new(
   metadata = metadata,
@@ -129,8 +129,8 @@ required columns: <strong>“id”, “symbol”, “score”, “p_value”</st
 <div id="metadata" class="section level3">
 <h3 class="hasAnchor">
 <a href="#metadata" class="anchor"></a>2.1. Metadata</h3>
-<p>To be saved into a OmicSignature object, the required <strong>metadata</strong> fields are:<br><strong>“signature_name”, “organism”, “platform”, “direction_type”, “phenotype”</strong>.<br>
-Other criteria such as adj_p (adjusted p-value), log fold change cutoff of the signature, and additional key words of the experiment will make the information more complete.</p>
+<p>To be saved into a OmicSignature object, the required <strong>metadata</strong> fields are:<br>
+“<strong>signature_name</strong>”, “<strong>organism</strong>”, “<strong>platform</strong>”, “<strong>direction_type</strong>”, “<strong>phenotype</strong>”. Additional optional fields can be added, e.g., adj_p (adjusted p-value), log fold change cutoff of the signature, or additional experiment descriptors, which will make the information more complete.</p>
 <p>One option is to create metadata list by hand:</p>
 <pre><code>metadata &lt;- list(
   "signature_name" = Myc_reduce_mice_liver_24m,
@@ -145,8 +145,8 @@ Other criteria such as adj_p (adjusted p-value), log fold change cutoff of the s
   "PMID" = 25619689,
   "year" = 2015
 )</code></pre>
-<p>Or use build-in function <code><a href="../reference/createMetadata.html">createMetadata()</a></code> (recommended). The function remind you what attributes to include. You can also provide your own customized attributes.<br>
-Click <a href="https://montilab.github.io/OmicSignature/reference/createMetadata.html">here</a> to see a full list of built in attributes.</p>
+<p>Or use the built-in function <code><a href="../reference/createMetadata.html">createMetadata()</a></code> (recommended). The function reminds you what attributes to include. You can also provide your own customized attributes.<br>
+Click <a href="https://montilab.github.io/OmicSignature/reference/createMetadata.html">here</a> to see a full list of built-in attributes.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">metadata</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/createMetadata.html">createMetadata</a></span><span class="op">(</span>
   <span class="co"># examples of build-in attributes:</span>
@@ -165,22 +165,25 @@ Click <a href="https://montilab.github.io/OmicSignature/reference/createMetadata
   <span class="co"># example of cursomized attributes:</span>
   animal_strain <span class="op">=</span> <span class="st">"C57BL/6"</span>
 <span class="op">)</span></code></pre></div>
-<p><strong>If “sample_type” is NOT a BRENDA ontology term or “platform” is NOT a valid GEO platform accession ID, you will receive warnings.</strong><br>
+<p><strong>If “sample_type” is NOT a BRENDA ontology term or “platform” is NOT a valid GEO platform accession ID, you will get warnings.</strong><br>
 See how to search for the correct term to use in <a href="https://montilab.github.io/OmicSignature/articles/BRENDA.html">“BRENDA ontology &amp; GEO platform ID”</a> section.</p>
 <div id="additional-info-for-direction_type" class="section level4">
 <h4 class="hasAnchor">
 <a href="#additional-info-for-direction_type" class="anchor"></a>2.1.1 Additional info for “direction_type”</h4>
-<p><code>direction_type</code> is either:<br>
-- “uni-directional”. You only have a list of significant feature names but don’t know if they are up or down regulated in the treatment group, or directional infomation is not applicable.<br>
-- “bi-directional”. In most cases significant features can be grouped into “up” and “down” regulated features. For example, when comparing treatment group with control group, some features will be higher (“up”, or “+”) and some will be lower (“down” or “-”) in treatment.<br>
-- “multi-directional”. Used when comparing multiple sampels together, usually using ANOVA. In this case, the “direction” column in signature table should be group name.</p>
+<p><code>direction_type</code> is one of:<br>
+- “uni-directional”. You only have a list of significant feature names but don’t know if they are up or down regulated in the treatment group, or directional information is not applicable.<br>
+- “bi-directional”. In most cases significant features can be grouped into “up” and “down” regulated features. For example, when comparing treatment <em>vs.</em> control groups, some features will be higher (“up”, or “+”) and some will be lower (“down” or “-”) in treatment.<br>
+- “multi-directional”. Used with multi-valued categorical phenotypes (e.g., “low” <em>vs.</em> “medium” <em>vs.</em> “high”), usually analyzed by ANOVA. In this case, the “direction” column in signature table should be the phenotype’s value name (e.g., “low”).</p>
 </div>
 </div>
 <div id="differential-expression-analysis-result-difexp" class="section level3">
 <h3 class="hasAnchor">
 <a href="#differential-expression-analysis-result-difexp" class="anchor"></a>2.2. Differential expression analysis result (difexp)</h3>
-<p>A differential expression analysis matrix is <strong>optional</strong> but <strong>highly recommended</strong> if you have it.<br>
-The differential expression analysis in this example was performed using a standard pipeline from lm package. Available columns are logFC, AveExpr, t score, P.Value, adj.P.Val, B score, Probe.ID, gene_symbol and gene_name.</p>
+<p>A differential expression analysis matrix is <strong>optional</strong> but <strong>highly recommended</strong> if you have it.</p>
+<p>To be saved into a OmicSignature object, the matrix’ required columns are:<br>
+“<strong>id</strong>”, “<strong>symbol</strong>”, “<strong>score</strong>”, “<strong>p_value</strong>”.<br>
+“id” is used as an unique identifier in case there are duplicated gene symbols. Frequently used id’s include probe ID, ENSEMBL ID, or unique numbers.</p>
+<p>Here we show an example of how to derive the <code>difexp</code> object from a dfferential expression analysis based on the <code>limma</code> package. Columns include logFC, AveExpr, t score, P.Value, adj.P.Val, B score, Probe.ID, gene_symbol and gene_name.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">difexp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.table</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, package <span class="op">=</span> <span class="st">"OmicSignature"</span><span class="op">)</span>, <span class="st">"difmatrix_Myc_mice_liver_24m_raw.txt"</span><span class="op">)</span>,
   header <span class="op">=</span> <span class="cn">TRUE</span>, sep <span class="op">=</span> <span class="st">"\t"</span>, stringsAsFactors <span class="op">=</span> <span class="cn">FALSE</span>
@@ -200,10 +203,7 @@ The differential expression analysis in this example was performed using a stand
 <span class="co">#&gt; 4      Lypla1                             lysophospholipase 1</span>
 <span class="co">#&gt; 5       Tcea1       transcription elongation factor A (SII) 1</span>
 <span class="co">#&gt; 6     Atp6v1h ATPase, H+ transporting, lysosomal V1 subunit H</span></code></pre></div>
-<p>To be saved into a OmicSignature object, the required columns for <strong>differential expression matrix</strong> are:<br><strong>“id”, “symbol”, “score”, “p_value”</strong>.<br>
-“id” is used as an unique identifier in case there are duplicated gene symbols. Frequently used id including probe ID, ENSEMBL ID, or unique numbers.</p>
-<p>Modify the column names to match the requirement.<br>
-Our build-in function <code><a href="../reference/replaceDifexpCol.html">replaceDifexpCol()</a></code> is designed to replace some frequently-used alternative column names. You can also change the column names manully.</p>
+<p>You can manually modify the column names to match the requirements. Alternatively, you can use the built-in function <code><a href="../reference/replaceDifexpCol.html">replaceDifexpCol()</a></code>, designed to replace some frequently-used alternative column names.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span><span class="op">(</span><span class="va">difexp</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/replaceDifexpCol.html">replaceDifexpCol</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span><span class="op">(</span><span class="va">difexp</span><span class="op">)</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">difexp</span><span class="op">)</span>
