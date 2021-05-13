@@ -24,14 +24,14 @@ library(dplyr)
 
 ## 1. Components to create an OmicSignature Object 
 An `OmicSignature` object contains three parts:  
- - **metadata**, a list contains metadata fields.  
-  required fields: **"signature_name", "organism", "platform", "direction_type", "phenotype"**.  
- - **signature**, a dataframe for signature info.  
-  required columns: **"signature_symbol"**, **"signature_direction"**  
-  optional column: **"signature_score"**  
-  "signature_symbol" should be a subset of "symbol" in difexp.  
+ - **metadata**, a list containing metadata fields.  
+  required fields: "**signature_name**", "**organism**", "**platform**", "**direction_type**", "**phenotype**".  
+ - **signature**, a dataframe.  
+  required columns: "**signature_symbol**", "**signature_direction**"  
+  optional column: "**signature_score**"  
+  "signature_symbol" should be a subset of "symbol" in difexp (if present).  
  - **difexp** (optional), a dataframe of differential expression analysis result.  
-  required columns: **"id", "symbol", "score", "p_value"**.  
+  required columns: "**id**", "**symbol**", "**score**", "**p_value**".  
 
 Once you have the componants above, you can create your own object:  
 ```
@@ -52,9 +52,9 @@ up and down regulated features (genes).
 
 ### 2.1. Metadata
 To be saved into a OmicSignature object, the required **metadata** fields are:  
-**"signature_name", "organism", "platform", "direction_type", "phenotype"**.  
-Other criteria such as adj_p (adjusted p-value), log fold change cutoff of 
-the signature, and additional key words of the experiment will make the information more complete.  
+"**signature_name**", "**organism**", "**platform**", "**direction_type**", "**phenotype**".
+Additional optional fields can be added, e.g., adj_p (adjusted p-value), log fold change cutoff of 
+the signature, or additional experiment descriptors, which will make the information more complete.  
 
 One option is to create metadata list by hand:
 
@@ -74,10 +74,10 @@ metadata <- list(
 )
 ```
 
-Or use build-in function `createMetadata()` (recommended). The function remind 
+Or use the built-in function `createMetadata()` (recommended). The function reminds 
 you what attributes to include. You can also provide your own customized attributes.  
 Click [here](https://montilab.github.io/OmicSignature/reference/createMetadata.html) 
-to see a full list of built in attributes.  
+to see a full list of built-in attributes.  
 ```{r}
 metadata <- createMetadata(
   # examples of build-in attributes:
@@ -98,20 +98,23 @@ metadata <- createMetadata(
 )
 ```
 
-**If "sample_type" is NOT a BRENDA ontology term or "platform" is NOT a valid GEO platform accession ID, you will receive warnings.**  
+**If "sample_type" is NOT a BRENDA ontology term or "platform" is NOT a valid GEO platform accession ID, you will get warnings.**  
 See how to search for the correct term to use in ["BRENDA ontology & GEO platform ID"](https://montilab.github.io/OmicSignature/articles/BRENDA.html) section.  
 
 #### 2.1.1 Additional info for "direction_type"
-`direction_type` is either:  
- - "uni-directional". You only have a list of significant feature names but don't know if they are up or down regulated in the treatment group, or directional infomation is not applicable.  
- - "bi-directional". In most cases significant features can be grouped into "up" and "down" regulated features. For example, when comparing treatment group with control group, some features will be higher ("up", or "+") and some will be lower ("down" or "-") in treatment.  
- - "multi-directional". Used when comparing multiple sampels together, usually using ANOVA. In this case, the "direction" column in signature table should be group name.  
+`direction_type` is one of:  
+ - "uni-directional". You only have a list of significant feature names but don't know if they are up or down regulated in the treatment group, or directional information is not applicable.  
+ - "bi-directional". In most cases significant features can be grouped into "up" and "down" regulated features. For example, when comparing treatment _vs._ control groups, some features will be higher ("up", or "+") and some will be lower ("down" or "-") in treatment.  
+ - "multi-directional". Used with multi-valued categorical phenotypes (e.g., "low" _vs._ "medium" _vs._ "high"), usually analyzed by ANOVA. In this case, the "direction" column in signature table should be the phenotype's value name (e.g., "low").  
 
 ### 2.2. Differential expression analysis result (difexp)
 A differential expression analysis matrix is **optional** but **highly recommended** if you have it.  
-The differential expression analysis in this example was performed using a standard 
-pipeline from lm package. Available columns are logFC, AveExpr, t score, P.Value, 
-adj.P.Val, B score, Probe.ID, gene_symbol and gene_name.  
+
+To be saved into a OmicSignature object, the matrix' required columns are:  
+"**id**", "**symbol**", "**score**", "**p_value**".  
+"id" is used as an unique identifier in case there are duplicated gene symbols. Frequently used id's include probe ID, ENSEMBL ID, or unique numbers.  
+
+Here we show an example of how to derive the `difexp` object from a dfferential expression analysis based on the `limma` package. Columns include logFC, AveExpr, t score, P.Value, adj.P.Val, B score, Probe.ID, gene_symbol and gene_name.  
 
 ```{r}
 difexp <- read.table(file.path(system.file("extdata", package = "OmicSignature"), "difmatrix_Myc_mice_liver_24m_raw.txt"),
@@ -119,19 +122,14 @@ difexp <- read.table(file.path(system.file("extdata", package = "OmicSignature")
 )
 head(difexp)
 ```
-To be saved into a OmicSignature object, the required columns for
-**differential expression matrix** are:  
-**"id", "symbol", "score", "p_value"**.  
-"id" is used as an unique identifier in case there are duplicated gene symbols. Frequently used id including probe ID, ENSEMBL ID, or unique numbers.  
 
-Modify the column names to match the requirement.  
-Our build-in function `replaceDifexpCol()` is designed to replace some 
-frequently-used alternative column names. You can also change the column names manully.
+You can manually modify the column names to match the requirements. Alternatively, you
+can use the built-in function `replaceDifexpCol()`, designed to replace some 
+frequently-used alternative column names. 
 ```{r}
 colnames(difexp) <- replaceDifexpCol(colnames(difexp))
 head(difexp)
 ```
-
 
 ### 2.3. Signature 
 Here we will create a signature by hand. This is a bi-directional signature example. 
