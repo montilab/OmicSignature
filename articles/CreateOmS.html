@@ -105,15 +105,17 @@
 <div id="components-to-create-an-omicsignature-object" class="section level2">
 <h2 class="hasAnchor">
 <a href="#components-to-create-an-omicsignature-object" class="anchor"></a>1. Components to create an OmicSignature Object</h2>
-<p>An <code>OmicSignature</code> object contains three parts:<br>
-- <strong>metadata</strong>, a list containing metadata fields.<br>
-required fields: “<strong>signature_name</strong>”, “<strong>organism</strong>”, “<strong>platform</strong>”, “<strong>direction_type</strong>”, “<strong>phenotype</strong>”.<br>
-- <strong>signature</strong>, a dataframe.<br>
+<p>An <code>OmicSignature</code> object contains three parts:</p>
+<ul>
+<li><p><strong>metadata</strong>, a list containing metadata fields.<br>
+required fields: “<strong>signature_name</strong>”, “<strong>organism</strong>”, “<strong>platform</strong>”, “<strong>direction_type</strong>”, “<strong>phenotype</strong>”.</p></li>
+<li><p><strong>signature</strong>, a dataframe.<br>
 required columns: “<strong>signature_symbol</strong>”, “<strong>signature_direction</strong>”<br>
 optional column: “<strong>signature_score</strong>”<br>
-“signature_symbol” should be a subset of “symbol” in difexp (if present).<br>
-- <strong>difexp</strong> (optional), a dataframe of differential expression analysis result.<br>
-required columns: “<strong>id</strong>”, “<strong>symbol</strong>”, “<strong>score</strong>”, “<strong>p_value</strong>”.</p>
+“signature_symbol” should be a subset of “symbol” in difexp (if present).</p></li>
+<li><p><strong>difexp</strong> (optional), a dataframe of differential expression analysis result.<br>
+required columns: “<strong>id</strong>”, “<strong>symbol</strong>”, “<strong>score</strong>”, “<strong>p_value</strong>”.</p></li>
+</ul>
 <p>Once you have the componants above, you can create your own object:</p>
 <pre><code>OmicObj &lt;- OmicSignature$new(
   metadata = metadata,
