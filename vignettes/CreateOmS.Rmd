@@ -24,13 +24,16 @@ library(dplyr)
 
 ## 1. Components to create an OmicSignature Object 
 An `OmicSignature` object contains three parts:  
- - **metadata**, a list containing metadata fields.  
+
+- **metadata**, a list containing metadata fields.  
   required fields: "**signature_name**", "**organism**", "**platform**", "**direction_type**", "**phenotype**".  
- - **signature**, a dataframe.  
+
+- **signature**, a dataframe.  
   required columns: "**signature_symbol**", "**signature_direction**"  
   optional column: "**signature_score**"  
   "signature_symbol" should be a subset of "symbol" in difexp (if present).  
- - **difexp** (optional), a dataframe of differential expression analysis result.  
+
+- **difexp** (optional), a dataframe of differential expression analysis result.  
   required columns: "**id**", "**symbol**", "**score**", "**p_value**".  
 
 Once you have the componants above, you can create your own object:  
