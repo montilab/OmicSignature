@@ -18,9 +18,9 @@ knitr::opts_chunk$set(
 
 ## Structure of OmicSignature object
 An `OmicSignature` object contains three parts:  
- - **metadata**, a list contains metadata fields;  
- - **signature**, a dataframe with feature symbols and directions, and scores if applicable;  
- - **difexp**, optional, a dataframe from differential expression analysis result.  
+ - **metadata**, a list containing metadata fields;  
+ - **signature**, a dataframe with feature symbols, directions, and scores if applicable;  
+ - **difexp**, optional, a dataframe with the differential expression analysis result.  
 
 See [here](https://montilab.github.io/OmicSignature/articles/CreateOmS.html) about how to create one. 
 
@@ -31,7 +31,7 @@ knitr::include_graphics("figs/Omic_structure.png")
 
 ## Structure of OmicSignatureCollection object
 An `OmicSignatureCollection` object contains two parts:  
- - metadata  
+ - metadata, a list 
  - OmicSigList, a list of OmicSignature Objects  
 
 See [here](https://montilab.github.io/OmicSignature/articles/CreateOmSC.html) about how to create one. 
