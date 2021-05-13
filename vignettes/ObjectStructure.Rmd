@@ -16,7 +16,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-## Structure of OmicSignature object
+## OmicSignature object structure
 An `OmicSignature` object contains three parts:  
  - **metadata**, a list containing metadata fields;  
  - **signature**, a dataframe with feature symbols, directions, and scores if applicable;  
@@ -29,9 +29,9 @@ knitr::include_graphics("figs/Omic_structure.png")
 ```
 
 
-## Structure of OmicSignatureCollection object
+## OmicSignatureCollection object structure
 An `OmicSignatureCollection` object contains two parts:  
- - metadata, a list 
+ - metadata, a list containing metadata fields;
  - OmicSigList, a list of OmicSignature Objects  
 
 See [here](https://montilab.github.io/OmicSignature/articles/CreateOmSC.html) about how to create one. 
