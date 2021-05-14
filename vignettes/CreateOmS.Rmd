@@ -55,9 +55,9 @@ up and down regulated features (genes).
 
 ### 2.1. Metadata
 To be saved into a OmicSignature object, the required **metadata** fields are:  
-"**signature_name**", "**organism**", "**platform**", "**direction_type**", "**phenotype**".
-Additional optional fields can be added, e.g., adj_p (adjusted p-value), log fold change cutoff of 
-the signature, or additional experiment descriptors, which will make the information more complete.  
+"**signature_name**", "**organism**", "**direction_type**".  
+Fields not required but highly recommended if available: "**platform**", "**sample_type**", "**phenotype**".  
+Additional optional fields can be added, e.g., score_cutoff, adj_p_cutoff, logfc_cutoff, or additional experiment descriptors, which will make the information more complete.  
 
 One option is to create metadata list by hand:
 
@@ -86,10 +86,10 @@ metadata <- createMetadata(
   # examples of build-in attributes:
   signature_name = "Myc_reduce_mice_liver_24m", # required
   organism = "Mus Musculus", # required
-  phenotype = "Myc_reduce", # required
+  phenotype = "Myc_reduce", # optional but highly recommended
   direction_type = "bi-directional", # required
-  platform = "GPL6246", # required; must be GEO platform ID
-  sample_type = "liver", # must be BRENDA ontology
+  platform = "GPL6246", # optional but highly recommended; must be a GEO platform ID
+  sample_type = "liver", # optional but highly recommended; must be BRENDA ontology
   adj_p_cutoff = 0.05,
   score_cutoff = 7,
   keywords = c("Myc", "KO", "longevity"),
@@ -119,7 +119,7 @@ To be saved into a OmicSignature object, the matrix' required columns are:
 "**id**", "**symbol**", "**score**", "**p_value**".  
 "id" is used as an unique identifier in case there are duplicated gene symbols. Frequently used id's include probe ID, ENSEMBL ID, or unique numbers.  
 
-Here we show an example of how to derive the `difexp` object from the results of a differential expression analysis based on the `limma` package. Output columns include logFC, AveExpr, t score, P.Value, adj.P.Val, B score, Probe.ID, gene_symbol, and gene_name.  
+Here we show an example of how to derive the `difexp` object from the results of a differential expression analysis based on the `limma` package. Output columns include logFC, AveExpr, t, P.Value, adj.P.Val, B score, Probe.ID, gene_symbol, and gene_name. In this example, we use t-test statistic (column t) as the score for the symbols. 
 
 ```{r}
 difexp <- read.table(file.path(system.file("extdata", package = "OmicSignature"), "difmatrix_Myc_mice_liver_24m_raw.txt"),
@@ -143,9 +143,9 @@ in the metadata.
 ```{r}
 signatures <- difexp %>%
   dplyr::filter(abs(score) > metadata$score_cutoff & adj_p < metadata$adj_p_cutoff) %>%
-  dplyr::select(symbol,score) %>%
-  dplyr::mutate(signature_direction=ifelse(score>0,"+","-")) %>% 
-  dplyr::rename(signature_symbol="symbol", signature_score="score")
+  dplyr::select(symbol, score) %>%
+  dplyr::mutate(signature_direction = ifelse(score > 0, "+", "-")) %>%
+  dplyr::rename(signature_symbol = "symbol", signature_score = "score")
 head(signatures)
 ```
 (note: if you see numbers instead of gene symbol name in the first column, please check if the "symbol" column in your difexp matrix is "character" and not accidentally be "factor")  
@@ -160,6 +160,20 @@ signatures <- standardizeSigDF(signatures)
 head(signatures)
 tail(signatures)
 ```
+
+
+Alternatively, you can provide signatures as a character vector. For example:  
+```
+signatures <- c("gene1", "gene2", "gene3")
+```
+
+Or as a numeric vector and provide symbols as its name:  
+```
+signatures <- c(0.45, -3.21, 2.44)
+names(signatures) <- c("gene1", "gene2", "gene3")
+```
+If `direction_type` in `metadata` is set to be "bi-directional", the direction will be determined by whether a symbol has a positive or negative score.  
+
 
 ### 2.4. Create `OmicSignature` object
 We have everything we need now.  
