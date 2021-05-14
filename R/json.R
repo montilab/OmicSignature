@@ -9,7 +9,10 @@
 #' @export
 writeJson <- function(OmicObj, file) {
   # drop the previous signature_direction column, to save space:
-  signatureDirection <- summary(OmicObj$signature$signature_direction)
+  signatureDirection <- NULL
+  if (!is.null(OmicObj$signature$signature_direction)) {
+    signatureDirection <- summary(OmicObj$signature$signature_direction)
+  }
   writeSignature <- OmicObj$signature
   writeSignature$signature_direction <- NULL
   writeDifexp <- NULL
@@ -47,11 +50,16 @@ readJson <- function(filename) {
   } else {
     warning(paste("Notice: ", filename, "does not have difexp data."))
   }
-  readLv2 <- data.frame(dplyr::bind_rows(readJson[c("signature_symbol", "signature_score")]))
-  readLv2 <- cbind(readLv2, "signature_direction" = rep(
-    readJson$signature_direction_names,
-    unlist(readJson[readJson$signature_direction_names])
-  ))
-  readSigObj <- OmicSignature$new(readMetadata, readLv2, readLv1)
+  readLv2 <- data.frame("signature_symbol" = readJson$signature_symbol)
+  if (!is.null(readJson$signature_score)) {
+    readLv2$signature_score <- readJson$signature_score
+  }
+  if (readJson$direction_type != "uni-directional") {
+    readLv2$signature_direction <- rep(
+      readJson$signature_direction_names,
+      unlist(readJson[readJson$signature_direction_names])
+    )
+  }
+  readSigObj <- OmicSignature$new(metadata = readMetadata, signature = readLv2, difexp = readLv1)
   return(readSigObj)
 }
