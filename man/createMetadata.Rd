@@ -3,14 +3,14 @@
 \name{createMetadata}
 \alias{createMetadata}
 \title{template for creating a metadata list for an OmicSignature R6 object
-updated 09/2020}
+updated 05/2021}
 \usage{
 createMetadata(
   signature_name,
   organism,
   phenotype = "unknown",
   covariates = "none",
-  platform,
+  platform = "GPLXXXXX",
   direction_type,
   sample_type = NULL,
   signature_collection = NULL,
@@ -29,24 +29,24 @@ createMetadata(
 )
 }
 \arguments{
-\item{signature_name}{name of the signature.}
+\item{signature_name}{required. name of the signature.}
 
-\item{organism}{organism. e.g. "Homo Sapiens", "Mus Musculus".}
+\item{organism}{required. e.g. "Homo Sapiens", "Mus Musculus".}
 
-\item{phenotype}{the phenotype of the signature. e.g. "Gene KO", "Ketodiet", "Parkinson disease", "unknown".}
+\item{phenotype}{optional but highly recommended. e.g. "Gene KO", "Parkinson disease". Use "unknown" or NULL if not applicable.}
 
-\item{covariates}{optional but highly recommended. any covariates used in the study. e.g. a signature of aging with covariate "gender".}
+\item{covariates}{optional. e.g. a signature of aging may have covariate "gender".}
 
-\item{platform}{GEO platform. e.g. "GPL11154" is for Illumina HiSeq 2000 Homo sapiens, "GPL570" is for Affymetrix Human Genome U133 Plus 2.0 Array}
+\item{platform}{optional but highly recommended. GEO platform name. e.g. "GPL11154" is for Illumina HiSeq 2000 Homo sapiens. Use "GPLXXXXX" or NULL if not available.}
 
-\item{direction_type}{the direction information of the signature.
+\item{direction_type}{required. the direction information of the signature.
 "uni" or "uni-directional" if signature has only one direction or no direction infomation.
 "bi" or "bi-directional" if signature contains "up" and "down" regulated features.
 "multi" or "multi-directional" if the signature contains more categories.}
 
 \item{sample_type}{optional but highly recommended. a cell line or tissue from BRENDA ontology.}
 
-\item{signature_collection}{optional. collection of which the signature belongs to.}
+\item{signature_collection}{optional. collection name that the signature belongs to.}
 
 \item{author}{optional. the author name if the signature is from a published article.}
 
@@ -73,9 +73,9 @@ createMetadata(
 \item{...}{additional user-defined metadata fields.}
 }
 \value{
-a metadata list to create an OmicSignature R6 object
+a metadata list to create an OmicSignature R6 object.
 }
 \description{
 template for creating a metadata list for an OmicSignature R6 object
-updated 09/2020
+updated 05/2021
 }

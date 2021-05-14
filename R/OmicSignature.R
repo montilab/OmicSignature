@@ -1,7 +1,7 @@
 #### OmicSigObj ####
 
 #' @title OmicSignature R6 object
-#' @description a R6 object to store signatures generated from experiments. In cluding metadata, signature, and an optional differential expression matrix.
+#' @description a R6 object to store signatures generated from experiments. In cluding metadata, signature, and an optional differential expression analysis result matrix.
 #' @importFrom R6 R6Class
 #' @importFrom dplyr filter pull %>%
 #' @importFrom jsonlite toJSON fromJSON
@@ -13,8 +13,8 @@ OmicSignature <-
     public = list(
       #' @description
       #' Create a new OmicSignature object
-      #' @param metadata required, must be a list
-      #' @param signature required, must be a dataframe
+      #' @param metadata required. must be a list. See `createMetadata` for more information.
+      #' @param signature required. must be a vector, or a dataframe with columns "signature_name", and "signature_direction" if applicable
       #' @param difexp optional
       #' @param print_message use TRUE if want to see all messages printed
       #' @export
@@ -130,7 +130,7 @@ OmicSignature <-
 
         ## check if it's empty:
         if (nrow(difexp) == 0) {
-          stop("Differential Matrix (difexp) is empty. ")
+          stop("difexp is empty. ")
         }
 
         ## check column names:
@@ -138,6 +138,9 @@ OmicSignature <-
         if (!("id" %in% colnames(difexp)) && "probe_id" %in% colnames(difexp)) {
           colnames(difexp) <- colnames(difexp) %>%
             dplyr::recode("probe_id" = "id")
+        }
+        if (!("id" %in% colnames(difexp))) {
+          difexp$id <- c(1:nrow(difexp))
         }
         ## require only one of adj_p, p_value, and q_value
         if ("adj_p" %in% colnames(difexp)) {
@@ -186,17 +189,10 @@ OmicSignature <-
       },
       checkMetadata = function(metadata, v = FALSE) {
         stopifnot(is(metadata, "list"))
-        if (is.null(metadata$covariates)) {
-          metadata$covariates <- "none"
-        }
-        if (is.null(metadata$phenotype)) {
-          metadata$phenotype <- "unknown"
-        }
 
         # check required metadata fields
         metadataRequired <- c(
-          "signature_name", "organism", "platform",
-          "direction_type", "phenotype", "covariates"
+          "signature_name", "organism", "direction_type"
         )
         metadataMissing <- setdiff(metadataRequired, names(metadata))
         private$verbose(v, paste("  --Required attributes for metadata: ",
@@ -210,6 +206,17 @@ OmicSignature <-
           )
         }
 
+        # check covariates
+        if (is.null(metadata$covariates)) {
+          metadata$covariates <- "none"
+        }
+
+        # check phenotype
+        if (is.null(metadata$phenotype)) {
+          metadata$phenotype <- "unknown"
+          warning("Note: Phenotype information unknown. ")
+        }
+
         # check if sample_type is a valid BRENDA term
         if (!is.null(metadata$sample_type)) {
           tempSampleType <- try(BRENDACurrentName(metadata$sample_type), silent = T)
@@ -217,8 +224,8 @@ OmicSignature <-
             metadata$sample_type <- tempSampleType[2]
           } else {
             warning(paste(
-              "sample_type in metadata is not a valid BRENDA ontology term.",
-              "Please consider using BRENDASearch() function to
+              "sample_type in metadata is not a valid or up-to-date BRENDA ontology term.",
+              "Please use BRENDASearch() function to
             	search for the correct BRENDA ontology term to use.",
               sep = "\n"
             ))
@@ -226,11 +233,13 @@ OmicSignature <-
         }
 
         # check if platform is a valid GPL platform
-        if (!metadata$platform %in% GEOplatform$Accession) {
+        if (is.null(metadata$platform) | metadata$platform == "GPLXXXXX") {
+          metadata$platform <- "GPLXXXXX"
+          warning("Note: Platform information unknown. ")
+        } else if (!metadata$platform %in% GEOplatform$Accession) {
           warning(paste(
-            "platform in metadata is not a valid GEO platform accession.",
-            "Please consider using GEOSearch() function to
-            	search for the correct platform assession to use.",
+            "Platform in metadata is not a valid GEO platform accession ID. ",
+            "Please use `GEOSearch()` to search for the correct platform assession to use, or use GPLXXXXX if is unknown. ",
             sep = "\n"
           ))
         }
@@ -238,58 +247,68 @@ OmicSignature <-
         metadata <- metadata[order(names(metadata))]
         return(metadata)
       },
-      checkSignature = function(omicObj, signatureType = NULL, category_num = 0, v = FALSE) {
+
+      checkSignature = function(input, signatureType = NULL, category_num = 0, v = FALSE) {
         ## category_num is used for multi-directional signature
-        ## read the signature, and check if it is a dataframe:
-        if (is(omicObj, "OmicSignature")) {
-          signature <- omicObj$signature
-          signatureType <- omicObj$metadata$direction_type
+
+        if (is(input, "OmicSignature")) {
+          signature <- input$signature
+          signatureType <- input$metadata$direction_type
           if (signatureType == "multi-directional") {
-            if (!is.null(omicObj$metadata$category_num)) {
-              categoryNum <- omicObj$metadata$category_num
+            if (!is.null(input$metadata$category_num)) {
+              categoryNum <- input$metadata$category_num
             } else {
               stop("Signature is specified as multi-directional, but sample number not found.")
             }
           }
         }
-        else if (is(omicObj, "data.frame")) {
-          signature <- omicObj
-          remove(omicObj)
-
-          ## change possible column names to standard column names:
-          colnames(signature) <- colnames(signature) %>%
-            tolower() %>%
-            dplyr::recode(
-              "signature" = "signature_symbol", "symbol" = "signature_symbol",
-              "name" = "signature_symbol", "score" = "signature_score",
-              "weight" = "signature_score", "direction" = "signature_direction"
-            )
+        else if (is.vector(input)) {
+          if (signatureType == "bi-directional") {
+            signature <- signatureVecToDF(input, bi_directional = TRUE)
+          } else if (signatureType == "uni-directional") {
+            signature <- signatureVecToDF(input, bi_directional = FALSE)
+          } else {
+            stop("Please save signature as a dataframe with columns 'signature_symbol' and 'signature_direction'. ")
+          }
+          remove(input)
+        }
+        else if (is.data.frame(input)) {
+          signature <- input
+          remove(input)
         } else {
           stop(paste(
             "Signature not found in OmicSignature object",
-            "or signature is not a dataframe. Or, if you are trying to modify",
+            "or signature is not a vector or dataframe. Or, if you are trying to modify",
             "the signature, the new signature you are inputting is not valid."
           ))
         }
 
+        ## at this point, signature should be a dataframe now
         if (nrow(signature) == 0) {
           stop("Signature is empty.")
         }
+
+        ## change column names to standard column names:
+        colnames(signature) <- colnames(signature) %>%
+          tolower() %>%
+          dplyr::recode(
+            "signature" = "signature_symbol", "symbol" = "signature_symbol",
+            "name" = "signature_symbol", "score" = "signature_score",
+            "weight" = "signature_score", "direction" = "signature_direction"
+          )
 
         ## check if signature_symbol and signature_score (lv2 or lv3) exists:
         if (!c("signature_symbol") %in% colnames(signature)) {
           stop("Signature dataframe does not contain \"signature_symbol\" column.")
         }
         if (!c("signature_score") %in% colnames(signature)) {
-          warning("Signature dataframe does not contain \"signature_score\" column.")
+          warning("Note: Signature dataframe does not contain \"signature_score\" column. Ignore this message if no score information is available. ")
         }
 
         ## check if the direction match with signature type:
         if (is.null(signatureType)) {
           stop("Signature type not specified. It needs to be uni-, bi- or multi-directional.")
         }
-        ## each signature type need to be "else if". because if none of the
-        ## type meet the criteria required, we need an "else" to output error.
 
         ## bi-directional signature:
         if (signatureType == "bi-directional") {
@@ -297,27 +316,14 @@ OmicSignature <-
             stop("Signature is specified as bi-directional but \"signature_direction\" information not found.")
           }
           ## change direction symbol to + and - :
-          colnames(signature) <- colnames(signature) %>%
-            tolower() %>%
-            dplyr::recode(
-              "signature" = "signature_symbol", "symbol" = "signature_symbol",
-              "name" = "signature_symbol", "score" = "signature_score",
-              "weight" = "signature_score", "direction" = "signature_direction"
-            )
           signature$signature_direction <- signature$signature_direction %>%
             tolower() %>%
             dplyr::recode("up" = "+", "dn" = "-", "down" = "-")
           signature$signature_direction <- as.factor(signature$signature_direction)
 
           ## check direction:
-          summaryDirection <- summary(signature$signature_direction)
-          if (isTRUE(all.equal(c("-", "+"), names(summary(signature$signature_direction))))) {
-            private$verbose(v, "  Signature: Checked, signature is bi-directional
-  						with - (Dn) and + (Up) directions. \n")
-          } else if (names(summaryDirection) == c("-") | names(summaryDirection) == c("+")) {
-            private$verbose(v, "  Signature: Checked, signature is bi-directional,
-  						but only one direction is found. \n")
-          } else {
+          summaryDirection <- as.character(unique(signature$signature_direction))
+          if (!all(as.character(unique(signature$signature_direction)) %in% c("-", "+"))) {
             stop("Direction for bi-directional signature is not valid. Should be marked with \"-\" and \"+\".")
           }
         }
@@ -326,11 +332,12 @@ OmicSignature <-
         else if (signatureType == "uni-directional") {
           signature$signature_direction <- NULL
         }
+
         ## multi-directional signature:
         else if (signatureType == "multi-directional") {
           summaryDirection <- summary(signature$signature_direction)
           if (length(summaryDirection) != categoryNum) {
-            warning("Category number in metadata does not match with the number of categories in the signature.")
+            warning("categoryNum in metadata does not match with the number of categories in the signature.")
           }
         }
 
@@ -410,7 +417,7 @@ OmicSignatureCollection <- R6Class(
         if (is(try_temp, "try-error")) {
           cat(paste(
             "  Warning: OmicSignature", x$metadata$signature_name,
-            "does not have diffexp matrix or does not have the specified column. \n"
+            "does not have diffanal result matrix (difexp) or does not have the specified column. \n"
           ))
           try_temp <- NULL
         }

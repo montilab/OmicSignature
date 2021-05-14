@@ -1,17 +1,17 @@
 #' @title template for creating a metadata list for an OmicSignature R6 object
-#' updated 09/2020
+#' updated 05/2021
 #' @importFrom dplyr recode %>%
-#' @param signature_name name of the signature.
-#' @param signature_collection optional. collection of which the signature belongs to.
-#' @param organism organism. e.g. "Homo Sapiens", "Mus Musculus".
-#' @param platform GEO platform. e.g. "GPL11154" is for Illumina HiSeq 2000 Homo sapiens, "GPL570" is for Affymetrix Human Genome U133 Plus 2.0 Array
-#' @param phenotype the phenotype of the signature. e.g. "Gene KO", "Ketodiet", "Parkinson disease", "unknown".
-#' @param covariates optional but highly recommended. any covariates used in the study. e.g. a signature of aging with covariate "gender".
-#' @param direction_type the direction information of the signature.
+#' @param signature_name required. name of the signature.
+#' @param signature_collection optional. collection name that the signature belongs to.
+#' @param direction_type required. the direction information of the signature.
 #' "uni" or "uni-directional" if signature has only one direction or no direction infomation.
 #' "bi" or "bi-directional" if signature contains "up" and "down" regulated features.
 #' "multi" or "multi-directional" if the signature contains more categories.
+#' @param organism required. e.g. "Homo Sapiens", "Mus Musculus".
+#' @param platform optional but highly recommended. GEO platform name. e.g. "GPL11154" is for Illumina HiSeq 2000 Homo sapiens. Use "GPLXXXXX" or NULL if not available.
+#' @param phenotype optional but highly recommended. e.g. "Gene KO", "Parkinson disease". Use "unknown" or NULL if not applicable.
 #' @param sample_type optional but highly recommended. a cell line or tissue from BRENDA ontology.
+#' @param covariates optional. e.g. a signature of aging may have covariate "gender".
 #' @param author optional. the author name if the signature is from a published article.
 #' @param year optional. the year when the signature was created or published.
 #' @param PMID optional. the PubMed ID if the signature is from a published article.
@@ -24,10 +24,10 @@
 #' @param score_cutoff optional. score cutoff used to generate the signature, if applicable.
 #' @param cutoff_description optional. discription of the cutoff, if applicable.
 #' @param ... additional user-defined metadata fields.
-#' @return a metadata list to create an OmicSignature R6 object
+#' @return a metadata list to create an OmicSignature R6 object.
 #' @export
 createMetadata <- function(signature_name, organism, phenotype = "unknown",
-                           covariates = "none", platform, direction_type,
+                           covariates = "none", platform = "GPLXXXXX", direction_type,
                            sample_type = NULL, signature_collection = NULL,
                            author = NULL, year = NULL, PMID = NULL,
                            keywords = NULL, description = NULL, category_num = NULL,
@@ -54,7 +54,7 @@ createMetadata <- function(signature_name, organism, phenotype = "unknown",
     if (is(tempSampleType, "character")) {
       sample_type <- tempSampleType[2]
     } else {
-      warning(paste("sample_type is not a valid BRENDA ontology term. Ignore this message if you intend to input other sample types, such as animal strains.",
+      warning(paste("sample_type is not a valid BRENDA ontology term. Ignore this message if it's intentional. ",
         "  Otherwise, please consider using BRENDASearch() function to search for the correct BRENDA ontology term to use.",
         sep = "\n"
       ))
@@ -63,8 +63,20 @@ createMetadata <- function(signature_name, organism, phenotype = "unknown",
 
   # check if platform is a valid GPL platform
   platform <- toupper(platform)
-  if (!platform %in% GEOplatform$Accession) {
-    warning("platform in metadata is not a valid GEO platform accession. Please see `View(GEOplatform)`, or use GEOPlatformSearch() function to search for the correct platform id.")
+  if (is.null(platform) | platform == "GPLXXXXX") {
+    platform <- "GPLXXXXX"
+    warning("Platform information unknown. Ignore this message if it's intentional. ")
+  } else if (!platform %in% GEOplatform$Accession) {
+    warning(paste("Input platform is not a valid GEO platform accession ID. Ignore this message if it's intentional. ",
+      "  Otherwise, please see `View(GEOplatform)`, or use `GEOPlatformSearch()` to search for the correct id. ",
+      sep = "\n"
+    ))
+  }
+
+  # check phenotype
+  if (is.null(phenotype) | phenotype == "unknown") {
+    phenotype <- "unknown"
+    warning("Phenotype information unknown. Ignore this message if it's intentional. ")
   }
 
   # create metadata list
