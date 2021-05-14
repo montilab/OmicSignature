@@ -26,23 +26,26 @@ library(dplyr)
 This object contains several `OmicSignature` objects to facilitate further analysis.  
 
 An `OmicSignatureCollection` object contains two parts:  
- - metadata  
- - OmicSigList, a list of OmicSignature Objects  
 
-### 1. Import OmicSignature objects
-Use `read.json()` function to read `OmicSignature` objects we want to put in the collection, or create them by hand. See [here](https://montilab.github.io/OmicSignature/articles/CreateOmS.html) for details to create them.  
+- metadata  
 
-```{r}
-OmicObj1 <- readJson(file.path(system.file("extdata", package = "OmicSignature"), "Myc_reduce_mice_adipose_24m_obj.json"))
-OmicObj2 <- readJson(file.path(system.file("extdata", package = "OmicSignature"), "Myc_reduce_mice_muscle_24m_obj.json"))
-OmicObj3 <- readJson(file.path(system.file("extdata", package = "OmicSignature"), "Myc_reduce_mice_liver_24m_obj.json"))
+- OmicSigList, a list of OmicSignature Objects  
+
+### 1. Create an `OmicSignatureCollection` object 
+Use `OmicSignatureCollection$new()` and provide metadata and a list of `OmicSignature` objects: 
+
+```{r eval=FALSE}
+OmicCol <- OmicSignatureCollection$new(
+  OmicSigList = list(OmicObj1, OmicObj2, OmicObj3),
+  metadata = ColMeta,
+  print_message = FALSE
+)
 ```
 
-
 ### 2. Metadata for the collection
-The required fields for **metadata** are:  
-**"collection_name", "description"**.  
-We can also add additional fields.  
+The required fields for **metadata** are: 
+"**collection_name**", "**description**".  
+Additional optional fields can be added.
 ```{r}
 ColMeta <- list(
   "collection_name" = "Myc_mice_collection",
@@ -52,16 +55,17 @@ ColMeta <- list(
 )
 ```
 
-### 3. Create an `OmicSignatureCollection` object.  
-Use `OmicSignatureCollection$new()` and provide our metadata and a list of 
-`OmicSignature` objects: 
+### 3. OmicSignature objects
+
+The `OmicSignature` objects to include in the collection can be created manually, see [here](https://montilab.github.io/OmicSignature/articles/CreateOmS.html). 
+In this example, we use `read.json()` function to read `OmicSignature` objects we previously created.
+
 ```{r}
-OmicCol <- OmicSignatureCollection$new(
-  OmicSigList = list(OmicObj1, OmicObj2, OmicObj3),
-  metadata = ColMeta,
-  print_message = FALSE
-)
+OmicObj1 <- readJson(file.path(system.file("extdata", package = "OmicSignature"), "Myc_reduce_mice_adipose_24m_obj.json"))
+OmicObj2 <- readJson(file.path(system.file("extdata", package = "OmicSignature"), "Myc_reduce_mice_muscle_24m_obj.json"))
+OmicObj3 <- readJson(file.path(system.file("extdata", package = "OmicSignature"), "Myc_reduce_mice_liver_24m_obj.json"))
 ```
+
 By default, `print_message` is set to `FALSE`. You can change it to `TRUE` to 
 see the messages. During the creation of OmicSignatureCollection object, all 
 input `OmicSignature` objects will be re-created to make sure they are all valid.  
