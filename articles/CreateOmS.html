@@ -132,7 +132,9 @@ required columns: “<strong>id</strong>”, “<strong>symbol</strong>”, “<
 <h3 class="hasAnchor">
 <a href="#metadata" class="anchor"></a>2.1. Metadata</h3>
 <p>To be saved into a OmicSignature object, the required <strong>metadata</strong> fields are:<br>
-“<strong>signature_name</strong>”, “<strong>organism</strong>”, “<strong>platform</strong>”, “<strong>direction_type</strong>”, “<strong>phenotype</strong>”. Additional optional fields can be added, e.g., adj_p (adjusted p-value), log fold change cutoff of the signature, or additional experiment descriptors, which will make the information more complete.</p>
+“<strong>signature_name</strong>”, “<strong>organism</strong>”, “<strong>direction_type</strong>”.<br>
+Fields not required but highly recommended if available: “<strong>platform</strong>”, “<strong>sample_type</strong>”, “<strong>phenotype</strong>”.<br>
+Additional optional fields can be added, e.g., score_cutoff, adj_p_cutoff, logfc_cutoff, or additional experiment descriptors, which will make the information more complete.</p>
 <p>One option is to create metadata list by hand:</p>
 <pre><code>metadata &lt;- list(
   "signature_name" = Myc_reduce_mice_liver_24m,
@@ -154,10 +156,10 @@ Click <a href="https://montilab.github.io/OmicSignature/reference/createMetadata
   <span class="co"># examples of build-in attributes:</span>
   signature_name <span class="op">=</span> <span class="st">"Myc_reduce_mice_liver_24m"</span>, <span class="co"># required</span>
   organism <span class="op">=</span> <span class="st">"Mus Musculus"</span>, <span class="co"># required</span>
-  phenotype <span class="op">=</span> <span class="st">"Myc_reduce"</span>, <span class="co"># required</span>
+  phenotype <span class="op">=</span> <span class="st">"Myc_reduce"</span>, <span class="co"># optional but highly recommended</span>
   direction_type <span class="op">=</span> <span class="st">"bi-directional"</span>, <span class="co"># required</span>
-  platform <span class="op">=</span> <span class="st">"GPL6246"</span>, <span class="co"># required; must be GEO platform ID</span>
-  sample_type <span class="op">=</span> <span class="st">"liver"</span>, <span class="co"># must be BRENDA ontology</span>
+  platform <span class="op">=</span> <span class="st">"GPL6246"</span>, <span class="co"># optional but highly recommended; must be a GEO platform ID</span>
+  sample_type <span class="op">=</span> <span class="st">"liver"</span>, <span class="co"># optional but highly recommended; must be BRENDA ontology</span>
   adj_p_cutoff <span class="op">=</span> <span class="fl">0.05</span>,
   score_cutoff <span class="op">=</span> <span class="fl">7</span>,
   keywords <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Myc"</span>, <span class="st">"KO"</span>, <span class="st">"longevity"</span><span class="op">)</span>,
@@ -186,7 +188,7 @@ Click <a href="https://montilab.github.io/OmicSignature/reference/createMetadata
 <p>To be saved into a OmicSignature object, the matrix’ required columns are:<br>
 “<strong>id</strong>”, “<strong>symbol</strong>”, “<strong>score</strong>”, “<strong>p_value</strong>”.<br>
 “id” is used as an unique identifier in case there are duplicated gene symbols. Frequently used id’s include probe ID, ENSEMBL ID, or unique numbers.</p>
-<p>Here we show an example of how to derive the <code>difexp</code> object from the results of a differential expression analysis based on the <code>limma</code> package. Output columns include logFC, AveExpr, t score, P.Value, adj.P.Val, B score, Probe.ID, gene_symbol, and gene_name.</p>
+<p>Here we show an example of how to derive the <code>difexp</code> object from the results of a differential expression analysis based on the <code>limma</code> package. Output columns include logFC, AveExpr, t, P.Value, adj.P.Val, B score, Probe.ID, gene_symbol, and gene_name. In this example, we use t-test statistic (column t) as the score for the symbols.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">difexp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.table</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, package <span class="op">=</span> <span class="st">"OmicSignature"</span><span class="op">)</span>, <span class="st">"difmatrix_Myc_mice_liver_24m_raw.txt"</span><span class="op">)</span>,
   header <span class="op">=</span> <span class="cn">TRUE</span>, sep <span class="op">=</span> <span class="st">"\t"</span>, stringsAsFactors <span class="op">=</span> <span class="cn">FALSE</span>
@@ -232,9 +234,9 @@ Click <a href="https://montilab.github.io/OmicSignature/reference/createMetadata
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">signatures</span> <span class="op">&lt;-</span> <span class="va">difexp</span> <span class="op">%&gt;%</span>
   <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">abs</a></span><span class="op">(</span><span class="va">score</span><span class="op">)</span> <span class="op">&gt;</span> <span class="va">metadata</span><span class="op">$</span><span class="va">score_cutoff</span> <span class="op">&amp;</span> <span class="va">adj_p</span> <span class="op">&lt;</span> <span class="va">metadata</span><span class="op">$</span><span class="va">adj_p_cutoff</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">symbol</span>,<span class="va">score</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>signature_direction<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/ifelse.html">ifelse</a></span><span class="op">(</span><span class="va">score</span><span class="op">&gt;</span><span class="fl">0</span>,<span class="st">"+"</span>,<span class="st">"-"</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html">rename</a></span><span class="op">(</span>signature_symbol<span class="op">=</span><span class="st">"symbol"</span>, signature_score<span class="op">=</span><span class="st">"score"</span><span class="op">)</span>
+  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">symbol</span>, <span class="va">score</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>signature_direction <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html">ifelse</a></span><span class="op">(</span><span class="va">score</span> <span class="op">&gt;</span> <span class="fl">0</span>, <span class="st">"+"</span>, <span class="st">"-"</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html">rename</a></span><span class="op">(</span>signature_symbol <span class="op">=</span> <span class="st">"symbol"</span>, signature_score <span class="op">=</span> <span class="st">"score"</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">signatures</span><span class="op">)</span>
 <span class="co">#&gt;   signature_symbol signature_score signature_direction</span>
 <span class="co">#&gt; 1            Il1r1      -13.542734                   -</span>
@@ -264,13 +266,19 @@ Click <a href="https://montilab.github.io/OmicSignature/reference/createMetadata
 <span class="co">#&gt; 343          Clec12a        7.024170                   +</span>
 <span class="co">#&gt; 344           Angpt2        7.021941                   +</span>
 <span class="co">#&gt; 345             Gas2        7.013040                   +</span></code></pre></div>
+<p>Alternatively, you can provide signatures as a character vector. For example:</p>
+<pre><code>signatures &lt;- c("gene1", "gene2", "gene3")</code></pre>
+<p>Or as a numeric vector and provide symbols as its name:</p>
+<pre><code>signatures &lt;- c(0.45, -3.21, 2.44)
+names(signatures) &lt;- c("gene1", "gene2", "gene3")</code></pre>
+<p>If <code>direction_type</code> in <code>metadata</code> is set to be “bi-directional”, the direction will be determined by whether a symbol has a positive or negative score.</p>
 </div>
 <div id="create-omicsignature-object" class="section level3">
 <h3 class="hasAnchor">
 <a href="#create-omicsignature-object" class="anchor"></a>2.4. Create <code>OmicSignature</code> object</h3>
 <p>We have everything we need now.<br>
 Use <code>OmicSignature$new()</code> to create a new OmicSignature R6 object.</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">OmicObj</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/OmicSignature.html">OmicSignature</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>
   metadata <span class="op">=</span> <span class="va">metadata</span>,
   signature <span class="op">=</span> <span class="va">signatures</span>,
@@ -278,7 +286,7 @@ Use <code>OmicSignature$new()</code> to create a new OmicSignature R6 object.</p
 <span class="op">)</span>
 <span class="co">#&gt;   [Success] OmicSignature object Myc_reduce_mice_liver_24m created.</span></code></pre></div>
 <p>Use <code><a href="https://rdrr.io/r/base/print.html">print()</a></code> to see its information:</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">OmicObj</span><span class="op">)</span>
 <span class="co">#&gt; Signature Object: </span>
 <span class="co">#&gt;   Metadata: </span>
@@ -301,17 +309,15 @@ Use <code>OmicSignature$new()</code> to create a new OmicSignature R6 object.</p
 <span class="co">#&gt;   Differential Expression Data: </span>
 <span class="co">#&gt;     27359 x 9</span></code></pre></div>
 <p>You can also ask the program to print the messages while creating the OmicSignature Object. By default, <code>print_message</code> is set to be <code>FALSE</code>.</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">OmicObj</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/OmicSignature.html">OmicSignature</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>
   metadata <span class="op">=</span> <span class="va">metadata</span>,
   signature <span class="op">=</span> <span class="va">signatures</span>,
   difexp <span class="op">=</span> <span class="va">difexp</span>,
   print_message <span class="op">=</span> <span class="cn">TRUE</span>
 <span class="op">)</span>
-<span class="co">#&gt;   --Required attributes for metadata: signature_name, organism, platform, direction_type, phenotype, covariates --</span>
+<span class="co">#&gt;   --Required attributes for metadata: signature_name, organism, direction_type --</span>
 <span class="co">#&gt;   [Success] Metadata is saved. </span>
-<span class="co">#&gt;   Signature: Checked, signature is bi-directional</span>
-<span class="co">#&gt;                          with - (Dn) and + (Up) directions. </span>
 <span class="co">#&gt;   [Success] Signature is valid. </span>
 <span class="co">#&gt;   difexp: additional columns found: logfc, aveexpr, p_value, b, gene_name. </span>
 <span class="co">#&gt;   [Success] difexp matrix is valid. </span>
@@ -324,7 +330,7 @@ Use <code>OmicSignature$new()</code> to create a new OmicSignature R6 object.</p
 </h2>
 <p>You can by-pass the generating signature process once you are an expert. Simply provide cutoffs in metadata, and <code><a href="../reference/OmicSigFromDifexp.html">OmicSigFromDifexp()</a></code> will extract signatures from the <code>difexp</code> provided according to those criteria, and create the <code>OmicSignature</code> object for you.</p>
 <p>Remember to provide cutoffs, e.g. <code>adj_p_cutoff</code> and <code>score_cutoff</code> in <code>metadata</code>, and make sure your input <code>difexp</code> has those columns.</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">OmicObj1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/OmicSigFromDifexp.html">OmicSigFromDifexp</a></span><span class="op">(</span><span class="va">difexp</span>, <span class="va">metadata</span><span class="op">)</span>
 <span class="co">#&gt; -- criterias used to extract signatures:  abs(score) &gt; 7; adj_p &lt; 0.05 . </span>
 <span class="co">#&gt; </span>
@@ -351,7 +357,7 @@ Use <code>OmicSignature$new()</code> to create a new OmicSignature R6 object.</p
 <span class="co">#&gt;   Differential Expression Data: </span>
 <span class="co">#&gt;     27359 x 9</span></code></pre></div>
 <p>See the top signatures:</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">OmicObj1</span><span class="op">$</span><span class="va">signature</span> <span class="op">%&gt;%</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/desc.html">desc</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">abs</a></span><span class="op">(</span><span class="va">signature_score</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
 <span class="co">#&gt;   signature_symbol signature_score signature_direction</span>
 <span class="co">#&gt; 1             Saa1       -35.29997                   -</span>

@@ -40,7 +40,7 @@
 
 
 <meta property="og:title" content="OmicSignature R6 object — OmicSignature" />
-<meta property="og:description" content="a R6 object to store signatures generated from experiments. In cluding metadata, signature, and an optional differential expression matrix." />
+<meta property="og:description" content="a R6 object to store signatures generated from experiments. In cluding metadata, signature, and an optional differential expression analysis result matrix." />
 
 
 
@@ -135,7 +135,7 @@
     </div>
 
     <div class="ref-description">
-    <p>a R6 object to store signatures generated from experiments. In cluding metadata, signature, and an optional differential expression matrix.</p>
+    <p>a R6 object to store signatures generated from experiments. In cluding metadata, signature, and an optional differential expression analysis result matrix.</p>
     </div>
 
 
@@ -182,9 +182,9 @@
 
 <h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Arguments</h4>
 <p><div class="arguments"></p><dl>
-<dt><code>metadata</code></dt><dd><p>required, must be a list</p></dd>
+<dt><code>metadata</code></dt><dd><p>required. must be a list. See `createMetadata` for more information.</p></dd>
 
-<dt><code>signature</code></dt><dd><p>required, must be a dataframe</p></dd>
+<dt><code>signature</code></dt><dd><p>required. must be a vector, or a dataframe with columns "signature_name", and "signature_direction" if applicable</p></dd>
 
 <dt><code>difexp</code></dt><dd><p>optional</p></dd>
 
