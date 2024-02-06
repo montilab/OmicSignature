@@ -2,9 +2,11 @@ on: [push]
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     container: bioconductor/bioconductor_docker:devel
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v3
 
       - name: Query dependencies
         run: |
@@ -25,7 +27,7 @@ jobs:
         if: runner.os == 'Linux'
         env:
           RHUB_PLATFORM: linux-x86_64-ubuntu-gcc
-          GITHUB_PAT: ${{ secrets.DEV_ACCESS_TOKEN }}
+          GITHUB_PAT: ${{ secrets.OMICSIGNATURE_TOKEN }}
         run: |
           Rscript -e "remotes::install_github('r-hub/sysreqs')"
           sysreqs=$(Rscript -e "cat(sysreqs::sysreq_commands('DESCRIPTION'))")
@@ -60,8 +62,8 @@ jobs:
           apt-get update
           apt-get -y install rsync
       - name: Deploy 🚀
-        uses: JamesIves/github-pages-deploy-action@releases/v3
+        uses: JamesIves/github-pages-deploy-action@v4
         with:
-          ACCESS_TOKEN: ${{ secrets.DEV_ACCESS_TOKEN }}
-          BRANCH: gh-pages # The branch the action should deploy to.
-          FOLDER: docs # The folder the action should deploy.
+          token: ${{ secrets.OMICSIGNATURE_TOKEN }}
+          branch: gh-pages 
+          folder: docs 
