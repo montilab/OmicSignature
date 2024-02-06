@@ -19,6 +19,8 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -31,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">OmicSignature</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.0</span>
       </span>
     </div>
 
@@ -41,7 +43,7 @@
   <a href="../index.html">Home</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -83,13 +85,14 @@
 
       
 
-      </header><script src="FunOmSC_files/header-attrs-2.8/header-attrs.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Functionalities of OmicSignatureCollection</h1>
-                        <h4 class="author">Vanessa Mengze Li</h4>
+                        <h4 data-toc-skip class="author">Vanessa Mengze
+Li</h4>
             
-            <h4 class="date">03/31/2021</h4>
+            <h4 data-toc-skip class="date">03/31/2021</h4>
       
       
       <div class="hidden name"><code>FunOmSC.Rmd</code></div>
@@ -99,128 +102,141 @@
     
     
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org//reference/load_all.html">load_all</a></span><span class="op">(</span><span class="st">"."</span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org/reference/load_all.html" class="external-link">load_all</a></span><span class="op">(</span><span class="st">"."</span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span></code></pre></div>
 <p><font color="#000000"></font></p>
 <p><img src="figs/Omic_OmicCol_func1.png" width="60%" height="60%"></p>
-<p>First create an <code>OmicSignatureCollection</code> object. This is the same code in <a href="https://montilab.github.io/OmicSignature/articles/CreateOmSC.html">“Create OmicSignatureCollection”</a> section.</p>
+<p>First create an <code>OmicSignatureCollection</code> object. This is
+the same code in <a href="https://montilab.github.io/OmicSignature/articles/CreateOmSC.html">“Create
+OmicSignatureCollection”</a> section.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">OmicObj1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/readJson.html">readJson</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, package <span class="op">=</span> <span class="st">"OmicSignature"</span><span class="op">)</span>, <span class="st">"Myc_reduce_mice_adipose_24m_obj.json"</span><span class="op">)</span><span class="op">)</span>
-<span class="co">#&gt;   [Success] OmicSignature object Myc_reduce_mice_adipose_24m created.</span>
-<span class="va">OmicObj2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/readJson.html">readJson</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, package <span class="op">=</span> <span class="st">"OmicSignature"</span><span class="op">)</span>, <span class="st">"Myc_reduce_mice_muscle_24m_obj.json"</span><span class="op">)</span><span class="op">)</span>
-<span class="co">#&gt;   [Success] OmicSignature object Myc_reduce_mice_muscle_24m created.</span>
-<span class="va">OmicObj3</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/readJson.html">readJson</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, package <span class="op">=</span> <span class="st">"OmicSignature"</span><span class="op">)</span>, <span class="st">"Myc_reduce_mice_liver_24m_obj.json"</span><span class="op">)</span><span class="op">)</span>
-<span class="co">#&gt;   [Success] OmicSignature object Myc_reduce_mice_liver_24m created.</span>
-<span class="va">ColMeta</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>
-  <span class="st">"collection_name"</span> <span class="op">=</span> <span class="st">"Myc_mice_collection"</span>,
-  <span class="st">"description"</span> <span class="op">=</span> <span class="st">"A collection for Myc reduced mice 24 month"</span>,
-  <span class="st">"organism"</span> <span class="op">=</span> <span class="st">"Mus Musculus"</span>,
-  <span class="st">"author"</span> <span class="op">=</span> <span class="st">"me"</span>
-<span class="op">)</span>
-<span class="va">OmicCol</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/OmicSignatureCollection.html">OmicSignatureCollection</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>
-  OmicSigList <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">OmicObj1</span>, <span class="va">OmicObj2</span>, <span class="va">OmicObj3</span><span class="op">)</span>,
-  metadata <span class="op">=</span> <span class="va">ColMeta</span>,
-  print_message <span class="op">=</span> <span class="cn">FALSE</span>
-<span class="op">)</span>
-<span class="co">#&gt;   [Success] OmicSignature Collection Myc_mice_collection created.</span></code></pre></div>
-<div id="print-a-summary-of-the-metadata-in-the-omicsignaturecollection" class="section level2">
-<h2 class="hasAnchor">
-<a href="#print-a-summary-of-the-metadata-in-the-omicsignaturecollection" class="anchor"></a>Print a summary of the metadata in the <code>OmicSignatureCollection</code>
+<code class="sourceCode R"><span><span class="va">OmicObj1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/readJson.html">readJson</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, package <span class="op">=</span> <span class="st">"OmicSignature"</span><span class="op">)</span>, <span class="st">"Myc_reduce_mice_adipose_24m_obj.json"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt;   [Success] OmicSignature object Myc_reduce_mice_adipose_24m created.</span></span>
+<span><span class="va">OmicObj2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/readJson.html">readJson</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, package <span class="op">=</span> <span class="st">"OmicSignature"</span><span class="op">)</span>, <span class="st">"Myc_reduce_mice_muscle_24m_obj.json"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt;   [Success] OmicSignature object Myc_reduce_mice_muscle_24m created.</span></span>
+<span><span class="va">OmicObj3</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/readJson.html">readJson</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, package <span class="op">=</span> <span class="st">"OmicSignature"</span><span class="op">)</span>, <span class="st">"Myc_reduce_mice_liver_24m_obj.json"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt;   [Success] OmicSignature object Myc_reduce_mice_liver_24m created.</span></span>
+<span><span class="va">ColMeta</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>  <span class="st">"collection_name"</span> <span class="op">=</span> <span class="st">"Myc_mice_collection"</span>,</span>
+<span>  <span class="st">"description"</span> <span class="op">=</span> <span class="st">"A collection for Myc reduced mice 24 month"</span>,</span>
+<span>  <span class="st">"organism"</span> <span class="op">=</span> <span class="st">"Mus Musculus"</span>,</span>
+<span>  <span class="st">"author"</span> <span class="op">=</span> <span class="st">"me"</span></span>
+<span><span class="op">)</span></span>
+<span><span class="va">OmicCol</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/OmicSignatureCollection.html">OmicSignatureCollection</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span></span>
+<span>  OmicSigList <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">OmicObj1</span>, <span class="va">OmicObj2</span>, <span class="va">OmicObj3</span><span class="op">)</span>,</span>
+<span>  metadata <span class="op">=</span> <span class="va">ColMeta</span>,</span>
+<span>  print_message <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span>
+<span><span class="co">#&gt;   [Success] OmicSignature Collection Myc_mice_collection created.</span></span></code></pre></div>
+<div class="section level2">
+<h2 id="print-a-summary-of-the-metadata-in-the-omicsignaturecollection">Print a summary of the metadata in the
+<code>OmicSignatureCollection</code><a class="anchor" aria-label="anchor" href="#print-a-summary-of-the-metadata-in-the-omicsignaturecollection"></a>
 </h2>
-<p><code>$metadataSummary()</code> will print out the metadata fields in all <code>OmicSignature</code> objects stored in the <code>OmicSignatureCollection</code>.<br>
-When parameter “only_shared” is set to be <code>TRUE</code>, only shared metadata fields among all <code>OmicSignature</code> objects will be included. Otherwise, all metadata fields will be included.</p>
+<p><code>$metadataSummary()</code> will print out the metadata fields in
+all <code>OmicSignature</code> objects stored in the
+<code>OmicSignatureCollection</code>.<br>
+When parameter “only_shared” is set to be <code>TRUE</code>, only shared
+metadata fields among all <code>OmicSignature</code> objects will be
+included. Otherwise, all metadata fields will be included.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">OmicCol</span><span class="op">$</span><span class="fu">metadataSummary</span><span class="op">(</span>only_shared <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
-<span class="co">#&gt;                Myc_reduce_mice_adipose_24m   Myc_reduce_mice_muscle_24m  </span>
-<span class="co">#&gt; adj_p_cutoff   0.05                          0.05                        </span>
-<span class="co">#&gt; covariates     "none"                        "none"                      </span>
-<span class="co">#&gt; direction_type "bi-directional"              "bi-directional"            </span>
-<span class="co">#&gt; keywords       character,3                   character,3                 </span>
-<span class="co">#&gt; logfc_cutoff   0                             0                           </span>
-<span class="co">#&gt; organism       "Mus Musculus"                "Mus Musculus"              </span>
-<span class="co">#&gt; phenotype      "Myc_reduce"                  "Myc_reduce"                </span>
-<span class="co">#&gt; platform       "GPL6246"                     "GPL6246"                   </span>
-<span class="co">#&gt; PMID           25619689                      25619689                    </span>
-<span class="co">#&gt; sample_type    "adipose tissue"              "muscle"                    </span>
-<span class="co">#&gt; score_cutoff   7                             7                           </span>
-<span class="co">#&gt; signature_name "Myc_reduce_mice_adipose_24m" "Myc_reduce_mice_muscle_24m"</span>
-<span class="co">#&gt; year           2015                          2015                        </span>
-<span class="co">#&gt;                Myc_reduce_mice_liver_24m  </span>
-<span class="co">#&gt; adj_p_cutoff   0.05                       </span>
-<span class="co">#&gt; covariates     "none"                     </span>
-<span class="co">#&gt; direction_type "bi-directional"           </span>
-<span class="co">#&gt; keywords       character,3                </span>
-<span class="co">#&gt; logfc_cutoff   0                          </span>
-<span class="co">#&gt; organism       "Mus Musculus"             </span>
-<span class="co">#&gt; phenotype      "Myc_reduce"               </span>
-<span class="co">#&gt; platform       "GPL6246"                  </span>
-<span class="co">#&gt; PMID           25619689                   </span>
-<span class="co">#&gt; sample_type    "liver"                    </span>
-<span class="co">#&gt; score_cutoff   7                          </span>
-<span class="co">#&gt; signature_name "Myc_reduce_mice_liver_24m"</span>
-<span class="co">#&gt; year           2015</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">OmicCol</span><span class="op">$</span><span class="fu">metadataSummary</span><span class="op">(</span>only_shared <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="co">#&gt;                Myc_reduce_mice_adipose_24m   Myc_reduce_mice_muscle_24m  </span></span>
+<span><span class="co">#&gt; adj_p_cutoff   0.05                          0.05                        </span></span>
+<span><span class="co">#&gt; covariates     "none"                        "none"                      </span></span>
+<span><span class="co">#&gt; direction_type "bi-directional"              "bi-directional"            </span></span>
+<span><span class="co">#&gt; keywords       character,3                   character,3                 </span></span>
+<span><span class="co">#&gt; logfc_cutoff   0                             0                           </span></span>
+<span><span class="co">#&gt; organism       "Mus Musculus"                "Mus Musculus"              </span></span>
+<span><span class="co">#&gt; phenotype      "Myc_reduce"                  "Myc_reduce"                </span></span>
+<span><span class="co">#&gt; platform       "GPL6246"                     "GPL6246"                   </span></span>
+<span><span class="co">#&gt; PMID           25619689                      25619689                    </span></span>
+<span><span class="co">#&gt; sample_type    "adipose tissue"              "muscle"                    </span></span>
+<span><span class="co">#&gt; score_cutoff   7                             7                           </span></span>
+<span><span class="co">#&gt; signature_name "Myc_reduce_mice_adipose_24m" "Myc_reduce_mice_muscle_24m"</span></span>
+<span><span class="co">#&gt; year           2015                          2015                        </span></span>
+<span><span class="co">#&gt;                Myc_reduce_mice_liver_24m  </span></span>
+<span><span class="co">#&gt; adj_p_cutoff   0.05                       </span></span>
+<span><span class="co">#&gt; covariates     "none"                     </span></span>
+<span><span class="co">#&gt; direction_type "bi-directional"           </span></span>
+<span><span class="co">#&gt; keywords       character,3                </span></span>
+<span><span class="co">#&gt; logfc_cutoff   0                          </span></span>
+<span><span class="co">#&gt; organism       "Mus Musculus"             </span></span>
+<span><span class="co">#&gt; phenotype      "Myc_reduce"               </span></span>
+<span><span class="co">#&gt; platform       "GPL6246"                  </span></span>
+<span><span class="co">#&gt; PMID           25619689                   </span></span>
+<span><span class="co">#&gt; sample_type    "liver"                    </span></span>
+<span><span class="co">#&gt; score_cutoff   7                          </span></span>
+<span><span class="co">#&gt; signature_name "Myc_reduce_mice_liver_24m"</span></span>
+<span><span class="co">#&gt; year           2015</span></span></code></pre></div>
 </div>
-<div id="extract-new-signatures-from-the-omicsignaturecollection-object" class="section level2">
-<h2 class="hasAnchor">
-<a href="#extract-new-signatures-from-the-omicsignaturecollection-object" class="anchor"></a>Extract new signatures from the <code>OmicSignatureCollection</code> object</h2>
-<p>For example, extract all features with a absolute score &gt; 25 and adj_p &lt; 0.001 from all the <code>OmicSignature</code> object stored in this Collection.<br>
+<div class="section level2">
+<h2 id="extract-new-signatures-from-the-omicsignaturecollection-object">Extract new signatures from the <code>OmicSignatureCollection</code>
+object<a class="anchor" aria-label="anchor" href="#extract-new-signatures-from-the-omicsignaturecollection-object"></a>
+</h2>
+<p>For example, extract all features with a absolute score &gt; 25 and
+adj_p &lt; 0.001 from all the <code>OmicSignature</code> object stored
+in this Collection.<br>
 By default, the features are ranked by score.<br>
-By default, <code>bind</code> is set to be <code>TRUE</code> to output results from all <code>OmicSignature</code> objects as a single dataframe.</p>
+By default, <code>bind</code> is set to be <code>TRUE</code> to output
+results from all <code>OmicSignature</code> objects as a single
+dataframe.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">OmicCol</span><span class="op">$</span><span class="fu">extractSignature</span><span class="op">(</span><span class="st">"abs(score) &gt; 25 &amp; adj_p &lt; 0.05"</span><span class="op">)</span>
-<span class="co">#&gt;                       sig_name    symbol    score direction</span>
-<span class="co">#&gt; 1  Myc_reduce_mice_adipose_24m    Crisp1  85.2374         +</span>
-<span class="co">#&gt; 2  Myc_reduce_mice_adipose_24m    Akr1b7  49.0361         +</span>
-<span class="co">#&gt; 3  Myc_reduce_mice_adipose_24m      Pcp4  40.2846         +</span>
-<span class="co">#&gt; 5  Myc_reduce_mice_adipose_24m    Spink8  36.2846         +</span>
-<span class="co">#&gt; 15   Myc_reduce_mice_liver_24m      Cpa1  34.6201         +</span>
-<span class="co">#&gt; 6  Myc_reduce_mice_adipose_24m       Kap  30.6262         +</span>
-<span class="co">#&gt; 7  Myc_reduce_mice_adipose_24m     Ces5a  30.0132         +</span>
-<span class="co">#&gt; 18   Myc_reduce_mice_liver_24m      Zg16  28.5156         +</span>
-<span class="co">#&gt; 9  Myc_reduce_mice_adipose_24m    Defb26  27.7851         +</span>
-<span class="co">#&gt; 13  Myc_reduce_mice_muscle_24m       Alb  27.7297         +</span>
-<span class="co">#&gt; 10 Myc_reduce_mice_adipose_24m      Smcp  27.3482         +</span>
-<span class="co">#&gt; 11 Myc_reduce_mice_adipose_24m   Sprr2a2  27.2045         +</span>
-<span class="co">#&gt; 12 Myc_reduce_mice_adipose_24m Serpina1f  25.5037         +</span>
-<span class="co">#&gt; 4  Myc_reduce_mice_adipose_24m      Mmp7 -36.8727         -</span>
-<span class="co">#&gt; 14   Myc_reduce_mice_liver_24m      Saa1    -35.3         -</span>
-<span class="co">#&gt; 16   Myc_reduce_mice_liver_24m   Sult3a1 -31.7553         -</span>
-<span class="co">#&gt; 17   Myc_reduce_mice_liver_24m    Isyna1 -29.9326         -</span>
-<span class="co">#&gt; 8  Myc_reduce_mice_adipose_24m   Ighv3-5 -29.0765         -</span>
-<span class="co">#&gt; 19   Myc_reduce_mice_liver_24m     Chil1 -25.4132         -</span></code></pre></div>
-<p>If <code>bind</code> is set to be <code>FALSE</code>, the output of each <code>OmicSignature</code> objects are provided individually as one element in a list.</p>
+<code class="sourceCode R"><span><span class="va">OmicCol</span><span class="op">$</span><span class="fu">extractSignature</span><span class="op">(</span><span class="st">"abs(score) &gt; 25 &amp; adj_p &lt; 0.05"</span><span class="op">)</span></span>
+<span><span class="co">#&gt;                       sig_name    symbol    score direction</span></span>
+<span><span class="co">#&gt; 1  Myc_reduce_mice_adipose_24m    Crisp1  85.2374         +</span></span>
+<span><span class="co">#&gt; 2  Myc_reduce_mice_adipose_24m    Akr1b7  49.0361         +</span></span>
+<span><span class="co">#&gt; 3  Myc_reduce_mice_adipose_24m      Pcp4  40.2846         +</span></span>
+<span><span class="co">#&gt; 5  Myc_reduce_mice_adipose_24m    Spink8  36.2846         +</span></span>
+<span><span class="co">#&gt; 15   Myc_reduce_mice_liver_24m      Cpa1  34.6201         +</span></span>
+<span><span class="co">#&gt; 6  Myc_reduce_mice_adipose_24m       Kap  30.6262         +</span></span>
+<span><span class="co">#&gt; 7  Myc_reduce_mice_adipose_24m     Ces5a  30.0132         +</span></span>
+<span><span class="co">#&gt; 18   Myc_reduce_mice_liver_24m      Zg16  28.5156         +</span></span>
+<span><span class="co">#&gt; 9  Myc_reduce_mice_adipose_24m    Defb26  27.7851         +</span></span>
+<span><span class="co">#&gt; 13  Myc_reduce_mice_muscle_24m       Alb  27.7297         +</span></span>
+<span><span class="co">#&gt; 10 Myc_reduce_mice_adipose_24m      Smcp  27.3482         +</span></span>
+<span><span class="co">#&gt; 11 Myc_reduce_mice_adipose_24m   Sprr2a2  27.2045         +</span></span>
+<span><span class="co">#&gt; 12 Myc_reduce_mice_adipose_24m Serpina1f  25.5037         +</span></span>
+<span><span class="co">#&gt; 4  Myc_reduce_mice_adipose_24m      Mmp7 -36.8727         -</span></span>
+<span><span class="co">#&gt; 14   Myc_reduce_mice_liver_24m      Saa1    -35.3         -</span></span>
+<span><span class="co">#&gt; 16   Myc_reduce_mice_liver_24m   Sult3a1 -31.7553         -</span></span>
+<span><span class="co">#&gt; 17   Myc_reduce_mice_liver_24m    Isyna1 -29.9326         -</span></span>
+<span><span class="co">#&gt; 8  Myc_reduce_mice_adipose_24m   Ighv3-5 -29.0765         -</span></span>
+<span><span class="co">#&gt; 19   Myc_reduce_mice_liver_24m     Chil1 -25.4132         -</span></span></code></pre></div>
+<p>If <code>bind</code> is set to be <code>FALSE</code>, the output of
+each <code>OmicSignature</code> objects are provided individually as one
+element in a list.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">OmicCol</span><span class="op">$</span><span class="fu">extractSignature</span><span class="op">(</span><span class="st">"abs(score) &gt; 25 &amp; adj_p &lt; 0.05"</span>, bind <span class="op">=</span> <span class="cn">F</span><span class="op">)</span>
-<span class="co">#&gt; $Myc_reduce_mice_adipose_24m</span>
-<span class="co">#&gt;       symbol    score direction</span>
-<span class="co">#&gt; 1     Crisp1  85.2374         +</span>
-<span class="co">#&gt; 2     Akr1b7  49.0361         +</span>
-<span class="co">#&gt; 3       Pcp4  40.2846         +</span>
-<span class="co">#&gt; 4       Mmp7 -36.8727         -</span>
-<span class="co">#&gt; 5     Spink8  36.2846         +</span>
-<span class="co">#&gt; 6        Kap  30.6262         +</span>
-<span class="co">#&gt; 7      Ces5a  30.0132         +</span>
-<span class="co">#&gt; 8    Ighv3-5 -29.0765         -</span>
-<span class="co">#&gt; 9     Defb26  27.7851         +</span>
-<span class="co">#&gt; 10      Smcp  27.3482         +</span>
-<span class="co">#&gt; 11   Sprr2a2  27.2045         +</span>
-<span class="co">#&gt; 12 Serpina1f  25.5037         +</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; $Myc_reduce_mice_muscle_24m</span>
-<span class="co">#&gt;   symbol   score direction</span>
-<span class="co">#&gt; 1    Alb 27.7297         +</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; $Myc_reduce_mice_liver_24m</span>
-<span class="co">#&gt;    symbol    score direction</span>
-<span class="co">#&gt; 1    Saa1    -35.3         -</span>
-<span class="co">#&gt; 2    Cpa1  34.6201         +</span>
-<span class="co">#&gt; 3 Sult3a1 -31.7553         -</span>
-<span class="co">#&gt; 4  Isyna1 -29.9326         -</span>
-<span class="co">#&gt; 5    Zg16  28.5156         +</span>
-<span class="co">#&gt; 6   Chil1 -25.4132         -</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">OmicCol</span><span class="op">$</span><span class="fu">extractSignature</span><span class="op">(</span><span class="st">"abs(score) &gt; 25 &amp; adj_p &lt; 0.05"</span>, bind <span class="op">=</span> <span class="cn">F</span><span class="op">)</span></span>
+<span><span class="co">#&gt; $Myc_reduce_mice_adipose_24m</span></span>
+<span><span class="co">#&gt;       symbol    score direction</span></span>
+<span><span class="co">#&gt; 1     Crisp1  85.2374         +</span></span>
+<span><span class="co">#&gt; 2     Akr1b7  49.0361         +</span></span>
+<span><span class="co">#&gt; 3       Pcp4  40.2846         +</span></span>
+<span><span class="co">#&gt; 4       Mmp7 -36.8727         -</span></span>
+<span><span class="co">#&gt; 5     Spink8  36.2846         +</span></span>
+<span><span class="co">#&gt; 6        Kap  30.6262         +</span></span>
+<span><span class="co">#&gt; 7      Ces5a  30.0132         +</span></span>
+<span><span class="co">#&gt; 8    Ighv3-5 -29.0765         -</span></span>
+<span><span class="co">#&gt; 9     Defb26  27.7851         +</span></span>
+<span><span class="co">#&gt; 10      Smcp  27.3482         +</span></span>
+<span><span class="co">#&gt; 11   Sprr2a2  27.2045         +</span></span>
+<span><span class="co">#&gt; 12 Serpina1f  25.5037         +</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $Myc_reduce_mice_muscle_24m</span></span>
+<span><span class="co">#&gt;   symbol   score direction</span></span>
+<span><span class="co">#&gt; 1    Alb 27.7297         +</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $Myc_reduce_mice_liver_24m</span></span>
+<span><span class="co">#&gt;    symbol    score direction</span></span>
+<span><span class="co">#&gt; 1    Saa1    -35.3         -</span></span>
+<span><span class="co">#&gt; 2    Cpa1  34.6201         +</span></span>
+<span><span class="co">#&gt; 3 Sult3a1 -31.7553         -</span></span>
+<span><span class="co">#&gt; 4  Isyna1 -29.9326         -</span></span>
+<span><span class="co">#&gt; 5    Zg16  28.5156         +</span></span>
+<span><span class="co">#&gt; 6   Chil1 -25.4132         -</span></span></code></pre></div>
 </div>
-<div id="section" class="section level2">
-<h2></h2>
+<div class="section level2">
+<h2 id="section"></h2>
 </div>
   </div>
 
@@ -235,11 +251,13 @@ By default, <code>bind</code> is set to be <code>TRUE</code> to output results f
 
 
       <footer><div class="copyright">
-  <p>Developed by Mengze Li.</p>
+  <p></p>
+<p>Developed by Mengze Li.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer>
@@ -247,6 +265,8 @@ By default, <code>bind</code> is set to be <code>TRUE</code> to output results f
 
   
 
+
+  
 
   </body>
 </html>

@@ -19,6 +19,8 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -31,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">OmicSignature</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.0</span>
       </span>
     </div>
 
@@ -41,7 +43,7 @@
   <a href="../index.html">Home</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -83,13 +85,15 @@
 
       
 
-      </header><script src="ObjectStructure_files/header-attrs-2.8/header-attrs.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1 data-toc-skip>Structure of OmicSignature &amp; OmicSignatureCollection</h1>
-                        <h4 class="author">Vanessa Mengze Li</h4>
+      <h1 data-toc-skip>Structure of OmicSignature &amp;
+OmicSignatureCollection</h1>
+                        <h4 data-toc-skip class="author">Vanessa Mengze
+Li</h4>
             
-            <h4 class="date">04/06/2021</h4>
+            <h4 data-toc-skip class="date">04/06/2021</h4>
       
       
       <div class="hidden name"><code>ObjectStructure.Rmd</code></div>
@@ -98,27 +102,33 @@
 
     
     
-<div id="omicsignature-object-structure" class="section level2">
-<h2 class="hasAnchor">
-<a href="#omicsignature-object-structure" class="anchor"></a>OmicSignature object structure</h2>
+<div class="section level2">
+<h2 id="omicsignature-object-structure">OmicSignature object structure<a class="anchor" aria-label="anchor" href="#omicsignature-object-structure"></a>
+</h2>
 <p>An <code>OmicSignature</code> object contains three parts:<br>
 - <strong>metadata</strong>, a list containing metadata fields;<br>
-- <strong>signature</strong>, a dataframe with feature symbols, directions, and scores if applicable;<br>
-- <strong>difexp</strong>, optional, a dataframe with the differential expression analysis result.</p>
-<p>See <a href="https://montilab.github.io/OmicSignature/articles/CreateOmS.html">here</a> about how to create one.</p>
+- <strong>signature</strong>, a dataframe with feature symbols,
+directions, and scores if applicable;<br>
+- <strong>difexp</strong>, optional, a dataframe with the differential
+expression analysis result.</p>
+<p>See <a href="https://montilab.github.io/OmicSignature/articles/CreateOmS.html">here</a>
+about how to create one.</p>
 <p><img src="figs/Omic_structure.png" width="60%" height="60%"></p>
 </div>
-<div id="omicsignaturecollection-object-structure" class="section level2">
-<h2 class="hasAnchor">
-<a href="#omicsignaturecollection-object-structure" class="anchor"></a>OmicSignatureCollection object structure</h2>
-<p>An <code>OmicSignatureCollection</code> object contains two parts:<br>
-- metadata, a list containing metadata fields; - OmicSigList, a list of OmicSignature Objects</p>
-<p>See <a href="https://montilab.github.io/OmicSignature/articles/CreateOmSC.html">here</a> about how to create one.</p>
+<div class="section level2">
+<h2 id="omicsignaturecollection-object-structure">OmicSignatureCollection object structure<a class="anchor" aria-label="anchor" href="#omicsignaturecollection-object-structure"></a>
+</h2>
+<p>An <code>OmicSignatureCollection</code> object contains two
+parts:<br>
+- metadata, a list containing metadata fields; - OmicSigList, a list of
+OmicSignature Objects</p>
+<p>See <a href="https://montilab.github.io/OmicSignature/articles/CreateOmSC.html">here</a>
+about how to create one.</p>
 <p><img src="figs/OmicCol_structure.png" width="60%" height="60%"></p>
 </div>
-<div id="quick-cheat-sheet-of-main-functionalities" class="section level2">
-<h2 class="hasAnchor">
-<a href="#quick-cheat-sheet-of-main-functionalities" class="anchor"></a>Quick Cheat-Sheet of main functionalities</h2>
+<div class="section level2">
+<h2 id="quick-cheat-sheet-of-main-functionalities">Quick Cheat-Sheet of main functionalities<a class="anchor" aria-label="anchor" href="#quick-cheat-sheet-of-main-functionalities"></a>
+</h2>
 <p><img src="figs/Omic_OmicCol_func2.png" width="60%" height="60%"></p>
 <p>–</p>
 </div>
@@ -135,11 +145,13 @@
 
 
       <footer><div class="copyright">
-  <p>Developed by Mengze Li.</p>
+  <p></p>
+<p>Developed by Mengze Li.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer>
@@ -147,6 +159,8 @@
 
   
 
+
+  
 
   </body>
 </html>

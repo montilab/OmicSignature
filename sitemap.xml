@@ -1,6 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://montilab.github.io/OmicSignature/404.html</loc>
+  </url>
+  <url>
+    <loc>https://montilab.github.io/OmicSignature/LICENSE-text.html</loc>
+  </url>
+  <url>
+    <loc>https://montilab.github.io/OmicSignature/articles/BRENDA.html</loc>
+  </url>
+  <url>
+    <loc>https://montilab.github.io/OmicSignature/articles/CreateOmS.html</loc>
+  </url>
+  <url>
+    <loc>https://montilab.github.io/OmicSignature/articles/CreateOmSC.html</loc>
+  </url>
+  <url>
+    <loc>https://montilab.github.io/OmicSignature/articles/FunOmS.html</loc>
+  </url>
+  <url>
+    <loc>https://montilab.github.io/OmicSignature/articles/FunOmSC.html</loc>
+  </url>
+  <url>
+    <loc>https://montilab.github.io/OmicSignature/articles/ObjectStructure.html</loc>
+  </url>
+  <url>
+    <loc>https://montilab.github.io/OmicSignature/articles/index.html</loc>
+  </url>
+  <url>
+    <loc>https://montilab.github.io/OmicSignature/authors.html</loc>
+  </url>
+  <url>
     <loc>https://montilab.github.io/OmicSignature/index.html</loc>
   </url>
   <url>
@@ -46,6 +76,9 @@
     <loc>https://montilab.github.io/OmicSignature/reference/diffAnalLm.html</loc>
   </url>
   <url>
+    <loc>https://montilab.github.io/OmicSignature/reference/index.html</loc>
+  </url>
+  <url>
     <loc>https://montilab.github.io/OmicSignature/reference/readJson.html</loc>
   </url>
   <url>
@@ -65,23 +98,5 @@
   </url>
   <url>
     <loc>https://montilab.github.io/OmicSignature/reference/writeJson.html</loc>
-  </url>
-  <url>
-    <loc>https://montilab.github.io/OmicSignature/articles/BRENDA.html</loc>
-  </url>
-  <url>
-    <loc>https://montilab.github.io/OmicSignature/articles/CreateOmS.html</loc>
-  </url>
-  <url>
-    <loc>https://montilab.github.io/OmicSignature/articles/CreateOmSC.html</loc>
-  </url>
-  <url>
-    <loc>https://montilab.github.io/OmicSignature/articles/FunOmS.html</loc>
-  </url>
-  <url>
-    <loc>https://montilab.github.io/OmicSignature/articles/FunOmSC.html</loc>
-  </url>
-  <url>
-    <loc>https://montilab.github.io/OmicSignature/articles/ObjectStructure.html</loc>
   </url>
 </urlset>
