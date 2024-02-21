@@ -1,7 +1,9 @@
-#' @title BRENDA tissue ontology obo file. updated 06/2020
+#' @title BRENDA tissue ontology obo file. using version 2021/10
+#' @description BTO:0000000 is set to be "unknown" 
 #' @export
-BRENDAobo <- readRDS(file.path(system.file("extdata", package = "OmicSignature"), "BRENDA.rds"))
+BRENDA <- readRDS(file.path(system.file("extdata", package = "OmicSignature"), "BRENDA_2021.rds"))
 
-#' @title all current GEO platform names. updated 06/2020
+#' @title GEO platform names. updated 02/2024
+#' @description GPLXXXXX is set to be "unknown" 
 #' @export
-GEOplatform <- readRDS(file.path(system.file("extdata", package = "OmicSignature"), "GEOplatform.rds"))
+GEOplatform <- readRDS(file.path(system.file("extdata", package = "OmicSignature"), "GEOplatform_2024.rds"))
