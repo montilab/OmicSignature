@@ -109,59 +109,56 @@ Li</h4>
 <h2 id="create-an-omicsignaturecollection-object">Create an OmicSignatureCollection Object<a class="anchor" aria-label="anchor" href="#create-an-omicsignaturecollection-object"></a>
 </h2>
 <p>This object contains several <code>OmicSignature</code> objects to
-facilitate further analysis.</p>
+facilitate further analysis.<br></p>
 <p>An <code>OmicSignatureCollection</code> object contains two
-parts:</p>
-<ul>
-<li><p>metadata</p></li>
-<li><p>OmicSigList, a list of OmicSignature Objects</p></li>
-</ul>
+parts:<br>
+- <strong>metadata</strong><br>
+- <strong>OmicSigList</strong>, a list of OmicSignature Objects<br></p>
 <div class="section level3">
-<h3 id="create-an-omicsignaturecollection-object-1">1. Create an <code>OmicSignatureCollection</code> object<a class="anchor" aria-label="anchor" href="#create-an-omicsignaturecollection-object-1"></a>
+<h3 id="metadata-for-the-collection">1. Metadata for the Collection<a class="anchor" aria-label="anchor" href="#metadata-for-the-collection"></a>
 </h3>
-<p>Use <code>OmicSignatureCollection$new()</code> and provide metadata
-and a list of <code>OmicSignature</code> objects:</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">OmicCol</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/OmicSignatureCollection.html">OmicSignatureCollection</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span></span>
-<span>  OmicSigList <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">OmicObj1</span>, <span class="va">OmicObj2</span>, <span class="va">OmicObj3</span><span class="op">)</span>,</span>
-<span>  metadata <span class="op">=</span> <span class="va">ColMeta</span>,</span>
-<span>  print_message <span class="op">=</span> <span class="cn">FALSE</span></span>
-<span><span class="op">)</span></span></code></pre></div>
-</div>
-<div class="section level3">
-<h3 id="metadata-for-the-collection">2. Metadata for the collection<a class="anchor" aria-label="anchor" href="#metadata-for-the-collection"></a>
-</h3>
-<p>The required fields for <strong>metadata</strong> are:
+<p>The required fields for <strong>metadata</strong> are:<br>
 “<strong>collection_name</strong>”,
 “<strong>description</strong>”.<br>
-Additional optional fields can be added.</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+Additional optional fields can be added.<br></p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ColMeta</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span>  <span class="st">"collection_name"</span> <span class="op">=</span> <span class="st">"Myc_mice_collection"</span>,</span>
-<span>  <span class="st">"description"</span> <span class="op">=</span> <span class="st">"A collection for Myc reduced mice 24 month"</span>,</span>
+<span>  <span class="st">"collection_name"</span> <span class="op">=</span> <span class="st">"Example_Collection"</span>,</span>
+<span>  <span class="st">"description"</span> <span class="op">=</span> <span class="st">"An example of signature collection"</span>,</span>
 <span>  <span class="st">"organism"</span> <span class="op">=</span> <span class="st">"Mus Musculus"</span>,</span>
 <span>  <span class="st">"author"</span> <span class="op">=</span> <span class="st">"me"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
-<h3 id="omicsignature-objects">3. OmicSignature objects<a class="anchor" aria-label="anchor" href="#omicsignature-objects"></a>
+<h3 id="prepare-omicsignature-objects">2. Prepare <code>OmicSignature</code> objects<a class="anchor" aria-label="anchor" href="#prepare-omicsignature-objects"></a>
 </h3>
-<p>The <code>OmicSignature</code> objects to include in the collection
-can be created manually, see <a href="https://montilab.github.io/OmicSignature/articles/CreateOmS.html">here</a>.
-In this example, we use <code>read.json()</code> function to read
-<code>OmicSignature</code> objects we previously created.</p>
+<p>Create or read OmicSignature objects.<br>
+The following signatures are pseudo results for illustration
+purpose.<br></p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">OmicObj1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/readJson.html">readJson</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, package <span class="op">=</span> <span class="st">"OmicSignature"</span><span class="op">)</span>, <span class="st">"OmS_example_1.json"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt;   [Success] OmicSignature object Experiment in liver created.</span></span>
+<span><span class="va">OmicObj2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/readJson.html">readJson</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, package <span class="op">=</span> <span class="st">"OmicSignature"</span><span class="op">)</span>, <span class="st">"OmS_example_2.json"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt;   [Success] OmicSignature object Experiment in brain created.</span></span>
+<span><span class="va">OmicObj3</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/readJson.html">readJson</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, package <span class="op">=</span> <span class="st">"OmicSignature"</span><span class="op">)</span>, <span class="st">"OmS_example_3.json"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt;   [Success] OmicSignature object Experiment in heart created.</span></span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="create-an-omicsignaturecollection-object-1">3. Create an <code>OmicSignatureCollection</code> object<a class="anchor" aria-label="anchor" href="#create-an-omicsignaturecollection-object-1"></a>
+</h3>
+<p>Use <code>OmicSignatureCollection$new()</code> and provide metadata
+and a list of <code>OmicSignature</code> objects:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">OmicObj1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/readJson.html">readJson</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, package <span class="op">=</span> <span class="st">"OmicSignature"</span><span class="op">)</span>, <span class="st">"Myc_reduce_mice_adipose_24m_obj.json"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt;   [Success] OmicSignature object Myc_reduce_mice_adipose_24m created.</span></span>
-<span><span class="va">OmicObj2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/readJson.html">readJson</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, package <span class="op">=</span> <span class="st">"OmicSignature"</span><span class="op">)</span>, <span class="st">"Myc_reduce_mice_muscle_24m_obj.json"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt;   [Success] OmicSignature object Myc_reduce_mice_muscle_24m created.</span></span>
-<span><span class="va">OmicObj3</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/readJson.html">readJson</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, package <span class="op">=</span> <span class="st">"OmicSignature"</span><span class="op">)</span>, <span class="st">"Myc_reduce_mice_liver_24m_obj.json"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt;   [Success] OmicSignature object Myc_reduce_mice_liver_24m created.</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">OmicCol</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/OmicSignatureCollection.html">OmicSignatureCollection</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span></span>
+<span>  OmicSigList <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">OmicObj1</span>, <span class="va">OmicObj2</span>, <span class="va">OmicObj3</span><span class="op">)</span>,</span>
+<span>  metadata <span class="op">=</span> <span class="va">ColMeta</span>,</span>
+<span>  print_message <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
 <p>By default, <code>print_message</code> is set to <code>FALSE</code>.
-You can change it to <code>TRUE</code> to see the messages. During the
-creation of OmicSignatureCollection object, all input
+You can change it to <code>TRUE</code> to see the messages.<br>
+During the creation of <code>OmicSignatureCollection</code>, all input
 <code>OmicSignature</code> objects will be re-created to make sure they
-are all valid.</p>
+pass all the check functions.<br></p>
 </div>
 </div>
 <div class="section level2">

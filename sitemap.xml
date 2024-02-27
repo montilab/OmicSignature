@@ -34,25 +34,13 @@
     <loc>https://montilab.github.io/OmicSignature/index.html</loc>
   </url>
   <url>
-    <loc>https://montilab.github.io/OmicSignature/reference/BRENDAAncestors.html</loc>
+    <loc>https://montilab.github.io/OmicSignature/reference/BRENDA.html</loc>
   </url>
   <url>
-    <loc>https://montilab.github.io/OmicSignature/reference/BRENDACurrentName.html</loc>
-  </url>
-  <url>
-    <loc>https://montilab.github.io/OmicSignature/reference/BRENDADescendants.html</loc>
-  </url>
-  <url>
-    <loc>https://montilab.github.io/OmicSignature/reference/BRENDADevelopFrom.html</loc>
-  </url>
-  <url>
-    <loc>https://montilab.github.io/OmicSignature/reference/BRENDAPartOf.html</loc>
+    <loc>https://montilab.github.io/OmicSignature/reference/BRENDAExistName.html</loc>
   </url>
   <url>
     <loc>https://montilab.github.io/OmicSignature/reference/BRENDASearch.html</loc>
-  </url>
-  <url>
-    <loc>https://montilab.github.io/OmicSignature/reference/BRENDAobo.html</loc>
   </url>
   <url>
     <loc>https://montilab.github.io/OmicSignature/reference/GEOPlatformSearch.html</loc>

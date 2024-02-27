@@ -92,7 +92,7 @@
                         <h4 data-toc-skip class="author">Vanessa Mengze
 Li</h4>
             
-            <h4 data-toc-skip class="date">02/06/2024</h4>
+            <h4 data-toc-skip class="date">02/27/2024</h4>
       
       
       <div class="hidden name"><code>CreateOmS.Rmd</code></div>
@@ -114,13 +114,12 @@ Li</h4>
 fields.<br>
 required fields: “<strong>signature_name</strong>”,
 “<strong>organism</strong>”, “<strong>platform</strong>”,
-“<strong>direction_type</strong>”, “<strong>phenotype</strong>”.<br></p></li>
+“<strong>direction_type</strong>”, “<strong>assay_type</strong>”,
+“<strong>phenotype</strong>”.<br></p></li>
 <li><p><strong>signature</strong>, a dataframe.<br>
-required columns: “<strong>signature_symbol</strong>”,
-“<strong>signature_direction</strong>”<br>
-optional column: “<strong>signature_score</strong>”<br>
-“signature_symbol” should be a subset of “symbol” in difexp (if
-present).<br></p></li>
+required columns: “<strong>symbol</strong>”,
+“<strong>direction</strong>”<br>
+optional column: “<strong>score</strong>”<br></p></li>
 <li><p><strong>difexp</strong> (optional), a dataframe of differential
 expression analysis results.<br>
 required columns: “<strong>id</strong>”, “<strong>symbol</strong>”,
@@ -129,7 +128,7 @@ required columns: “<strong>id</strong>”, “<strong>symbol</strong>”,
 <p>Create the object:<br></p>
 <pre><code><span><span class="va">OmicObj</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/OmicSignature.html">OmicSignature</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span></span>
 <span>  metadata <span class="op">=</span> <span class="va">metadata</span>,</span>
-<span>  signature <span class="op">=</span> <span class="va">signatures</span>,</span>
+<span>  signature <span class="op">=</span> <span class="va">signature</span>,</span>
 <span>  difexp <span class="op">=</span> <span class="va">difexp</span></span>
 <span><span class="op">)</span></span></code></pre>
 <p>You can also read an <code>OmicSignature</code> saved in .json format
@@ -141,31 +140,34 @@ for more details.<br></p>
 </h2>
 <p>The example provided below is from an experiment for Myc gene reduce
 in mice. Signatures were extracted by comparing the liver of treatment
-and control when mice is 24-month old. This is a bi-directional
-signature example, which contains up and down regulated features
-(genes).<br></p>
+and control when mice is 24-month old. To save space, only the result of
+1000 genes are included.<br></p>
+<p>This is a bi-directional signature example, which contains up and
+down regulated features (genes).<br></p>
 <div class="section level3">
 <h3 id="metadata">2.1. Metadata<a class="anchor" aria-label="anchor" href="#metadata"></a>
 </h3>
-<p>Required <strong>metadata</strong> fields:<br>
+<p><strong>metadata</strong> is a list with the following required
+fields:<br>
 “<strong>signature_name</strong>”, “<strong>organism</strong>”,
-“<strong>direction_type</strong>”.<br>
-Fields not required, but highly recommended when applicable:<br>
+“<strong>direction_type</strong>”, “<strong>assay_type</strong>”.<br>
+Not required, but highly recommended fields:<br>
 “<strong>phenotype</strong>”, “<strong>platform</strong>”,
 “<strong>sample_type</strong>”, “<strong>covariates</strong>”,
 “<strong>score_cutoff</strong>”, “<strong>adj_p_cutoff</strong>”,
 “<strong>logfc_cutoff</strong>”.<br></p>
-<p>Option 1: Create metadata by hand (not recommended because typos can
-occur)<br></p>
+<p>Option 1: Create <code>metadata</code> by hand. This is not
+recommended, because typos can occur.<br></p>
 <pre><code><span><span class="va">metadata</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>  <span class="st">"signature_name"</span> <span class="op">=</span> <span class="va">Myc_reduce_mice_liver_24m</span>,</span>
 <span>  <span class="st">"organism"</span> <span class="op">=</span> <span class="st">"Mus Musculus"</span>,</span>
 <span>  <span class="st">"sample_type"</span> <span class="op">=</span> <span class="st">"liver"</span>,</span>
 <span>  <span class="st">"phenotype"</span> <span class="op">=</span> <span class="st">"Myc_reduce"</span>,</span>
 <span>  <span class="st">"direction_type"</span> <span class="op">=</span> <span class="st">"bi-directional"</span>,</span>
+<span>  <span class="st">"assay_type"</span> <span class="op">=</span> <span class="st">"transcriptomics"</span>, </span>
 <span>  <span class="st">"platform"</span> <span class="op">=</span> <span class="st">"GPL6246"</span>,</span>
 <span>  <span class="st">"adj_p_cutoff"</span> <span class="op">=</span> <span class="fl">0.05</span>,</span>
-<span>  <span class="st">"score_cutoff"</span> <span class="op">=</span> <span class="fl">7</span>,</span>
+<span>  <span class="st">"score_cutoff"</span> <span class="op">=</span> <span class="fl">5</span>,</span>
 <span>  <span class="st">"keywords"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Myc"</span>, <span class="st">"KO"</span>, <span class="st">"longevity"</span><span class="op">)</span>,</span>
 <span>  <span class="st">"PMID"</span> <span class="op">=</span> <span class="fl">25619689</span>,</span>
 <span>  <span class="st">"year"</span> <span class="op">=</span> <span class="fl">2015</span></span>
@@ -181,6 +183,7 @@ You can also provide your own customized attributes.<br></p>
 <span>  signature_name <span class="op">=</span> <span class="st">"Myc_reduce_mice_liver_24m"</span>,</span>
 <span>  organism <span class="op">=</span> <span class="st">"Mus Musculus"</span>,</span>
 <span>  direction_type <span class="op">=</span> <span class="st">"bi-directional"</span>,</span>
+<span>  assay_type <span class="op">=</span> <span class="st">"transcriptomics"</span>,</span>
 <span></span>
 <span>  <span class="co"># optional and recommended:</span></span>
 <span>  phenotype <span class="op">=</span> <span class="st">"Myc_reduce"</span>,</span>
@@ -190,11 +193,10 @@ You can also provide your own customized attributes.<br></p>
 <span></span>
 <span>  <span class="co"># optional cut-off attributes.</span></span>
 <span>  <span class="co"># specifying them can facilitate the extraction of signatures.</span></span>
-<span>  <span class="co"># feel free to delete any that are not relevant.</span></span>
 <span>  logfc_cutoff <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  p_value_cutoff <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  adj_p_cutoff <span class="op">=</span> <span class="fl">0.05</span>,</span>
-<span>  score_cutoff <span class="op">=</span> <span class="fl">7</span>,</span>
+<span>  score_cutoff <span class="op">=</span> <span class="fl">5</span>,</span>
 <span></span>
 <span>  <span class="co"># other optional built-in attributes:</span></span>
 <span>  keywords <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Myc"</span>, <span class="st">"KO"</span>, <span class="st">"longevity"</span><span class="op">)</span>,</span>
@@ -209,9 +211,9 @@ You can also provide your own customized attributes.<br></p>
 <div class="section level4">
 <h4 id="instruction-for-sample_type-and-platform">2.1.1 Instruction for “sample_type” and “platform”<a class="anchor" aria-label="anchor" href="#instruction-for-sample_type-and-platform"></a>
 </h4>
-<p>If “sample_type” is NOT a BRENDA ontology term, or “platform” is NOT
-a valid GEO platform accession ID, you will get warnings. See how to
-search for the correct term in <a href="https://montilab.github.io/OmicSignature/articles/BRENDA.html">“BRENDA
+<p>“sample_type” should be a BRENDA ontology term, and “platform” should
+be a GEO platform accession ID. Otherwise, you will get warnings. See
+how to search for the correct term to use in <a href="https://montilab.github.io/OmicSignature/articles/BRENDA.html">“BRENDA
 ontology &amp; GEO platform ID”</a>.<br></p>
 </div>
 <div class="section level4">
@@ -230,11 +232,23 @@ and some will be lower (“down” or “-”) in the treatment group.
 Similarly, when the phenotype is a continuous trait, such as age, some
 features will increase (“up”, or “+”) with age, while others will
 decrease (“down”, or “-”).<br></p></li>
-<li><p>“multi-directional”. Used with multi-valued categorical
-phenotypes (e.g., “low” <em>vs.</em> “medium” <em>vs.</em> “high”),
-usually analyzed by ANOVA. In this case, the “direction” column in
-signature table should be the phenotype’s category (e.g., “low”).<br></p></li>
+<li><p>“multiple”. Used with multi-valued categorical phenotypes (e.g.,
+“low” <em>vs.</em> “medium” <em>vs.</em> “high”), usually analyzed by
+ANOVA. In this case, the “direction” column in signature table should be
+the phenotype’s category (e.g., “low”).<br></p></li>
 </ul>
+</div>
+<div class="section level4">
+<h4 id="instruction-for-assay_type">2.1.3 Instruction for “assay_type”<a class="anchor" aria-label="anchor" href="#instruction-for-assay_type"></a>
+</h4>
+<p>For the time being, <code>assay_type</code> is one of the
+following:<br>
+- “transcriptomics”<br>
+- “proteomics”<br>
+- “metabolomics”<br>
+- “methylomics”<br>
+- “genetic_variations”<br>
+- “others”<br></p>
 </div>
 </div>
 <div class="section level3">
@@ -257,24 +271,17 @@ UniProt ID, unique numbers.<br>
 <p>Here we use an example out put from the differential expression
 analysis using the <code>limma</code> package.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">difexp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.table</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, package <span class="op">=</span> <span class="st">"OmicSignature"</span><span class="op">)</span>, <span class="st">"difmatrix_Myc_mice_liver_24m_raw.txt"</span><span class="op">)</span>,</span>
+<code class="sourceCode R"><span><span class="va">difexp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.table</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, package <span class="op">=</span> <span class="st">"OmicSignature"</span><span class="op">)</span>, <span class="st">"difmatrix_Myc_mice_liver_24m.txt"</span><span class="op">)</span>,</span>
 <span>  header <span class="op">=</span> <span class="cn">TRUE</span>, sep <span class="op">=</span> <span class="st">"\t"</span>, stringsAsFactors <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">difexp</span><span class="op">)</span></span>
-<span><span class="co">#&gt;         logFC   AveExpr          t    P.Value adj.P.Val         b Probe.ID</span></span>
-<span><span class="co">#&gt; 1 -0.09301000  6.676552 -1.0304955 0.33776819 0.7015182 -6.370549 10344614</span></span>
-<span><span class="co">#&gt; 2 -0.09837667  2.998012 -1.1161772 0.30194862 0.6735042 -6.281333 10344616</span></span>
-<span><span class="co">#&gt; 3 -0.21524000  5.055207 -2.5893972 0.03664519 0.2872695 -4.287330 10344620</span></span>
-<span><span class="co">#&gt; 4 -0.12186667 12.056667 -1.5881487 0.15719140 0.5256233 -5.713531 10344624</span></span>
-<span><span class="co">#&gt; 5  0.01440000 10.087133  0.2221561 0.83066749 0.9532330 -6.902609 10344633</span></span>
-<span><span class="co">#&gt; 6 -0.03361667  9.947465 -0.4638379 0.65713620 0.8842391 -6.810300 10344637</span></span>
-<span><span class="co">#&gt;   gene_symbol                                       gene_name</span></span>
-<span><span class="co">#&gt; 1     Gm16088                            predicted gene 16088</span></span>
-<span><span class="co">#&gt; 2     Gm26206                           predicted gene, 26206</span></span>
-<span><span class="co">#&gt; 3     Gm10568                            predicted gene 10568</span></span>
-<span><span class="co">#&gt; 4      Lypla1                             lysophospholipase 1</span></span>
-<span><span class="co">#&gt; 5       Tcea1       transcription elongation factor A (SII) 1</span></span>
-<span><span class="co">#&gt; 6     Atp6v1h ATPase, H+ transporting, lysosomal V1 subunit H</span></span></code></pre></div>
+<span><span class="co">#&gt;    logFC AveExpr      t P.Value adj.P.Val      b Probe.ID gene_symbol</span></span>
+<span><span class="co">#&gt; 1 -0.093   6.677 -1.030   0.338     0.702 -6.371 10344614     Gm16088</span></span>
+<span><span class="co">#&gt; 2 -0.098   2.998 -1.116   0.302     0.674 -6.281 10344616     Gm26206</span></span>
+<span><span class="co">#&gt; 3 -0.215   5.055 -2.589   0.037     0.287 -4.287 10344620     Gm10568</span></span>
+<span><span class="co">#&gt; 4 -0.122  12.057 -1.588   0.157     0.526 -5.714 10344624      Lypla1</span></span>
+<span><span class="co">#&gt; 5  0.014  10.087  0.222   0.831     0.953 -6.903 10344633       Tcea1</span></span>
+<span><span class="co">#&gt; 6 -0.034   9.947 -0.464   0.657     0.884 -6.810 10344637     Atp6v1h</span></span></code></pre></div>
 <p>We can manually modify the column names to match the requirements.
 Alternatively, we can use the built-in function
 <code><a href="../reference/replaceDifexpCol.html">replaceDifexpCol()</a></code> designed to replace some frequently used
@@ -282,79 +289,72 @@ alternative column names.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">difexp</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/replaceDifexpCol.html">replaceDifexpCol</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">difexp</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">difexp</span><span class="op">)</span></span>
-<span><span class="co">#&gt;         logfc   aveexpr      score    p_value     adj_p         b       id</span></span>
-<span><span class="co">#&gt; 1 -0.09301000  6.676552 -1.0304955 0.33776819 0.7015182 -6.370549 10344614</span></span>
-<span><span class="co">#&gt; 2 -0.09837667  2.998012 -1.1161772 0.30194862 0.6735042 -6.281333 10344616</span></span>
-<span><span class="co">#&gt; 3 -0.21524000  5.055207 -2.5893972 0.03664519 0.2872695 -4.287330 10344620</span></span>
-<span><span class="co">#&gt; 4 -0.12186667 12.056667 -1.5881487 0.15719140 0.5256233 -5.713531 10344624</span></span>
-<span><span class="co">#&gt; 5  0.01440000 10.087133  0.2221561 0.83066749 0.9532330 -6.902609 10344633</span></span>
-<span><span class="co">#&gt; 6 -0.03361667  9.947465 -0.4638379 0.65713620 0.8842391 -6.810300 10344637</span></span>
-<span><span class="co">#&gt;    symbol                                       gene_name</span></span>
-<span><span class="co">#&gt; 1 Gm16088                            predicted gene 16088</span></span>
-<span><span class="co">#&gt; 2 Gm26206                           predicted gene, 26206</span></span>
-<span><span class="co">#&gt; 3 Gm10568                            predicted gene 10568</span></span>
-<span><span class="co">#&gt; 4  Lypla1                             lysophospholipase 1</span></span>
-<span><span class="co">#&gt; 5   Tcea1       transcription elongation factor A (SII) 1</span></span>
-<span><span class="co">#&gt; 6 Atp6v1h ATPase, H+ transporting, lysosomal V1 subunit H</span></span></code></pre></div>
+<span><span class="co">#&gt;    logfc aveexpr  score p_value adj_p      b       id  symbol</span></span>
+<span><span class="co">#&gt; 1 -0.093   6.677 -1.030   0.338 0.702 -6.371 10344614 Gm16088</span></span>
+<span><span class="co">#&gt; 2 -0.098   2.998 -1.116   0.302 0.674 -6.281 10344616 Gm26206</span></span>
+<span><span class="co">#&gt; 3 -0.215   5.055 -2.589   0.037 0.287 -4.287 10344620 Gm10568</span></span>
+<span><span class="co">#&gt; 4 -0.122  12.057 -1.588   0.157 0.526 -5.714 10344624  Lypla1</span></span>
+<span><span class="co">#&gt; 5  0.014  10.087  0.222   0.831 0.953 -6.903 10344633   Tcea1</span></span>
+<span><span class="co">#&gt; 6 -0.034   9.947 -0.464   0.657 0.884 -6.810 10344637 Atp6v1h</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="signature">2.3. Signature<a class="anchor" aria-label="anchor" href="#signature"></a>
 </h3>
-<p>To be stored into an OmicSignature object, <strong>signature</strong>
-need to be a dataframe with column <strong>“signature_symbol”</strong>.
-Also, if the signature is “bi-directional” or “multi-directional”
-(specified in <code>direction_type</code> in <code>metadata</code>
-list), then column <strong>“signature_direction”</strong> is also
-required.<br>
-An optional column “signature_score” is recommended when feature scores
-are available.<br></p>
+<p><strong>signature</strong> is a dataframe with column
+<strong>“symbol”</strong>. “symbol” should be a subset of “symbol” in
+difexp if present.<br>
+Also, if the signature is “bi-directional” or “multiple” (specified in
+<code>direction_type</code> in <code>metadata</code> list), then column
+<strong>“direction”</strong> is also required.<br>
+An optional column “score” is recommended when feature scores are
+available.<br></p>
 <p>Option 1: Extract signature from difexp.<br>
 Here we create a bi-directional signature manually from the difexp
 generated above, using the <code>score_cutoff</code> and
 <code>adj_p_cutoff</code> previously specified in the metadata.<br></p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">signatures</span> <span class="op">&lt;-</span> <span class="va">difexp</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<code class="sourceCode R"><span><span class="va">signature</span> <span class="op">&lt;-</span> <span class="va">difexp</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">abs</a></span><span class="op">(</span><span class="va">score</span><span class="op">)</span> <span class="op">&gt;</span> <span class="va">metadata</span><span class="op">$</span><span class="va">score_cutoff</span> <span class="op">&amp;</span> <span class="va">adj_p</span> <span class="op">&lt;</span> <span class="va">metadata</span><span class="op">$</span><span class="va">adj_p_cutoff</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">symbol</span>, <span class="va">score</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>signature_direction <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">score</span> <span class="op">&gt;</span> <span class="fl">0</span>, <span class="st">"+"</span>, <span class="st">"-"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html" class="external-link">rename</a></span><span class="op">(</span>signature_symbol <span class="op">=</span> <span class="st">"symbol"</span>, signature_score <span class="op">=</span> <span class="st">"score"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">signatures</span><span class="op">)</span></span>
-<span><span class="co">#&gt;   signature_symbol signature_score signature_direction</span></span>
-<span><span class="co">#&gt; 1            Il1r1      -13.542734                   -</span></span>
-<span><span class="co">#&gt; 2             Ctse       14.762071                   +</span></span>
-<span><span class="co">#&gt; 3            Chil1      -25.413178                   -</span></span>
-<span><span class="co">#&gt; 4            Kcnt2       -7.727982                   -</span></span>
-<span><span class="co">#&gt; 5          Sh2d1b1        8.818281                   +</span></span>
-<span><span class="co">#&gt; 6           Olfr16       -7.010304                   -</span></span></code></pre></div>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>direction <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">score</span> <span class="op">&gt;</span> <span class="fl">0</span>, <span class="st">"+"</span>, <span class="st">"-"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html" class="external-link">rename</a></span><span class="op">(</span>symbol <span class="op">=</span> <span class="st">"symbol"</span>, score <span class="op">=</span> <span class="st">"score"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">signature</span><span class="op">)</span></span>
+<span><span class="co">#&gt;     symbol   score direction</span></span>
+<span><span class="co">#&gt; 1 n-R5s210  -5.953         -</span></span>
+<span><span class="co">#&gt; 2    Il1r1 -13.543         -</span></span>
+<span><span class="co">#&gt; 3   Adam23  -6.990         -</span></span>
+<span><span class="co">#&gt; 4   Mogat1   5.496         +</span></span>
+<span><span class="co">#&gt; 5   Utp14b  -5.404         -</span></span>
+<span><span class="co">#&gt; 6     Ctse  14.762         +</span></span></code></pre></div>
 <p>(note: if you see numbers instead of gene symbol name in the first
 column, please check if the “symbol” column in your difexp matrix is
 “character” and not accidentally be “factor”)<br></p>
 <p>Function <code><a href="../reference/standardizeSigDF.html">standardizeSigDF()</a></code> can help remove duplicate
 rows, empty symbols in the signature dataframe.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">signatures</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/standardizeSigDF.html">standardizeSigDF</a></span><span class="op">(</span><span class="va">signatures</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">signatures</span><span class="op">)</span></span>
-<span><span class="co">#&gt;    signature_symbol signature_score signature_direction</span></span>
-<span><span class="co">#&gt; 1              Saa1       -35.29997                   -</span></span>
-<span><span class="co">#&gt; 3           Sult3a1       -31.75527                   -</span></span>
-<span><span class="co">#&gt; 4            Isyna1       -29.93255                   -</span></span>
-<span><span class="co">#&gt; 6             Chil1       -25.41318                   -</span></span>
-<span><span class="co">#&gt; 8              Saa2       -23.81452                   -</span></span>
-<span><span class="co">#&gt; 11          Sult1e1       -22.76345                   -</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">tail</a></span><span class="op">(</span><span class="va">signatures</span><span class="op">)</span></span>
-<span><span class="co">#&gt;     signature_symbol signature_score signature_direction</span></span>
-<span><span class="co">#&gt; 339              Cfp        7.040545                   +</span></span>
-<span><span class="co">#&gt; 340        Igkv9-124        7.031580                   +</span></span>
-<span><span class="co">#&gt; 341           Mtnr1a        7.030133                   +</span></span>
-<span><span class="co">#&gt; 343          Clec12a        7.024170                   +</span></span>
-<span><span class="co">#&gt; 344           Angpt2        7.021941                   +</span></span>
-<span><span class="co">#&gt; 345             Gas2        7.013040                   +</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">signature</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/standardizeSigDF.html">standardizeSigDF</a></span><span class="op">(</span><span class="va">signature</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">signature</span><span class="op">)</span></span>
+<span><span class="co">#&gt;    symbol   score direction</span></span>
+<span><span class="co">#&gt; 1   Chil1 -25.413         -</span></span>
+<span><span class="co">#&gt; 2    Ctse  14.762         +</span></span>
+<span><span class="co">#&gt; 3   Il1r1 -13.543         -</span></span>
+<span><span class="co">#&gt; 4    Eya1  10.487         +</span></span>
+<span><span class="co">#&gt; 5    Myl1 -10.315         -</span></span>
+<span><span class="co">#&gt; 6 Sh2d1b1   8.818         +</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">tail</a></span><span class="op">(</span><span class="va">signature</span><span class="op">)</span></span>
+<span><span class="co">#&gt;      symbol  score direction</span></span>
+<span><span class="co">#&gt; 13    Erbb4  6.083         +</span></span>
+<span><span class="co">#&gt; 14 n-R5s210 -5.953         -</span></span>
+<span><span class="co">#&gt; 15   Lpgat1 -5.574         -</span></span>
+<span><span class="co">#&gt; 16   Mogat1  5.496         +</span></span>
+<span><span class="co">#&gt; 17    Ildr2 -5.429         -</span></span>
+<span><span class="co">#&gt; 18   Utp14b -5.404         -</span></span></code></pre></div>
 <p>Option 2: Manually write signature.<br>
-For uni-directional signatures:<br></p>
-<pre><code><span><span class="va">signatures</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"gene1"</span>, <span class="st">"gene2"</span>, <span class="st">"gene3"</span><span class="op">)</span></span></code></pre>
-<p>For bi-directional signatures:<br></p>
-<pre><code><span><span class="va">signatures</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.45</span>, <span class="op">-</span><span class="fl">3.21</span>, <span class="fl">2.44</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">signatures</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"gene1"</span>, <span class="st">"gene2"</span>, <span class="st">"gene3"</span><span class="op">)</span></span></code></pre>
+For uni-directional signature:<br></p>
+<pre><code><span><span class="va">signature</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"gene1"</span>, <span class="st">"gene2"</span>, <span class="st">"gene3"</span><span class="op">)</span></span></code></pre>
+<p>For bi-directional signature:<br></p>
+<pre><code><span><span class="va">signature</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.45</span>, <span class="op">-</span><span class="fl">3.21</span>, <span class="fl">2.44</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">signature</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"gene1"</span>, <span class="st">"gene2"</span>, <span class="st">"gene3"</span><span class="op">)</span></span></code></pre>
 <p>The direction will be automatically determined by the score value
 provided.<br></p>
 </div>
@@ -366,7 +366,7 @@ object.<br></p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">OmicObj</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/OmicSignature.html">OmicSignature</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span></span>
 <span>  metadata <span class="op">=</span> <span class="va">metadata</span>,</span>
-<span>  signature <span class="op">=</span> <span class="va">signatures</span>,</span>
+<span>  signature <span class="op">=</span> <span class="va">signature</span>,</span>
 <span>  difexp <span class="op">=</span> <span class="va">difexp</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt;   [Success] OmicSignature object Myc_reduce_mice_liver_24m created.</span></span></code></pre></div>
@@ -376,23 +376,24 @@ be <code>FALSE</code>.</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">OmicObj</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/OmicSignature.html">OmicSignature</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span></span>
 <span>  metadata <span class="op">=</span> <span class="va">metadata</span>,</span>
-<span>  signature <span class="op">=</span> <span class="va">signatures</span>,</span>
+<span>  signature <span class="op">=</span> <span class="va">signature</span>,</span>
 <span>  difexp <span class="op">=</span> <span class="va">difexp</span>,</span>
 <span>  print_message <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt;   --Required attributes for metadata: signature_name, organism, direction_type --</span></span>
+<span><span class="co">#&gt;   --Required attributes for metadata: signature_name, organism, direction_type, assay_type --</span></span>
 <span><span class="co">#&gt;   [Success] Metadata is saved. </span></span>
 <span><span class="co">#&gt;   [Success] Signature is valid. </span></span>
-<span><span class="co">#&gt;   difexp: additional columns found: logfc, aveexpr, p_value, b, gene_name. </span></span>
+<span><span class="co">#&gt;   difexp: additional columns found: logfc, aveexpr, b. </span></span>
 <span><span class="co">#&gt;   [Success] difexp matrix is valid. </span></span>
 <span><span class="co">#&gt;   [Success] OmicSignature object Myc_reduce_mice_liver_24m created.</span></span></code></pre></div>
-<p>Now we can <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code> to see the information:</p>
+<p>Use <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code> to see information:</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">OmicObj</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Signature Object: </span></span>
 <span><span class="co">#&gt;   Metadata: </span></span>
 <span><span class="co">#&gt;     adj_p_cutoff = 0.05 </span></span>
 <span><span class="co">#&gt;     animal_strain = C57BL/6 </span></span>
+<span><span class="co">#&gt;     assay_type = transcriptomics </span></span>
 <span><span class="co">#&gt;     covariates = none </span></span>
 <span><span class="co">#&gt;     direction_type = bi-directional </span></span>
 <span><span class="co">#&gt;     keywords = Myc, KO, longevity </span></span>
@@ -401,26 +402,27 @@ be <code>FALSE</code>.</p>
 <span><span class="co">#&gt;     platform = GPL6246 </span></span>
 <span><span class="co">#&gt;     PMID = 25619689 </span></span>
 <span><span class="co">#&gt;     sample_type = liver </span></span>
-<span><span class="co">#&gt;     score_cutoff = 7 </span></span>
+<span><span class="co">#&gt;     score_cutoff = 5 </span></span>
 <span><span class="co">#&gt;     signature_name = Myc_reduce_mice_liver_24m </span></span>
 <span><span class="co">#&gt;     year = 2015 </span></span>
 <span><span class="co">#&gt;   signature: </span></span>
-<span><span class="co">#&gt;     - (152)</span></span>
-<span><span class="co">#&gt;     + (194)</span></span>
+<span><span class="co">#&gt;     - (12)</span></span>
+<span><span class="co">#&gt;     + (6)</span></span>
 <span><span class="co">#&gt;   Differential Expression Data: </span></span>
-<span><span class="co">#&gt;     27359 x 9</span></span></code></pre></div>
-<p>And use new criteria to extract new significant features:<br>
+<span><span class="co">#&gt;     1000 x 8</span></span></code></pre></div>
+<p>Use new criteria to extract significant features:<br>
 (note: this does <em>not</em> change the <code>signature</code> saved in
 the object)</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">OmicObj</span><span class="op">$</span><span class="fu">extractSignature</span><span class="op">(</span><span class="st">"abs(score) &gt; 25; adj_p &lt; 0.001"</span><span class="op">)</span></span>
-<span><span class="co">#&gt;    symbol     score direction</span></span>
-<span><span class="co">#&gt; 1    Saa1 -35.29997         -</span></span>
-<span><span class="co">#&gt; 2    Cpa1  34.62008         +</span></span>
-<span><span class="co">#&gt; 3 Sult3a1 -31.75527         -</span></span>
-<span><span class="co">#&gt; 4  Isyna1 -29.93255         -</span></span>
-<span><span class="co">#&gt; 5    Zg16  28.51562         +</span></span>
-<span><span class="co">#&gt; 6   Chil1 -25.41318         -</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">OmicObj</span><span class="op">$</span><span class="fu">extractSignature</span><span class="op">(</span><span class="st">"abs(score) &gt; 10; adj_p &lt; 0.01"</span><span class="op">)</span></span>
+<span><span class="co">#&gt;   symbol   score direction</span></span>
+<span><span class="co">#&gt; 1  Chil1 -25.413         -</span></span>
+<span><span class="co">#&gt; 2   Ctse  14.762         +</span></span>
+<span><span class="co">#&gt; 3  Il1r1 -13.543         -</span></span>
+<span><span class="co">#&gt; 4   Eya1  10.487         +</span></span>
+<span><span class="co">#&gt; 5   Myl1 -10.315         -</span></span></code></pre></div>
+<p>Write it in a json text format:</p>
+<pre><code><span><span class="fu"><a href="../reference/writeJson.html">writeJson</a></span><span class="op">(</span><span class="va">OmicObj</span>, <span class="st">"Myc_reduce_mice_liver_24m_obj.json"</span><span class="op">)</span></span></code></pre>
 <p>See more in <a href="https://montilab.github.io/OmicSignature/articles/FunOmS.html">“Functionalities
 of OmicSignature”</a> section.<br></p>
 </div>
@@ -435,9 +437,9 @@ expert. Simply provide cutoffs (e.g. <code>adj_p_cutoff</code> and
 <code>difexp</code> has those columns available, and use
 <code><a href="../reference/OmicSigFromDifexp.html">OmicSigFromDifexp()</a></code> to extract significant features and
 create the <code>OmicSignature</code> object.<br></p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">OmicObj1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/OmicSigFromDifexp.html">OmicSigFromDifexp</a></span><span class="op">(</span><span class="va">difexp</span>, <span class="va">metadata</span><span class="op">)</span></span>
-<span><span class="co">#&gt; -- criterias used to extract signatures:  abs(score) &gt; 7; adj_p &lt; 0.05 . </span></span>
+<span><span class="co">#&gt; -- criterias used to extract signatures:  abs(score) &gt; 5; adj_p &lt; 0.05 . </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;   [Success] OmicSignature object Myc_reduce_mice_liver_24m created.</span></span>
 <span><span class="va">OmicObj1</span></span>
@@ -445,6 +447,7 @@ create the <code>OmicSignature</code> object.<br></p>
 <span><span class="co">#&gt;   Metadata: </span></span>
 <span><span class="co">#&gt;     adj_p_cutoff = 0.05 </span></span>
 <span><span class="co">#&gt;     animal_strain = C57BL/6 </span></span>
+<span><span class="co">#&gt;     assay_type = transcriptomics </span></span>
 <span><span class="co">#&gt;     covariates = none </span></span>
 <span><span class="co">#&gt;     direction_type = bi-directional </span></span>
 <span><span class="co">#&gt;     keywords = Myc, KO, longevity </span></span>
@@ -453,14 +456,14 @@ create the <code>OmicSignature</code> object.<br></p>
 <span><span class="co">#&gt;     platform = GPL6246 </span></span>
 <span><span class="co">#&gt;     PMID = 25619689 </span></span>
 <span><span class="co">#&gt;     sample_type = liver </span></span>
-<span><span class="co">#&gt;     score_cutoff = 7 </span></span>
+<span><span class="co">#&gt;     score_cutoff = 5 </span></span>
 <span><span class="co">#&gt;     signature_name = Myc_reduce_mice_liver_24m </span></span>
 <span><span class="co">#&gt;     year = 2015 </span></span>
 <span><span class="co">#&gt;   signature: </span></span>
-<span><span class="co">#&gt;     - (152)</span></span>
-<span><span class="co">#&gt;     + (194)</span></span>
+<span><span class="co">#&gt;     - (12)</span></span>
+<span><span class="co">#&gt;     + (6)</span></span>
 <span><span class="co">#&gt;   Differential Expression Data: </span></span>
-<span><span class="co">#&gt;     27359 x 9</span></span></code></pre></div>
+<span><span class="co">#&gt;     1000 x 8</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="section"></h2>
