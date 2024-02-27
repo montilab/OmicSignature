@@ -26,15 +26,16 @@ library(dplyr)
 knitr::include_graphics("figs/Omic_OmicCol_func1.png")
 ```
 
-First create an `OmicSignatureCollection` object. 
-This is the same code in ["Create OmicSignatureCollection"](https://montilab.github.io/OmicSignature/articles/CreateOmSC.html) section. 
+First, create an `OmicSignatureCollection` object. \
+This is the same code in ["Create OmicSignatureCollection"](https://montilab.github.io/OmicSignature/articles/CreateOmSC.html) section. \
+The following signatures are pseudo results for illustration purpose. \
 ```{r}
-OmicObj1 <- readJson(file.path(system.file("extdata", package = "OmicSignature"), "Myc_reduce_mice_adipose_24m_obj.json"))
-OmicObj2 <- readJson(file.path(system.file("extdata", package = "OmicSignature"), "Myc_reduce_mice_muscle_24m_obj.json"))
-OmicObj3 <- readJson(file.path(system.file("extdata", package = "OmicSignature"), "Myc_reduce_mice_liver_24m_obj.json"))
+OmicObj1 <- readJson(file.path(system.file("extdata", package = "OmicSignature"), "OmS_example_1.json"))
+OmicObj2 <- readJson(file.path(system.file("extdata", package = "OmicSignature"), "OmS_example_2.json"))
+OmicObj3 <- readJson(file.path(system.file("extdata", package = "OmicSignature"), "OmS_example_3.json"))
 ColMeta <- list(
-  "collection_name" = "Myc_mice_collection",
-  "description" = "A collection for Myc reduced mice 24 month",
+  "collection_name" = "OmS_example_Collection",
+  "description" = "An example of signature collection",
   "organism" = "Mus Musculus",
   "author" = "me"
 )
@@ -56,18 +57,17 @@ OmicCol$metadataSummary(only_shared = TRUE)
 ```
 
 ## Extract new signatures from the `OmicSignatureCollection` object
-For example, extract all features with a absolute score > 25 and adj_p < 0.001 from all the `OmicSignature` object stored in this Collection.    
-By default, the features are ranked by score.  
-By default, `bind` is set to be `TRUE` to output results from all `OmicSignature` 
-objects as a single dataframe.  
+
+For example, extract all features with a absolute score > 4.5 and p < 0.01 from all the `OmicSignature` object stored in this Collection. \
+By default, the features are ranked by absolute score value. \
+By default, `bind` is set to be `TRUE` to output results from all `OmicSignature` objects as a single dataframe. \
 ```{r}
-OmicCol$extractSignature("abs(score) > 25 & adj_p < 0.05")
+OmicCol$extractSignature("abs(score) > 4.5 & p_value < 0.01")
 ```
 
-If `bind` is set to be `FALSE`, the output of each `OmicSignature` objects are 
-provided individually as one element in a list.
+If `bind` is set to be `FALSE`, the output of each `OmicSignature` objects are provided individually as one element in a list. \
 ```{r}
-OmicCol$extractSignature("abs(score) > 25 & adj_p < 0.05", bind = F)
+OmicCol$extractSignature("abs(score) > 4.5 & p_value < 0.01", bind = FALSE)
 ```
 
 </font>
