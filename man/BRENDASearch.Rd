@@ -4,13 +4,13 @@
 \alias{BRENDASearch}
 \title{BRENDASearch}
 \usage{
-BRENDASearch(x, obo = BRENDAobo, contain_all = TRUE)
+BRENDASearch(x, file = BRENDA, contain_all = TRUE)
 }
 \arguments{
-\item{x}{A string or character vector to search for.
-x will be divided into different search patterns by space. See examples below.}
+\item{x}{A string or character vector to search for. Multiple search terms
+are separated by space.}
 
-\item{obo}{The ontology file or a character vector of all possible term names. Optional. BRENDA OBO file will be loaded if not provided.}
+\item{file}{The BRENDA data frame, has columns ID and Name.}
 
 \item{contain_all}{if TRUE, will only return the results contain all search terms.
 if FALSE, will return results contain any of the given pattern.}
@@ -19,15 +19,18 @@ if FALSE, will return results contain any of the given pattern.}
 matrix including search result
 }
 \description{
-search for ontology term in an obo file or a vector
-of all ontology term name
-updated 07/2020
+search for BRENDA tissue name
+updated 02/2024
 }
 \examples{
-BRENDASearch("MDA MB cell", contain_all = TRUE) 
-# search for results that contain "MDA" "MB" and "cell"
-BRENDASearch(c("MDA MB", "cell"), contain_all = TRUE) 
-# same as above
-BRENDASearch(c("MDA-MB", "SUM"), contain_all = FALSE) 
-# search for results that contain either "MDA-MB" or "SUM"
+# search for results that contain all of "HEK" "293" and "T":
+BRENDASearch("HEK 293 T", contain_all = TRUE)
+BRENDASearch(c("HEK", "293", "T"), contain_all = TRUE)
+BRENDASearch(c("HEK 293", "T"), contain_all = TRUE)
+
+# search for results that contain any of "HEK", "SUM" or "HeLa":
+BRENDASearch("HEK SUM HeLa", contain_all = FALSE)
+BRENDASearch(c("HEK", "SUM", "HeLa"), contain_all = FALSE)
+BRENDASearch(c("HEK SUM", "HeLa"), contain_all = FALSE)
+
 }

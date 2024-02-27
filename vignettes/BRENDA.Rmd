@@ -14,31 +14,39 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 <font color = "#000000">
 
-We use BRENDA tissue ontology to indicate the tissue or cell-line of a signature, and GEO platform accession id for platform records.  
-The record was last updated **09/2020**, so some newest ontology and platform may not be included.  
-If you are not sure which BRENDA tissue ontology or GEO platform accession id to use, you can search for them as shown below.  
-
-## Search for a BRENDA tissue ontology
 ```{r}
 devtools::load_all(".")
-BRENDASearch("MDA")
+```
+
+We use BRENDA tissue ontology to indicate the tissue or cell-line of a signature, and GEO platform accession id for platform records.  
+BRENDA tissue ontology version: **10/2021**. The OBO file was downloaded at https://www.brenda-enzymes.org/ontology.php.  
+GEO platform IDs are manually downloaded at https://www.ncbi.nlm.nih.gov/geo/browse/?view=platforms. 25,827 platforms were downloaded as of 2024/02.  
+If you are not sure which BRENDA tissue ontology or GEO platform accession id to use, you can search for them as shown below.  
+
+## Search for a BRENDA tissue ontology 
+Multiple search terms are seperated by space " ". \
+Set `contain_all = TRUE` to show results include all search terms. \
+Set `contain_all = FALSE` to show results include any of the search terms. \
+```{r}
+BRENDASearch("HEK 293 T", contain_all = TRUE)
 ```
 
 ## Search for a GEO platform
 ```{r}
-GEOPlatformSearch("Illumina HiSeq 4000", species = "Homo Sapiens")
+GEOPlatformSearch("Illumina HiSeq 4000", organism = "Homo Sapiens")
 ```
 
 Show only accession id:
 ```{r}
-GEOPlatformSearch("Illumina HiSeq 4000", species = "Homo Sapiens", accession_only = TRUE)
+GEOPlatformSearch("Illumina HiSeq 4000", organism = "Homo Sapiens", accession_only = TRUE)
 ```
 
 Search for multiple terms: 
 ```{r}
-GEOPlatformSearch(c("Drosophila melanogaster", "Illumina HiSeq 4000"), species = "Homo Sapiens", contain_all = TRUE)
+GEOPlatformSearch(c("Drosophila melanogaster", "Illumina HiSeq 4000"), organism = "Homo Sapiens", contain_all = TRUE)
 ```
-Set `contain_all = T` to show results include all search terms. Set `contain_all = FALSE` to show results include any of the search terms. 
+Set `contain_all = TRUE` to show results include all search terms. \
+Set `contain_all = FALSE` to show results include any of the search terms. \
 
 </font>
 --
