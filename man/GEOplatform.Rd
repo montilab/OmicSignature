@@ -3,14 +3,14 @@
 \docType{data}
 \name{GEOplatform}
 \alias{GEOplatform}
-\title{all current GEO platform names. updated 06/2020}
+\title{GEO platform names. updated 02/2024}
 \format{
-An object of class \code{data.frame} with 21227 rows and 9 columns.
+An object of class \code{data.frame} with 25828 rows and 4 columns.
 }
 \usage{
 GEOplatform
 }
 \description{
-all current GEO platform names. updated 06/2020
+GPLXXXXX is set to be "unknown"
 }
 \keyword{datasets}
