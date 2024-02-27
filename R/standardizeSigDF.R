@@ -1,19 +1,22 @@
-#' @title remove empty, duplicate rows in signature dataframe
-#' updated 08/2020
+#' @title remove missing and duplicated entries in signature dataframe
+#' updated 02/2024
 #'
-#' @importFrom dplyr distinct %>%
+#' @importFrom dplyr distinct filter arrange mutate %>%
 #' @importFrom stats complete.cases
 #' @param sigdf signature dataframe
 #' @return signature dataframe with empty, duplicate rows removed and ordered by score
 #' @export
-standardizeSigDF <- function(sigdf){
-	sigdf <- replaceSigCol(sigdf, ObjtoGeneral = F)
-	sigdf <- sigdf[complete.cases(sigdf), ]
-	sigdf <- sigdf[sigdf$signature_symbol != "", ]
-	sigdf <- sigdf[sigdf$signature_score != "", ]
-	sigdf <- sigdf[order(abs(as.numeric(as.character(sigdf$signature_score))), decreasing = T), ]
-	sigdf <- dplyr::distinct(sigdf, sigdf$signature_symbol, .keep_all = T)#[, c(1:3)]
-	sigdf$`sigdf$signature_symbol` <- NULL
-	sigdf <- sigdf[order(sigdf$signature_direction, decreasing = F), ]
-	return(sigdf)
+standardizeSigDF <- function(sigdf) {
+  sigdf <- replaceSigCol(sigdf, long = FALSE)
+  sigdf <- sigdf[complete.cases(sigdf), ]
+  sigdf <- sigdf %>%
+    dplyr::filter(symbol != "", score != "") %>%
+    dplyr::arrange(desc(abs(score))) %>%
+    dplyr::distinct(symbol, .keep_all = TRUE) %>%
+    dplyr::mutate(
+      score = as.numeric(as.character(score)),
+      symbol = as.character(symbol),
+      direction = as.factor(as.character(direction))
+    )
+  return(sigdf)
 }

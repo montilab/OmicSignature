@@ -3,7 +3,7 @@
 \name{OmicSigFromDifexp}
 \alias{OmicSigFromDifexp}
 \title{create an OmicSignature object from differential expsignaturession matrix
-updated 03/2021}
+updated 02/2024}
 \usage{
 OmicSigFromDifexp(difexp, metadata, criteria = NULL)
 }
@@ -24,5 +24,5 @@ OmicSignature object
 }
 \description{
 create an OmicSignature object from differential expsignaturession matrix
-updated 03/2021
+updated 02/2024
 }

@@ -3,21 +3,21 @@
 \name{replaceSigCol}
 \alias{replaceSigCol}
 \title{rename the columns of a signature dataframe
-updated 10/2020}
+updated 02/2024}
 \usage{
-replaceSigCol(sigdf, ObjtoGeneral = TRUE)
+replaceSigCol(sigdf, long = FALSE)
 }
 \arguments{
 \item{sigdf}{signature dataframe}
 
-\item{ObjtoGeneral}{if TRUE, will replace columns in OmicSignature object,
-e.g. "signature_symbol", to general name, e.g. "symbol". if FALSE, will replace
-general name, e.g. "name", to names in OmicSignature object, e.g. "signature_symbol".}
+\item{long}{if TRUE, replace "symbol" to "signature_symbol", mainly
+used to facilitate write into json format; if FALSE, replace "signature_symbol"
+to "symbol", i.e. standard sigdf names.}
 }
 \value{
 signature dataframe with column names changed to standard
 }
 \description{
 rename the columns of a signature dataframe
-updated 10/2020
+updated 02/2024
 }

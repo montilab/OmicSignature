@@ -3,12 +3,13 @@
 \name{createMetadata}
 \alias{createMetadata}
 \title{template for creating a metadata list for an OmicSignature R6 object
-updated 05/2021}
+updated 02/2024}
 \usage{
 createMetadata(
   signature_name,
   organism,
   phenotype = "unknown",
+  assay_type,
   covariates = "none",
   platform = "GPLXXXXX",
   direction_type,
@@ -35,20 +36,22 @@ createMetadata(
 
 \item{phenotype}{optional but highly recommended. e.g. "Gene KO", "Parkinson disease". Use "unknown" or NULL if not applicable.}
 
-\item{covariates}{optional. e.g. a signature of aging may have covariate "gender".}
+\item{assay_type}{required. e.g. "transcriptomics", "proteomics", "metabolomics", "methylomics". some common misspell, e.g. "gene", "protein", "metab" will be changed automatically.}
+
+\item{covariates}{optional. e.g. "gender", "age".}
 
 \item{platform}{optional but highly recommended. GEO platform name. e.g. "GPL11154" is for Illumina HiSeq 2000 Homo sapiens. Use "GPLXXXXX" or NULL if not available.}
 
 \item{direction_type}{required. the direction information of the signature.
 "uni" or "uni-directional" if signature has only one direction or no direction infomation.
 "bi" or "bi-directional" if signature contains "up" and "down" regulated features.
-"multi" or "multi-directional" if the signature contains more categories.}
+"multiple" if the signature contains more categories.}
 
 \item{sample_type}{optional but highly recommended. a cell line or tissue from BRENDA ontology.}
 
 \item{signature_collection}{optional. collection name that the signature belongs to.}
 
-\item{author}{optional. the author name if the signature is from a published article.}
+\item{author}{optional. the author name.}
 
 \item{year}{optional. the year when the signature was created or published.}
 
@@ -58,7 +61,7 @@ createMetadata(
 
 \item{description}{optional. free text to describe the signature.}
 
-\item{category_num}{optional, specifically used for multi-directional signature to specify how many categories or class the signature contains.}
+\item{category_num}{optional, specifically used for multiple category signature to specify how many categories or class the signature contains.}
 
 \item{logfc_cutoff}{optional. log fold change cutoff used to generate the signature, if applicable.}
 
@@ -77,5 +80,5 @@ a metadata list to create an OmicSignature R6 object.
 }
 \description{
 template for creating a metadata list for an OmicSignature R6 object
-updated 05/2021
+updated 02/2024
 }

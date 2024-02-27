@@ -1,6 +1,6 @@
 #### OmicSigFromDifexp() ####
 #' @title create an OmicSignature object from differential expsignaturession matrix
-#' updated 03/2021
+#' updated 02/2024
 #' @param difexp Differential expsignaturession matrix
 #' @param metadata Metadata for the OmicSignature object. If `criteria` is `NULL`,
 #' the criterias to extract signatures will need to be provided in metadata.

@@ -2,8 +2,8 @@
 % Please edit documentation in R/standardizeSigDF.R
 \name{standardizeSigDF}
 \alias{standardizeSigDF}
-\title{remove empty, duplicate rows in signature dataframe
-updated 08/2020}
+\title{remove missing and duplicated entries in signature dataframe
+updated 02/2024}
 \usage{
 standardizeSigDF(sigdf)
 }
@@ -14,6 +14,6 @@ standardizeSigDF(sigdf)
 signature dataframe with empty, duplicate rows removed and ordered by score
 }
 \description{
-remove empty, duplicate rows in signature dataframe
-updated 08/2020
+remove missing and duplicated entries in signature dataframe
+updated 02/2024
 }

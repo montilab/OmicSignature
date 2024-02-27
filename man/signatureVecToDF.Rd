@@ -3,7 +3,7 @@
 \name{signatureVecToDF}
 \alias{signatureVecToDF}
 \title{change a signature vector into a dataframe to be saved into OmicSignature object
-updated 05/2021}
+updated 02/2024}
 \usage{
 signatureVecToDF(input, bi_directional = FALSE)
 }
@@ -13,11 +13,11 @@ signatureVecToDF(input, bi_directional = FALSE)
 \item{bi_directional}{logical.}
 }
 \value{
-signature dataframe with columns "signature_symbol", along with "signature_score" and "signature_direction" if applicable
+signature dataframe with columns "symbol", along with "score" and "direction" if applicable
 }
 \description{
 change a signature vector into a dataframe to be saved into OmicSignature object
-updated 05/2021
+updated 02/2024
 }
 \examples{
 signatures <- c("gene1", "gene2", "gene3")
