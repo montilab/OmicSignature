@@ -5,45 +5,33 @@
 \title{OmicSignature R6 object}
 \description{
 a R6 object to store signatures generated from experiments. In cluding metadata, signature, and an optional differential expression analysis result matrix.
-}
-\section{Public fields}{
-\if{html}{\out{<div class="r6-fields">}}
-\describe{
-\item{\code{metadata.}}{a list to describe the metadata}
-
-\item{\code{signature.}}{a dataframe contains symbol, score (optional) and direction (optional)}
-
-\item{\code{difexp.}}{a dataframe for differential expression result}
-
-\item{\code{deleteDifexp.}}{a function to delete difexp from the object}
-}
-\if{html}{\out{</div>}}
+updated 02/2024
 }
 \section{Active bindings}{
 \if{html}{\out{<div class="r6-active-bindings">}}
 \describe{
-\item{\code{metadata.}}{a list to describe the metadata}
+\item{\code{metadata}}{a list to describe the metadata}
 
-\item{\code{signature.}}{a dataframe contains symbol, score (optional) and direction (optional)}
+\item{\code{signature}}{a dataframe contains symbol, score (optional) and direction (optional)}
 
-\item{\code{difexp.}}{a dataframe for differential expression result}
+\item{\code{difexp}}{a dataframe for differential expression result}
 
-\item{\code{deleteDifexp.}}{a function to delete difexp from the object}
+\item{\code{deleteDifexp}}{a function to delete difexp from the object}
 }
 \if{html}{\out{</div>}}
 }
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
-\item \href{#method-new}{\code{OmicSignature$new()}}
-\item \href{#method-print}{\code{OmicSignature$print()}}
-\item \href{#method-extractSignature}{\code{OmicSignature$extractSignature()}}
-\item \href{#method-clone}{\code{OmicSignature$clone()}}
+\item \href{#method-OmicSignature-new}{\code{OmicSignature$new()}}
+\item \href{#method-OmicSignature-print}{\code{OmicSignature$print()}}
+\item \href{#method-OmicSignature-extractSignature}{\code{OmicSignature$extractSignature()}}
+\item \href{#method-OmicSignature-clone}{\code{OmicSignature$clone()}}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-new"></a>}}
-\if{latex}{\out{\hypertarget{method-new}{}}}
+\if{html}{\out{<a id="method-OmicSignature-new"></a>}}
+\if{latex}{\out{\hypertarget{method-OmicSignature-new}{}}}
 \subsection{Method \code{new()}}{
 Create a new OmicSignature object
 \subsection{Usage}{
@@ -53,9 +41,9 @@ Create a new OmicSignature object
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{metadata}}{required. must be a list. See `createMetadata` for more information.}
+\item{\code{metadata}}{required. must be a list. See `createMetadata` for more information}
 
-\item{\code{signature}}{required. must be a vector, or a dataframe with columns "signature_name", and "signature_direction" if applicable}
+\item{\code{signature}}{required. must be a vector, or a dataframe with column "symbol" and "direction", and optional column "score"}
 
 \item{\code{difexp}}{optional}
 
@@ -65,8 +53,8 @@ Create a new OmicSignature object
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-print"></a>}}
-\if{latex}{\out{\hypertarget{method-print}{}}}
+\if{html}{\out{<a id="method-OmicSignature-print"></a>}}
+\if{latex}{\out{\hypertarget{method-OmicSignature-print}{}}}
 \subsection{Method \code{print()}}{
 Print an OmicSignature object
 \subsection{Usage}{
@@ -75,8 +63,8 @@ Print an OmicSignature object
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-extractSignature"></a>}}
-\if{latex}{\out{\hypertarget{method-extractSignature}{}}}
+\if{html}{\out{<a id="method-OmicSignature-extractSignature"></a>}}
+\if{latex}{\out{\hypertarget{method-OmicSignature-extractSignature}{}}}
 \subsection{Method \code{extractSignature()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{OmicSignature$extractSignature(conditions)}\if{html}{\out{</div>}}
@@ -94,8 +82,8 @@ a dataframe of new signatures
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-clone"></a>}}
-\if{latex}{\out{\hypertarget{method-clone}{}}}
+\if{html}{\out{<a id="method-OmicSignature-clone"></a>}}
+\if{latex}{\out{\hypertarget{method-OmicSignature-clone}{}}}
 \subsection{Method \code{clone()}}{
 The objects of this class are cloneable with this method.
 \subsection{Usage}{

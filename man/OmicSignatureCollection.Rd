@@ -19,16 +19,16 @@ In cluding metadata, OmicSigList which is a list of OmicSignature object.
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
-\item \href{#method-new}{\code{OmicSignatureCollection$new()}}
-\item \href{#method-print}{\code{OmicSignatureCollection$print()}}
-\item \href{#method-extractSignature}{\code{OmicSignatureCollection$extractSignature()}}
-\item \href{#method-metadataSummary}{\code{OmicSignatureCollection$metadataSummary()}}
-\item \href{#method-clone}{\code{OmicSignatureCollection$clone()}}
+\item \href{#method-OmicSignatureCollection-new}{\code{OmicSignatureCollection$new()}}
+\item \href{#method-OmicSignatureCollection-print}{\code{OmicSignatureCollection$print()}}
+\item \href{#method-OmicSignatureCollection-extractSignature}{\code{OmicSignatureCollection$extractSignature()}}
+\item \href{#method-OmicSignatureCollection-metadataSummary}{\code{OmicSignatureCollection$metadataSummary()}}
+\item \href{#method-OmicSignatureCollection-clone}{\code{OmicSignatureCollection$clone()}}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-new"></a>}}
-\if{latex}{\out{\hypertarget{method-new}{}}}
+\if{html}{\out{<a id="method-OmicSignatureCollection-new"></a>}}
+\if{latex}{\out{\hypertarget{method-OmicSignatureCollection-new}{}}}
 \subsection{Method \code{new()}}{
 Create an OmicSignatureCollection object
 \subsection{Usage}{
@@ -48,8 +48,8 @@ Create an OmicSignatureCollection object
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-print"></a>}}
-\if{latex}{\out{\hypertarget{method-print}{}}}
+\if{html}{\out{<a id="method-OmicSignatureCollection-print"></a>}}
+\if{latex}{\out{\hypertarget{method-OmicSignatureCollection-print}{}}}
 \subsection{Method \code{print()}}{
 Print an OmicSignatureCollection object
 \subsection{Usage}{
@@ -58,8 +58,8 @@ Print an OmicSignatureCollection object
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-extractSignature"></a>}}
-\if{latex}{\out{\hypertarget{method-extractSignature}{}}}
+\if{html}{\out{<a id="method-OmicSignatureCollection-extractSignature"></a>}}
+\if{latex}{\out{\hypertarget{method-OmicSignatureCollection-extractSignature}{}}}
 \subsection{Method \code{extractSignature()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{OmicSignatureCollection$extractSignature(conditions, bind = TRUE)}\if{html}{\out{</div>}}
@@ -79,8 +79,8 @@ a dataframe or a list of new signatures
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-metadataSummary"></a>}}
-\if{latex}{\out{\hypertarget{method-metadataSummary}{}}}
+\if{html}{\out{<a id="method-OmicSignatureCollection-metadataSummary"></a>}}
+\if{latex}{\out{\hypertarget{method-OmicSignatureCollection-metadataSummary}{}}}
 \subsection{Method \code{metadataSummary()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{OmicSignatureCollection$metadataSummary(only_shared = TRUE)}\if{html}{\out{</div>}}
@@ -98,8 +98,8 @@ a dataframe of the summary of the metadata
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-clone"></a>}}
-\if{latex}{\out{\hypertarget{method-clone}{}}}
+\if{html}{\out{<a id="method-OmicSignatureCollection-clone"></a>}}
+\if{latex}{\out{\hypertarget{method-OmicSignatureCollection-clone}{}}}
 \subsection{Method \code{clone()}}{
 The objects of this class are cloneable with this method.
 \subsection{Usage}{

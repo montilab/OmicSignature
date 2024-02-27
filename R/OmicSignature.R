@@ -2,8 +2,9 @@
 
 #' @title OmicSignature R6 object
 #' @description a R6 object to store signatures generated from experiments. In cluding metadata, signature, and an optional differential expression analysis result matrix.
+#' updated 02/2024
 #' @importFrom R6 R6Class
-#' @importFrom dplyr filter pull %>%
+#' @importFrom dplyr filter select mutate arrange distinct recode %>%
 #' @importFrom jsonlite toJSON fromJSON
 #' @export
 OmicSignature <-
@@ -13,8 +14,8 @@ OmicSignature <-
     public = list(
       #' @description
       #' Create a new OmicSignature object
-      #' @param metadata required. must be a list. See `createMetadata` for more information.
-      #' @param signature required. must be a vector, or a dataframe with columns "signature_name", and "signature_direction" if applicable
+      #' @param metadata required. must be a list. See `createMetadata` for more information
+      #' @param signature required. must be a vector, or a dataframe with column "symbol" and "direction", and optional column "score"
       #' @param difexp optional
       #' @param print_message use TRUE if want to see all messages printed
       #' @export
@@ -24,10 +25,10 @@ OmicSignature <-
         if (!is.null(difexp)) {
           difexp <- private$checkDifexp(difexp, v = print_message)
           private$.difexp <- difexp
-          if (!all(signature$signature_symbol %in% difexp$symbol)) {
+          if (!all(signature$symbol %in% difexp$symbol)) {
             stop(paste(
-              "Some features in signature$signature_symbol are not included in difexp$symbol. Examples:",
-              paste(head(setdiff(signature$signature_symbol, difexp$symbol)), collapse = " ")
+              "Some features in signature$symbol are not included in difexp$symbol. Examples:",
+              paste(head(setdiff(signature$symbol, difexp$symbol)), collapse = " ")
             ))
           }
         }
@@ -49,8 +50,8 @@ OmicSignature <-
         sh <- mapply(
           function(k, v) {
             cat("    ", k, " (", v, ")", "\n", sep = "")
-          }, names(summary(private$.signature$signature_direction)),
-          summary(private$.signature$signature_direction)
+          }, names(summary(private$.signature$direction)),
+          summary(private$.signature$direction)
         )
         cat("  Differential Expression Data: \n")
         cat("    ", nrow(private$.difexp), " x ", ncol(private$.difexp), "\n", sep = "")
@@ -66,21 +67,19 @@ OmicSignature <-
         v <- rlang::parse_exprs(conditions)
         res <- private$.difexp %>%
           dplyr::filter(!!!v) %>%
+          dplyr::filter(symbol != "" & score != "") %>%
           dplyr::select(symbol, score) %>%
           dplyr::mutate(direction = ifelse(score < 0, "-", "+")) %>%
-          dplyr::arrange(desc(abs(score)))
+          dplyr::arrange(desc(abs(score))) %>%
+          dplyr::distinct(symbol, .keep_all = TRUE)
         res <- res[complete.cases(res), ]
-        res <- res[res$symbol != "", ]
-        res <- res[res$score != "", ]
-        res <- res[order(abs(as.numeric(as.character(res$score))), decreasing = T), ]
-        res <- distinct(res, res$symbol, .keep_all = T)[, c(1:3)]
         return(res)
       }
     ),
 
     #### active of OmicSig ####
     active = list(
-      #' @field metadata. a list to describe the metadata
+      #' @field metadata a list to describe the metadata
       metadata = function(value, print_message = FALSE) {
         if (missing(value)) {
           private$.metadata
@@ -88,7 +87,7 @@ OmicSignature <-
           private$.metadata <- private$checkMetadata(value, print_message)
         }
       },
-      #' @field signature. a dataframe contains symbol, score (optional) and direction (optional)
+      #' @field signature a dataframe contains symbol, score (optional) and direction (optional)
       signature = function(value, print_message = FALSE) {
         if (missing(value)) {
           private$.signature
@@ -96,7 +95,7 @@ OmicSignature <-
           private$.signature <- private$checkSignature(value, print_message)
         }
       },
-      #' @field difexp. a dataframe for differential expression result
+      #' @field difexp a dataframe for differential expression result
       difexp = function(value, print_message = FALSE) {
         if (missing(value)) {
           private$.difexp
@@ -104,7 +103,7 @@ OmicSignature <-
           private$.difexp <- private$checkDifexp(value, print_message)
         }
       },
-      #' @field deleteDifexp. a function to delete difexp from the object
+      #' @field deleteDifexp a function to delete difexp from the object
       deleteDifexp = function(x) {
         private$.difexp <- NULL
         cat("difexp has been deleted.\n")
@@ -134,21 +133,14 @@ OmicSignature <-
         }
 
         ## check column names:
-        ## if id is not included, then use probe_id as id
-        if (!("id" %in% colnames(difexp)) && "probe_id" %in% colnames(difexp)) {
-          colnames(difexp) <- colnames(difexp) %>%
-            dplyr::recode("probe_id" = "id")
-        }
+        ## if id is not included, then setup numeric counter as id
         if (!("id" %in% colnames(difexp))) {
           difexp$id <- c(1:nrow(difexp))
         }
-        ## require only one of adj_p, p_value, and q_value
-        if ("adj_p" %in% colnames(difexp)) {
-          difexpColRequired <- c("id", "symbol", "score", "adj_p")
-        } else if ("p_value" %in% colnames(difexp)) {
-          difexpColRequired <- c("id", "symbol", "score", "p_value")
-        } else if ("q_value" %in% colnames(difexp)) {
-          difexpColRequired <- c("id", "symbol", "score", "q_value")
+        ## require any of adj_p, p_value, or q_value
+        p_intersect <- intersect(colnames(difexp), c("adj_p", "p_value", "q_value"))
+        if (length(p_intersect) > 0) {
+          difexpColRequired <- c("id", "symbol", "score", p_intersect)
         } else {
           stop("Columns in difexp need to contain at least one of the following: p_value, q_value, adj_p.")
         }
@@ -192,7 +184,7 @@ OmicSignature <-
 
         # check required metadata fields
         metadataRequired <- c(
-          "signature_name", "organism", "direction_type"
+          "signature_name", "organism", "direction_type", "assay_type"
         )
         metadataMissing <- setdiff(metadataRequired, names(metadata))
         private$verbose(v, paste("  --Required attributes for metadata: ",
@@ -204,6 +196,16 @@ OmicSignature <-
             paste(metadataMissing, collapse = ", "), ".",
             sep = ""
           )
+        }
+
+        # check direction_type
+        if (!metadata$direction_type %in% c("uni-directional", "bi-directional", "multiple")) {
+          stop("direction_type must be uni-directional, bi-directional, or multiple. ")
+        }
+
+        # check assay_type
+        if (!metadata$assay_type %in% c("transcriptomics", "proteomics", "metabolomics", "methylomics")) {
+          warning("Note: assay_type is not one of the commonly used term: transcriptomics, proteomics, metabolomics, methylomics. ")
         }
 
         # check covariates
@@ -218,28 +220,25 @@ OmicSignature <-
         }
 
         # check if sample_type is a valid BRENDA term
-        if (!is.null(metadata$sample_type)) {
-          tempSampleType <- try(BRENDACurrentName(metadata$sample_type), silent = T)
-          if (is(tempSampleType, "character")) {
-            metadata$sample_type <- tempSampleType[2]
-          } else {
-            warning(paste(
-              "sample_type in metadata is not a valid or up-to-date BRENDA ontology term.",
-              "Please use BRENDASearch() function to
-            	search for the correct BRENDA ontology term to use.",
-              sep = "\n"
-            ))
-          }
+        if (is.null(metadata$sample_type)) {
+          metadata$sample_type <- "unknown"
+        }
+        if (!BRENDAExistName(metadata$sample_type) | metadata$sample_type == "unknown") {
+          warning(paste(
+            "sample_type is missing or is not a valid BRENDA ontology term. Set to be unknown.",
+            "If this is a mistake, use BRENDASearch() to search for the correct term to use.",
+            sep = "\n"
+          ))
         }
 
         # check if platform is a valid GPL platform
-        if (is.null(metadata$platform) | metadata$platform == "GPLXXXXX") {
+        if (is.null(metadata$platform)) {
           metadata$platform <- "GPLXXXXX"
-          warning("Note: Platform information unknown. ")
-        } else if (!metadata$platform %in% GEOplatform$Accession) {
+        }
+        if (!metadata$platform %in% GEOplatform$Accession | metadata$platform == "GPLXXXXX") {
           warning(paste(
-            "Platform in metadata is not a valid GEO platform accession ID. ",
-            "Please use `GEOSearch()` to search for the correct platform assession to use, or use GPLXXXXX if is unknown. ",
+            "platform is missing or not a valid GEO platform accession ID. Set to be GPLXXXXX.",
+            "If this is a mistake, use `GEOSearch()` to search for the correct assession ID to use. ",
             sep = "\n"
           ))
         }
@@ -247,32 +246,29 @@ OmicSignature <-
         metadata <- metadata[order(names(metadata))]
         return(metadata)
       },
-
       checkSignature = function(input, signatureType = NULL, category_num = 0, v = FALSE) {
-        ## category_num is used for multi-directional signature
+        ## category_num is used for multiple category signature
 
         if (is(input, "OmicSignature")) {
           signature <- input$signature
           signatureType <- input$metadata$direction_type
-          if (signatureType == "multi-directional") {
+          if (signatureType == "multiple") {
             if (!is.null(input$metadata$category_num)) {
               categoryNum <- input$metadata$category_num
             } else {
-              stop("Signature is specified as multi-directional, but sample number not found.")
+              stop("Signature is specified as multiple, but sample number not found.")
             }
           }
-        }
-        else if (is.vector(input)) {
+        } else if (is.vector(input)) {
           if (signatureType == "bi-directional") {
             signature <- signatureVecToDF(input, bi_directional = TRUE)
           } else if (signatureType == "uni-directional") {
             signature <- signatureVecToDF(input, bi_directional = FALSE)
           } else {
-            stop("Please save signature as a dataframe with columns 'signature_symbol' and 'signature_direction'. ")
+            stop("Please save signature as a dataframe with columns 'symbol' and 'direction'. ")
           }
           remove(input)
-        }
-        else if (is.data.frame(input)) {
+        } else if (is.data.frame(input)) {
           signature <- input
           remove(input)
         } else {
@@ -283,59 +279,57 @@ OmicSignature <-
           ))
         }
 
-        ## at this point, signature should be a dataframe now
+        ## starting this point, signature should be a dataframe
         if (nrow(signature) == 0) {
           stop("Signature is empty.")
         }
 
-        ## change column names to standard column names:
-        colnames(signature) <- colnames(signature) %>%
-          tolower() %>%
-          dplyr::recode(
-            "signature" = "signature_symbol", "symbol" = "signature_symbol",
-            "name" = "signature_symbol", "score" = "signature_score",
-            "weight" = "signature_score", "direction" = "signature_direction"
-          )
+        ## standardize content and column names:
+        signature <- standardizeSigDF(signature)
+        signature <- replaceSigCol(signature)
 
         ## check if signature_symbol and signature_score (lv2 or lv3) exists:
-        if (!c("signature_symbol") %in% colnames(signature)) {
-          stop("Signature dataframe does not contain \"signature_symbol\" column.")
+        if (!c("symbol") %in% colnames(signature)) {
+          stop("Signature dataframe does not contain \"symbol\" column.")
         }
-        if (!c("signature_score") %in% colnames(signature)) {
-          warning("Note: Signature dataframe does not contain \"signature_score\" column. Ignore this message if no score information is available. ")
+        if (!c("score") %in% colnames(signature)) {
+          warning("Signature dataframe does not contain \"score\" column. Ignore this message if intentional. ")
         }
 
         ## check if the direction match with signature type:
         if (is.null(signatureType)) {
-          stop("Signature type not specified. It needs to be uni-, bi- or multi-directional.")
+          stop("Signature type not specified. It needs to be uni-directional, bi-directional or multiple.")
         }
 
         ## bi-directional signature:
         if (signatureType == "bi-directional") {
-          if (!"signature_direction" %in% colnames(signature)) {
-            stop("Signature is specified as bi-directional but \"signature_direction\" information not found.")
+          if (!"direction" %in% colnames(signature)) {
+            stop("Signature is specified as bi-directional but \"direction\" information not found.")
           }
           ## change direction symbol to + and - :
-          signature$signature_direction <- signature$signature_direction %>%
+          signature$direction <- signature$direction %>%
             tolower() %>%
-            dplyr::recode("up" = "+", "dn" = "-", "down" = "-")
-          signature$signature_direction <- as.factor(signature$signature_direction)
+            dplyr::case_match(
+              .default = signature$direction,
+              "up" ~ "+", "dn" ~ "-", "down" ~ "-"
+            )
+          signature$direction <- as.factor(signature$direction)
 
           ## check direction:
-          summaryDirection <- as.character(unique(signature$signature_direction))
-          if (!all(as.character(unique(signature$signature_direction)) %in% c("-", "+"))) {
+          summaryDirection <- as.character(unique(signature$direction))
+          if (!all(as.character(unique(signature$direction)) %in% c("-", "+"))) {
             stop("Direction for bi-directional signature is not valid. Should be marked with \"-\" and \"+\".")
           }
         }
 
         ## uni-directional signature:
         else if (signatureType == "uni-directional") {
-          signature$signature_direction <- NULL
+          signature$direction <- NULL
         }
 
-        ## multi-directional signature:
-        else if (signatureType == "multi-directional") {
-          summaryDirection <- summary(signature$signature_direction)
+        ## multiple category signature:
+        else if (signatureType == "multiple") {
+          summaryDirection <- summary(signature$direction)
           if (length(summaryDirection) != categoryNum) {
             warning("categoryNum in metadata does not match with the number of categories in the signature.")
           }
@@ -343,7 +337,7 @@ OmicSignature <-
 
         ## if none of the signature type is met:
         else {
-          stop("Signature information invalid. Please check the column names and content of the signature dataframe, or the signature_direction of your features. ")
+          stop("Signature information invalid. Please check the column names and content of the signature dataframe. ")
         }
         private$verbose(v, "  [Success] Signature is valid. \n")
         return(signature)
@@ -356,7 +350,7 @@ OmicSignature <-
 #' @description a R6 object to store a collection of OmicSignature objects.
 #' In cluding metadata, OmicSigList which is a list of OmicSignature object.
 #' @importFrom R6 R6Class
-#' @importFrom dplyr filter pull %>%
+#' @importFrom dplyr filter arrange mutate %>%
 #' @export
 OmicSignatureCollection <- R6Class(
   "OmicSignatureCollection",
@@ -412,7 +406,7 @@ OmicSignatureCollection <- R6Class(
     #' @return a dataframe or a list of new signatures
     #' @export
     extractSignature = function(conditions, bind = TRUE) {
-      a <- mapply(function(x) {
+      sig_df <- mapply(function(x) {
         try_temp <- try(x$extractSignature(conditions), silent = T)
         if (is(try_temp, "try-error")) {
           cat(paste(
@@ -424,23 +418,29 @@ OmicSignatureCollection <- R6Class(
         return(try_temp)
       }, private$.OmicSigList)
 
-      # 'a' should be a matrix, each column is one signature, rows are score, symbol, direction
+      # 'sig_df' should be a matrix, each column is one signature, rows are score, symbol, direction
       # process it into a list; each signature is a dataframe as an element in the list
-      if (is(a, "matrix")) {
-        colnames(a) <- sapply(X = private$.OmicSigList, function(x) {
+      if (is(sig_df, "matrix")) {
+        colnames(sig_df) <- sapply(X = private$.OmicSigList, function(x) {
           x$metadata$signature_name
         })
-        a <- apply(a, 2, function(x) {
+        sig_df <- apply(sig_df, 2, function(x) {
           data.frame(matrix(unlist(x), nrow = length(x[[1]]), byrow = F), stringsAsFactors = F)
         })
       }
 
       # change the column names of the dataframes
-      if (is(a, "list")) {
-        a <- lapply(a, function(x) {
+      if (is(sig_df, "list")) {
+        sig_df <- lapply(sig_df, function(x) {
           if (is(x, "data.frame") && nrow(x) > 0) {
             colnames(x) <- c("symbol", "score", "direction")
-            x$direction <- as.character(x$direction)
+            x <- x %>%
+              dplyr::mutate(
+                symbol = as.character(symbol),
+                score = as.numeric(as.character(score)),
+                direction = as.character(direction)
+              ) %>%
+              arrange(desc(abs(score)))
           } else {
             x <- NULL
           }
@@ -450,16 +450,22 @@ OmicSignatureCollection <- R6Class(
 
       # bind them into a single dataframe if asked to
       if (bind) {
-        res <- bind_rows(a, .id = "sig_name") # save names(a) as a column sig_name
+        res <- bind_rows(sig_df, .id = "sig_name") # save names(sig_df) as a column sig_name
         if (is(res, "data.frame") && nrow(res) > 0) {
           colnames(res) <- c("sig_name", "symbol", "score", "direction")
-          res <- res[order(res$score, decreasing = T), ]
+          res <- res %>%
+            dplyr::mutate(
+              symbol = as.character(symbol),
+              score = as.numeric(as.character(score)),
+              direction = as.character(direction)
+            ) %>%
+            arrange(desc(abs(score)))
         } else {
           res <- NULL
         }
         return(res)
       } else {
-        return(a)
+        return(sig_df)
       }
     },
     #' @param only_shared use TRUE to only print the shared metadata fields in the OmicSignatures
