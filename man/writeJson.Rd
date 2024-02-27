@@ -2,20 +2,18 @@
 % Please edit documentation in R/json.R
 \name{writeJson}
 \alias{writeJson}
-\title{write OmicSignature object into json txt format
-updated 03/2021}
+\title{write OmicSignature object into json txt format}
 \usage{
 writeJson(OmicObj, file)
 }
 \arguments{
 \item{OmicObj}{A OmicSignature object}
 
-\item{file}{export file name}
-}
-\value{
-a "finished" message
+\item{file}{file name to write}
 }
 \description{
-write OmicSignature object into json txt format
-updated 03/2021
+To avoid confusion, in the written json text file, the column 
+names in signature dataframe and difexp dataframe will have prefix "sig_" 
+and "difexp" added. This corresponds to readJson() function.
+updated 02/2024
 }

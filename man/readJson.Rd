@@ -2,8 +2,7 @@
 % Please edit documentation in R/json.R
 \name{readJson}
 \alias{readJson}
-\title{read an OmicSignature object from json txt file created by writeJson()
-updated 03/2021}
+\title{read an OmicSignature object from json txt file created by writeJson()}
 \usage{
 readJson(filename)
 }
@@ -14,6 +13,8 @@ readJson(filename)
 OmicSignature object
 }
 \description{
-read an OmicSignature object from json txt file created by writeJson()
-updated 03/2021
+To avoid confusion, in the json text file, assume the column 
+names in signature dataframe and difexp dataframe have prefix "sig_" 
+and "difexp". This corresponds to writeJson() function. 
+updated 02/2024
 }

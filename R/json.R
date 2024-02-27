@@ -1,65 +1,80 @@
 #### writeJson() ####
 #' @title write OmicSignature object into json txt format
-#' updated 03/2021
+#' @description To avoid confusion, in the written json text file, the column 
+#' names in signature dataframe and difexp dataframe will have prefix "sig_" 
+#' and "difexp" added. This corresponds to readJson() function.
+#' updated 02/2024
 #'
 #' @param OmicObj A OmicSignature object
-#' @param file export file name
+#' @param file file name to write
 #' @importFrom jsonlite toJSON fromJSON
-#' @return a "finished" message
+#' @return NULL
 #' @export
 writeJson <- function(OmicObj, file) {
-  # drop the previous signature_direction column, to save space:
-  signatureDirection <- NULL
-  if (!is.null(OmicObj$signature$signature_direction)) {
-    signatureDirection <- summary(OmicObj$signature$signature_direction)
-  }
+  #### sig df ####
   writeSignature <- OmicObj$signature
-  writeSignature$signature_direction <- NULL
+  # add "sig_" prefix to column names to avoid confusion with columns in difexp
+  names(writeSignature) <- paste0("sig_", names(writeSignature))
+
+  #### difexp ####
   writeDifexp <- NULL
   if (!is.null(OmicObj$difexp)) {
+    # add "difexp_" prefix to column names to avoid confusion with other entries
+    difexp_formatted <- OmicObj$difexp
+    colnames(difexp_formatted) <- paste0("difexp_", colnames(difexp_formatted))
     writeDifexp <- c(
-      list("lv1_colnames" = colnames(OmicObj$difexp)),
-      OmicObj$difexp
+      list("difexp_colnames" = colnames(difexp_formatted)),
+      difexp_formatted
     )
   }
+
+  #### write json ####
   writeJsonObj <- jsonlite::toJSON(c(
     OmicObj$metadata,
     "metadata_length" = length(OmicObj$metadata),
-    list("signature_direction_names" = names(signatureDirection)),
-    signatureDirection,
     writeSignature,
     writeDifexp
-  ), na = NULL, pretty = T)
+  ), na = NULL, pretty = TRUE)
   write(writeJsonObj, file)
-  return("finished")
+
+  cat(paste("Finish writing", file, "."))
 }
 
 #### readJson() ####
 #' @title read an OmicSignature object from json txt file created by writeJson()
-#' updated 03/2021
+#' @description To avoid confusion, in the json text file, assume the column 
+#' names in signature dataframe and difexp dataframe have prefix "sig_" 
+#' and "difexp". This corresponds to writeJson() function. 
+#' updated 02/2024
 #'
 #' @param filename json file name to read in
 #' @return OmicSignature object
 #' @export
 readJson <- function(filename) {
   readJson <- jsonlite::fromJSON(txt = filename)
+
+  #### metadata ####
   readMetadata <- readJson[c(1:readJson$metadata_length)]
-  readLv1 <- NULL
-  if ("lv1_colnames" %in% names(readJson)) {
-    readLv1 <- data.frame(dplyr::bind_rows(readJson[c(readJson$lv1_colnames)]))
+
+  #### difexp ####
+  readDifexp <- NULL
+  if ("difexp_colnames" %in% names(readJson)) {
+    readDifexp <- data.frame(dplyr::bind_rows(readJson[c(readJson$difexp_colnames)]))
+    colnames(readDifexp) <- gsub("difexp_", "", colnames(readDifexp))
   } else {
-    warning(paste("Notice: ", filename, "does not have difexp data."))
+    cat(paste("Notice: ", filename, "does not have difexp data. \n"))
   }
-  readLv2 <- data.frame("signature_symbol" = readJson$signature_symbol)
-  if (!is.null(readJson$signature_score)) {
-    readLv2$signature_score <- readJson$signature_score
+
+  #### sig df ####
+  readSignature <- data.frame("symbol" = readJson$sig_symbol)
+  if (!is.null(readJson$sig_score)) {
+    readSignature$score <- readJson$sig_score
   }
-  if (readJson$direction_type != "uni-directional") {
-    readLv2$signature_direction <- rep(
-      readJson$signature_direction_names,
-      unlist(readJson[readJson$signature_direction_names])
-    )
+  if (!is.null(readJson$sig_direction)) {
+    readSignature$direction <- readJson$sig_direction
   }
-  readSigObj <- OmicSignature$new(metadata = readMetadata, signature = readLv2, difexp = readLv1)
-  return(readSigObj)
+
+  #### Obj ####
+  readOmicObj <- OmicSignature$new(metadata = readMetadata, signature = readSignature, difexp = readDifexp)
+  return(readOmicObj)
 }
