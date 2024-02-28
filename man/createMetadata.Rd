@@ -36,7 +36,7 @@ createMetadata(
 
 \item{phenotype}{optional but highly recommended. e.g. "Gene KO", "Parkinson disease". Use "unknown" or NULL if not applicable.}
 
-\item{assay_type}{required. e.g. "transcriptomics", "proteomics", "metabolomics", "methylomics". some common misspell, e.g. "gene", "protein", "metab" will be changed automatically.}
+\item{assay_type}{required. e.g. "transcriptomics", "proteomics", "metabolomics", "methylomics", "methylomics", "genetic_variations", "DNA_binding_sites". some common misspell, e.g. "gene", "protein", "metab" will be changed automatically.}
 
 \item{covariates}{optional. e.g. "gender", "age".}
 

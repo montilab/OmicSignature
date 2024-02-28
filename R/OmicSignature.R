@@ -204,8 +204,9 @@ OmicSignature <-
         }
 
         # check assay_type
-        if (!metadata$assay_type %in% c("transcriptomics", "proteomics", "metabolomics", "methylomics")) {
-          warning("Note: assay_type is not one of the commonly used term: transcriptomics, proteomics, metabolomics, methylomics. ")
+        if (!metadata$assay_type %in% c("transcriptomics", "proteomics", "metabolomics", "methylomics", "genetic_variations", "DNA_binding_sites")) {
+          metadata$assay_type <- "others"
+          warning("Note: assay_type is not one of the commonly used term: transcriptomics, proteomics, metabolomics, methylomics, genetic_variations, DNA_binding_sites. Set it to be \"others\". ")
         }
 
         # check covariates
@@ -225,7 +226,7 @@ OmicSignature <-
         }
         if (!BRENDAExistName(metadata$sample_type) | metadata$sample_type == "unknown") {
           warning(paste(
-            "sample_type is missing or is not a valid BRENDA ontology term. Set to be unknown.",
+            "Note: sample_type is missing or is not a valid BRENDA ontology term. Set to be unknown.",
             "If this is a mistake, use BRENDASearch() to search for the correct term to use.",
             sep = "\n"
           ))
@@ -237,7 +238,7 @@ OmicSignature <-
         }
         if (!metadata$platform %in% GEOplatform$Accession | metadata$platform == "GPLXXXXX") {
           warning(paste(
-            "platform is missing or not a valid GEO platform accession ID. Set to be GPLXXXXX.",
+            "Note: platform is missing or not a valid GEO platform accession ID. Set to be GPLXXXXX.",
             "If this is a mistake, use `GEOSearch()` to search for the correct assession ID to use. ",
             sep = "\n"
           ))

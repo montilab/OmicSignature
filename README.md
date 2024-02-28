@@ -1,7 +1,7 @@
 README
 ================
 Vanessa Mengze Li
-12/10/2020
+02/27/2024
 
 OmicSignature
 =============
@@ -13,7 +13,7 @@ Contact: Vanessa Mengze Li
 
 ### Last update
 
-04/06/2021
+02/27/2024
 
 ### Installation
 

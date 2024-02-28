@@ -7,7 +7,7 @@
 #' "uni" or "uni-directional" if signature has only one direction or no direction infomation.
 #' "bi" or "bi-directional" if signature contains "up" and "down" regulated features.
 #' "multiple" if the signature contains more categories.
-#' @param assay_type required. e.g. "transcriptomics", "proteomics", "metabolomics", "methylomics". some common misspell, e.g. "gene", "protein", "metab" will be changed automatically.
+#' @param assay_type required. e.g. "transcriptomics", "proteomics", "metabolomics", "methylomics", "methylomics", "genetic_variations", "DNA_binding_sites". some common misspell, e.g. "gene", "protein", "metab" will be changed automatically.
 #' @param organism required. e.g. "Homo Sapiens", "Mus Musculus".
 #' @param platform optional but highly recommended. GEO platform name. e.g. "GPL11154" is for Illumina HiSeq 2000 Homo sapiens. Use "GPLXXXXX" or NULL if not available.
 #' @param phenotype optional but highly recommended. e.g. "Gene KO", "Parkinson disease". Use "unknown" or NULL if not applicable.
@@ -71,13 +71,17 @@ createMetadata <- function(signature_name, organism, phenotype = "unknown", assa
       "SNP" ~ "genetic_variations",
       "genetic" ~ "genetic_variations",
       "genetics" ~ "genetic_variations",
-      "genetic_variation" ~ "genetic_variations"
+      "genetic_variation" ~ "genetic_variations",
+      "chip-seq" ~ "DNA_binding_sites",
+      "ChIP-seq" ~ "DNA_binding_sites",
+      "DNA binding" ~ "DNA_binding_sites",
+      "DNA_binding_site" ~ "DNA_binding_sites"
     )
-  if (!assay_type %in% c("transcriptomics", "proteomics", "metabolomics", "methylomics", "genetic_variations")) {
+  if (!assay_type %in% c("transcriptomics", "proteomics", "metabolomics", "methylomics", "genetic_variations", "DNA_binding_sites")) {
     assay_type <- "others"
     warning(paste0(
-      "assay_type is not one of the following: transcriptomics, proteomics, metabolomics, methylomics, genetic_variations. \n",
-      "Set it to be 'others'. \n"
+      "assay_type is not one of the following: transcriptomics, proteomics, metabolomics, methylomics, genetic_variations, DNA_binding_sites. \n",
+      "Set it to be \"others\". \n"
     ))
   }
 
