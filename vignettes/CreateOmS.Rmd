@@ -126,11 +126,12 @@ metadata <- createMetadata(
 
 #### 2.1.3 Instruction for "assay_type"
 For the time being, `assay_type` is one of the following: \
-- "transcriptomics" \
+- "transcriptomics" (e.g. RNA-seq data) \
 - "proteomics" \
 - "metabolomics" \
 - "methylomics" \
-- "genetic_variations" \
+- "genetic_variations" (e.g. SNP) \
+- "DNA_binding_sites" (e.g. ChIP-seq data) \
 - "others" \
 
 ### 2.2. Diffanal results (difexp)
