@@ -9,7 +9,7 @@
 #' BRENDAExistName("random tissue")
 #' @export
 BRENDAExistName <- function(x, file = BRENDA) {
-  if (x %in% BRENDA$Name) {
+  if (x %in% file$Name) {
     return(TRUE)
   } else {
     return(FALSE)
