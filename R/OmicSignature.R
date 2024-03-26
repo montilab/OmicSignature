@@ -46,7 +46,13 @@ OmicSignature <-
         sh <- mapply(function(k, v) {
           cat("   ", k, "=", paste(v, collapse = ", "), "\n")
         }, names(private$.metadata), private$.metadata)
-        cat("  signature: \n")
+        if (!is.null(private$.metadata$others)) {
+          cat("  Metadata user defined fields: \n")
+          sh <- mapply(function(k, v) {
+            cat("   ", k, "=", paste(v, collapse = ", "), "\n")
+          }, names(private$.metadata$others), private$.metadata$others)
+        }
+        cat("  Signature: \n")
         sh <- mapply(
           function(k, v) {
             cat("    ", k, " (", v, ")", "\n", sep = "")
