@@ -18,13 +18,13 @@
 #' @param PMID optional. the PubMed ID if the signature is from a published article.
 #' @param keywords optional. key words for the signature. examples are "longevity", "perturbation". "drug".
 #' @param description optional. free text to describe the signature.
-#' @param category_num optional, specifically used for multiple category signature to specify how many categories or class the signature contains.
+#' @param category_num required when direction_type = "multiple". numeric. indicates how many categories or class the signature contains.
 #' @param logfc_cutoff optional. log fold change cutoff used to generate the signature, if applicable.
 #' @param p_value_cutoff optional. p value cutoff used to generate the signature, if applicable.
 #' @param adj_p_cutoff optional. adjusted p-value, e.g. fdr, cutoff used to generate the signature, if applicable.
 #' @param score_cutoff optional. score cutoff used to generate the signature, if applicable.
 #' @param cutoff_description optional. discription of the cutoff, if applicable.
-#' @param ... additional user-defined metadata fields.
+#' @param others provide additional user-defined metadata fields as a list. for example, others = list("animal_strain" = "C57BL/6", "lab" = "new_lab").
 #' @return a metadata list to create an OmicSignature R6 object.
 #' @export
 createMetadata <- function(signature_name, organism, phenotype = "unknown", assay_type,
@@ -34,7 +34,7 @@ createMetadata <- function(signature_name, organism, phenotype = "unknown", assa
                            keywords = NULL, description = NULL, category_num = NULL,
                            logfc_cutoff = NULL, p_value_cutoff = NULL,
                            adj_p_cutoff = NULL, score_cutoff = NULL,
-                           cutoff_description = NULL, ...) {
+                           cutoff_description = NULL, others = NULL) {
   # check sig direction type
   direction_type <- direction_type %>%
     tolower() %>%
@@ -113,6 +113,11 @@ createMetadata <- function(signature_name, organism, phenotype = "unknown", assa
     warning("Phenotype information unknown. Ignore this message if intentional. ")
   }
 
+  # check others, i.e. user defined fields
+  if (!is.null(others) & !is.list(others)) {
+    stop("\"others\" must be a list. see description for details.")
+  }
+
   # create metadata list
   result <- list(
     "signature_name" = signature_name,
@@ -131,17 +136,16 @@ createMetadata <- function(signature_name, organism, phenotype = "unknown", assa
     "p_value_cutoff" = p_value_cutoff,
     "adj_p_cutoff" = adj_p_cutoff,
     "score_cutoff" = score_cutoff,
-    "cutoff_description" = cutoff_description
+    "cutoff_description" = cutoff_description,
+    "others" = others
   )
   if (direction_type == "multiple") {
     if (!is.null(category_num)) {
       result$category_num <- category_num
     } else {
-      stop("Error: signature is multiple category but category_num not found. \n")
+      stop("Error: signature is multiple category but category_num is not specified. \n")
     }
   }
-  userDef <- list(...)
-  result <- c(result, userDef)
 
   # remove empty entries
   result <- result[-which(sapply(result, is.null))]

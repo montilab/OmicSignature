@@ -26,7 +26,7 @@ createMetadata(
   adj_p_cutoff = NULL,
   score_cutoff = NULL,
   cutoff_description = NULL,
-  ...
+  others = NULL
 )
 }
 \arguments{
@@ -61,7 +61,7 @@ createMetadata(
 
 \item{description}{optional. free text to describe the signature.}
 
-\item{category_num}{optional, specifically used for multiple category signature to specify how many categories or class the signature contains.}
+\item{category_num}{required when direction_type = "multiple". numeric. indicates how many categories or class the signature contains.}
 
 \item{logfc_cutoff}{optional. log fold change cutoff used to generate the signature, if applicable.}
 
@@ -73,7 +73,7 @@ createMetadata(
 
 \item{cutoff_description}{optional. discription of the cutoff, if applicable.}
 
-\item{...}{additional user-defined metadata fields.}
+\item{others}{provide additional user-defined metadata fields as a list. for example, others = list("animal_strain" = "C57BL/6", "lab" = "new_lab").}
 }
 \value{
 a metadata list to create an OmicSignature R6 object.

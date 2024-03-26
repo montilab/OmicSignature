@@ -107,8 +107,8 @@ metadata <- createMetadata(
   PMID = 25619689,
   year = 2015,
 
-  # example of a customized attribute:
-  animal_strain = "C57BL/6"
+  # example of customized attributes:
+  others = list("animal_strain" = "C57BL/6")
 )
 ```
 
@@ -167,7 +167,7 @@ Also, if the signature is "bi-directional" or "multiple" (specified in `directio
 An optional column "score" is recommended when feature scores are available. \
 
 Option 1: Extract signature from difexp. \
-Here we create a bi-directional signature manually from the difexp generated above, using the `score_cutoff` and `adj_p_cutoff` previously specified in the metadata. \
+Here we create a bi-directional signature from the difexp using the `score_cutoff` and `adj_p_cutoff` previously specified in the metadata. \
 
 ```{r}
 signature <- difexp %>%
@@ -177,7 +177,7 @@ signature <- difexp %>%
   dplyr::rename(symbol = "symbol", score = "score")
 head(signature)
 ```
-(note: if you see numbers instead of gene symbol name in the first column, please check if the "symbol" column in your difexp matrix is "character" and not accidentally be "factor") \
+(note: if you see numbers instead of gene symbol name in the first column, please check if the "symbol" column in your difexp matrix is "character" instead of "factor") \
 
 Function `standardizeSigDF()` can help remove duplicate rows, empty symbols in the signature dataframe.
 ```{r}
@@ -186,18 +186,20 @@ head(signature)
 tail(signature)
 ```
 
-Option 2: Manually write signature. \
+Option 2: Manually create signature dataframe. \
 For uni-directional signature: \
 ```
-signature <- c("gene1", "gene2", "gene3")
+signature <- data.frame("symbol" = c("gene1", "gene2", "gene3"))
 ```
 
 For bi-directional signature: \
 ```
-signature <- c(0.45, -3.21, 2.44)
-names(signature) <- c("gene1", "gene2", "gene3")
+signature <- data.frame(
+  "symbol" = c("gene1", "gene2", "gene3"),
+  "score" = c(0.45, -3.21, 2.44),
+  "direction" = c("+", "-", "+")
+)
 ```
-The direction will be automatically determined by the score value provided. \
 
 ### 2.4. Create the `OmicSignature` object
 Use `OmicSignature$new()` to create a new OmicSignature R6 object. \
