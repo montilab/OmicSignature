@@ -205,8 +205,8 @@ You can also provide your own customized attributes.<br></p>
 <span>  PMID <span class="op">=</span> <span class="fl">25619689</span>,</span>
 <span>  year <span class="op">=</span> <span class="fl">2015</span>,</span>
 <span></span>
-<span>  <span class="co"># example of a customized attribute:</span></span>
-<span>  animal_strain <span class="op">=</span> <span class="st">"C57BL/6"</span></span>
+<span>  <span class="co"># example of customized attributes:</span></span>
+<span>  others <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"animal_strain"</span> <span class="op">=</span> <span class="st">"C57BL/6"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <div class="section level4">
 <h4 id="instruction-for-sample_type-and-platform">2.1.1 Instruction for “sample_type” and “platform”<a class="anchor" aria-label="anchor" href="#instruction-for-sample_type-and-platform"></a>
@@ -310,9 +310,9 @@ Also, if the signature is “bi-directional” or “multiple” (specified in
 An optional column “score” is recommended when feature scores are
 available.<br></p>
 <p>Option 1: Extract signature from difexp.<br>
-Here we create a bi-directional signature manually from the difexp
-generated above, using the <code>score_cutoff</code> and
-<code>adj_p_cutoff</code> previously specified in the metadata.<br></p>
+Here we create a bi-directional signature from the difexp using the
+<code>score_cutoff</code> and <code>adj_p_cutoff</code> previously
+specified in the metadata.<br></p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">signature</span> <span class="op">&lt;-</span> <span class="va">difexp</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">abs</a></span><span class="op">(</span><span class="va">score</span><span class="op">)</span> <span class="op">&gt;</span> <span class="va">metadata</span><span class="op">$</span><span class="va">score_cutoff</span> <span class="op">&amp;</span> <span class="va">adj_p</span> <span class="op">&lt;</span> <span class="va">metadata</span><span class="op">$</span><span class="va">adj_p_cutoff</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
@@ -329,7 +329,7 @@ generated above, using the <code>score_cutoff</code> and
 <span><span class="co">#&gt; 6     Ctse  14.762         +</span></span></code></pre></div>
 <p>(note: if you see numbers instead of gene symbol name in the first
 column, please check if the “symbol” column in your difexp matrix is
-“character” and not accidentally be “factor”)<br></p>
+“character” instead of “factor”)<br></p>
 <p>Function <code><a href="../reference/standardizeSigDF.html">standardizeSigDF()</a></code> can help remove duplicate
 rows, empty symbols in the signature dataframe.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
@@ -350,14 +350,15 @@ rows, empty symbols in the signature dataframe.</p>
 <span><span class="co">#&gt; 16   Mogat1  5.496         +</span></span>
 <span><span class="co">#&gt; 17    Ildr2 -5.429         -</span></span>
 <span><span class="co">#&gt; 18   Utp14b -5.404         -</span></span></code></pre></div>
-<p>Option 2: Manually write signature.<br>
+<p>Option 2: Manually create signature dataframe.<br>
 For uni-directional signature:<br></p>
-<pre><code><span><span class="va">signature</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"gene1"</span>, <span class="st">"gene2"</span>, <span class="st">"gene3"</span><span class="op">)</span></span></code></pre>
+<pre><code><span><span class="va">signature</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span><span class="st">"symbol"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"gene1"</span>, <span class="st">"gene2"</span>, <span class="st">"gene3"</span><span class="op">)</span><span class="op">)</span></span></code></pre>
 <p>For bi-directional signature:<br></p>
-<pre><code><span><span class="va">signature</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.45</span>, <span class="op">-</span><span class="fl">3.21</span>, <span class="fl">2.44</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">signature</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"gene1"</span>, <span class="st">"gene2"</span>, <span class="st">"gene3"</span><span class="op">)</span></span></code></pre>
-<p>The direction will be automatically determined by the score value
-provided.<br></p>
+<pre><code><span><span class="va">signature</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
+<span>  <span class="st">"symbol"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"gene1"</span>, <span class="st">"gene2"</span>, <span class="st">"gene3"</span><span class="op">)</span>,</span>
+<span>  <span class="st">"score"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.45</span>, <span class="op">-</span><span class="fl">3.21</span>, <span class="fl">2.44</span><span class="op">)</span>,</span>
+<span>  <span class="st">"direction"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"+"</span>, <span class="st">"-"</span>, <span class="st">"+"</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre>
 </div>
 <div class="section level3">
 <h3 id="create-the-omicsignature-object">2.4. Create the <code>OmicSignature</code> object<a class="anchor" aria-label="anchor" href="#create-the-omicsignature-object"></a>
@@ -393,12 +394,12 @@ be <code>FALSE</code>.</p>
 <span><span class="co">#&gt; Signature Object: </span></span>
 <span><span class="co">#&gt;   Metadata: </span></span>
 <span><span class="co">#&gt;     adj_p_cutoff = 0.05 </span></span>
-<span><span class="co">#&gt;     animal_strain = C57BL/6 </span></span>
 <span><span class="co">#&gt;     assay_type = transcriptomics </span></span>
 <span><span class="co">#&gt;     covariates = none </span></span>
 <span><span class="co">#&gt;     direction_type = bi-directional </span></span>
 <span><span class="co">#&gt;     keywords = Myc, KO, longevity </span></span>
 <span><span class="co">#&gt;     organism = Mus Musculus </span></span>
+<span><span class="co">#&gt;     others = C57BL/6 </span></span>
 <span><span class="co">#&gt;     phenotype = Myc_reduce </span></span>
 <span><span class="co">#&gt;     platform = GPL6246 </span></span>
 <span><span class="co">#&gt;     PMID = 25619689 </span></span>
@@ -447,12 +448,12 @@ create the <code>OmicSignature</code> object.<br></p>
 <span><span class="co">#&gt; Signature Object: </span></span>
 <span><span class="co">#&gt;   Metadata: </span></span>
 <span><span class="co">#&gt;     adj_p_cutoff = 0.05 </span></span>
-<span><span class="co">#&gt;     animal_strain = C57BL/6 </span></span>
 <span><span class="co">#&gt;     assay_type = transcriptomics </span></span>
 <span><span class="co">#&gt;     covariates = none </span></span>
 <span><span class="co">#&gt;     direction_type = bi-directional </span></span>
 <span><span class="co">#&gt;     keywords = Myc, KO, longevity </span></span>
 <span><span class="co">#&gt;     organism = Mus Musculus </span></span>
+<span><span class="co">#&gt;     others = C57BL/6 </span></span>
 <span><span class="co">#&gt;     phenotype = Myc_reduce </span></span>
 <span><span class="co">#&gt;     platform = GPL6246 </span></span>
 <span><span class="co">#&gt;     PMID = 25619689 </span></span>

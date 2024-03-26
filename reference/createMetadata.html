@@ -100,7 +100,7 @@ updated 02/2024</p>
 <span>  adj_p_cutoff <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  score_cutoff <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  cutoff_description <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  <span class="va">...</span></span>
+<span>  others <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -166,7 +166,7 @@ updated 02/2024</p>
 
 
 <dt>category_num</dt>
-<dd><p>optional, specifically used for multiple category signature to specify how many categories or class the signature contains.</p></dd>
+<dd><p>required when direction_type = "multiple". numeric. indicates how many categories or class the signature contains.</p></dd>
 
 
 <dt>logfc_cutoff</dt>
@@ -189,8 +189,8 @@ updated 02/2024</p>
 <dd><p>optional. discription of the cutoff, if applicable.</p></dd>
 
 
-<dt>...</dt>
-<dd><p>additional user-defined metadata fields.</p></dd>
+<dt>others</dt>
+<dd><p>provide additional user-defined metadata fields as a list. for example, others = list("animal_strain" = "C57BL/6", "lab" = "new_lab").</p></dd>
 
 </dl></div>
     <div id="value">
