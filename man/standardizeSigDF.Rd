@@ -3,7 +3,7 @@
 \name{standardizeSigDF}
 \alias{standardizeSigDF}
 \title{remove missing and duplicated entries in signature dataframe
-updated 02/2024}
+updated 04/2024}
 \usage{
 standardizeSigDF(sigdf)
 }
@@ -15,5 +15,5 @@ signature dataframe with empty, duplicate rows removed and ordered by score
 }
 \description{
 remove missing and duplicated entries in signature dataframe
-updated 02/2024
+updated 04/2024
 }

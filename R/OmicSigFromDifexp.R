@@ -1,7 +1,7 @@
 #### OmicSigFromDifexp() ####
 #' @title create an OmicSignature object from differential expsignaturession matrix
-#' updated 02/2024
-#' @param difexp Differential expsignaturession matrix
+#' updated 04/2024
+#' @param difexp Differential expression matrix
 #' @param metadata Metadata for the OmicSignature object. If `criteria` is `NULL`,
 #' the criterias to extract signatures will need to be provided in metadata.
 #' They can be specified in metadata fields as one or more of the followings:
@@ -15,8 +15,11 @@
 #' @export
 
 OmicSigFromDifexp <- function(difexp, metadata, criteria = NULL) {
-  symbol <- NULL # not functional; define these only to pass R CMD check
-  score <- NULL # R CMD wrongly view them as variables when used in dplyr functions
+  ## define the following to pass R check since they are viewed as variables in dplyr functions
+  id <- NULL
+  symbol <- NULL
+  score <- NULL
+
   if (!is.null(metadata$fdr_cutoff)) {
     metadata$adj_p_cutoff <- metadata$fdr_cutoff
     metadata$fdr_cutoff <- NULL
@@ -41,13 +44,12 @@ OmicSigFromDifexp <- function(difexp, metadata, criteria = NULL) {
   v <- rlang::parse_exprs(criteria)
   signatures <- difexp %>%
     dplyr::filter(!!!v) %>%
-    dplyr::select(symbol, score) %>%
+    dplyr::select(id, symbol, score) %>%
     dplyr::mutate(direction = ifelse(score < 0, "-", "+")) %>%
     dplyr::arrange(dplyr::desc(abs(score)))
   signatures <- signatures[complete.cases(signatures), ]
   signatures <- signatures[signatures$symbol != "", ]
   signatures <- signatures[signatures$score != "", ]
-  signatures <- distinct(signatures, signatures$symbol, .keep_all = T)[, c(1:3)]
 
   OmicSig <- OmicSignature$new(
     metadata = metadata,

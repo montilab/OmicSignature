@@ -5,14 +5,14 @@
 \title{OmicSignature R6 object}
 \description{
 a R6 object to store signatures generated from experiments. In cluding metadata, signature, and an optional differential expression analysis result matrix.
-updated 02/2024
+updated 04/2024
 }
 \section{Active bindings}{
 \if{html}{\out{<div class="r6-active-bindings">}}
 \describe{
 \item{\code{metadata}}{a list to describe the metadata}
 
-\item{\code{signature}}{a dataframe contains symbol, score (optional) and direction (optional)}
+\item{\code{signature}}{a dataframe contains id, symbol, score (optional) and direction (optional)}
 
 \item{\code{difexp}}{a dataframe for differential expression result}
 
@@ -43,7 +43,7 @@ Create a new OmicSignature object
 \describe{
 \item{\code{metadata}}{required. must be a list. See `createMetadata` for more information}
 
-\item{\code{signature}}{required. must be a vector, or a dataframe with column "symbol" and "direction", and optional column "score"}
+\item{\code{signature}}{required. must be a vector, or a dataframe with column "id", "symbol" and "direction", and optional column "score"}
 
 \item{\code{difexp}}{optional}
 

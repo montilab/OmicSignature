@@ -13,8 +13,8 @@ readJson(filename)
 OmicSignature object
 }
 \description{
-To avoid confusion, in the json text file, assume the column 
-names in signature dataframe and difexp dataframe have prefix "sig_" 
-and "difexp". This corresponds to writeJson() function. 
-updated 02/2024
+To avoid confusion, in the json text file, assume the column
+names in signature dataframe and difexp dataframe have prefix "sig_"
+and "difexp". This corresponds to writeJson() function.
+updated 04/2024
 }

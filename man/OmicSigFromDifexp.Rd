@@ -3,12 +3,12 @@
 \name{OmicSigFromDifexp}
 \alias{OmicSigFromDifexp}
 \title{create an OmicSignature object from differential expsignaturession matrix
-updated 02/2024}
+updated 04/2024}
 \usage{
 OmicSigFromDifexp(difexp, metadata, criteria = NULL)
 }
 \arguments{
-\item{difexp}{Differential expsignaturession matrix}
+\item{difexp}{Differential expression matrix}
 
 \item{metadata}{Metadata for the OmicSignature object. If `criteria` is `NULL`,
 the criterias to extract signatures will need to be provided in metadata.
@@ -24,5 +24,5 @@ OmicSignature object
 }
 \description{
 create an OmicSignature object from differential expsignaturession matrix
-updated 02/2024
+updated 04/2024
 }

@@ -10,6 +10,7 @@
   "score_cutoff": [3],
   "signature_name": ["Experiment in liver"],
   "metadata_length": [10],
+  "sig_id": [2, 46, 13, 48, 6, 47, 30, 9, 45, 17, 38, 42, 1, 21, 43, 35, 26, 19],
   "sig_symbol": ["gene2", "gene46", "gene13", "gene48", "gene6", "gene47", "gene30", "gene9", "gene45", "gene17", "gene38", "gene42", "gene1", "gene21", "gene43", "gene35", "gene26", "gene19"],
   "sig_score": [4.99, -4.71, 4.68, -4.67, 4.35, -4.13, 4.09, 3.98, 3.96, -3.94, 3.74, 3.73, 3.69, 3.54, 3.51, 3.37, 3.28, -3.08],
   "sig_direction": ["+", "-", "+", "-", "+", "-", "+", "+", "+", "-", "+", "+", "+", "+", "+", "+", "+", "-"],

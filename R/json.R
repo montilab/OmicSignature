@@ -1,9 +1,9 @@
 #### writeJson() ####
 #' @title write OmicSignature object into json txt format
-#' @description To avoid confusion, in the written json text file, the column 
-#' names in signature dataframe and difexp dataframe will have prefix "sig_" 
+#' @description To avoid confusion, in the written json text file, the column
+#' names in signature dataframe and difexp dataframe will have prefix "sig_"
 #' and "difexp" added. This corresponds to readJson() function.
-#' updated 02/2024
+#' updated 04/2024
 #'
 #' @param OmicObj A OmicSignature object
 #' @param file file name to write
@@ -42,10 +42,10 @@ writeJson <- function(OmicObj, file) {
 
 #### readJson() ####
 #' @title read an OmicSignature object from json txt file created by writeJson()
-#' @description To avoid confusion, in the json text file, assume the column 
-#' names in signature dataframe and difexp dataframe have prefix "sig_" 
-#' and "difexp". This corresponds to writeJson() function. 
-#' updated 02/2024
+#' @description To avoid confusion, in the json text file, assume the column
+#' names in signature dataframe and difexp dataframe have prefix "sig_"
+#' and "difexp". This corresponds to writeJson() function.
+#' updated 04/2024
 #'
 #' @param filename json file name to read in
 #' @return OmicSignature object
@@ -66,7 +66,7 @@ readJson <- function(filename) {
   }
 
   #### sig df ####
-  readSignature <- data.frame("symbol" = readJson$sig_symbol)
+  readSignature <- data.frame("id" = readJson$sig_id, "symbol" = readJson$sig_symbol)
   if (!is.null(readJson$sig_score)) {
     readSignature$score <- readJson$sig_score
   }
