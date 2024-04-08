@@ -125,12 +125,12 @@ Li</h4>
 <span><span class="co">#&gt; Signature Object: </span></span>
 <span><span class="co">#&gt;   Metadata: </span></span>
 <span><span class="co">#&gt;     adj_p_cutoff = 0.05 </span></span>
-<span><span class="co">#&gt;     animal_strain = C57BL/6 </span></span>
 <span><span class="co">#&gt;     assay_type = transcriptomics </span></span>
 <span><span class="co">#&gt;     covariates = none </span></span>
 <span><span class="co">#&gt;     direction_type = bi-directional </span></span>
 <span><span class="co">#&gt;     keywords = Myc, KO, longevity </span></span>
 <span><span class="co">#&gt;     organism = Mus Musculus </span></span>
+<span><span class="co">#&gt;     others = C57BL/6 </span></span>
 <span><span class="co">#&gt;     phenotype = Myc_reduce </span></span>
 <span><span class="co">#&gt;     platform = GPL6246 </span></span>
 <span><span class="co">#&gt;     PMID = 25619689 </span></span>
@@ -138,6 +138,8 @@ Li</h4>
 <span><span class="co">#&gt;     score_cutoff = 5 </span></span>
 <span><span class="co">#&gt;     signature_name = Myc_reduce_mice_liver_24m </span></span>
 <span><span class="co">#&gt;     year = 2015 </span></span>
+<span><span class="co">#&gt;   Metadata user defined fields: </span></span>
+<span><span class="co">#&gt;     animal_strain = C57BL/6 </span></span>
 <span><span class="co">#&gt;   Signature: </span></span>
 <span><span class="co">#&gt;     - (12)</span></span>
 <span><span class="co">#&gt;     + (6)</span></span>
@@ -155,8 +157,8 @@ For example, extract all features with a t-score with absolute value
 higher than 20 and adj_p less than 0.001:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">OmicObj</span><span class="op">$</span><span class="fu">extractSignature</span><span class="op">(</span><span class="st">"abs(score) &gt; 20; adj_p &lt; 0.001"</span><span class="op">)</span></span>
-<span><span class="co">#&gt;   symbol   score direction</span></span>
-<span><span class="co">#&gt; 1  Chil1 -25.413         -</span></span></code></pre></div>
+<span><span class="co">#&gt;         id symbol   score direction</span></span>
+<span><span class="co">#&gt; 1 10349968  Chil1 -25.413         -</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="section"></h2>
