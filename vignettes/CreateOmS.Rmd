@@ -27,9 +27,9 @@ An `OmicSignature` object contains three parts: \
 
 - **metadata**, a list. \
   Required fields: \
-  "**signature_name**", "**organism**", "**direction_type**", "**assay_type**". \
+  "**signature_name**", "**organism**", "**direction_type**", "**assay_type**", "**phenotype**". \
   Recommended optional fields: \
-	"**phenotype**", "**platform**", "**sample_type**", \
+	"**platform**", "**sample_type**", "**description**", \
 	"**covariates**", "**score_cutoff**", "**adj_p_cutoff**", "**logfc_cutoff**". \
 
 - **signature**, a dataframe. \
@@ -56,9 +56,13 @@ This is a bi-directional signature example, which contains up and down regulated
 
 ### 2.1. Metadata
 A list with the following required fields: \
-"**signature_name**", "**organism**", "**direction_type**", "**assay_type**". \
+"**signature_name**", "**organism**", "**direction_type**", "**assay_type**", "**phenotype**". \
 Not required, but highly recommended fields: \
-"**phenotype**", "**platform**", "**sample_type**", "**covariates**", "**score_cutoff**", "**adj_p_cutoff**", "**logfc_cutoff**". \
+"**platform**", "**sample_type**", "**covariates**", "**description**",
+"**adj_p_cutoff**", "**score_cutoff**". \
+
+Usually, "phenotype" is a one or two-word description of a topic, such as a drug treatment, a gene knock out, or a research area, for example, longevity or breast cancer. \
+Providing a detailed "description" is highly recommended. For instance, it may include information about how the treatment was administered and how each group was defined. \
 
 Option 1: Create `metadata` by hand. This is not recommended, because typos can occur. \
 ```
@@ -69,18 +73,13 @@ metadata <- list(
   "phenotype" = "Myc_reduce",
   "direction_type" = "bi-directional",
   "assay_type" = "transcriptomics", 
-  "platform" = "GPL6246",
-  "adj_p_cutoff" = 0.05,
-  "score_cutoff" = 5,
-  "keywords" = c("Myc", "KO", "longevity"),
-  "PMID" = 25619689,
-  "year" = 2015
+  "platform" = "GPL6246"
 )
 ```
 
 Option 2: Use function `createMetadata()` (recommended). \
 This function helps remind you of the built-in attributes. The full list of current built-in attributes is shown [here](https://montilab.github.io/OmicSignature/reference/createMetadata.html). \
-You can also provide your own customized attributes. \
+You can also provide your own customized attributes using the "others" field. \
 ```{r}
 metadata <- createMetadata(
   # required attributes:
@@ -88,10 +87,11 @@ metadata <- createMetadata(
   organism = "Mus Musculus",
   direction_type = "bi-directional",
   assay_type = "transcriptomics",
+  phenotype = "Myc_reduce",
 
   # optional and recommended:
-  phenotype = "Myc_reduce",
   covariates = "none",
+  description = "mice MYC reduced expression",
   platform = "GPL6246", # must be a GEO platform ID
   sample_type = "liver", # must be BRENDA ontology
 
@@ -165,8 +165,8 @@ head(difexp)
 ```
 
 ### 2.3. Signature 
-**signature** is a dataframe with column **"id"** and **"symbol"**, which should be subsets of "id" and "symbol" in the difexp, if present. If the signature is "bi-directional" or "multiple" (specified in `direction_type` in `metadata` list), then column **"direction"** is also required. \
-An optional column "score" is recommended when feature scores are available. \
+**signature** is a dataframe with column **"id"** and **"symbol"**, which should be subsets of "id" and "symbol" in the difexp, if present. If the signature is "bi-directional" or "multiple" (specified in `direction_type` in `metadata`), then column **"direction"** is also required. \
+An optional column "score" is recommended when applicable. \
 
 Option 1: Extract signature from difexp. \
 In this example, we create a bi-directional signature from the difexp using the `score_cutoff` and `adj_p_cutoff` specified in the metadata. \
@@ -184,7 +184,6 @@ Function `standardizeSigDF()` can help remove duplicate rows, empty symbols in t
 ```{r}
 signature <- standardizeSigDF(signature)
 head(signature)
-tail(signature)
 ```
 
 Option 2: Manually create signature dataframe. \
