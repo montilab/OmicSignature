@@ -2,7 +2,7 @@
 title: "Functionalities of OmicSignature"
 output: rmarkdown::html_vignette
 author: "Vanessa Mengze Li"
-date: "02/27/2024"
+date: "08/15/2024"
 vignette: >
   %\VignetteIndexEntry{Functionalities of OmicSignature}
   %\VignetteEngine{knitr::rmarkdown}
@@ -45,10 +45,10 @@ OmicObj
 We can use new criterias to extract new signatures conveniently from 
 the OmicSignature Object, **if it has difexp matrix included**.  
 For example, extract all features with a t-score with absolute value 
-higher than 20 and adj_p less than 0.001:  
+higher than 5 and adj_p smaller than 0.01:  
 
 ```{r}
-OmicObj$extractSignature("abs(score) > 20; adj_p < 0.001")
+OmicObj$extractSignature("abs(score) > 5; adj_p < 0.01")
 ```
 
 </font>

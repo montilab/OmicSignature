@@ -2,7 +2,7 @@
 title: "Create OmicSignatureCollection"
 output: rmarkdown::html_vignette
 author: "Vanessa Mengze Li"
-date: "02/27/2024"
+date: "08/15/2024"
 vignette: >
   %\VignetteIndexEntry{Create OmicSignatureCollection}
   %\VignetteEngine{knitr::rmarkdown}
@@ -63,7 +63,6 @@ OmicCol <- OmicSignatureCollection$new(
 )
 ```
 
-By default, `print_message` is set to `FALSE`. You can change it to `TRUE` to see the messages. \
 During the creation of `OmicSignatureCollection`, all input `OmicSignature` objects will be re-created to make sure they pass all the check functions. \
 
 </font>

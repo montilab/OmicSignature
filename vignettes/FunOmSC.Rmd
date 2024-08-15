@@ -2,7 +2,7 @@
 title: "Functionalities of OmicSignatureCollection"
 output: rmarkdown::html_vignette
 author: "Vanessa Mengze Li"
-date: "04/05/2024"
+date: "08/15/2024"
 vignette: >
   %\VignetteIndexEntry{Functionalities of OmicSignatureCollection}
   %\VignetteEngine{knitr::rmarkdown}
@@ -58,14 +58,13 @@ OmicCol$metadataSummary(only_shared = TRUE)
 
 ## Extract new signatures from the `OmicSignatureCollection` object
 
-For example, extract all features with a absolute score > 4.5 and p < 0.01 from all the `OmicSignature` object stored in this Collection. \
-By default, the features are ranked by absolute score value. \
-By default, `bind` is set to be `TRUE` to output results from all `OmicSignature` objects as a single dataframe. \
+For example, extract all features with a absolute score > 4.5 and p < 0.01 from all the `OmicSignature` object stored in this Collection. The features are ranked by absolute score, if applicable. 
 ```{r}
-OmicCol$extractSignature("abs(score) > 4.5 & p_value < 0.01")
+a <- OmicCol$extractSignature("abs(score) > 4.5 & p_value < 0.01")
+a
 ```
 
-If `bind` is set to be `FALSE`, the output of each `OmicSignature` objects are provided individually as one element in a list. \
+If `bind` is set to be `FALSE`, the output of each `OmicSignature` objects are provided as a list. \
 ```{r}
 OmicCol$extractSignature("abs(score) > 4.5 & p_value < 0.01", bind = FALSE)
 ```
