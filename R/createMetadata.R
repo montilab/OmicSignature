@@ -1,12 +1,12 @@
-#' @title template for creating a metadata list for an OmicSignature R6 object
-#' updated 02/2024
+#' @title template for creating a metadata list for an OmicSignature R6 object 
+#' @description updated 02/2024
 #' @importFrom dplyr recode %>%
 #' @param signature_name required. name of the signature.
 #' @param signature_collection optional. collection name that the signature belongs to.
 #' @param direction_type required. the direction information of the signature.
 #' "uni" or "uni-directional" if signature has only one direction or no direction infomation.
 #' "bi" or "bi-directional" if signature contains "up" and "down" regulated features.
-#' "multiple" if the signature contains more categories.
+#' "categorical" if the signature contains more categories.
 #' @param assay_type required. e.g. "transcriptomics", "proteomics", "metabolomics", "methylomics", "methylomics", "genetic_variations", "DNA_binding_sites". some common misspell, e.g. "gene", "protein", "metab" will be changed automatically.
 #' @param organism required. e.g. "Homo Sapiens", "Mus Musculus".
 #' @param platform optional but highly recommended. GEO platform name. e.g. "GPL11154" is for Illumina HiSeq 2000 Homo sapiens. Use "GPLXXXXX" or NULL if not available.
@@ -18,7 +18,7 @@
 #' @param PMID optional. the PubMed ID if the signature is from a published article.
 #' @param keywords optional. key words for the signature. examples are "longevity", "perturbation". "drug".
 #' @param description optional. free text to describe the signature.
-#' @param category_num required when direction_type = "multiple". numeric. indicates how many categories or class the signature contains.
+#' @param category_num required when direction_type = "categorical". numeric. indicates how many categories or class the signature contains.
 #' @param logfc_cutoff optional. log fold change cutoff used to generate the signature, if applicable.
 #' @param p_value_cutoff optional. p value cutoff used to generate the signature, if applicable.
 #' @param adj_p_cutoff optional. adjusted p-value, e.g. fdr, cutoff used to generate the signature, if applicable.
@@ -43,8 +43,8 @@ createMetadata <- function(signature_name, organism, phenotype = "unknown", assa
       "bi" ~ "bi-directional",
       "uni" ~ "uni-directional"
     )
-  if (!direction_type %in% c("bi-directional", "uni-directional", "multiple")) {
-    stop("direction_type should be uni-directional, bi-directional or multiple.")
+  if (!direction_type %in% c("bi-directional", "uni-directional", "categorical")) {
+    stop("direction_type should be uni-directional, bi-directional or categorical.")
   }
 
   # check assey type
@@ -139,11 +139,11 @@ createMetadata <- function(signature_name, organism, phenotype = "unknown", assa
     "cutoff_description" = cutoff_description,
     "others" = others
   )
-  if (direction_type == "multiple") {
+  if (direction_type == "categorical") {
     if (!is.null(category_num)) {
       result$category_num <- category_num
     } else {
-      stop("Error: signature is multiple category but category_num is not specified. \n")
+      stop("Error: signature is categorical but category_num is not specified. \n")
     }
   }
 

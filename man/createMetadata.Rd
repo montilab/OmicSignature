@@ -2,8 +2,7 @@
 % Please edit documentation in R/createMetadata.R
 \name{createMetadata}
 \alias{createMetadata}
-\title{template for creating a metadata list for an OmicSignature R6 object
-updated 02/2024}
+\title{template for creating a metadata list for an OmicSignature R6 object}
 \usage{
 createMetadata(
   signature_name,
@@ -45,7 +44,7 @@ createMetadata(
 \item{direction_type}{required. the direction information of the signature.
 "uni" or "uni-directional" if signature has only one direction or no direction infomation.
 "bi" or "bi-directional" if signature contains "up" and "down" regulated features.
-"multiple" if the signature contains more categories.}
+"categorical" if the signature contains more categories.}
 
 \item{sample_type}{optional but highly recommended. a cell line or tissue from BRENDA ontology.}
 
@@ -61,7 +60,7 @@ createMetadata(
 
 \item{description}{optional. free text to describe the signature.}
 
-\item{category_num}{required when direction_type = "multiple". numeric. indicates how many categories or class the signature contains.}
+\item{category_num}{required when direction_type = "categorical". numeric. indicates how many categories or class the signature contains.}
 
 \item{logfc_cutoff}{optional. log fold change cutoff used to generate the signature, if applicable.}
 
@@ -79,6 +78,5 @@ createMetadata(
 a metadata list to create an OmicSignature R6 object.
 }
 \description{
-template for creating a metadata list for an OmicSignature R6 object
 updated 02/2024
 }
