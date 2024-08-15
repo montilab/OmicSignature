@@ -1,19 +1,12 @@
-README
-================
-Vanessa Mengze Li
-02/27/2024
-
 OmicSignature
 =============
-
-### 
 
 Contact: Vanessa Mengze Li
 `vmli@bu.edu`
 
 ### Last update
 
-02/27/2024
+08/15/2024
 
 ### Installation
 
