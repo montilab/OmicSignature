@@ -2,8 +2,7 @@
 % Please edit documentation in R/OmicSigFromDifexp.R
 \name{OmicSigFromDifexp}
 \alias{OmicSigFromDifexp}
-\title{create an OmicSignature object from differential expsignaturession matrix
-updated 04/2024}
+\title{create an OmicSignature object from differential expsignaturession matrix}
 \usage{
 OmicSigFromDifexp(difexp, metadata, criteria = NULL)
 }
@@ -23,6 +22,5 @@ they can be provided in metadata fields: list("logfc_cutoff" = 5, "score_cutoff"
 OmicSignature object
 }
 \description{
-create an OmicSignature object from differential expsignaturession matrix
-updated 04/2024
+updated 08/2024
 }

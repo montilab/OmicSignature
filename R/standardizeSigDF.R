@@ -1,5 +1,6 @@
-#' @title remove missing and duplicated entries in signature dataframe
-#' updated 04/2024
+#' @title Standardize signature data frame
+#' @description remove missing and duplicated symbols.
+#' updated 08/2024.
 #'
 #' @importFrom dplyr filter arrange mutate %>%
 #' @importFrom stats complete.cases
@@ -7,16 +8,22 @@
 #' @return signature dataframe with empty, duplicate rows removed and ordered by score
 #' @export
 standardizeSigDF <- function(sigdf) {
-  sigdf <- replaceSigCol(sigdf, long = FALSE)
-  sigdf <- sigdf[complete.cases(sigdf), ]
+  sigdf <- replaceSigCol(sigdf)
   sigdf <- sigdf %>%
-    dplyr::filter(symbol != "", score != "") %>%
-    dplyr::arrange(desc(abs(score))) %>%
+    dplyr::filter(symbol != "") %>%
     dplyr::mutate(
       id = as.character(id),
-      symbol = as.character(symbol),
-      score = as.numeric(as.character(score)),
-      direction = as.factor(as.character(direction))
+      symbol = as.character(symbol)
     )
+  if ("score" %in% colnames(sigdf)) {
+    sigdf <- sigdf %>%
+      dplyr::filter(score != "") %>%
+      dplyr::mutate(score = as.numeric(as.character(score))) %>%
+      dplyr::arrange(desc(abs(score)))
+  }
+  if ("direction" %in% colnames(sigdf)) {
+    sigdf <- sigdf %>%
+      dplyr::mutate(direction = as.factor(as.character(direction)))
+  }
   return(sigdf)
 }
