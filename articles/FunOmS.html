@@ -91,7 +91,7 @@
                         <h4 data-toc-skip class="author">Vanessa Mengze
 Li</h4>
             
-            <h4 data-toc-skip class="date">02/27/2024</h4>
+            <h4 data-toc-skip class="date">08/15/2024</h4>
       
 
       <div class="hidden name"><code>FunOmS.Rmd</code></div>
@@ -153,11 +153,16 @@ object<a class="anchor" aria-label="anchor" href="#extract-new-signatures-from-t
 the OmicSignature Object, <strong>if it has difexp matrix
 included</strong>.<br>
 For example, extract all features with a t-score with absolute value
-higher than 20 and adj_p less than 0.001:</p>
+higher than 5 and adj_p smaller than 0.01:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">OmicObj</span><span class="op">$</span><span class="fu">extractSignature</span><span class="op">(</span><span class="st">"abs(score) &gt; 20; adj_p &lt; 0.001"</span><span class="op">)</span></span>
-<span><span class="co">#&gt;         id symbol   score direction</span></span>
-<span><span class="co">#&gt; 1 10349968  Chil1 -25.413         -</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">OmicObj</span><span class="op">$</span><span class="fu">extractSignature</span><span class="op">(</span><span class="st">"abs(score) &gt; 5; adj_p &lt; 0.01"</span><span class="op">)</span></span>
+<span><span class="co">#&gt;         id  symbol   score direction</span></span>
+<span><span class="co">#&gt; 1 10349968   Chil1 -25.413         -</span></span>
+<span><span class="co">#&gt; 2 10349648    Ctse  14.762         +</span></span>
+<span><span class="co">#&gt; 3 10345762   Il1r1 -13.543         -</span></span>
+<span><span class="co">#&gt; 4 10353192    Eya1  10.487         +</span></span>
+<span><span class="co">#&gt; 5 10355259    Myl1 -10.315         -</span></span>
+<span><span class="co">#&gt; 6 10351477 Sh2d1b1   8.818         +</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="section"></h2>
