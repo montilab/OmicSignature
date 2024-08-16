@@ -118,14 +118,19 @@ Recommended optional fields, if applicable:<br>
 “platform”, “sample_type”, “description”, “covariates”, “score_cutoff”,
 “adj_p_cutoff”.<br></p></li>
 <li><p><strong>signature</strong>, a data frame.<br>
-Required columns: “<strong>id</strong>”, “<strong>symbol</strong>”<br>
+Required columns:<br>
+“<strong>id</strong>” (unique identifier for each feature)<br>
+“<strong>symbol</strong>” (feature name. e.g. ENSEMBL ID, gene
+name)<br>
 Required for bi-directional and categorical signatures:
 “<strong>direction</strong>”<br>
 Recommended optional column, if applicable: “score”<br></p></li>
 <li><p><strong>difexp</strong> (optional), a data frame of differential
 expression analysis results.<br>
-Required columns: “<strong>id</strong>”,
-“<strong>symbol</strong>”,<br>
+Required columns:<br>
+“<strong>id</strong>” (unique identifier for each feature)<br>
+“<strong>symbol</strong>” (feature name. e.g. ENSEMBL ID, gene
+name)<br>
 Require at least one of the following: “<strong>p_value</strong>”,
 “<strong>q_value</strong>”, or “<strong>adj_p</strong>”.<br></p></li>
 </ul>
@@ -266,17 +271,21 @@ one of the following: “<strong>p_value</strong>”,
 <p>“<strong>id</strong>” is a unique identifier for each feature. If not
 provided, it will be automatically generated. Common examples include
 unique numbers and probe IDs.<br>
-“<strong>symbol</strong>” is a self-explanatory name for each feature.
-Common examples include ENSEMBL IDs, UniProt IDs, gene names, and gene
-symbols.<br>
+“<strong>symbol</strong>” is a name that identifies each feature. Common
+examples include ENSEMBL IDs, UniProt IDs, Refmet IDs, and feature
+names.<br>
+To better identify the features, if an ID (e.g., ENSG00000174807 or
+Q9HCU0) is used as the “symbol”, it is highly recommended to add an
+additional annotation column (e.g., “gene_name”) to specify the feature
+name (e.g., CD248). For metabolite features, it is recommended to
+include multiple annotation columns is available (e.g. HMDB ID, InChI
+key).<br>
 “<strong>p_value</strong>”, “<strong>q_value</strong>”, or
-“<strong>adj_p</strong>” is the p- or q-value that represents the
+“<strong>adj_p</strong>” refers to the p- or q-value representing the
 significance of each feature.<br>
-“score” is a numeric value that represents the importance or
-significance of a feature. Common examples include t-test statistics and
-Z-scores.<br>
-Other commonly used optional column examples: “logfc”, “beta”, “mean”,
-“se”, “robust_se”, “HR”, “annotation”.<br></p>
+“score” is a numeric value that indicates the importance or significance
+of a feature. Common examples include t-test statistics and
+Z-scores.<br></p>
 <p>Here we use an example out put from the differential expression
 analysis using the <code>limma</code> package.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
