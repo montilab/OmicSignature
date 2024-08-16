@@ -23,7 +23,7 @@ standardizeSigDF <- function(sigdf) {
   }
   if ("direction" %in% colnames(sigdf)) {
     sigdf <- sigdf %>%
-      dplyr::mutate(direction = as.factor(as.character(direction)))
+      dplyr::mutate(direction = as.character(direction))
   }
   return(sigdf)
 }

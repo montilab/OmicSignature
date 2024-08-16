@@ -117,7 +117,8 @@ OmicSignature <-
 
         res <- res %>%
           dplyr::filter(symbol != "", complete.cases(.)) %>%
-          dplyr::distinct(symbol, .keep_all = TRUE)
+          dplyr::distinct(symbol, .keep_all = TRUE) %>%
+          dplyr::mutate(direction = as.character(direction))
 
         return(res)
       }
@@ -205,7 +206,7 @@ OmicSignature <-
         }
         ## "symbol" should be character
         if ("symbol" %in% colnames(difexp)) {
-          if (!is(difexp$symbol, "character") && !is(difexp$symbol, "factor")) {
+          if (!is(difexp$symbol, "character")) {
             stop("difexp: symbol is not character.")
           }
         }
@@ -334,8 +335,7 @@ OmicSignature <-
               .default = signature$direction,
               "up" ~ "+", "increase" ~ "+", "more" ~ "+",
               "dn" ~ "-", "down" ~ "-", "decrease" ~ "-", "less" ~ "-"
-            ) %>%
-            as.factor()
+            )
           if (!all(as.character(unique(signature$direction)) %in% c("-", "+"))) {
             stop("Direction for bi-directional signature should be either \"-\" and \"+\".")
           }
