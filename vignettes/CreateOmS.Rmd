@@ -32,12 +32,16 @@ An `OmicSignature` object contains three parts: \
 	"platform", "sample_type", "description", "covariates", "score_cutoff", "adj_p_cutoff". \
 
 - **signature**, a data frame. \
-  Required columns: "**id**", "**symbol**" \
+  Required columns: \
+    "**id**" (unique identifier for each feature) \
+    "**symbol**" (feature name. e.g. ENSEMBL ID, gene name) \
   Required for bi-directional and categorical signatures: "**direction**" \
   Recommended optional column, if applicable: "score" \
 
 - **difexp** (optional), a data frame of differential expression analysis results. \
-  Required columns: "**id**", "**symbol**", \
+  Required columns: \
+    "**id**" (unique identifier for each feature) \
+    "**symbol**" (feature name. e.g. ENSEMBL ID, gene name) \
   Require at least one of the following: "**p_value**", "**q_value**", or "**adj_p**". \
 
 Create the object: \
@@ -145,10 +149,10 @@ A differential expression dataframe is **optional** but **highly recommended** i
 "**id**", "**symbol**", along with at least one of the following: "**p_value**", "**q_value**", or "**adj_p**". \
 
 "**id**" is a unique identifier for each feature. If not provided, it will be automatically generated. Common examples include unique numbers and probe IDs. \
-"**symbol**" is a self-explanatory name for each feature. Common examples include ENSEMBL IDs, UniProt IDs, gene names, and gene symbols. \
-"**p_value**", "**q_value**", or "**adj_p**" is the p- or q-value that represents the significance of each feature. \
-"score" is a numeric value that represents the importance or significance of a feature. Common examples include t-test statistics and Z-scores. \
-Other commonly used optional column examples: "logfc", "beta", "mean", "se", "robust_se", "HR", "annotation". \
+"**symbol**" is a name that identifies each feature. Common examples include ENSEMBL IDs, UniProt IDs, Refmet IDs, and feature names. \
+To better identify the features, if an ID (e.g., ENSG00000174807 or Q9HCU0) is used as the "symbol", it is highly recommended to add an additional annotation column (e.g., "gene_name") to specify the feature name (e.g., CD248). For metabolite features, it is recommended to include multiple annotation columns is available (e.g. HMDB ID, InChI key). \
+"**p_value**", "**q_value**", or "**adj_p**" refers to the p- or q-value representing the significance of each feature. \
+"score" is a numeric value that indicates the importance or significance of a feature. Common examples include t-test statistics and Z-scores. \
 
 Here we use an example out put from the differential expression analysis using the `limma` package. 
 
