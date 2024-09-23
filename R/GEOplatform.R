@@ -1,6 +1,6 @@
-#' @title GEOPlatformSearch
+#' @title searchPlatform
 #' @description search for GEO platform name
-#' updated 02/2024
+#' updated 09/2024
 #' @param x a string or character vector to search for. input character vector if searching for multiple terms.
 #' @param organism organism name to narrow down the search. partial input of an organism name is allowed. e.g. results for organism "Homo sapiens" will be pulled if input "homo".
 #' @param file GEO platform information dataframe. columns: "Accession", "Name", "Technology", "Organism".
@@ -9,11 +9,11 @@
 #' @return character or dataframe of search result
 #'
 #' @examples
-#' GEOPlatformSearch("illumina")
-#' GEOPlatformSearch("illumina", organism = "Homo sapiens")
-#' GEOPlatformSearch(c("Affymetrix", "Transcriptome"), organism = "mus", contain_all = TRUE)
+#' searchPlatform("illumina")
+#' searchPlatform("illumina", organism = "Homo sapiens")
+#' searchPlatform(c("Affymetrix", "Transcriptome"), organism = "mus", contain_all = TRUE)
 #' @export
-GEOPlatformSearch <- function(x, organism = NULL, file = GEOplatform, contain_all = TRUE, accession_only = FALSE) {
+searchPlatform <- function(x, organism = NULL, file = GEOplatform, contain_all = TRUE, accession_only = FALSE) {
   # x <- unlist(strsplit(x, split = " "))
   if (!is.null(organism)) {
     file <- file[grep(organism, file$Organism, ignore.case = TRUE), ]
@@ -21,13 +21,13 @@ GEOPlatformSearch <- function(x, organism = NULL, file = GEOplatform, contain_al
   if (contain_all) {
     result <- c(1:nrow(file))
     for (i in x) {
-      result0 <- grep(i, file$Name)
+      result0 <- grep(i, file$Name, ignore.case = TRUE)
       result <- intersect(result0, result)
     }
   } else {
     result <- numeric(0)
     for (i in x) {
-      result0 <- grep(i, file$Name)
+      result0 <- grep(i, file$Name, ignore.case = TRUE)
       result <- union(result0, result)
     }
   }

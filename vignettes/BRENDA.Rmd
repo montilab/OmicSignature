@@ -23,30 +23,27 @@ BRENDA tissue ontology version: **10/2021**. The OBO file was downloaded at http
 GEO platform IDs are manually downloaded at https://www.ncbi.nlm.nih.gov/geo/browse/?view=platforms. 25,827 platforms were downloaded as of 2024/02.  
 If you are not sure which BRENDA tissue ontology or GEO platform accession id to use, you can search for them as shown below.  
 
-## Search for a BRENDA tissue ontology 
-Multiple search terms are seperated by space " ". \
+## Search for sample type and platform 
+Multiple search terms are seperated by space " ". The search is case in-sensitive. \
 Set `contain_all = TRUE` to show results include all search terms. \
 Set `contain_all = FALSE` to show results include any of the search terms. \
+
 ```{r}
-BRENDASearch("HEK 293 T", contain_all = TRUE)
+searchSampleType("mcf cell", contain_all = TRUE)
 ```
 
-## Search for a GEO platform
 ```{r}
-GEOPlatformSearch("Illumina HiSeq 4000", organism = "Homo Sapiens")
+searchSampleType("MCF-10 MCF-7", contain_all = FALSE)
+```
+
+```{r}
+searchPlatform("illumina hiseq 3000", organism = "Homo Sapiens", contain_all = TRUE)
 ```
 
 Show only accession id:
 ```{r}
-GEOPlatformSearch("Illumina HiSeq 4000", organism = "Homo Sapiens", accession_only = TRUE)
+searchPlatform("illumina hiseq 3000", organism = "Homo Sapiens", contain_all = TRUE, accession_only = TRUE)
 ```
-
-Search for multiple terms: 
-```{r}
-GEOPlatformSearch(c("Drosophila melanogaster", "Illumina HiSeq 4000"), organism = "Homo Sapiens", contain_all = TRUE)
-```
-Set `contain_all = TRUE` to show results include all search terms. \
-Set `contain_all = FALSE` to show results include any of the search terms. \
 
 </font>
 --
