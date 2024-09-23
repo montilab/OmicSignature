@@ -150,10 +150,14 @@ OmicSignature <-
           private$.difexp <- private$checkDifexp(value, print_message)
         }
       },
-      #' @field deleteDifexp a function to delete difexp from the object
-      deleteDifexp = function(x) {
-        private$.difexp <- NULL
-        cat("difexp has been deleted.\n")
+      #' @field removeDifexp a function to remove difexp from the object
+      removeDifexp = function(check = "no") {
+        if (tolower(check) == "yes") {
+          private$.difexp <- NULL
+          cat("difexp has been deleted.\n")
+        } else {
+          cat("use removeDifexp(\"yes\") to delete difexp. \n")
+        }
       }
     ),
 
@@ -166,7 +170,7 @@ OmicSignature <-
         if (v) cat(...)
       },
       checkDifexp = function(difexp, v = FALSE) {
-        if (is.null(difexp)) stop("Please use build-in function $deleteDifexp.")
+        if (is.null(difexp)) stop("Please use build-in function $removeDifexp.")
         if (is(difexp, "OmicSignature")) difexp <- difexp$difexp
         if (is(difexp, "matrix")) difexp <- as.data.frame(difexp)
         if (!is(difexp, "data.frame")) stop("difexp must be a data frame. ")

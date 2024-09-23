@@ -16,7 +16,7 @@ updated 08/2024
 
 \item{\code{difexp}}{a dataframe for differential expression result}
 
-\item{\code{deleteDifexp}}{a function to delete difexp from the object}
+\item{\code{removeDifexp}}{a function to remove difexp from the object}
 }
 \if{html}{\out{</div>}}
 }

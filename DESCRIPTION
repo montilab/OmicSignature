@@ -2,8 +2,8 @@ Package: OmicSignature
 Type: Package
 Title: Development testing
 Version: 0.1.0
-Author: Mengze Li
-Maintainer: Mengze Li <vmli@bu.edu>
+Author: Vanessa Mengze Li
+Maintainer: Vanessa Mengze Li <vmli@bu.edu>
 Description: As high-throughput technology evolves, a large number of omics-signatures are being derived. 
     This package contains OmicSignature and OmicSignatureCollection R6 objects, and can help to store signatures efficiently and retrieve them conveniently.
 Depends: R (>= 3.5.0)
