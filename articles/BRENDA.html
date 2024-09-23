@@ -113,144 +113,76 @@ GEO platform IDs are manually downloaded at <a href="https://www.ncbi.nlm.nih.go
 If you are not sure which BRENDA tissue ontology or GEO platform
 accession id to use, you can search for them as shown below.</p>
 <div class="section level2">
-<h2 id="search-for-a-brenda-tissue-ontology">Search for a BRENDA tissue ontology<a class="anchor" aria-label="anchor" href="#search-for-a-brenda-tissue-ontology"></a>
+<h2 id="search-for-sample-type-and-platform">Search for sample type and platform<a class="anchor" aria-label="anchor" href="#search-for-sample-type-and-platform"></a>
 </h2>
-<p>Multiple search terms are seperated by space ” “.<br>
+<p>Multiple search terms are seperated by space ” “. The search is case
+in-sensitive.<br>
 Set <code>contain_all = TRUE</code> to show results include all search
 terms.<br>
 Set <code>contain_all = FALSE</code> to show results include any of the
 search terms.<br></p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/BRENDASearch.html">BRENDASearch</a></span><span class="op">(</span><span class="st">"HEK 293 T"</span>, contain_all <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">##               ID                      Name</span></span>
-<span><span class="co">## 2180 BTO:0002181             HEK-293T cell</span></span>
-<span><span class="co">## 3346 BTO:0003347    HEK-293 Tet-On 3G cell</span></span>
-<span><span class="co">## 5023 BTO:0005025         HEK-293-TrkB cell</span></span>
-<span><span class="co">## 5027 BTO:0005029            HEK-293FT cell</span></span>
-<span><span class="co">## 5546 BTO:0005548            HEK-293ET cell</span></span>
-<span><span class="co">## 6320 BTO:0006322 Jump-In-T-REx HEK293 cell</span></span>
-<span><span class="co">## 6326 BTO:0006328          HEK-293T/17 cell</span></span>
-<span><span class="co">## 6511 BTO:0006513          HEK-293-AT1 cell</span></span></code></pre>
-</div>
-<div class="section level2">
-<h2 id="search-for-a-geo-platform">Search for a GEO platform<a class="anchor" aria-label="anchor" href="#search-for-a-geo-platform"></a>
-</h2>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/searchSampleType.html">searchSampleType</a></span><span class="op">(</span><span class="st">"mcf cell"</span>, contain_all <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">##               ID              Name</span></span>
+<span><span class="co">## 94   BTO:0000093        MCF-7 cell</span></span>
+<span><span class="co">## 1938 BTO:0001939      MCF-10A cell</span></span>
+<span><span class="co">## 2269 BTO:0002270     MCF-7/2a cell</span></span>
+<span><span class="co">## 2543 BTO:0002544      MCF-12A cell</span></span>
+<span><span class="co">## 2544 BTO:0002545      MCF-12F cell</span></span>
+<span><span class="co">## 3899 BTO:0003900      MCF-10F cell</span></span>
+<span><span class="co">## 5125 BTO:0005127 MCF-10A neoT cell</span></span>
+<span><span class="co">## 5190 BTO:0005192    MCF-7/adr cell</span></span>
+<span><span class="co">## 5968 BTO:0005970   MCF-7/LCC9 cell</span></span>
+<span><span class="co">## 6396 BTO:0006398    MCF-10-2A cell</span></span></code></pre>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/GEOPlatformSearch.html">GEOPlatformSearch</a></span><span class="op">(</span><span class="st">"Illumina HiSeq 4000"</span>, organism <span class="op">=</span> <span class="st">"Homo Sapiens"</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">##       Accession</span></span>
-<span><span class="co">## 517    GPL33716</span></span>
-<span><span class="co">## 888    GPL33334</span></span>
-<span><span class="co">## 1383   GPL32809</span></span>
-<span><span class="co">## 1680   GPL32511</span></span>
-<span><span class="co">## 2469   GPL31944</span></span>
-<span><span class="co">## 3753   GPL30035</span></span>
-<span><span class="co">## 4085   GPL29636</span></span>
-<span><span class="co">## 4106   GPL29603</span></span>
-<span><span class="co">## 4172   GPL29543</span></span>
-<span><span class="co">## 4275   GPL29429</span></span>
-<span><span class="co">## 4613   GPL28989</span></span>
-<span><span class="co">## 5257   GPL28185</span></span>
-<span><span class="co">## 5505   GPL27803</span></span>
-<span><span class="co">## 6016   GPL26865</span></span>
-<span><span class="co">## 6176   GPL26639</span></span>
-<span><span class="co">## 6695   GPL25904</span></span>
-<span><span class="co">## 6852   GPL25719</span></span>
-<span><span class="co">## 7026   GPL25476</span></span>
-<span><span class="co">## 7045   GPL25431</span></span>
-<span><span class="co">## 7496   GPL24850</span></span>
-<span><span class="co">## 8703   GPL23362</span></span>
-<span><span class="co">## 9777   GPL22132</span></span>
-<span><span class="co">## 11458  GPL20301</span></span>
-<span><span class="co">##                                                                           Name</span></span>
-<span><span class="co">## 517                          Illumina HiSeq 4000 (Homo sapiens; Sindbis virus)</span></span>
-<span><span class="co">## 888                      Illumina HiSeq 4000 (Homo sapiens; Toxoplasma gondii)</span></span>
-<span><span class="co">## 1383                  Illumina HiSeq 4000 (Homo sapiens; Toxoplasma gondii RH)</span></span>
-<span><span class="co">## 1680                      Illumina HiSeq 4000 (Homo sapiens; Plasmodium vivax)</span></span>
-<span><span class="co">## 2469            Illumina HiSeq 4000 (Homo sapiens; Mycobacterium tuberculosis)</span></span>
-<span><span class="co">## 3753       Illumina HiSeq 4000 (Homo sapiens; Mus musculus; Rattus norvegicus)</span></span>
-<span><span class="co">## 4085     Illumina HiSeq 4000 (Homo sapiens; Human herpesvirus 5 strain Merlin)</span></span>
-<span><span class="co">## 4106               Illumina HiSeq 4000 (Homo sapiens; Human betaherpesvirus 5)</span></span>
-<span><span class="co">## 4172              Illumina HiSeq 4000 (Homo sapiens; Human alphaherpesvirus 1)</span></span>
-<span><span class="co">## 4275                   Illumina HiSeq 4000 (Homo sapiens; Salmonella enterica)</span></span>
-<span><span class="co">## 4613                   Illumina HiSeq 4000 (Homo sapiens; synthetic construct)</span></span>
-<span><span class="co">## 5257                    Illumina HiSeq 4000 (Homo sapiens; Plasmodium berghei)</span></span>
-<span><span class="co">## 5505                       Illumina HiSeq 4000 (Homo sapiens; Pan troglodytes)</span></span>
-<span><span class="co">## 6016  Illumina HiSeq 4000 (Canis lupus familiaris; Homo sapiens; Mus musculus)</span></span>
-<span><span class="co">## 6176                 Illumina HiSeq 4000 ([Haemophilus] ducreyi; Homo sapiens)</span></span>
-<span><span class="co">## 6695                 Illumina HiSeq 4000 (Homo sapiens; Neisseria gonorrhoeae)</span></span>
-<span><span class="co">## 6852              Illumina HiSeq 4000 (Homo sapiens; Human gammaherpesvirus 8)</span></span>
-<span><span class="co">## 7026               Illumina HiSeq 4000 (Drosophila melanogaster; Homo sapiens)</span></span>
-<span><span class="co">## 7045                          Illumina HiSeq 4000 (Homo sapiens; Mus musculus)</span></span>
-<span><span class="co">## 7496                         Illumina HiSeq 4000 (Gallus gallus; Homo sapiens)</span></span>
-<span><span class="co">## 8703              Illumina HiSeq 4000 (Homo sapiens; Human gammaherpesvirus 4)</span></span>
-<span><span class="co">## 9777                   Illumina HiSeq 4000 (Homo sapiens; Human herpesvirus 4)</span></span>
-<span><span class="co">## 11458                                       Illumina HiSeq 4000 (Homo sapiens)</span></span>
-<span><span class="co">##                       Technology</span></span>
-<span><span class="co">## 517   high-throughput sequencing</span></span>
-<span><span class="co">## 888   high-throughput sequencing</span></span>
-<span><span class="co">## 1383  high-throughput sequencing</span></span>
-<span><span class="co">## 1680  high-throughput sequencing</span></span>
-<span><span class="co">## 2469  high-throughput sequencing</span></span>
-<span><span class="co">## 3753  high-throughput sequencing</span></span>
-<span><span class="co">## 4085  high-throughput sequencing</span></span>
-<span><span class="co">## 4106  high-throughput sequencing</span></span>
-<span><span class="co">## 4172  high-throughput sequencing</span></span>
-<span><span class="co">## 4275  high-throughput sequencing</span></span>
-<span><span class="co">## 4613  high-throughput sequencing</span></span>
-<span><span class="co">## 5257  high-throughput sequencing</span></span>
-<span><span class="co">## 5505  high-throughput sequencing</span></span>
-<span><span class="co">## 6016  high-throughput sequencing</span></span>
-<span><span class="co">## 6176  high-throughput sequencing</span></span>
-<span><span class="co">## 6695  high-throughput sequencing</span></span>
-<span><span class="co">## 6852  high-throughput sequencing</span></span>
-<span><span class="co">## 7026  high-throughput sequencing</span></span>
-<span><span class="co">## 7045  high-throughput sequencing</span></span>
-<span><span class="co">## 7496  high-throughput sequencing</span></span>
-<span><span class="co">## 8703  high-throughput sequencing</span></span>
-<span><span class="co">## 9777  high-throughput sequencing</span></span>
-<span><span class="co">## 11458 high-throughput sequencing</span></span>
-<span><span class="co">##                                               Organism</span></span>
-<span><span class="co">## 517                         Homo sapiens;Sindbis virus</span></span>
-<span><span class="co">## 888                     Homo sapiens;Toxoplasma gondii</span></span>
-<span><span class="co">## 1383                 Homo sapiens;Toxoplasma gondii RH</span></span>
-<span><span class="co">## 1680                     Homo sapiens;Plasmodium vivax</span></span>
-<span><span class="co">## 2469           Homo sapiens;Mycobacterium tuberculosis</span></span>
-<span><span class="co">## 3753       Homo sapiens;Mus musculus;Rattus norvegicus</span></span>
-<span><span class="co">## 4085    Homo sapiens;Human herpesvirus 5 strain Merlin</span></span>
-<span><span class="co">## 4106              Homo sapiens;Human betaherpesvirus 5</span></span>
-<span><span class="co">## 4172             Homo sapiens;Human alphaherpesvirus 1</span></span>
-<span><span class="co">## 4275                  Homo sapiens;Salmonella enterica</span></span>
-<span><span class="co">## 4613                  Homo sapiens;synthetic construct</span></span>
-<span><span class="co">## 5257                   Homo sapiens;Plasmodium berghei</span></span>
-<span><span class="co">## 5505                      Homo sapiens;Pan troglodytes</span></span>
-<span><span class="co">## 6016  Canis lupus familiaris;Homo sapiens;Mus musculus</span></span>
-<span><span class="co">## 6176                Homo sapiens;[Haemophilus] ducreyi</span></span>
-<span><span class="co">## 6695                Homo sapiens;Neisseria gonorrhoeae</span></span>
-<span><span class="co">## 6852             Homo sapiens;Human gammaherpesvirus 8</span></span>
-<span><span class="co">## 7026              Drosophila melanogaster;Homo sapiens</span></span>
-<span><span class="co">## 7045                         Homo sapiens;Mus musculus</span></span>
-<span><span class="co">## 7496                        Gallus gallus;Homo sapiens</span></span>
-<span><span class="co">## 8703             Homo sapiens;human gammaherpesvirus 4</span></span>
-<span><span class="co">## 9777             Homo sapiens;human gammaherpesvirus 4</span></span>
-<span><span class="co">## 11458                                     Homo sapiens</span></span></code></pre>
-<p>Show only accession id:</p>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/searchSampleType.html">searchSampleType</a></span><span class="op">(</span><span class="st">"MCF-10 MCF-7"</span>, contain_all <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">##               ID              Name</span></span>
+<span><span class="co">## 94   BTO:0000093        MCF-7 cell</span></span>
+<span><span class="co">## 2269 BTO:0002270     MCF-7/2a cell</span></span>
+<span><span class="co">## 5190 BTO:0005192    MCF-7/adr cell</span></span>
+<span><span class="co">## 5968 BTO:0005970   MCF-7/LCC9 cell</span></span>
+<span><span class="co">## 1938 BTO:0001939      MCF-10A cell</span></span>
+<span><span class="co">## 3899 BTO:0003900      MCF-10F cell</span></span>
+<span><span class="co">## 5125 BTO:0005127 MCF-10A neoT cell</span></span>
+<span><span class="co">## 6396 BTO:0006398    MCF-10-2A cell</span></span></code></pre>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/GEOPlatformSearch.html">GEOPlatformSearch</a></span><span class="op">(</span><span class="st">"Illumina HiSeq 4000"</span>, organism <span class="op">=</span> <span class="st">"Homo Sapiens"</span>, accession_only <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">##  [1] "GPL33716" "GPL33334" "GPL32809" "GPL32511" "GPL31944" "GPL30035"</span></span>
-<span><span class="co">##  [7] "GPL29636" "GPL29603" "GPL29543" "GPL29429" "GPL28989" "GPL28185"</span></span>
-<span><span class="co">## [13] "GPL27803" "GPL26865" "GPL26639" "GPL25904" "GPL25719" "GPL25476"</span></span>
-<span><span class="co">## [19] "GPL25431" "GPL24850" "GPL23362" "GPL22132" "GPL20301"</span></span></code></pre>
-<p>Search for multiple terms:</p>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/searchPlatform.html">searchPlatform</a></span><span class="op">(</span><span class="st">"illumina hiseq 3000"</span>, organism <span class="op">=</span> <span class="st">"Homo Sapiens"</span>, contain_all <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">##       Accession</span></span>
+<span><span class="co">## 2681   GPL31935</span></span>
+<span><span class="co">## 3776   GPL30008</span></span>
+<span><span class="co">## 5877   GPL27044</span></span>
+<span><span class="co">## 6015   GPL26864</span></span>
+<span><span class="co">## 7794   GPL24496</span></span>
+<span><span class="co">## 8304   GPL23888</span></span>
+<span><span class="co">## 10569  GPL21290</span></span>
+<span><span class="co">##                                                                           Name</span></span>
+<span><span class="co">## 2681                          Illumina HiSeq 3000 (Homo sapiens; Myxoma virus)</span></span>
+<span><span class="co">## 3776    Illumina HiSeq 3000 (Homo sapiens; Human T-cell leukemia virus type I)</span></span>
+<span><span class="co">## 5877                                        Illumina Hiseq 3000 (Homo sapiens)</span></span>
+<span><span class="co">## 6015  Illumina HiSeq 3000 (Canis lupus familiaris; Homo sapiens; Mus musculus)</span></span>
+<span><span class="co">## 7794                          Illumina HiSeq 3000 (Homo sapiens; Mus musculus)</span></span>
+<span><span class="co">## 8304              Illumina HiSeq 3000 (Homo sapiens; Human gammaherpesvirus 8)</span></span>
+<span><span class="co">## 10569                                       Illumina HiSeq 3000 (Homo sapiens)</span></span>
+<span><span class="co">##                       Technology</span></span>
+<span><span class="co">## 2681  high-throughput sequencing</span></span>
+<span><span class="co">## 3776  high-throughput sequencing</span></span>
+<span><span class="co">## 5877  high-throughput sequencing</span></span>
+<span><span class="co">## 6015  high-throughput sequencing</span></span>
+<span><span class="co">## 7794  high-throughput sequencing</span></span>
+<span><span class="co">## 8304  high-throughput sequencing</span></span>
+<span><span class="co">## 10569 high-throughput sequencing</span></span>
+<span><span class="co">##                                               Organism</span></span>
+<span><span class="co">## 2681                         Homo sapiens;Myxoma virus</span></span>
+<span><span class="co">## 3776   Homo sapiens;Human T-cell leukemia virus type I</span></span>
+<span><span class="co">## 5877                                      Homo sapiens</span></span>
+<span><span class="co">## 6015  Canis lupus familiaris;Homo sapiens;Mus musculus</span></span>
+<span><span class="co">## 7794                         Homo sapiens;Mus musculus</span></span>
+<span><span class="co">## 8304             Homo sapiens;Human gammaherpesvirus 8</span></span>
+<span><span class="co">## 10569                                     Homo sapiens</span></span></code></pre>
+<p>Show only accession id:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/GEOPlatformSearch.html">GEOPlatformSearch</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Drosophila melanogaster"</span>, <span class="st">"Illumina HiSeq 4000"</span><span class="op">)</span>, organism <span class="op">=</span> <span class="st">"Homo Sapiens"</span>, contain_all <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">##      Accession                                                        Name</span></span>
-<span><span class="co">## 7026  GPL25476 Illumina HiSeq 4000 (Drosophila melanogaster; Homo sapiens)</span></span>
-<span><span class="co">##                      Technology                             Organism</span></span>
-<span><span class="co">## 7026 high-throughput sequencing Drosophila melanogaster;Homo sapiens</span></span></code></pre>
-<p>Set <code>contain_all = TRUE</code> to show results include all
-search terms.<br>
-Set <code>contain_all = FALSE</code> to show results include any of the
-search terms.<br></p>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/searchPlatform.html">searchPlatform</a></span><span class="op">(</span><span class="st">"illumina hiseq 3000"</span>, organism <span class="op">=</span> <span class="st">"Homo Sapiens"</span>, contain_all <span class="op">=</span> <span class="cn">TRUE</span>, accession_only <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## [1] "GPL31935" "GPL30008" "GPL27044" "GPL26864" "GPL24496" "GPL23888" "GPL21290"</span></span></code></pre>
 </div>
 <div class="section level2">
 <h2 id="section"></h2>
@@ -267,12 +199,12 @@ search terms.<br></p>
 
       <footer><div class="copyright">
   <p></p>
-<p>Developed by Mengze Li.</p>
+<p>Developed by Vanessa Mengze Li.</p>
 </div>
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.0.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
 </div>
 
       </footer>

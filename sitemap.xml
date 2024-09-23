@@ -12,8 +12,6 @@
 <url><loc>https://montilab.github.io/OmicSignature/index.html</loc></url>
 <url><loc>https://montilab.github.io/OmicSignature/reference/BRENDA.html</loc></url>
 <url><loc>https://montilab.github.io/OmicSignature/reference/BRENDAExistName.html</loc></url>
-<url><loc>https://montilab.github.io/OmicSignature/reference/BRENDASearch.html</loc></url>
-<url><loc>https://montilab.github.io/OmicSignature/reference/GEOPlatformSearch.html</loc></url>
 <url><loc>https://montilab.github.io/OmicSignature/reference/GEOplatform.html</loc></url>
 <url><loc>https://montilab.github.io/OmicSignature/reference/OmicSigFromDifexp.html</loc></url>
 <url><loc>https://montilab.github.io/OmicSignature/reference/OmicSignature.html</loc></url>
@@ -24,6 +22,8 @@
 <url><loc>https://montilab.github.io/OmicSignature/reference/readJson.html</loc></url>
 <url><loc>https://montilab.github.io/OmicSignature/reference/replaceDifexpCol.html</loc></url>
 <url><loc>https://montilab.github.io/OmicSignature/reference/replaceSigCol.html</loc></url>
+<url><loc>https://montilab.github.io/OmicSignature/reference/searchPlatform.html</loc></url>
+<url><loc>https://montilab.github.io/OmicSignature/reference/searchSampleType.html</loc></url>
 <url><loc>https://montilab.github.io/OmicSignature/reference/signatureVecToDF.html</loc></url>
 <url><loc>https://montilab.github.io/OmicSignature/reference/standardizeSigDF.html</loc></url>
 <url><loc>https://montilab.github.io/OmicSignature/reference/testRepo.html</loc></url>
