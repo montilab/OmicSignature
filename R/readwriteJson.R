@@ -3,7 +3,7 @@
 #' @description To avoid confusion, in the written json text file, the column
 #' names in signature dataframe and difexp dataframe will have prefix "sig_"
 #' and "difexp" added. This corresponds to readJson() function.
-#' updated 04/2024
+#' updated 10/2024
 #'
 #' @param OmicObj A OmicSignature object
 #' @param file file name to write
@@ -66,7 +66,7 @@ readJson <- function(filename) {
   }
 
   #### sig df ####
-  readSignature <- data.frame("id" = readJson$sig_id, "symbol" = readJson$sig_symbol)
+  readSignature <- data.frame("probe_id" = readJson$sig_probe_id, "feature_symbol" = readJson$sig_feature_symbol)
   if (!is.null(readJson$sig_score)) {
     readSignature$score <- readJson$sig_score
   }

@@ -1,5 +1,5 @@
 #' @title rename the columns of a differential analysis matrix for OmicSignature R6 object
-#' updated 04/2024
+#' updated 10/2024
 #'
 #' @importFrom dplyr %>%
 #' @importFrom methods is
@@ -21,9 +21,9 @@ replaceDifexpCol <- function(colname) {
     dplyr::recode(
       # old = new
       "t" = "score",
-      "gene_symbol" = "symbol", "gene.symbol" = "symbol",
+      "gene_symbol" = "gene_name", "gene.symbol" = "gene_name",
       "aveexpr" = "mean", "average" = "mean",
-      "probe.id" = "id", "probe" = "id", "probe_id" = "id",
+      "probe.id" = "probe_id", "probe" = "probe_id", "id" = "probe_id",
       "log2fc" = "logfc", "log.fold.change" = "logfc",
       "p.value" = "p_value", "pval" = "p_value",
       "adj.p.val" = "adj_p", "adj.p.value" = "adj_p", "adj.p" = "adj_p", "fdr" = "adj_p",

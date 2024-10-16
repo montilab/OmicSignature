@@ -1,3 +1,5 @@
+.gitignore
+
 # mac
 .DS_Store
 # R studio files

@@ -1,7 +1,7 @@
 Package: OmicSignature
 Type: Package
-Title: Development testing
-Version: 0.1.0
+Title: OmicSignature
+Version: 1.0.0
 Author: Vanessa Mengze Li
 Maintainer: Vanessa Mengze Li <vmli@bu.edu>
 Description: As high-throughput technology evolves, a large number of omics-signatures are being derived. 

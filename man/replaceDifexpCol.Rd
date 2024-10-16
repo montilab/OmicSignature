@@ -3,7 +3,7 @@
 \name{replaceDifexpCol}
 \alias{replaceDifexpCol}
 \title{rename the columns of a differential analysis matrix for OmicSignature R6 object
-updated 04/2024}
+updated 10/2024}
 \usage{
 replaceDifexpCol(colname)
 }
@@ -16,5 +16,5 @@ standardized column names of the difexp matrix before creating the OmicSignature
 }
 \description{
 rename the columns of a differential analysis matrix for OmicSignature R6 object
-updated 04/2024
+updated 10/2024
 }

@@ -1,6 +1,6 @@
 #### OmicSigFromDifexp() ####
 #' @title create an OmicSignature object from differential expsignaturession matrix
-#' @description updated 08/2024
+#' @description updated 10/2024
 #' @param difexp Differential expression matrix
 #' @param metadata Metadata for the OmicSignature object. If `criteria` is `NULL`,
 #' the criterias to extract signatures will need to be provided in metadata.
@@ -16,16 +16,16 @@
 
 OmicSigFromDifexp <- function(difexp, metadata, criteria = NULL) {
   ## define the following to pass R check since they are viewed as variables in dplyr functions
-  id <- NULL
-  symbol <- NULL
+  probe_id <- NULL
+  feature_symbol <- NULL
   score <- NULL
   direction <- NULL
 
   signatureType <- metadata$direction_type
 
-  ## if id is not provided in difexp, setup numeric counter as id
-  if (!"id" %in% colnames(difexp)) {
-    difexp <- difexp %>% dplyr::mutate(id = seq(nrow(difexp)), .before = everything())
+  ## if probe_id is not provided in difexp, setup numeric counter as probe_id
+  if (!"probe_id" %in% colnames(difexp)) {
+    difexp <- difexp %>% dplyr::mutate(probe_id = seq(nrow(difexp)), .before = everything())
   }
 
   if (signatureType == "bi-directional") {
@@ -53,25 +53,25 @@ OmicSigFromDifexp <- function(difexp, metadata, criteria = NULL) {
   if ("score" %in% colnames(difexp)) {
     if (signatureType %in% c("bi-directional", "categorical")) {
       signatures <- signatures %>%
-        dplyr::select(id, symbol, score, direction) %>%
+        dplyr::select(probe_id, feature_symbol, score, direction) %>%
         dplyr::arrange(dplyr::desc(abs(score)))
     } else {
       signatures <- signatures %>%
-        dplyr::select(id, symbol, score)
+        dplyr::select(probe_id, feature_symbol, score)
     }
   } else {
     if (signatureType %in% c("bi-directional", "categorical")) {
       signatures <- signatures %>%
-        dplyr::select(id, symbol, direction)
+        dplyr::select(probe_id, feature_symbol, direction)
     } else {
       signatures <- signatures %>%
-        dplyr::select(id, symbol)
+        dplyr::select(probe_id, feature_symbol)
     }
   }
 
   signatures <- signatures %>%
-    dplyr::distinct(symbol, .keep_all = TRUE) %>%
-    filter(symbol != "", complete.cases(.))
+    dplyr::distinct(feature_symbol, .keep_all = TRUE) %>%
+    filter(feature_symbol != "", complete.cases(.))
 
   OmicSig <- OmicSignature$new(
     metadata = metadata,

@@ -2,7 +2,7 @@
 
 #' @title OmicSignature R6 object
 #' @description a R6 object to store signatures generated from experiments. In cluding metadata, signature, and an optional differential expression analysis result dataframe.
-#' updated 08/2024
+#' updated 10/2024
 #' @importFrom R6 R6Class
 #' @importFrom dplyr filter select mutate arrange distinct recode bind_rows %>%
 #' @importFrom jsonlite toJSON fromJSON
@@ -15,7 +15,7 @@ OmicSignature <-
       #' @description
       #' Create a new OmicSignature object
       #' @param metadata required. a list. See `createMetadata` for more information
-      #' @param signature required. a vector, or a dataframe including columns: "id", "symbol" and "direction", and an optional column "score"
+      #' @param signature required. a vector, or a dataframe including columns: "probe_id", "feature_symbol" and "direction", and an optional column "score"
       #' @param difexp optional
       #' @param print_message use TRUE if want to see all messages printed
       #' @export
@@ -25,16 +25,16 @@ OmicSignature <-
         if (!is.null(difexp)) {
           difexp <- private$checkDifexp(difexp, v = print_message)
           private$.difexp <- difexp
-          if (!all(signature$id %in% difexp$id)) {
+          if (!all(signature$probe_id %in% difexp$probe_id)) {
             stop(paste(
-              "Some features in signature$id are not included in difexp$id. Examples:",
-              paste(head(setdiff(signature$id, difexp$id)), collapse = " ")
+              "Some features in signature$probe_id are not included in difexp$probe_id. Examples:",
+              paste(head(setdiff(signature$probe_id, difexp$probe_id)), collapse = " ")
             ))
           }
-          if (!all(signature$symbol %in% difexp$symbol)) {
+          if (!all(signature$feature_symbol %in% difexp$feature_symbol)) {
             stop(paste(
-              "Some features in signature$symbol are not included in difexp$symbol. Examples:",
-              paste(head(setdiff(signature$symbol, difexp$symbol)), collapse = " ")
+              "Some features in signature$feature_symbol are not included in difexp$feature_symbol. Examples:",
+              paste(head(setdiff(signature$feature_symbol, difexp$feature_symbol)), collapse = " ")
             ))
           }
         }
@@ -89,35 +89,35 @@ OmicSignature <-
         if ("score" %in% colnames(difexp)) {
           if (direction_type == "uni-directional") {
             res <- res %>%
-              dplyr::select(id, symbol, score) %>%
+              dplyr::select(probe_id, feature_symbol, score) %>%
               dplyr::filter(score != "") %>%
               dplyr::arrange(desc(abs(score)))
           } else if (direction_type == "bi-directional") {
             res <- res %>%
-              dplyr::select(id, symbol, score) %>%
+              dplyr::select(probe_id, feature_symbol, score) %>%
               dplyr::filter(score != "") %>%
               dplyr::mutate(direction = ifelse(score < 0, "-", "+")) %>%
               dplyr::arrange(desc(abs(score)))
           } else if (direction_type == "categorical") {
             res <- res %>%
-              dplyr::select(id, symbol, score, direction) %>%
+              dplyr::select(probe_id, feature_symbol, score, direction) %>%
               dplyr::filter(score != "", ) %>%
               dplyr::arrange(desc(abs(score)))
           }
         } else {
           if (direction_type == "uni-directional") {
             res <- res %>%
-              dplyr::select(id, symbol)
+              dplyr::select(probe_id, feature_symbol)
           } else {
             res <- res %>%
               dplyr::filter(!!!v) %>%
-              dplyr::select(id, symbol, direction)
+              dplyr::select(probe_id, feature_symbol, direction)
           }
         }
 
         res <- res %>%
-          dplyr::filter(symbol != "", complete.cases(.)) %>%
-          dplyr::distinct(symbol, .keep_all = TRUE) %>%
+          dplyr::filter(feature_symbol != "", complete.cases(.)) %>%
+          dplyr::distinct(feature_symbol, .keep_all = TRUE) %>%
           dplyr::mutate(direction = as.character(direction))
 
         return(res)
@@ -134,7 +134,7 @@ OmicSignature <-
           private$.metadata <- private$checkMetadata(value, print_message)
         }
       },
-      #' @field signature a dataframe contains id, symbol, score (optional) and direction (optional)
+      #' @field signature a dataframe contains probe_id, feature_symbol, score (optional) and direction (optional)
       signature = function(value, print_message = FALSE) {
         if (missing(value)) {
           private$.signature
@@ -179,14 +179,14 @@ OmicSignature <-
         if (nrow(difexp) == 0) stop("difexp is empty. ")
 
         ## check column names:
-        ## if id is not provided, setup numeric counter as id
-        if (!"id" %in% colnames(difexp)) {
-          difexp <- difexp %>% mutate(id = seq(nrow(difexp)), .before = everything())
+        ## if probe_id is not provided, setup numeric counter as probe_id
+        if (!"probe_id" %in% colnames(difexp)) {
+          difexp <- difexp %>% mutate(probe_id = seq(nrow(difexp)), .before = everything())
         }
         ## require any of p_value, q_value, or adj_p
         exist_p_columns <- intersect(colnames(difexp), c("p_value", "q_value", "adj_p"))
         if (length(exist_p_columns) > 0) {
-          difexpColRequired <- c("id", "symbol", exist_p_columns)
+          difexpColRequired <- c("probe_id", "feature_symbol", exist_p_columns)
         } else {
           stop("difexp requires at least one of the following columns: p_value, q_value, adj_p.")
         }
@@ -208,10 +208,10 @@ OmicSignature <-
             }
           }
         }
-        ## "symbol" should be character
-        if ("symbol" %in% colnames(difexp)) {
-          if (!is(difexp$symbol, "character")) {
-            stop("difexp: symbol is not character.")
+        ## "feature_symbol" should be character
+        if ("feature_symbol" %in% colnames(difexp)) {
+          if (!is(difexp$feature_symbol, "character")) {
+            stop("difexp: feature_symbol is not character.")
           }
         }
         private$verbose(v, "  [Success] difexp is valid. \n")
@@ -318,10 +318,9 @@ OmicSignature <-
 
         ## standardize content and column names:
         signature <- standardizeSigDF(signature)
-        signature <- replaceSigCol(signature)
 
         ## check column names
-        signatureColRequired <- c("id", "symbol")
+        signatureColRequired <- c("probe_id", "feature_symbol")
         if (signatureType != "uni-directional") {
           signatureColRequired <- c(signatureColRequired, "direction")
         }
