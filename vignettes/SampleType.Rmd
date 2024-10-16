@@ -1,10 +1,10 @@
 ---
-title: "BRENDA & GEO platform"
+title: "Sample Type & Platform Information"
 output: rmarkdown::html_vignette
 author: "Vanessa Mengze Li"
 date: "10/03/2024"
 vignette: >
-  %\VignetteIndexEntry{BRENDA & GEO platform}
+  %\VignetteIndexEntry{Sample Type & Platform Info}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

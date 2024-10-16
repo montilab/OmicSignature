@@ -13,15 +13,15 @@ navbar:
       menu:
       - text: "Structure of OmicSignature & OmicSignatureCollection"
         href: articles/ObjectStructure.html
-      - text: "---- OmicSignature object ----"
-      - text: "Create OmicSignature"
+      - text: "---- OmicSignature ----"
+      - text: "Create an OmicSignature"
         href: articles/CreateOmS.html
       - text: "Functionalities, imports and exports"
         href: articles/FunOmS.html
-      - text: "BRENDA ontology & GEO platform ID"
-        href: articles/BRENDA.html
-      - text: "---- OmicSignatureCollection object ----"
-      - text: "Create OmicSignatureCollection"
+      - text: "Sample Type & Platform Info"
+        href: articles/SampleType.html
+      - text: "---- OmicSignatureCollection ----"
+      - text: "Create an OmicSignatureCollection"
         href: articles/CreateOmSC.html
       - text: "Functionalities of OmicSignatureCollection"
         href: articles/FunOmSC.html
