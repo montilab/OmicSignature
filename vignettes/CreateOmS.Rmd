@@ -34,14 +34,14 @@ An `OmicSignature` object contains three parts: \
 - **signature**, a data frame. \
   Required columns: \
     "**probe_id**" (unique identifier for each feature) \
-    "**feature_name**" (e.g. ENSEMBL ID, Uniprot ID) \
+    "**feature_symbol**" (e.g. ENSEMBL ID, Uniprot ID) \
   Required for bi-directional and categorical signatures: "**direction**" \
   Recommended optional column, if applicable: "score" \
 
 - **difexp** (optional), a data frame of differential expression analysis results. \
   Required columns: \
     "**probe_id**" (unique identifier for each feature) \
-    "**feature_name**" (e.g. ENSEMBL ID, Uniprot ID) \
+    "**feature_symbol**" (e.g. ENSEMBL ID, Uniprot ID) \
     Require at least one of the following: "**p_value**", "**q_value**", or "**adj_p**". \
   Recommended optional column, if applicable: "score", "feature_symbol" \
 
@@ -150,7 +150,7 @@ A differential expression dataframe is **optional** but **highly recommended** i
 "**probe_id**", "**feature_symbol**", along with at least one of the following: "**p_value**", "**q_value**", or "**adj_p**". \
 
 "**probe_id**" is a unique identifier for each feature. If not provided, it will be automatically generated. Common examples include unique numbers and probe IDs. \
-"**feature_symbol**" is a name that identifies each feature, examples include ENSEMBL IDs, UniProt IDs, and Refmet IDs. To better identify the features, it is recommended to add an additional annotation column (e.g., "gene_name") to specify the feature name (e.g., CD248). For metabolite features, it is recommended to include multiple annotation columns is available (e.g. HMDB ID, InChI key). \
+"**feature_symbol**" is a name that identifies each feature, examples include ENSEMBL IDs, UniProt IDs, and Refmet IDs. To better identify the features, it is recommended to add an additional annotation column (e.g., "gene_name") to specify a more human readable name (e.g., CD248). For metabolite features, it is recommended to include multiple annotation columns is available (e.g. HMDB ID, InChI key). \
 "**p_value**", "**q_value**", or "**adj_p**" refers to the p- or q-value representing the significance of each feature. \
 "score" is a numeric value that indicates the importance or significance of a feature. Common examples include t-test statistics and Z-scores. \
 

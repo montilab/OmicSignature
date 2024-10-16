@@ -2,7 +2,7 @@
 title: "Functionalities of OmicSignature"
 output: rmarkdown::html_vignette
 author: "Vanessa Mengze Li"
-date: "08/15/2024"
+date: "10/16/2024"
 vignette: >
   %\VignetteIndexEntry{Functionalities of OmicSignature}
   %\VignetteEngine{knitr::rmarkdown}
