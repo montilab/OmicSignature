@@ -120,7 +120,7 @@ Recommended optional fields, if applicable:<br>
 <li><p><strong>signature</strong>, a data frame.<br>
 Required columns:<br>
 “<strong>probe_id</strong>” (unique identifier for each feature)<br>
-“<strong>feature_name</strong>” (e.g. ENSEMBL ID, Uniprot ID)<br>
+“<strong>feature_symbol</strong>” (e.g. ENSEMBL ID, Uniprot ID)<br>
 Required for bi-directional and categorical signatures:
 “<strong>direction</strong>”<br>
 Recommended optional column, if applicable: “score”<br></p></li>
@@ -128,7 +128,7 @@ Recommended optional column, if applicable: “score”<br></p></li>
 expression analysis results.<br>
 Required columns:<br>
 “<strong>probe_id</strong>” (unique identifier for each feature)<br>
-“<strong>feature_name</strong>” (e.g. ENSEMBL ID, Uniprot ID)<br>
+“<strong>feature_symbol</strong>” (e.g. ENSEMBL ID, Uniprot ID)<br>
 Require at least one of the following: “<strong>p_value</strong>”,
 “<strong>q_value</strong>”, or “<strong>adj_p</strong>”.<br>
 Recommended optional column, if applicable: “score”,
@@ -274,9 +274,10 @@ include unique numbers and probe IDs.<br>
 “<strong>feature_symbol</strong>” is a name that identifies each
 feature, examples include ENSEMBL IDs, UniProt IDs, and Refmet IDs. To
 better identify the features, it is recommended to add an additional
-annotation column (e.g., “gene_name”) to specify the feature name (e.g.,
-CD248). For metabolite features, it is recommended to include multiple
-annotation columns is available (e.g. HMDB ID, InChI key).<br>
+annotation column (e.g., “gene_name”) to specify a more human readable
+name (e.g., CD248). For metabolite features, it is recommended to
+include multiple annotation columns is available (e.g. HMDB ID, InChI
+key).<br>
 “<strong>p_value</strong>”, “<strong>q_value</strong>”, or
 “<strong>adj_p</strong>” refers to the p- or q-value representing the
 significance of each feature.<br>
