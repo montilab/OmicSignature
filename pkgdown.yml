@@ -2,13 +2,13 @@ pandoc: '3.4'
 pkgdown: 2.1.1
 pkgdown_sha: ~
 articles:
-  BRENDA: BRENDA.html
   CreateOmS: CreateOmS.html
   CreateOmSC: CreateOmSC.html
   FunOmS: FunOmS.html
   FunOmSC: FunOmSC.html
   ObjectStructure: ObjectStructure.html
-last_built: 2024-10-03T17:11Z
+  SampleType: SampleType.html
+last_built: 2024-10-16T23:26Z
 urls:
   reference: https://montilab.github.io/OmicSignature/reference
   article: https://montilab.github.io/OmicSignature/articles

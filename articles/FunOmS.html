@@ -32,7 +32,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">OmicSignature</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.0</span>
       </span>
     </div>
 
@@ -51,19 +51,19 @@
 <li>
       <a href="../articles/ObjectStructure.html">Structure of OmicSignature &amp; OmicSignatureCollection</a>
     </li>
-    <li class="dropdown-header">---- OmicSignature object ----</li>
+    <li class="dropdown-header">---- OmicSignature ----</li>
     <li>
-      <a href="../articles/CreateOmS.html">Create OmicSignature</a>
+      <a href="../articles/CreateOmS.html">Create an OmicSignature</a>
     </li>
     <li>
       <a href="../articles/FunOmS.html">Functionalities, imports and exports</a>
     </li>
     <li>
-      <a href="../articles/BRENDA.html">BRENDA ontology &amp; GEO platform ID</a>
+      <a href="../articles/SampleType.html">Sample Type &amp; Platform Info</a>
     </li>
-    <li class="dropdown-header">---- OmicSignatureCollection object ----</li>
+    <li class="dropdown-header">---- OmicSignatureCollection ----</li>
     <li>
-      <a href="../articles/CreateOmSC.html">Create OmicSignatureCollection</a>
+      <a href="../articles/CreateOmSC.html">Create an OmicSignatureCollection</a>
     </li>
     <li>
       <a href="../articles/FunOmSC.html">Functionalities of OmicSignatureCollection</a>
@@ -126,6 +126,7 @@ Li</h4>
 <span><span class="co">#&gt;     adj_p_cutoff = 0.05 </span></span>
 <span><span class="co">#&gt;     assay_type = transcriptomics </span></span>
 <span><span class="co">#&gt;     covariates = none </span></span>
+<span><span class="co">#&gt;     description = mice MYC reduced expression </span></span>
 <span><span class="co">#&gt;     direction_type = bi-directional </span></span>
 <span><span class="co">#&gt;     keywords = Myc, KO, longevity </span></span>
 <span><span class="co">#&gt;     organism = Mus Musculus </span></span>
@@ -140,11 +141,11 @@ Li</h4>
 <span><span class="co">#&gt;   Metadata user defined fields: </span></span>
 <span><span class="co">#&gt;     animal_strain = C57BL/6 </span></span>
 <span><span class="co">#&gt;   Signature: </span></span>
-<span><span class="co">#&gt;     Length (18)</span></span>
+<span><span class="co">#&gt;     Length (15)</span></span>
 <span><span class="co">#&gt;     Class (character)</span></span>
 <span><span class="co">#&gt;     Mode (character)</span></span>
 <span><span class="co">#&gt;   Differential Expression Data: </span></span>
-<span><span class="co">#&gt;     1000 x 8</span></span></code></pre></div>
+<span><span class="co">#&gt;     884 x 9</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="extract-new-signatures-from-the-omicsignature-object">Extract new signatures from the <code>OmicSignature</code>
@@ -157,13 +158,12 @@ For example, extract all features with a t-score with absolute value
 higher than 5 and adj_p smaller than 0.01:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">OmicObj</span><span class="op">$</span><span class="fu">extractSignature</span><span class="op">(</span><span class="st">"abs(score) &gt; 5; adj_p &lt; 0.01"</span><span class="op">)</span></span>
-<span><span class="co">#&gt;         id  symbol   score direction</span></span>
-<span><span class="co">#&gt; 1 10349968   Chil1 -25.413         -</span></span>
-<span><span class="co">#&gt; 2 10349648    Ctse  14.762         +</span></span>
-<span><span class="co">#&gt; 3 10345762   Il1r1 -13.543         -</span></span>
-<span><span class="co">#&gt; 4 10353192    Eya1  10.487         +</span></span>
-<span><span class="co">#&gt; 5 10355259    Myl1 -10.315         -</span></span>
-<span><span class="co">#&gt; 6 10351477 Sh2d1b1   8.818         +</span></span></code></pre></div>
+<span><span class="co">#&gt;   probe_id     feature_symbol   score direction</span></span>
+<span><span class="co">#&gt; 1 10349648 ENSMUSG00000004552  14.762         +</span></span>
+<span><span class="co">#&gt; 2 10345762 ENSMUSG00000026072 -13.543         -</span></span>
+<span><span class="co">#&gt; 3 10353192 ENSMUSG00000025932  10.487         +</span></span>
+<span><span class="co">#&gt; 4 10355259 ENSMUSG00000061816 -10.315         -</span></span>
+<span><span class="co">#&gt; 5 10351477 ENSMUSG00000102418   8.818         +</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="section"></h2>
