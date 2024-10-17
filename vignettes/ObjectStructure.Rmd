@@ -16,6 +16,10 @@ knitr::opts_chunk$set(
 )
 ```
 
+```{r echo=FALSE, out.height="80%", out.width="80%"}
+knitr::include_graphics("figs/OmS_OmSC_structure.png")
+```
+
 ## OmicSignature object structure
 An `OmicSignature` object contains three parts:  
  - **metadata**, a list containing metadata fields;  
@@ -24,11 +28,6 @@ An `OmicSignature` object contains three parts:
 
 See [here](https://montilab.github.io/OmicSignature/articles/CreateOmS.html) about how to create one. 
 
-```{r echo=FALSE, out.height="60%", out.width="60%"}
-knitr::include_graphics("figs/Omic_structure.png")
-```
-
-
 ## OmicSignatureCollection object structure
 An `OmicSignatureCollection` object contains two parts:  
  - metadata, a list containing metadata fields;
@@ -36,14 +35,13 @@ An `OmicSignatureCollection` object contains two parts:
 
 See [here](https://montilab.github.io/OmicSignature/articles/CreateOmSC.html) about how to create one. 
 
+## Cheat-Sheet of main functionalities
 ```{r echo=FALSE, out.height="60%", out.width="60%"}
-knitr::include_graphics("figs/OmicCol_structure.png")
+knitr::include_graphics("figs/OmS_function.png")
 ```
 
-
-## Quick Cheat-Sheet of main functionalities
-```{r echo=FALSE, out.height="60%", out.width="60%"}
-knitr::include_graphics("figs/Omic_OmicCol_func2.png")
+```{r echo=FALSE, out.height="80%", out.width="80%"}
+knitr::include_graphics("figs/OmSC_function.png")
 ```
 
 --
