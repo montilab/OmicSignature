@@ -2,7 +2,7 @@
 title: "Functionalities of OmicSignature"
 output: rmarkdown::html_vignette
 author: "Vanessa Mengze Li"
-date: "10/16/2024"
+date: "10/17/2024"
 vignette: >
   %\VignetteIndexEntry{Functionalities of OmicSignature}
   %\VignetteEngine{knitr::rmarkdown}
@@ -22,7 +22,7 @@ devtools::load_all(".")
 <font color = "#000000">
 
 ```{r echo=FALSE, out.height="60%", out.width="60%"}
-knitr::include_graphics("figs/Omic_OmicCol_func1.png")
+knitr::include_graphics("figs/OmS_function.png")
 ```
 
 ## Read an `OmicSignature` object from a json file

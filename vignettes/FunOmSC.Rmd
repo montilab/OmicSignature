@@ -2,7 +2,7 @@
 title: "Functionalities of OmicSignatureCollection"
 output: rmarkdown::html_vignette
 author: "Vanessa Mengze Li"
-date: "10/16/2024"
+date: "10/17/2024"
 vignette: >
   %\VignetteIndexEntry{Functionalities of OmicSignatureCollection}
   %\VignetteEngine{knitr::rmarkdown}
@@ -23,7 +23,7 @@ library(dplyr)
 <font color = "#000000">
 
 ```{r echo=FALSE, out.height="60%", out.width="60%"}
-knitr::include_graphics("figs/Omic_OmicCol_func1.png")
+knitr::include_graphics("figs/OmSC_function.png")
 ```
 
 First, create an `OmicSignatureCollection` object. \

@@ -1,8 +1,8 @@
 ---
-title: "Sample Type & Platform Information"
+title: "Sample Type & Platform Info"
 output: rmarkdown::html_vignette
 author: "Vanessa Mengze Li"
-date: "10/16/2024"
+date: "10/17/2024"
 vignette: >
   %\VignetteIndexEntry{Sample Type & Platform Info}
   %\VignetteEngine{knitr::rmarkdown}
