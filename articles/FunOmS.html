@@ -107,20 +107,22 @@ Li</h4>
 <div class="section level2">
 <h2 id="read-an-omicsignature-object-from-a-json-file">Read an <code>OmicSignature</code> object from a json file<a class="anchor" aria-label="anchor" href="#read-an-omicsignature-object-from-a-json-file"></a>
 </h2>
+<p>Alternatively, you can read and write the object in <code>.rds</code>
+format as any other R objects.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">OmicObj</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/readJson.html">readJson</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, package <span class="op">=</span> <span class="st">"OmicSignature"</span><span class="op">)</span>, <span class="st">"Myc_reduce_mice_liver_24m_obj.json"</span><span class="op">)</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">OmS</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/readJson.html">readJson</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, package <span class="op">=</span> <span class="st">"OmicSignature"</span><span class="op">)</span>, <span class="st">"Myc_reduce_mice_liver_24m_OmS.json"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt;   [Success] OmicSignature object Myc_reduce_mice_liver_24m created.</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="write-an-omicsignature-object-into-a-json-file">Write an <code>OmicSignature</code> object into a json file<a class="anchor" aria-label="anchor" href="#write-an-omicsignature-object-into-a-json-file"></a>
 </h2>
-<pre><code><span><span class="fu"><a href="../reference/writeJson.html">writeJson</a></span><span class="op">(</span><span class="va">OmicObj</span>, <span class="st">"Myc_reduce_mice_liver_24m.json"</span><span class="op">)</span></span></code></pre>
+<pre><code><span><span class="fu"><a href="../reference/writeJson.html">writeJson</a></span><span class="op">(</span><span class="va">OmS</span>, <span class="st">"Myc_reduce_mice_liver_24m_OmS.json"</span><span class="op">)</span></span></code></pre>
 </div>
 <div class="section level2">
 <h2 id="print-and-see-the-metadata">Print and see the metadata<a class="anchor" aria-label="anchor" href="#print-and-see-the-metadata"></a>
 </h2>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">OmicObj</span></span>
+<code class="sourceCode R"><span><span class="va">OmS</span></span>
 <span><span class="co">#&gt; Signature Object: </span></span>
 <span><span class="co">#&gt;   Metadata: </span></span>
 <span><span class="co">#&gt;     adj_p_cutoff = 0.05 </span></span>
@@ -157,7 +159,7 @@ included</strong>.<br>
 For example, extract all features with a t-score with absolute value
 higher than 5 and adj_p smaller than 0.01:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">OmicObj</span><span class="op">$</span><span class="fu">extractSignature</span><span class="op">(</span><span class="st">"abs(score) &gt; 5; adj_p &lt; 0.01"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">OmS</span><span class="op">$</span><span class="fu">extractSignature</span><span class="op">(</span><span class="st">"abs(score) &gt; 5; adj_p &lt; 0.01"</span><span class="op">)</span></span>
 <span><span class="co">#&gt;   probe_id       feature_name   score direction</span></span>
 <span><span class="co">#&gt; 1 10349648 ENSMUSG00000004552  14.762         +</span></span>
 <span><span class="co">#&gt; 2 10345762 ENSMUSG00000026072 -13.543         -</span></span>

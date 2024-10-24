@@ -111,11 +111,11 @@ OmicSignatureCollection”</a> section.<br>
 The following signatures are pseudo results for illustration
 purpose.<br></p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">OmicObj1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/readJson.html">readJson</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, package <span class="op">=</span> <span class="st">"OmicSignature"</span><span class="op">)</span>, <span class="st">"OmS_example_1.json"</span><span class="op">)</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">OmS1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/readJson.html">readJson</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, package <span class="op">=</span> <span class="st">"OmicSignature"</span><span class="op">)</span>, <span class="st">"OmS_example_1.json"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt;   [Success] OmicSignature object Experiment in liver created.</span></span>
-<span><span class="va">OmicObj2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/readJson.html">readJson</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, package <span class="op">=</span> <span class="st">"OmicSignature"</span><span class="op">)</span>, <span class="st">"OmS_example_2.json"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">OmS2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/readJson.html">readJson</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, package <span class="op">=</span> <span class="st">"OmicSignature"</span><span class="op">)</span>, <span class="st">"OmS_example_2.json"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt;   [Success] OmicSignature object Experiment in brain created.</span></span>
-<span><span class="va">OmicObj3</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/readJson.html">readJson</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, package <span class="op">=</span> <span class="st">"OmicSignature"</span><span class="op">)</span>, <span class="st">"OmS_example_3.json"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">OmS3</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/readJson.html">readJson</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, package <span class="op">=</span> <span class="st">"OmicSignature"</span><span class="op">)</span>, <span class="st">"OmS_example_3.json"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt;   [Success] OmicSignature object Experiment in heart created.</span></span>
 <span><span class="va">ColMeta</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>  <span class="st">"collection_name"</span> <span class="op">=</span> <span class="st">"OmS_example_Collection"</span>,</span>
@@ -123,8 +123,8 @@ purpose.<br></p>
 <span>  <span class="st">"organism"</span> <span class="op">=</span> <span class="st">"Mus Musculus"</span>,</span>
 <span>  <span class="st">"author"</span> <span class="op">=</span> <span class="st">"me"</span></span>
 <span><span class="op">)</span></span>
-<span><span class="va">OmicCol</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/OmicSignatureCollection.html">OmicSignatureCollection</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span></span>
-<span>  OmicSigList <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">OmicObj1</span>, <span class="va">OmicObj2</span>, <span class="va">OmicObj3</span><span class="op">)</span>,</span>
+<span><span class="va">OmSC</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/OmicSignatureCollection.html">OmicSignatureCollection</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span></span>
+<span>  OmicSigList <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">OmS1</span>, <span class="va">OmS2</span>, <span class="va">OmS3</span><span class="op">)</span>,</span>
 <span>  metadata <span class="op">=</span> <span class="va">ColMeta</span>,</span>
 <span>  print_message <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span>
@@ -140,7 +140,7 @@ When parameter “only_shared” is set to be <code>TRUE</code>, only shared
 metadata fields among all <code>OmicSignature</code> objects will be
 included. Otherwise, all metadata fields will be included.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">OmicCol</span><span class="op">$</span><span class="fu">metadataSummary</span><span class="op">(</span>only_shared <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">OmSC</span><span class="op">$</span><span class="fu">metadataSummary</span><span class="op">(</span>only_shared <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="co">#&gt;                Experiment in liver   Experiment in brain  </span></span>
 <span><span class="co">#&gt; assay_type     "transcriptomics"     "transcriptomics"    </span></span>
 <span><span class="co">#&gt; covariates     "none"                "none"               </span></span>
@@ -173,7 +173,7 @@ p &lt; 0.01 from all the <code>OmicSignature</code> object stored in
 this Collection. The features are ranked by absolute score, if
 applicable.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">OmicCol</span><span class="op">$</span><span class="fu">extractSignature</span><span class="op">(</span><span class="st">"abs(score) &gt; 4.5 &amp; p_value &lt; 0.01"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">OmSC</span><span class="op">$</span><span class="fu">extractSignature</span><span class="op">(</span><span class="st">"abs(score) &gt; 4.5 &amp; p_value &lt; 0.01"</span><span class="op">)</span></span>
 <span><span class="co">#&gt;               sig_name probe_id feature_name score direction</span></span>
 <span><span class="co">#&gt; 1  Experiment in brain       14       gene14 -4.99         -</span></span>
 <span><span class="co">#&gt; 2  Experiment in heart       28       gene28  4.99         +</span></span>
@@ -191,7 +191,7 @@ applicable.</p>
 <p>If <code>bind</code> is set to be <code>FALSE</code>, the output of
 each <code>OmicSignature</code> objects are provided as a list.<br></p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">OmicCol</span><span class="op">$</span><span class="fu">extractSignature</span><span class="op">(</span><span class="st">"abs(score) &gt; 4.5 &amp; p_value &lt; 0.01"</span>, bind <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">OmSC</span><span class="op">$</span><span class="fu">extractSignature</span><span class="op">(</span><span class="st">"abs(score) &gt; 4.5 &amp; p_value &lt; 0.01"</span>, bind <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span><span class="co">#&gt; $`Experiment in liver`</span></span>
 <span><span class="co">#&gt;   probe_id feature_name score direction</span></span>
 <span><span class="co">#&gt; 1       46       gene46 -4.71         -</span></span>

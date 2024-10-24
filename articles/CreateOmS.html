@@ -91,7 +91,7 @@
                         <h4 data-toc-skip class="author">Vanessa Mengze
 Li</h4>
             
-            <h4 data-toc-skip class="date">10/16/2024</h4>
+            <h4 data-toc-skip class="date">10/24/2024</h4>
       
 
       <div class="hidden name"><code>CreateOmS.Rmd</code></div>
@@ -135,7 +135,7 @@ Recommended optional column, if applicable: “score”, “gene_symbol”,
 “hgnc_symbol”<br></p></li>
 </ul>
 <p>Create the object:<br></p>
-<pre><code><span><span class="va">OmicObj</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/OmicSignature.html">OmicSignature</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span></span>
+<pre><code><span><span class="va">OmS</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/OmicSignature.html">OmicSignature</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span></span>
 <span>  metadata <span class="op">=</span> <span class="va">metadata</span>,</span>
 <span>  signature <span class="op">=</span> <span class="va">signature</span>,</span>
 <span>  difexp <span class="op">=</span> <span class="va">difexp</span></span>
@@ -387,7 +387,7 @@ For uni-directional signature:<br></p>
 <h3 id="create-the-omicsignature-object">2.4. Create the <code>OmicSignature</code> object<a class="anchor" aria-label="anchor" href="#create-the-omicsignature-object"></a>
 </h3>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">OmicObj</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/OmicSignature.html">OmicSignature</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="va">OmS</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/OmicSignature.html">OmicSignature</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span></span>
 <span>  metadata <span class="op">=</span> <span class="va">metadata</span>,</span>
 <span>  signature <span class="op">=</span> <span class="va">signature</span>,</span>
 <span>  difexp <span class="op">=</span> <span class="va">difexp</span></span>
@@ -396,7 +396,7 @@ For uni-directional signature:<br></p>
 <p>Set <code>print_message</code> = <code>TRUE</code> to see the
 messages.<br></p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">OmicObj</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/OmicSignature.html">OmicSignature</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="va">OmS</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/OmicSignature.html">OmicSignature</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span></span>
 <span>  metadata <span class="op">=</span> <span class="va">metadata</span>,</span>
 <span>  signature <span class="op">=</span> <span class="va">signature</span>,</span>
 <span>  difexp <span class="op">=</span> <span class="va">difexp</span>,</span>
@@ -409,7 +409,7 @@ messages.<br></p>
 <span><span class="co">#&gt;   [Success] OmicSignature object Myc_reduce_mice_liver_24m created.</span></span></code></pre></div>
 <p>See the created object information:</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">OmicObj</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">OmS</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Signature Object: </span></span>
 <span><span class="co">#&gt;   Metadata: </span></span>
 <span><span class="co">#&gt;     adj_p_cutoff = 0.05 </span></span>
@@ -439,14 +439,16 @@ messages.<br></p>
 (this does <em>not</em> change the <code>signature</code> saved in the
 object)</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">OmicObj</span><span class="op">$</span><span class="fu">extractSignature</span><span class="op">(</span><span class="st">"abs(score) &gt; 10; adj_p &lt; 0.01"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">OmS</span><span class="op">$</span><span class="fu">extractSignature</span><span class="op">(</span><span class="st">"abs(score) &gt; 10; adj_p &lt; 0.01"</span><span class="op">)</span></span>
 <span><span class="co">#&gt;   probe_id       feature_name   score direction</span></span>
 <span><span class="co">#&gt; 1 10349648 ENSMUSG00000004552  14.762         +</span></span>
 <span><span class="co">#&gt; 2 10345762 ENSMUSG00000026072 -13.543         -</span></span>
 <span><span class="co">#&gt; 3 10353192 ENSMUSG00000025932  10.487         +</span></span>
 <span><span class="co">#&gt; 4 10355259 ENSMUSG00000061816 -10.315         -</span></span></code></pre></div>
-<p>Export the object as a json text file:<br></p>
-<pre><code><span><span class="fu"><a href="../reference/writeJson.html">writeJson</a></span><span class="op">(</span><span class="va">OmicObj</span>, <span class="st">"Myc_reduce_mice_liver_24m_obj.json"</span><span class="op">)</span></span></code></pre>
+<p>Besides save and read OmicSignature object in <code>.rds</code>
+format, you can export the object as a json text file.<br></p>
+<pre><code><span><span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">saveRDS</a></span><span class="op">(</span><span class="va">OmS</span>, <span class="st">"Myc_reduce_mice_liver_24m_OmS.rds"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/writeJson.html">writeJson</a></span><span class="op">(</span><span class="va">OmS</span>, <span class="st">"Myc_reduce_mice_liver_24m_OmS.json"</span><span class="op">)</span></span></code></pre>
 <p>See more in <a href="https://montilab.github.io/OmicSignature/articles/FunOmS.html">“Functionalities
 of OmicSignature”</a> section.<br></p>
 </div>
@@ -462,11 +464,11 @@ expert. Simply provide cutoffs (e.g. <code>adj_p_cutoff</code> and
 <code><a href="../reference/OmicSigFromDifexp.html">OmicSigFromDifexp()</a></code> to automatically extract significant
 features and create the <code>OmicSignature</code> object.<br></p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">OmicObj1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/OmicSigFromDifexp.html">OmicSigFromDifexp</a></span><span class="op">(</span><span class="va">difexp</span>, <span class="va">metadata</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">OmS1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/OmicSigFromDifexp.html">OmicSigFromDifexp</a></span><span class="op">(</span><span class="va">difexp</span>, <span class="va">metadata</span><span class="op">)</span></span>
 <span><span class="co">#&gt; -- criterias used to extract signatures:  abs(score) &gt;= 5; adj_p &lt;= 0.05 . </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;   [Success] OmicSignature object Myc_reduce_mice_liver_24m created.</span></span>
-<span><span class="va">OmicObj1</span></span>
+<span><span class="va">OmS1</span></span>
 <span><span class="co">#&gt; Signature Object: </span></span>
 <span><span class="co">#&gt;   Metadata: </span></span>
 <span><span class="co">#&gt;     adj_p_cutoff = 0.05 </span></span>
