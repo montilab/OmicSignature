@@ -120,7 +120,7 @@ Recommended optional fields, if applicable:<br>
 <li><p><strong>signature</strong>, a data frame.<br>
 Required columns:<br>
 “<strong>probe_id</strong>” (unique identifier for each feature)<br>
-“<strong>feature_symbol</strong>” (e.g. ENSEMBL ID, Uniprot ID)<br>
+“<strong>feature_name</strong>” (e.g. ENSEMBL ID, Uniprot ID)<br>
 Required for bi-directional and categorical signatures:
 “<strong>direction</strong>”<br>
 Recommended optional column, if applicable: “score”<br></p></li>
@@ -128,7 +128,7 @@ Recommended optional column, if applicable: “score”<br></p></li>
 expression analysis results.<br>
 Required columns:<br>
 “<strong>probe_id</strong>” (unique identifier for each feature)<br>
-“<strong>feature_symbol</strong>” (e.g. ENSEMBL ID, Uniprot ID)<br>
+“<strong>feature_name</strong>” (e.g. ENSEMBL ID, Uniprot ID)<br>
 Require at least one of the following: “<strong>p_value</strong>”,
 “<strong>q_value</strong>”, or “<strong>adj_p</strong>”.<br>
 Recommended optional column, if applicable: “score”, “gene_symbol”,
@@ -265,18 +265,18 @@ ANOVA.<br></p></li>
 downstream signature extraction.<br></p>
 <p><code>difexp</code> is a dataframe with the following
 <strong>required</strong> columns:<br>
-“<strong>probe_id</strong>”, “<strong>feature_symbol</strong>”, along
-with at least one of the following: “<strong>p_value</strong>”,
+“<strong>probe_id</strong>”, “<strong>feature_name</strong>”, along with
+at least one of the following: “<strong>p_value</strong>”,
 “<strong>q_value</strong>”, or “<strong>adj_p</strong>”.<br></p>
 <p>“<strong>probe_id</strong>” is a unique identifier for each feature.
 If not provided, it will be automatically generated. Common examples
 include unique numbers and probe IDs.<br>
-“<strong>feature_symbol</strong>” is a name that identifies each
-feature, examples include ENSEMBL IDs, UniProt IDs, and Refmet IDs. To
-better identify the features, it is recommended to add an additional
-annotation column(s), e.g., “hgnc_symbol”. For metabolite features, it
-is recommended to include multiple annotation columns is available,
-e.g., HMDB ID and InChI key.<br>
+“<strong>feature_name</strong>” is a name that identifies each feature,
+examples include ENSEMBL IDs, UniProt IDs, and Refmet IDs. To better
+identify the features, it is recommended to add an additional annotation
+column(s), e.g., “hgnc_symbol”. For metabolite features, it is
+recommended to include multiple annotation columns is available, e.g.,
+HMDB ID and InChI key.<br>
 “<strong>p_value</strong>”, “<strong>q_value</strong>”, or
 “<strong>adj_p</strong>” refers to the p- or q-value representing the
 significance of each feature.<br>
@@ -291,7 +291,7 @@ analysis using the <code>limma</code> package.</p>
 <span><span class="co"># )</span></span>
 <span><span class="va">difexp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, package <span class="op">=</span> <span class="st">"OmicSignature"</span><span class="op">)</span>, <span class="st">"difmatrix_Myc_mice_liver_24m.rds"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">difexp</span><span class="op">)</span></span>
-<span><span class="co">#&gt;   Probe.ID  logFC AveExpr      t P.Value adj.P.Val      b     feature_symbol</span></span>
+<span><span class="co">#&gt;   Probe.ID  logFC AveExpr      t P.Value adj.P.Val      b            ensembl</span></span>
 <span><span class="co">#&gt; 1 10345228 -0.167   7.106 -1.470   0.186     0.560 -5.866 ENSMUSG00000103746</span></span>
 <span><span class="co">#&gt; 2 10354534  0.041   4.351  0.520   0.620     0.870 -6.780 ENSMUSG00000060715</span></span>
 <span><span class="co">#&gt; 3 10354529 -0.175   4.955 -0.941   0.379     0.731 -6.458 ENSMUSG00000043629</span></span>
@@ -305,17 +305,14 @@ analysis using the <code>limma</code> package.</p>
 <span><span class="co">#&gt; 4 1700066M21Rik</span></span>
 <span><span class="co">#&gt; 5 1700101I19Rik</span></span>
 <span><span class="co">#&gt; 6 2810025M15Rik</span></span></code></pre></div>
-<p>We can manually modify the column names to match the requirements.
-Alternatively, we can use the built-in function
-<code><a href="../reference/replaceDifexpCol.html">replaceDifexpCol()</a></code> designed to replace some frequently used
-alternative column names.</p>
+<p>Manually change the column names to match the requirement. The
+built-in function <code><a href="../reference/replaceDifexpCol.html">replaceDifexpCol()</a></code> designed to replace
+some frequently used alternative column names.<br></p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">difexp</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/replaceDifexpCol.html">replaceDifexpCol</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">difexp</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning in replaceDifexpCol(colnames(difexp)): Required column for</span></span>
-<span><span class="co">#&gt; OmicSignature object difexp: id, symbol, is not found in your input. This may</span></span>
-<span><span class="co">#&gt; cause problem when creating your OmicSignature object.</span></span>
+<code class="sourceCode R"><span><span class="va">difexp</span> <span class="op">&lt;-</span> <span class="va">difexp</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html" class="external-link">rename</a></span><span class="op">(</span>feature_name <span class="op">=</span> <span class="va">ensembl</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">difexp</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/replaceDifexpCol.html">replaceDifexpCol</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">difexp</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">difexp</span><span class="op">)</span></span>
-<span><span class="co">#&gt;   probe_id  logfc  mean  score p_value adj_p      b     feature_symbol</span></span>
+<span><span class="co">#&gt;   probe_id  logfc  mean  score p_value adj_p      b       feature_name</span></span>
 <span><span class="co">#&gt; 1 10345228 -0.167 7.106 -1.470   0.186 0.560 -5.866 ENSMUSG00000103746</span></span>
 <span><span class="co">#&gt; 2 10354534  0.041 4.351  0.520   0.620 0.870 -6.780 ENSMUSG00000060715</span></span>
 <span><span class="co">#&gt; 3 10354529 -0.175 4.955 -0.941   0.379 0.731 -6.458 ENSMUSG00000043629</span></span>
@@ -334,8 +331,8 @@ alternative column names.</p>
 <h3 id="signature">2.3. Signature<a class="anchor" aria-label="anchor" href="#signature"></a>
 </h3>
 <p><strong>signature</strong> is a dataframe with column
-<strong>“probe_id”</strong> and <strong>“feature_symbol”</strong>. If
-the signature is “bi-directional” or “categorical” (specified in
+<strong>“probe_id”</strong> and <strong>“feature_name”</strong>. If the
+signature is “bi-directional” or “categorical” (specified in
 <code>direction_type</code> in <code>metadata</code>), then column
 <strong>“direction”</strong> is also required.<br>
 An optional column “score” is recommended when applicable.<br></p>
@@ -346,10 +343,10 @@ specified in the metadata.<br></p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">signature</span> <span class="op">&lt;-</span> <span class="va">difexp</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">abs</a></span><span class="op">(</span><span class="va">score</span><span class="op">)</span> <span class="op">&gt;</span> <span class="va">metadata</span><span class="op">$</span><span class="va">score_cutoff</span> <span class="op">&amp;</span> <span class="va">adj_p</span> <span class="op">&lt;</span> <span class="va">metadata</span><span class="op">$</span><span class="va">adj_p_cutoff</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">probe_id</span>, <span class="va">feature_symbol</span>, <span class="va">score</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">probe_id</span>, <span class="va">feature_name</span>, <span class="va">score</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>direction <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">score</span> <span class="op">&gt;</span> <span class="fl">0</span>, <span class="st">"+"</span>, <span class="st">"-"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">signature</span><span class="op">)</span></span>
-<span><span class="co">#&gt;   probe_id     feature_symbol   score direction</span></span>
+<span><span class="co">#&gt;   probe_id       feature_name   score direction</span></span>
 <span><span class="co">#&gt; 1 10346882 ENSMUSG00000025964  -6.990         -</span></span>
 <span><span class="co">#&gt; 2 10353878 ENSMUSG00000067653  -7.867         -</span></span>
 <span><span class="co">#&gt; 3 10349648 ENSMUSG00000004552  14.762         +</span></span>
@@ -357,11 +354,11 @@ specified in the metadata.<br></p>
 <span><span class="co">#&gt; 5 10353192 ENSMUSG00000025932  10.487         +</span></span>
 <span><span class="co">#&gt; 6 10345762 ENSMUSG00000026072 -13.543         -</span></span></code></pre></div>
 <p>Function <code><a href="../reference/standardizeSigDF.html">standardizeSigDF()</a></code> can help remove duplicated
-and empty symbols.</p>
+and empty names.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">signature</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/standardizeSigDF.html">standardizeSigDF</a></span><span class="op">(</span><span class="va">signature</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">signature</span><span class="op">)</span></span>
-<span><span class="co">#&gt;   probe_id     feature_symbol   score direction</span></span>
+<span><span class="co">#&gt;   probe_id       feature_name   score direction</span></span>
 <span><span class="co">#&gt; 1 10349648 ENSMUSG00000004552  14.762         +</span></span>
 <span><span class="co">#&gt; 2 10345762 ENSMUSG00000026072 -13.543         -</span></span>
 <span><span class="co">#&gt; 3 10353192 ENSMUSG00000025932  10.487         +</span></span>
@@ -370,18 +367,18 @@ and empty symbols.</p>
 <span><span class="co">#&gt; 6 10353878 ENSMUSG00000067653  -7.867         -</span></span></code></pre></div>
 <p>Option 2: Manually create signature dataframe.<br>
 For uni-directional signature:<br></p>
-<pre><code><span><span class="va">signature</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span><span class="st">"probe_id"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">3</span><span class="op">)</span>, <span class="st">"feature_symbol"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"gene1"</span>, <span class="st">"gene2"</span>, <span class="st">"gene3"</span><span class="op">)</span><span class="op">)</span></span></code></pre>
+<pre><code><span><span class="va">signature</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span><span class="st">"probe_id"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">3</span><span class="op">)</span>, <span class="st">"feature_name"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"gene1"</span>, <span class="st">"gene2"</span>, <span class="st">"gene3"</span><span class="op">)</span><span class="op">)</span></span></code></pre>
 <p>For bi-directional signature:<br></p>
 <pre><code><span><span class="va">signature</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
 <span>  <span class="st">"probe_id"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">3</span><span class="op">)</span>,</span>
-<span>  <span class="st">"feature_symbol"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"gene1"</span>, <span class="st">"gene2"</span>, <span class="st">"gene3"</span><span class="op">)</span>,</span>
+<span>  <span class="st">"feature_name"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"gene1"</span>, <span class="st">"gene2"</span>, <span class="st">"gene3"</span><span class="op">)</span>,</span>
 <span>  <span class="st">"score"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.45</span>, <span class="op">-</span><span class="fl">3.21</span>, <span class="fl">2.44</span><span class="op">)</span>,</span>
 <span>  <span class="st">"direction"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"+"</span>, <span class="st">"-"</span>, <span class="st">"+"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre>
 <p>For categorical signature:<br></p>
 <pre><code><span><span class="va">signature</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
 <span>  <span class="st">"probe_id"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">3</span>, <span class="fl">4</span><span class="op">)</span>,</span>
-<span>  <span class="st">"feature_symbol"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"gene1"</span>, <span class="st">"gene2"</span>, <span class="st">"gene3"</span>, <span class="st">"gene4"</span><span class="op">)</span>,</span>
+<span>  <span class="st">"feature_name"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"gene1"</span>, <span class="st">"gene2"</span>, <span class="st">"gene3"</span>, <span class="st">"gene4"</span><span class="op">)</span>,</span>
 <span>  <span class="st">"score"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.45</span>, <span class="op">-</span><span class="fl">3.21</span>, <span class="fl">2.44</span>, <span class="op">-</span><span class="fl">2.45</span><span class="op">)</span>,</span>
 <span>  <span class="st">"direction"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"group1"</span>, <span class="st">"group1"</span>, <span class="st">"group2"</span>, <span class="st">"group3"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre>
@@ -443,7 +440,7 @@ messages.<br></p>
 object)</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">OmicObj</span><span class="op">$</span><span class="fu">extractSignature</span><span class="op">(</span><span class="st">"abs(score) &gt; 10; adj_p &lt; 0.01"</span><span class="op">)</span></span>
-<span><span class="co">#&gt;   probe_id     feature_symbol   score direction</span></span>
+<span><span class="co">#&gt;   probe_id       feature_name   score direction</span></span>
 <span><span class="co">#&gt; 1 10349648 ENSMUSG00000004552  14.762         +</span></span>
 <span><span class="co">#&gt; 2 10345762 ENSMUSG00000026072 -13.543         -</span></span>
 <span><span class="co">#&gt; 3 10353192 ENSMUSG00000025932  10.487         +</span></span>
