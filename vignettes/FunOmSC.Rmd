@@ -30,17 +30,17 @@ First, create an `OmicSignatureCollection` object. \
 This is the same code in ["Create OmicSignatureCollection"](https://montilab.github.io/OmicSignature/articles/CreateOmSC.html) section. \
 The following signatures are pseudo results for illustration purpose. \
 ```{r}
-OmicObj1 <- readJson(file.path(system.file("extdata", package = "OmicSignature"), "OmS_example_1.json"))
-OmicObj2 <- readJson(file.path(system.file("extdata", package = "OmicSignature"), "OmS_example_2.json"))
-OmicObj3 <- readJson(file.path(system.file("extdata", package = "OmicSignature"), "OmS_example_3.json"))
+OmS1 <- readJson(file.path(system.file("extdata", package = "OmicSignature"), "OmS_example_1.json"))
+OmS2 <- readJson(file.path(system.file("extdata", package = "OmicSignature"), "OmS_example_2.json"))
+OmS3 <- readJson(file.path(system.file("extdata", package = "OmicSignature"), "OmS_example_3.json"))
 ColMeta <- list(
   "collection_name" = "OmS_example_Collection",
   "description" = "An example of signature collection",
   "organism" = "Mus Musculus",
   "author" = "me"
 )
-OmicCol <- OmicSignatureCollection$new(
-  OmicSigList = list(OmicObj1, OmicObj2, OmicObj3),
+OmSC <- OmicSignatureCollection$new(
+  OmicSigList = list(OmS1, OmS2, OmS3),
   metadata = ColMeta,
   print_message = FALSE
 )
@@ -53,19 +53,19 @@ When parameter "only_shared" is set to be `TRUE`, only shared metadata fields
 among all `OmicSignature` objects will be included. Otherwise, all metadata 
 fields will be included.
 ```{r}
-OmicCol$metadataSummary(only_shared = TRUE)
+OmSC$metadataSummary(only_shared = TRUE)
 ```
 
 ## Extract new signatures from the `OmicSignatureCollection` object
 
 For example, extract all features with a absolute score > 4.5 and p < 0.01 from all the `OmicSignature` object stored in this Collection. The features are ranked by absolute score, if applicable. 
 ```{r}
-OmicCol$extractSignature("abs(score) > 4.5 & p_value < 0.01")
+OmSC$extractSignature("abs(score) > 4.5 & p_value < 0.01")
 ```
 
 If `bind` is set to be `FALSE`, the output of each `OmicSignature` objects are provided as a list. \
 ```{r}
-OmicCol$extractSignature("abs(score) > 4.5 & p_value < 0.01", bind = FALSE)
+OmSC$extractSignature("abs(score) > 4.5 & p_value < 0.01", bind = FALSE)
 ```
 
 </font>

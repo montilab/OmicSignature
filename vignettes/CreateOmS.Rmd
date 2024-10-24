@@ -2,7 +2,7 @@
 title: "Create OmicSignature"
 output: rmarkdown::html_vignette
 author: "Vanessa Mengze Li"
-date: "10/16/2024"
+date: "10/24/2024"
 vignette: >
   %\VignetteIndexEntry{Create OmicSignature}
   %\VignetteEngine{knitr::rmarkdown}
@@ -47,7 +47,7 @@ An `OmicSignature` object contains three parts: \
 
 Create the object: \
 ```
-OmicObj <- OmicSignature$new(
+OmS <- OmicSignature$new(
   metadata = metadata,
   signature = signature,
   difexp = difexp
@@ -220,7 +220,7 @@ signature <- data.frame(
 
 ### 2.4. Create the `OmicSignature` object
 ```{r}
-OmicObj <- OmicSignature$new(
+OmS <- OmicSignature$new(
   metadata = metadata,
   signature = signature,
   difexp = difexp
@@ -229,7 +229,7 @@ OmicObj <- OmicSignature$new(
 
 Set `print_message` = `TRUE` to see the messages. \
 ```{r}
-OmicObj <- OmicSignature$new(
+OmS <- OmicSignature$new(
   metadata = metadata,
   signature = signature,
   difexp = difexp,
@@ -239,18 +239,19 @@ OmicObj <- OmicSignature$new(
 
 See the created object information: 
 ```{r}
-print(OmicObj)
+print(OmS)
 ```
 
 Use new criteria to extract significant features: \
 (this does _not_ change the `signature` saved in the object)
 ```{r}
-OmicObj$extractSignature("abs(score) > 10; adj_p < 0.01")
+OmS$extractSignature("abs(score) > 10; adj_p < 0.01")
 ```
 
-Export the object as a json text file: \
+Besides save and read OmicSignature object in `.rds` format, you can export the object as a json text file. \
 ```
-writeJson(OmicObj, "Myc_reduce_mice_liver_24m_obj.json")
+saveRDS(OmS, "Myc_reduce_mice_liver_24m_OmS.rds")
+writeJson(OmS, "Myc_reduce_mice_liver_24m_OmS.json")
 ```
 
 See more in ["Functionalities of OmicSignature"](https://montilab.github.io/OmicSignature/articles/FunOmS.html) section. \
@@ -259,8 +260,8 @@ See more in ["Functionalities of OmicSignature"](https://montilab.github.io/Omic
 You can by-pass the generating signature process once you are an expert. Simply provide cutoffs (e.g. `adj_p_cutoff` and `score_cutoff`) in the `metadata`, make sure `difexp` has "adj_p" and "score" columns, and use `OmicSigFromDifexp()` to automatically extract significant features and create the `OmicSignature` object. \
 
 ```{r}
-OmicObj1 <- OmicSigFromDifexp(difexp, metadata)
-OmicObj1
+OmS1 <- OmicSigFromDifexp(difexp, metadata)
+OmS1
 ```
 
 </font>

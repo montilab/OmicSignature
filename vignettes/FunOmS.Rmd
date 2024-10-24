@@ -26,18 +26,21 @@ knitr::include_graphics("figs/OmS_function.png")
 ```
 
 ## Read an `OmicSignature` object from a json file
+
+Alternatively, you can read and write the object in `.rds` format as any other R objects. 
+
 ```{r}
-OmicObj <- readJson(file.path(system.file("extdata", package = "OmicSignature"), "Myc_reduce_mice_liver_24m_obj.json"))
+OmS <- readJson(file.path(system.file("extdata", package = "OmicSignature"), "Myc_reduce_mice_liver_24m_OmS.json"))
 ```
 
 ## Write an `OmicSignature` object into a json file
 ```
-writeJson(OmicObj, "Myc_reduce_mice_liver_24m.json")
+writeJson(OmS, "Myc_reduce_mice_liver_24m_OmS.json")
 ```
 
 ## Print and see the metadata
 ```{r}
-OmicObj
+OmS
 ```
 
 
@@ -48,7 +51,7 @@ For example, extract all features with a t-score with absolute value
 higher than 5 and adj_p smaller than 0.01:  
 
 ```{r}
-OmicObj$extractSignature("abs(score) > 5; adj_p < 0.01")
+OmS$extractSignature("abs(score) > 5; adj_p < 0.01")
 ```
 
 </font>
