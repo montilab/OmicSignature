@@ -12,7 +12,7 @@ updated 10/2024
 \describe{
 \item{\code{metadata}}{a list to describe the metadata}
 
-\item{\code{signature}}{a dataframe contains probe_id, feature_symbol, score (optional) and direction (optional)}
+\item{\code{signature}}{a dataframe contains probe_id, feature_name, score (optional) and direction (optional)}
 
 \item{\code{difexp}}{a dataframe for differential expression result}
 
@@ -43,7 +43,7 @@ Create a new OmicSignature object
 \describe{
 \item{\code{metadata}}{required. a list. See `createMetadata` for more information}
 
-\item{\code{signature}}{required. a vector, or a dataframe including columns: "probe_id", "feature_symbol" and "direction", and an optional column "score"}
+\item{\code{signature}}{required. a vector, or a dataframe including columns: "probe_id", "feature_name" and "direction", and an optional column "score"}
 
 \item{\code{difexp}}{optional}
 

@@ -17,7 +17,7 @@
 OmicSigFromDifexp <- function(difexp, metadata, criteria = NULL) {
   ## define the following to pass R check since they are viewed as variables in dplyr functions
   probe_id <- NULL
-  feature_symbol <- NULL
+  feature_name <- NULL
   score <- NULL
   direction <- NULL
 
@@ -53,25 +53,25 @@ OmicSigFromDifexp <- function(difexp, metadata, criteria = NULL) {
   if ("score" %in% colnames(difexp)) {
     if (signatureType %in% c("bi-directional", "categorical")) {
       signatures <- signatures %>%
-        dplyr::select(probe_id, feature_symbol, score, direction) %>%
+        dplyr::select(probe_id, feature_name, score, direction) %>%
         dplyr::arrange(dplyr::desc(abs(score)))
     } else {
       signatures <- signatures %>%
-        dplyr::select(probe_id, feature_symbol, score)
+        dplyr::select(probe_id, feature_name, score)
     }
   } else {
     if (signatureType %in% c("bi-directional", "categorical")) {
       signatures <- signatures %>%
-        dplyr::select(probe_id, feature_symbol, direction)
+        dplyr::select(probe_id, feature_name, direction)
     } else {
       signatures <- signatures %>%
-        dplyr::select(probe_id, feature_symbol)
+        dplyr::select(probe_id, feature_name)
     }
   }
 
   signatures <- signatures %>%
-    dplyr::distinct(feature_symbol, .keep_all = TRUE) %>%
-    filter(feature_symbol != "", complete.cases(.))
+    dplyr::distinct(feature_name, .keep_all = TRUE) %>%
+    filter(feature_name != "", complete.cases(.))
 
   OmicSig <- OmicSignature$new(
     metadata = metadata,

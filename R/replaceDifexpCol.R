@@ -29,7 +29,7 @@ replaceDifexpCol <- function(colname) {
       "adj.p.val" = "adj_p", "adj.p.value" = "adj_p", "adj.p" = "adj_p", "fdr" = "adj_p",
       "q.value" = "q_value", "qval" = "q_value"
     )
-  colnameMissing <- setdiff(c("id", "symbol", "score"), colname)
+  colnameMissing <- setdiff(c("probe_id", "feature_name", "score"), colname)
   if (length(colnameMissing) > 0) {
     warning(
       "Required column for OmicSignature object difexp: ", paste(colnameMissing, collapse = ", "),

@@ -66,7 +66,7 @@ readJson <- function(filename) {
   }
 
   #### sig df ####
-  readSignature <- data.frame("probe_id" = readJson$sig_probe_id, "feature_symbol" = readJson$sig_feature_symbol)
+  readSignature <- data.frame("probe_id" = readJson$sig_probe_id, "feature_name" = readJson$sig_feature_name)
   if (!is.null(readJson$sig_score)) {
     readSignature$score <- readJson$sig_score
   }

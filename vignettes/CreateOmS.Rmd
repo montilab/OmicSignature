@@ -34,14 +34,14 @@ An `OmicSignature` object contains three parts: \
 - **signature**, a data frame. \
   Required columns: \
     "**probe_id**" (unique identifier for each feature) \
-    "**feature_symbol**" (e.g. ENSEMBL ID, Uniprot ID) \
+    "**feature_name**" (e.g. ENSEMBL ID, Uniprot ID) \
   Required for bi-directional and categorical signatures: "**direction**" \
   Recommended optional column, if applicable: "score" \
 
 - **difexp** (optional), a data frame of differential expression analysis results. \
   Required columns: \
     "**probe_id**" (unique identifier for each feature) \
-    "**feature_symbol**" (e.g. ENSEMBL ID, Uniprot ID) \
+    "**feature_name**" (e.g. ENSEMBL ID, Uniprot ID) \
     Require at least one of the following: "**p_value**", "**q_value**", or "**adj_p**". \
   Recommended optional column, if applicable: "score", "gene_symbol", "hgnc_symbol" \
 
@@ -147,10 +147,10 @@ See how to search for the correct term to use in ["Sample Type & Platform Info"]
 A differential expression dataframe is **optional** but **highly recommended** if available. It facilitates downstream signature extraction. \
 
 `difexp` is a dataframe with the following **required** columns: \
-"**probe_id**", "**feature_symbol**", along with at least one of the following: "**p_value**", "**q_value**", or "**adj_p**". \
+"**probe_id**", "**feature_name**", along with at least one of the following: "**p_value**", "**q_value**", or "**adj_p**". \
 
 "**probe_id**" is a unique identifier for each feature. If not provided, it will be automatically generated. Common examples include unique numbers and probe IDs. \
-"**feature_symbol**" is a name that identifies each feature, examples include ENSEMBL IDs, UniProt IDs, and Refmet IDs. To better identify the features, it is recommended to add an additional annotation column(s), e.g., "hgnc_symbol". For metabolite features, it is recommended to include multiple annotation columns is available, e.g., HMDB ID and InChI key. \
+"**feature_name**" is a name that identifies each feature, examples include ENSEMBL IDs, UniProt IDs, and Refmet IDs. To better identify the features, it is recommended to add an additional annotation column(s), e.g., "hgnc_symbol". For metabolite features, it is recommended to include multiple annotation columns is available, e.g., HMDB ID and InChI key. \
 "**p_value**", "**q_value**", or "**adj_p**" refers to the p- or q-value representing the significance of each feature. \
 "score" is a numeric value that indicates the importance or significance of a feature. Common examples include t-test statistics and Z-scores. \
 
@@ -164,15 +164,15 @@ difexp <- readRDS(file.path(system.file("extdata", package = "OmicSignature"), "
 head(difexp)
 ```
 
-We can manually modify the column names to match the requirements. Alternatively, we can use the built-in function `replaceDifexpCol()` designed to replace some 
-frequently used alternative column names. 
+Manually change the column names to match the requirement. The built-in function `replaceDifexpCol()` designed to replace some frequently used alternative column names. \
 ```{r}
+difexp <- difexp %>% rename(feature_name = ensembl)
 colnames(difexp) <- replaceDifexpCol(colnames(difexp))
 head(difexp)
 ```
 
 ### 2.3. Signature 
-**signature** is a dataframe with column **"probe_id"** and **"feature_symbol"**. If the signature is "bi-directional" or "categorical" (specified in `direction_type` in `metadata`), then column **"direction"** is also required. \
+**signature** is a dataframe with column **"probe_id"** and **"feature_name"**. If the signature is "bi-directional" or "categorical" (specified in `direction_type` in `metadata`), then column **"direction"** is also required. \
 An optional column "score" is recommended when applicable. \
 
 Option 1: Extract signature from difexp. \
@@ -181,12 +181,12 @@ In this example, we create a bi-directional signature from the difexp using the 
 ```{r}
 signature <- difexp %>%
   dplyr::filter(abs(score) > metadata$score_cutoff & adj_p < metadata$adj_p_cutoff) %>%
-  dplyr::select(probe_id, feature_symbol, score) %>%
+  dplyr::select(probe_id, feature_name, score) %>%
   dplyr::mutate(direction = ifelse(score > 0, "+", "-"))
 head(signature)
 ```
 
-Function `standardizeSigDF()` can help remove duplicated and empty symbols. 
+Function `standardizeSigDF()` can help remove duplicated and empty names. 
 ```{r}
 signature <- standardizeSigDF(signature)
 head(signature)
@@ -195,14 +195,14 @@ head(signature)
 Option 2: Manually create signature dataframe. \
 For uni-directional signature: \
 ```
-signature <- data.frame("probe_id" = c(1, 2, 3), "feature_symbol" = c("gene1", "gene2", "gene3"))
+signature <- data.frame("probe_id" = c(1, 2, 3), "feature_name" = c("gene1", "gene2", "gene3"))
 ```
 
 For bi-directional signature: \
 ```
 signature <- data.frame(
   "probe_id" = c(1, 2, 3),
-  "feature_symbol" = c("gene1", "gene2", "gene3"),
+  "feature_name" = c("gene1", "gene2", "gene3"),
   "score" = c(0.45, -3.21, 2.44),
   "direction" = c("+", "-", "+")
 )
@@ -212,7 +212,7 @@ For categorical signature: \
 ```
 signature <- data.frame(
   "probe_id" = c(1, 2, 3, 4),
-  "feature_symbol" = c("gene1", "gene2", "gene3", "gene4"),
+  "feature_name" = c("gene1", "gene2", "gene3", "gene4"),
   "score" = c(0.45, -3.21, 2.44, -2.45),
   "direction" = c("group1", "group1", "group2", "group3")
 )

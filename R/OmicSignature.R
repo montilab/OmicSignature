@@ -15,7 +15,7 @@ OmicSignature <-
       #' @description
       #' Create a new OmicSignature object
       #' @param metadata required. a list. See `createMetadata` for more information
-      #' @param signature required. a vector, or a dataframe including columns: "probe_id", "feature_symbol" and "direction", and an optional column "score"
+      #' @param signature required. a vector, or a dataframe including columns: "probe_id", "feature_name" and "direction", and an optional column "score"
       #' @param difexp optional
       #' @param print_message use TRUE if want to see all messages printed
       #' @export
@@ -31,10 +31,10 @@ OmicSignature <-
               paste(head(setdiff(signature$probe_id, difexp$probe_id)), collapse = " ")
             ))
           }
-          if (!all(signature$feature_symbol %in% difexp$feature_symbol)) {
+          if (!all(signature$feature_name %in% difexp$feature_name)) {
             stop(paste(
-              "Some features in signature$feature_symbol are not included in difexp$feature_symbol. Examples:",
-              paste(head(setdiff(signature$feature_symbol, difexp$feature_symbol)), collapse = " ")
+              "Some features in signature$feature_name are not included in difexp$feature_name. Examples:",
+              paste(head(setdiff(signature$feature_name, difexp$feature_name)), collapse = " ")
             ))
           }
         }
@@ -89,35 +89,35 @@ OmicSignature <-
         if ("score" %in% colnames(difexp)) {
           if (direction_type == "uni-directional") {
             res <- res %>%
-              dplyr::select(probe_id, feature_symbol, score) %>%
+              dplyr::select(probe_id, feature_name, score) %>%
               dplyr::filter(score != "") %>%
               dplyr::arrange(desc(abs(score)))
           } else if (direction_type == "bi-directional") {
             res <- res %>%
-              dplyr::select(probe_id, feature_symbol, score) %>%
+              dplyr::select(probe_id, feature_name, score) %>%
               dplyr::filter(score != "") %>%
               dplyr::mutate(direction = ifelse(score < 0, "-", "+")) %>%
               dplyr::arrange(desc(abs(score)))
           } else if (direction_type == "categorical") {
             res <- res %>%
-              dplyr::select(probe_id, feature_symbol, score, direction) %>%
+              dplyr::select(probe_id, feature_name, score, direction) %>%
               dplyr::filter(score != "", ) %>%
               dplyr::arrange(desc(abs(score)))
           }
         } else {
           if (direction_type == "uni-directional") {
             res <- res %>%
-              dplyr::select(probe_id, feature_symbol)
+              dplyr::select(probe_id, feature_name)
           } else {
             res <- res %>%
               dplyr::filter(!!!v) %>%
-              dplyr::select(probe_id, feature_symbol, direction)
+              dplyr::select(probe_id, feature_name, direction)
           }
         }
 
         res <- res %>%
-          dplyr::filter(feature_symbol != "", complete.cases(.)) %>%
-          dplyr::distinct(feature_symbol, .keep_all = TRUE) %>%
+          dplyr::filter(feature_name != "", complete.cases(.)) %>%
+          dplyr::distinct(feature_name, .keep_all = TRUE) %>%
           dplyr::mutate(direction = as.character(direction))
 
         return(res)
@@ -134,7 +134,7 @@ OmicSignature <-
           private$.metadata <- private$checkMetadata(value, print_message)
         }
       },
-      #' @field signature a dataframe contains probe_id, feature_symbol, score (optional) and direction (optional)
+      #' @field signature a dataframe contains probe_id, feature_name, score (optional) and direction (optional)
       signature = function(value, print_message = FALSE) {
         if (missing(value)) {
           private$.signature
@@ -186,7 +186,7 @@ OmicSignature <-
         ## require any of p_value, q_value, or adj_p
         exist_p_columns <- intersect(colnames(difexp), c("p_value", "q_value", "adj_p"))
         if (length(exist_p_columns) > 0) {
-          difexpColRequired <- c("probe_id", "feature_symbol", exist_p_columns)
+          difexpColRequired <- c("probe_id", "feature_name", exist_p_columns)
         } else {
           stop("difexp requires at least one of the following columns: p_value, q_value, adj_p.")
         }
@@ -208,10 +208,10 @@ OmicSignature <-
             }
           }
         }
-        ## "feature_symbol" should be character
-        if ("feature_symbol" %in% colnames(difexp)) {
-          if (!is(difexp$feature_symbol, "character")) {
-            stop("difexp: feature_symbol is not character.")
+        ## "feature_name" should be character
+        if ("feature_name" %in% colnames(difexp)) {
+          if (!is(difexp$feature_name, "character")) {
+            stop("difexp: feature_name is not character.")
           }
         }
         private$verbose(v, "  [Success] difexp is valid. \n")
@@ -320,7 +320,7 @@ OmicSignature <-
         signature <- standardizeSigDF(signature)
 
         ## check column names
-        signatureColRequired <- c("probe_id", "feature_symbol")
+        signatureColRequired <- c("probe_id", "feature_name")
         if (signatureType != "uni-directional") {
           signatureColRequired <- c(signatureColRequired, "direction")
         }

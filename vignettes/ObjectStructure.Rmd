@@ -23,7 +23,7 @@ knitr::include_graphics("figs/OmS_OmSC_structure.png")
 ## OmicSignature object structure
 An `OmicSignature` object contains three parts:  
  - **metadata**, a list containing metadata fields;  
- - **signature**, a dataframe with feature symbols, directions, and scores if applicable;  
+ - **signature**, a dataframe with feature names, directions, and scores if applicable;  
  - **difexp**, optional, a dataframe with the differential expression analysis result.  
 
 See [here](https://montilab.github.io/OmicSignature/articles/CreateOmS.html) about how to create one. 

@@ -9,10 +9,10 @@
 #' @export
 standardizeSigDF <- function(sigdf) {
   sigdf <- sigdf %>%
-    dplyr::filter(feature_symbol != "") %>%
+    dplyr::filter(feature_name != "") %>%
     dplyr::mutate(
       probe_id = as.character(probe_id),
-      feature_symbol = as.character(feature_symbol)
+      feature_name = as.character(feature_name)
     )
   if ("score" %in% colnames(sigdf)) {
     sigdf <- sigdf %>%

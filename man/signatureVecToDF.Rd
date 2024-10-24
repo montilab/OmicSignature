@@ -8,12 +8,12 @@ updated 10/2024}
 signatureVecToDF(input, bi_directional = FALSE)
 }
 \arguments{
-\item{input}{a character vector of the symbol of the signature, or a numeric vector which names are signature symbols and values are scores.}
+\item{input}{a character vector of the significant feature names, or a numeric vector which names are feature names and values are scores.}
 
 \item{bi_directional}{logical.}
 }
 \value{
-signature dataframe with columns "feature_symbol", along with "score" and "direction" if applicable
+signature dataframe with columns "feature_name", along with "score" and "direction" if applicable
 }
 \description{
 change a signature vector into a dataframe to be saved into OmicSignature object

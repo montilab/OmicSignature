@@ -1,8 +1,8 @@
 #' @title change a signature vector into a dataframe to be saved into OmicSignature object
 #' updated 10/2024
-#' @param input a character vector of the symbol of the signature, or a numeric vector which names are signature symbols and values are scores.
+#' @param input a character vector of the significant feature names, or a numeric vector which names are feature names and values are scores.
 #' @param bi_directional logical.
-#' @return signature dataframe with columns "feature_symbol", along with "score" and "direction" if applicable
+#' @return signature dataframe with columns "feature_name", along with "score" and "direction" if applicable
 #' @examples
 #' signatures <- c("gene1", "gene2", "gene3")
 #' signatureVecToDF(signatures)
@@ -16,7 +16,7 @@ signatureVecToDF <- function(input, bi_directional = FALSE) {
   if (is.numeric(input) & !is.null(names(input))) {
     DF <- data.frame(
       "probe_id" = seq(length(input)),
-      "feature_symbol" = names(input),
+      "feature_name" = names(input),
       "score" = input
     )
     if (bi_directional) {
@@ -28,7 +28,7 @@ signatureVecToDF <- function(input, bi_directional = FALSE) {
   } else if (is.character(input) | is.factor(input)) {
     DF <- data.frame(
       "probe_id" = seq(length(input)),
-      "feature_symbol" = as.character(input)
+      "feature_name" = as.character(input)
     )
   } else {
     stop("input signature vector is not valid. See `signatureVecToDF()`. ")
