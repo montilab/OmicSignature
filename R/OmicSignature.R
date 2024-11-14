@@ -183,14 +183,14 @@ OmicSignature <-
         if (!"probe_id" %in% colnames(difexp)) {
           difexp <- difexp %>% mutate(probe_id = seq(nrow(difexp)), .before = everything())
         }
+        difexpColRequired <- c("probe_id", "feature_name", "score")
         ## require any of p_value, q_value, or adj_p
         exist_p_columns <- intersect(colnames(difexp), c("p_value", "q_value", "adj_p"))
         if (length(exist_p_columns) > 0) {
-          difexpColRequired <- c("probe_id", "feature_name", exist_p_columns)
+          difexpColRequired <- c(difexpColRequired, exist_p_columns)
         } else {
           stop("difexp requires at least one of the following columns: p_value, q_value, adj_p.")
         }
-
         difexpColMissing <- setdiff(difexpColRequired, colnames(difexp))
         if (length(difexpColMissing) > 0) {
           stop("Differential expression result (difexp) does not contain required column(s): ",

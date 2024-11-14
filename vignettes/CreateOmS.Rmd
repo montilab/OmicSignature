@@ -42,8 +42,9 @@ An `OmicSignature` object contains three parts: \
   Required columns: \
     "**probe_id**" (unique identifier for each feature) \
     "**feature_name**" (e.g. ENSEMBL ID, Uniprot ID) \
-    Require at least one of the following: "**p_value**", "**q_value**", or "**adj_p**". \
-  Recommended optional column, if applicable: "score", "gene_symbol", "hgnc_symbol" \
+    "**score**" \
+    At least one of the following: "**p_value**", "**q_value**", or "**adj_p**". \
+  Recommended optional column, if applicable: "gene_symbol" \
 
 Create the object: \
 ```
@@ -147,10 +148,10 @@ See how to search for the correct term to use in ["Sample Type & Platform Info"]
 A differential expression dataframe is **optional** but **highly recommended** if available. It facilitates downstream signature extraction. \
 
 `difexp` is a dataframe with the following **required** columns: \
-"**probe_id**", "**feature_name**", along with at least one of the following: "**p_value**", "**q_value**", or "**adj_p**". \
+"**probe_id**", "**feature_name**", "**score**", along with at least one of the following: "**p_value**", "**q_value**", or "**adj_p**". \
 
 "**probe_id**" is a unique identifier for each feature. If not provided, it will be automatically generated. Common examples include unique numbers and probe IDs. \
-"**feature_name**" is a name that identifies each feature, examples include ENSEMBL IDs, UniProt IDs, and Refmet IDs. To better identify the features, it is recommended to add an additional annotation column(s), e.g., "hgnc_symbol". For metabolite features, it is recommended to include multiple annotation columns is available, e.g., HMDB ID and InChI key. \
+"**feature_name**" is a name that identifies each feature, examples include ENSEMBL IDs, UniProt IDs, and Refmet IDs. To better identify the features, it is recommended to add an additional annotation column(s), e.g., "gene_symbol". For metabolite features, it is recommended to include multiple annotation columns is available, e.g., HMDB ID and InChI key. \
 "**p_value**", "**q_value**", or "**adj_p**" refers to the p- or q-value representing the significance of each feature. \
 "score" is a numeric value that indicates the importance or significance of a feature. Common examples include t-test statistics and Z-scores. \
 
