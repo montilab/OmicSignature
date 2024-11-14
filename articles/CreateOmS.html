@@ -129,10 +129,10 @@ expression analysis results.<br>
 Required columns:<br>
 “<strong>probe_id</strong>” (unique identifier for each feature)<br>
 “<strong>feature_name</strong>” (e.g. ENSEMBL ID, Uniprot ID)<br>
-Require at least one of the following: “<strong>p_value</strong>”,
+“<strong>score</strong>”<br>
+At least one of the following: “<strong>p_value</strong>”,
 “<strong>q_value</strong>”, or “<strong>adj_p</strong>”.<br>
-Recommended optional column, if applicable: “score”, “gene_symbol”,
-“hgnc_symbol”<br></p></li>
+Recommended optional column, if applicable: “gene_symbol”<br></p></li>
 </ul>
 <p>Create the object:<br></p>
 <pre><code><span><span class="va">OmS</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/OmicSignature.html">OmicSignature</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span></span>
@@ -265,16 +265,17 @@ ANOVA.<br></p></li>
 downstream signature extraction.<br></p>
 <p><code>difexp</code> is a dataframe with the following
 <strong>required</strong> columns:<br>
-“<strong>probe_id</strong>”, “<strong>feature_name</strong>”, along with
-at least one of the following: “<strong>p_value</strong>”,
-“<strong>q_value</strong>”, or “<strong>adj_p</strong>”.<br></p>
+“<strong>probe_id</strong>”, “<strong>feature_name</strong>”,
+“<strong>score</strong>”, along with at least one of the following:
+“<strong>p_value</strong>”, “<strong>q_value</strong>”, or
+“<strong>adj_p</strong>”.<br></p>
 <p>“<strong>probe_id</strong>” is a unique identifier for each feature.
 If not provided, it will be automatically generated. Common examples
 include unique numbers and probe IDs.<br>
 “<strong>feature_name</strong>” is a name that identifies each feature,
 examples include ENSEMBL IDs, UniProt IDs, and Refmet IDs. To better
 identify the features, it is recommended to add an additional annotation
-column(s), e.g., “hgnc_symbol”. For metabolite features, it is
+column(s), e.g., “gene_symbol”. For metabolite features, it is
 recommended to include multiple annotation columns is available, e.g.,
 HMDB ID and InChI key.<br>
 “<strong>p_value</strong>”, “<strong>q_value</strong>”, or
