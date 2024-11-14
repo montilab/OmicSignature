@@ -21,7 +21,7 @@ replaceDifexpCol <- function(colname) {
     dplyr::recode(
       # old = new
       "t" = "score",
-      "gene_symbol" = "gene_name", "gene.symbol" = "gene_name",
+      "gene.symbol" = "gene_symbol", "hgnc_symbol" = "gene_symbol",
       "aveexpr" = "mean", "average" = "mean",
       "probe.id" = "probe_id", "probe" = "probe_id", "id" = "probe_id",
       "log2fc" = "logfc", "log.fold.change" = "logfc",
