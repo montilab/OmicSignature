@@ -259,19 +259,16 @@ OmicSignature <-
 
         # check if sample_type is a valid BRENDA term
         if (is.null(metadata$sample_type)) metadata$sample_type <- "unknown"
-
-        if (!BRENDAExistName(metadata$sample_type) | metadata$sample_type == "unknown") {
-          warning(paste(
-            "sample_type is missing or is not a valid BRENDA ontology term. Set to be unknown.",
-            "If this is a mistake, use BRENDASearch() to search for the correct term to use.",
-            sep = "\n"
-          ))
+        if (!BRENDAExistName(metadata$sample_type)) {
+          metadata$sample_type <- "unknown"
+          warning("sample_type is not a valid BRENDA ontology term. Set to be unknown.")
         }
 
         # check if platform is a valid GPL platform
         if (is.null(metadata$platform)) metadata$platform <- "GPLXXXXX"
         if (!metadata$platform %in% GEOplatform$Accession) {
-          warning("platform is not a valid GEO platform accession ID. Ignore this if it's intentional.")
+          metadata$platform <- "unknown"
+          warning("platform is not a valid GEO platform accession ID. Set to be unknown.")
         }
         private$verbose(v, "  [Success] Metadata is saved. \n")
         metadata <- metadata[order(names(metadata))]
