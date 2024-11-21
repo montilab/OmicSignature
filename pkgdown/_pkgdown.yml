@@ -1,8 +1,10 @@
+destination: docs
+
 template:
   bootstrap: 5
   bootswatch: spacelab
 
-url: https://montilab.github.io/OmicSignature
+url: https://montilab.github.io/OmicSignature/
 
 navbar:
   title: "OmicSignature"
