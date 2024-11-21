@@ -8,11 +8,12 @@ Contact: Vanessa Mengze Li \
 
 10/16/2024
 
+### Github Link
+[montilab/OmicSignature](https://github.com/montilab/OmicSignature) 
+
 ### Installation
 
 `devtools::install_github(repo = "montilab/OmicSignature")` 
-
-Github Link: [montilab/OmicSignature](https://github.com/montilab/OmicSignature). 
 
 ### Description
 
