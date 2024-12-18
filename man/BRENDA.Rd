@@ -5,7 +5,7 @@
 \alias{BRENDA}
 \title{BRENDA tissue ontology obo file. using version 2021/10}
 \format{
-An object of class \code{data.frame} with 6564 rows and 2 columns.
+An object of class \code{data.frame} with 6565 rows and 2 columns.
 }
 \usage{
 BRENDA

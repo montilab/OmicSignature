@@ -4,7 +4,7 @@
 #' @description a R6 object to store signatures generated from experiments. In cluding metadata, signature, and an optional differential expression analysis result dataframe.
 #' updated 10/2024
 #' @importFrom R6 R6Class
-#' @importFrom dplyr filter select mutate arrange distinct recode bind_rows %>%
+#' @importFrom dplyr filter select mutate relocate arrange distinct recode bind_rows %>%
 #' @importFrom jsonlite toJSON fromJSON
 #' @export
 OmicSignature <-
@@ -20,28 +20,35 @@ OmicSignature <-
       #' @param print_message use TRUE if want to see all messages printed
       #' @export
       initialize = function(metadata, signature, difexp = NULL, print_message = FALSE) {
+        ## if probe_id is not provided, setup numeric counter as probe_id
+        if (!is.null(difexp)) {
+          if (!"probe_id" %in% colnames(difexp)) {
+            difexp <- difexp %>% dplyr::mutate(probe_id = paste0("feature_", seq(nrow(difexp))), .before = everything())
+          }
+          signature$probe_id <- NULL
+          signature <- merge(
+            x = difexp[, c("probe_id", "feature_name")],
+            y = signature, by = "feature_name", all.x = FALSE, all.y = TRUE
+          )
+          signature <- signature %>% dplyr::relocate(probe_id, .before = everything())
+        } else {
+          signature <- signature %>%
+            dplyr::mutate(probe_id = seq(paste0("feature_", nrow(signature))), .before = everything())
+        }
+
         private$.metadata <- private$checkMetadata(metadata, v = print_message)
         private$.signature <- private$checkSignature(signature, signatureType = metadata$direction_type, v = print_message)
         if (!is.null(difexp)) {
           difexp <- private$checkDifexp(difexp, v = print_message)
           private$.difexp <- difexp
           if (!all(signature$probe_id %in% difexp$probe_id)) {
-            stop(paste(
-              "Some features in signature$probe_id are not included in difexp$probe_id. Examples:",
-              paste(head(setdiff(signature$probe_id, difexp$probe_id)), collapse = " ")
-            ))
+            stop("Some probe_id in the signature are not included in the probe_id in the difexp.")
           }
           if (!all(signature$feature_name %in% difexp$feature_name)) {
-            stop(paste(
-              "Some features in signature$feature_name are not included in difexp$feature_name. Examples:",
-              paste(head(setdiff(signature$feature_name, difexp$feature_name)), collapse = " ")
-            ))
+            stop("Some feature_name in the signature are not included in the feature_name in the difexp.")
           }
         }
-        cat(paste(
-          "  [Success] OmicSignature object",
-          private$.metadata$signature_name, "created.\n"
-        ))
+        cat(paste("  [Success] OmicSignature object", private$.metadata$signature_name, "created.\n"))
       },
       #' @description
       #' Print an OmicSignature object
@@ -179,10 +186,6 @@ OmicSignature <-
         if (nrow(difexp) == 0) stop("difexp is empty. ")
 
         ## check column names:
-        ## if probe_id is not provided, setup numeric counter as probe_id
-        if (!"probe_id" %in% colnames(difexp)) {
-          difexp <- difexp %>% mutate(probe_id = seq(nrow(difexp)), .before = everything())
-        }
         difexpColRequired <- c("probe_id", "feature_name", "score")
         ## require any of p_value, q_value, or adj_p
         exist_p_columns <- intersect(colnames(difexp), c("p_value", "q_value", "adj_p"))
@@ -221,10 +224,7 @@ OmicSignature <-
         stopifnot(is(metadata, "list"))
 
         # check required metadata fields
-        metadataRequired <- c(
-          "signature_name", "organism", "direction_type", "assay_type",
-          "phenotype"
-        )
+        metadataRequired <- c("signature_name", "phenotype", "organism", "direction_type", "assay_type")
         metadataMissing <- setdiff(metadataRequired, names(metadata))
         private$verbose(v, paste("  --Required attributes for metadata: ",
           paste(metadataRequired, collapse = ", "), " --\n",
