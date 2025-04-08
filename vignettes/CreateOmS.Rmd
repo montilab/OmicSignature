@@ -57,19 +57,16 @@ OmS <- OmicSignature$new(
 
 ## 2. Create an `OmicSignature` Object Step-by-Step
 
-The example provided below is from an experiment for Myc gene reduce in mice. Signatures were extracted by comparing the liver of treatment and control when mice is 24-month old. To save space, only the result of 1000 genes are included. \
-
-This is a bi-directional signature example, which contains up and down regulated features (genes). \
+The example provided below is from an experiment evaluating the effects of Myc reduced expression by comparing liver profiles of 24-month old _Myc_$^{+/+}$ _vs._ _Myc_$^{+/-}$ mice. This is a _bi-directional_ signature example, since it contains up and down regulated features (genes). For ease of exposition, only the top 1000 genes are here included. \
 
 ### 2.1. Metadata
 A list with the following required fields: \
-"**signature_name**", "**organism**", "**direction_type**", "**assay_type**", "**phenotype**". \
+    "**signature_name**", "**organism**", "**direction_type**", "**assay_type**", "**phenotype**". \
 Not required, but highly recommended fields: \
-"**platform**", "**sample_type**", "**description**", \
-"**covariates**", "**score_cutoff**", "**adj_p_cutoff**", "**logfc_cutoff**". \
+    "**platform**", "**sample_type**", "**description**", "**covariates**", "**score_cutoff**", "**adj_p_cutoff**", "**logfc_cutoff**". \
 
-"phenotype" is a one or two-word description of a topic, such as a drug treatment, a gene knock out, or a research area. For example, longevity and breast cancer. \
-Providing a detailed "description" is highly recommended. For instance, it may include information about how the treatment was administered and how each group was defined. \
+"phenotype" is a free text, one or two-word description of a topic, such as a drug treatment, a gene knock out, or a clinical trait. For example, _age_ or _breast cancer_. \
+Providing a detailed (free text) "description" is highly recommended. For instance, it may include information about how the treatment was administered and how each group was defined. \
 
 Option 1: Create `metadata` by hand. This is not recommended, because typos can occur. \
 ```
@@ -98,7 +95,7 @@ metadata <- createMetadata(
 
   # optional and recommended:
   covariates = "none",
-  description = "mice MYC reduced expression",
+  description = "mice Myc haploinsufficient (Myc(+/-))",
   platform = "GPL6246", # use GEO platform ID
   sample_type = "liver", # use BRENDA ontology
 
