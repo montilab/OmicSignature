@@ -78,8 +78,6 @@ Li</h4>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org/reference/load_all.html" class="external-link">load_all</a></span><span class="op">(</span><span class="st">"."</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Loading <span style="color: #0000BB;">OmicSignature</span></span></span></code></pre>
-<pre><code><span><span class="co">## Error in get(paste0(generic, ".", class), envir = get_method_env()) : </span></span>
-<span><span class="co">##   object 'type_sum.accel' not found</span></span></code></pre>
 <p>We use BRENDA tissue ontology to indicate the tissue or cell-line of
 a signature, and GEO platform accession id for platform records.<br>
 BRENDA tissue ontology version: <strong>10/2021</strong>. The OBO file
@@ -97,7 +95,7 @@ Set <code>contain_all = TRUE</code> to show results include all search
 terms.<br>
 Set <code>contain_all = FALSE</code> to show results include any of the
 search terms.<br></p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/searchSampleType.html">searchSampleType</a></span><span class="op">(</span><span class="st">"mcf cell"</span>, contain_all <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##               ID              Name</span></span>
 <span><span class="co">## 95   BTO:0000093        MCF-7 cell</span></span>
@@ -110,7 +108,7 @@ search terms.<br></p>
 <span><span class="co">## 5189 BTO:0005192    MCF-7/adr cell</span></span>
 <span><span class="co">## 5967 BTO:0005970   MCF-7/LCC9 cell</span></span>
 <span><span class="co">## 6395 BTO:0006398    MCF-10-2A cell</span></span></code></pre>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/searchSampleType.html">searchSampleType</a></span><span class="op">(</span><span class="st">"MCF-10 MCF-7"</span>, contain_all <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##               ID              Name</span></span>
 <span><span class="co">## 95   BTO:0000093        MCF-7 cell</span></span>
@@ -121,7 +119,7 @@ search terms.<br></p>
 <span><span class="co">## 3900 BTO:0003900      MCF-10F cell</span></span>
 <span><span class="co">## 5124 BTO:0005127 MCF-10A neoT cell</span></span>
 <span><span class="co">## 6395 BTO:0006398    MCF-10-2A cell</span></span></code></pre>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/searchPlatform.html">searchPlatform</a></span><span class="op">(</span><span class="st">"illumina hiseq 3000"</span>, organism <span class="op">=</span> <span class="st">"Homo Sapiens"</span>, contain_all <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##       Accession</span></span>
 <span><span class="co">## 2681   GPL31935</span></span>
@@ -156,7 +154,7 @@ search terms.<br></p>
 <span><span class="co">## 8304             Homo sapiens;Human gammaherpesvirus 8</span></span>
 <span><span class="co">## 10569                                     Homo sapiens</span></span></code></pre>
 <p>Show only accession id:</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/searchPlatform.html">searchPlatform</a></span><span class="op">(</span><span class="st">"illumina hiseq 3000"</span>, organism <span class="op">=</span> <span class="st">"Homo Sapiens"</span>, contain_all <span class="op">=</span> <span class="cn">TRUE</span>, accession_only <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] "GPL31935" "GPL30008" "GPL27044" "GPL26864" "GPL24496" "GPL23888" "GPL21290"</span></span></code></pre>
 </div>

@@ -76,8 +76,6 @@ Li</h4>
     
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org/reference/load_all.html" class="external-link">load_all</a></span><span class="op">(</span><span class="st">"."</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Error in get(paste0(generic, ".", class), envir = get_method_env()) : </span></span>
-<span><span class="co">#&gt;   object 'type_sum.accel' not found</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span></code></pre></div>
 <p><font color="#000000"></font></p>
 <div class="section level2">
@@ -120,12 +118,14 @@ Recommended optional column, if applicable: “gene_symbol”<br></p></li>
 <div class="section level2">
 <h2 id="create-an-omicsignature-object-step-by-step">2. Create an <code>OmicSignature</code> Object Step-by-Step<a class="anchor" aria-label="anchor" href="#create-an-omicsignature-object-step-by-step"></a>
 </h2>
-<p>The example provided below is from an experiment for Myc gene reduce
-in mice. Signatures were extracted by comparing the liver of treatment
-and control when mice is 24-month old. To save space, only the result of
-1000 genes are included.<br></p>
-<p>This is a bi-directional signature example, which contains up and
-down regulated features (genes).<br></p>
+<p>The example provided below is from an experiment evaluating the
+effects of Myc reduced expression by comparing liver profiles of
+24-month old
+<em>Myc</em><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi></mi><mrow><mi>+</mi><mi>/</mi><mo>+</mo></mrow></msup><annotation encoding="application/x-tex">^{+/+}</annotation></semantics></math><em>vs.</em>
+<em>Myc</em><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi></mi><mrow><mi>+</mi><mi>/</mi><mo>−</mo></mrow></msup><annotation encoding="application/x-tex">^{+/-}</annotation></semantics></math>
+mice. This is a <em>bi-directional</em> signature example, since it
+contains up and down regulated features (genes). For ease of exposition,
+only the top 1000 genes are here included.<br></p>
 <div class="section level3">
 <h3 id="metadata">2.1. Metadata<a class="anchor" aria-label="anchor" href="#metadata"></a>
 </h3>
@@ -135,15 +135,15 @@ down regulated features (genes).<br></p>
 “<strong>phenotype</strong>”.<br>
 Not required, but highly recommended fields:<br>
 “<strong>platform</strong>”, “<strong>sample_type</strong>”,
-“<strong>description</strong>”,<br>
-“<strong>covariates</strong>”, “<strong>score_cutoff</strong>”,
-“<strong>adj_p_cutoff</strong>”, “<strong>logfc_cutoff</strong>”.<br></p>
-<p>“phenotype” is a one or two-word description of a topic, such as a
-drug treatment, a gene knock out, or a research area. For example,
-longevity and breast cancer.<br>
-Providing a detailed “description” is highly recommended. For instance,
-it may include information about how the treatment was administered and
-how each group was defined.<br></p>
+“<strong>description</strong>”, “<strong>covariates</strong>”,
+“<strong>score_cutoff</strong>”, “<strong>adj_p_cutoff</strong>”,
+“<strong>logfc_cutoff</strong>”.<br></p>
+<p>“phenotype” is a free text, one or two-word description of a topic,
+such as a drug treatment, a gene knock out, or a clinical trait. For
+example, <em>age</em> or <em>breast cancer</em>.<br>
+Providing a detailed (free text) “description” is highly recommended.
+For instance, it may include information about how the treatment was
+administered and how each group was defined.<br></p>
 <p>Option 1: Create <code>metadata</code> by hand. This is not
 recommended, because typos can occur.<br></p>
 <pre><code><span><span class="va">metadata</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
@@ -171,7 +171,7 @@ field.<br></p>
 <span></span>
 <span>  <span class="co"># optional and recommended:</span></span>
 <span>  covariates <span class="op">=</span> <span class="st">"none"</span>,</span>
-<span>  description <span class="op">=</span> <span class="st">"mice MYC reduced expression"</span>,</span>
+<span>  description <span class="op">=</span> <span class="st">"mice Myc haploinsufficient (Myc(+/-))"</span>,</span>
 <span>  platform <span class="op">=</span> <span class="st">"GPL6246"</span>, <span class="co"># use GEO platform ID</span></span>
 <span>  sample_type <span class="op">=</span> <span class="st">"liver"</span>, <span class="co"># use BRENDA ontology</span></span>
 <span></span>
@@ -392,7 +392,7 @@ messages.<br></p>
 <span><span class="co">#&gt;     adj_p_cutoff = 0.05 </span></span>
 <span><span class="co">#&gt;     assay_type = transcriptomics </span></span>
 <span><span class="co">#&gt;     covariates = none </span></span>
-<span><span class="co">#&gt;     description = mice MYC reduced expression </span></span>
+<span><span class="co">#&gt;     description = mice Myc haploinsufficient (Myc(+/-)) </span></span>
 <span><span class="co">#&gt;     direction_type = bi-directional </span></span>
 <span><span class="co">#&gt;     keywords = Myc, KO, longevity </span></span>
 <span><span class="co">#&gt;     organism = Mus Musculus </span></span>
@@ -451,7 +451,7 @@ features and create the <code>OmicSignature</code> object.<br></p>
 <span><span class="co">#&gt;     adj_p_cutoff = 0.05 </span></span>
 <span><span class="co">#&gt;     assay_type = transcriptomics </span></span>
 <span><span class="co">#&gt;     covariates = none </span></span>
-<span><span class="co">#&gt;     description = mice MYC reduced expression </span></span>
+<span><span class="co">#&gt;     description = mice Myc haploinsufficient (Myc(+/-)) </span></span>
 <span><span class="co">#&gt;     direction_type = bi-directional </span></span>
 <span><span class="co">#&gt;     keywords = Myc, KO, longevity </span></span>
 <span><span class="co">#&gt;     organism = Mus Musculus </span></span>
