@@ -90,7 +90,7 @@ createMetadata <- function(signature_name, organism, phenotype = "unknown", assa
     if (!BRENDAExistName(sample_type)) {
       warning(paste0(
         "sample_type is not a valid BRENDA ontology term. Ignore this message if intentional. \n",
-        "Use BRENDASearch() to search for the correct BRENDA ontology term to use. \n"
+        "Use searchSampleType() to search for the correct BRENDA ontology term to use. \n"
       ))
     }
   }
@@ -103,7 +103,7 @@ createMetadata <- function(signature_name, organism, phenotype = "unknown", assa
   } else if (!platform %in% GEOplatform$Accession) {
     warning(paste0(
       "Input platform is not a valid GEO platform accession ID. Ignore this message if intentional. \n",
-      "Use `GEOPlatformSearch()` to search for the correct accession ID to use. \n"
+      "Use `searchPlatform()` to search for the correct accession ID to use. \n"
     ))
   }
 
