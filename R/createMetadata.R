@@ -96,13 +96,12 @@ createMetadata <- function(signature_name, organism, phenotype = "unknown", assa
   }
 
   # check if platform is valid
-  platform <- toupper(platform)
   if (is.null(platform) | platform == "unknown") {
     platform <- "unknown"
     warning("Platform information unknown. Ignore this message if intentional. ")
   } else if (!platform %in% predefined_platforms) {
     warning(paste0(
-      "Input platform is not a valid platform. Ignore this message if intentional. \n",
+      "Input platform is not in the pre-defined list. Ignore this message if intentional. \n",
       "Use `searchPlatform()` to search for the correct accession ID to use. \n"
     ))
   }
