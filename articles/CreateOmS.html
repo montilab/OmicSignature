@@ -66,7 +66,7 @@
                         <h4 data-toc-skip class="author">Vanessa Mengze
 Li</h4>
             
-            <h4 data-toc-skip class="date">10/24/2024</h4>
+            <h4 data-toc-skip class="date">05/15/2025</h4>
       
 
       <div class="d-none name"><code>CreateOmS.Rmd</code></div>
@@ -142,7 +142,7 @@ Not required, but highly recommended fields:<br>
 recommended, because typos can occur.<br></p>
 <pre><code><span><span class="va">metadata</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>  <span class="st">"signature_name"</span> <span class="op">=</span> <span class="va">Myc_reduce_mice_liver_24m</span>,</span>
-<span>  <span class="st">"organism"</span> <span class="op">=</span> <span class="st">"Mus Musculus"</span>,</span>
+<span>  <span class="st">"organism"</span> <span class="op">=</span> <span class="st">"Mus musculus"</span>,</span>
 <span>  <span class="st">"sample_type"</span> <span class="op">=</span> <span class="st">"liver"</span>,</span>
 <span>  <span class="st">"phenotype"</span> <span class="op">=</span> <span class="st">"Myc_reduce"</span>,</span>
 <span>  <span class="st">"direction_type"</span> <span class="op">=</span> <span class="st">"bi-directional"</span>,</span>
@@ -158,7 +158,7 @@ field.<br></p>
 <code class="sourceCode R"><span><span class="va">metadata</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/createMetadata.html">createMetadata</a></span><span class="op">(</span></span>
 <span>  <span class="co"># required attributes:</span></span>
 <span>  signature_name <span class="op">=</span> <span class="st">"Myc_reduce_mice_liver_24m"</span>,</span>
-<span>  organism <span class="op">=</span> <span class="st">"Mus Musculus"</span>,</span>
+<span>  organism <span class="op">=</span> <span class="st">"Mus musculus"</span>,</span>
 <span>  direction_type <span class="op">=</span> <span class="st">"bi-directional"</span>,</span>
 <span>  assay_type <span class="op">=</span> <span class="st">"transcriptomics"</span>,</span>
 <span>  phenotype <span class="op">=</span> <span class="st">"Myc_reduce"</span>,</span>
@@ -166,7 +166,7 @@ field.<br></p>
 <span>  <span class="co"># optional and recommended:</span></span>
 <span>  covariates <span class="op">=</span> <span class="st">"none"</span>,</span>
 <span>  description <span class="op">=</span> <span class="st">"mice Myc haploinsufficient (Myc(+/-))"</span>,</span>
-<span>  platform <span class="op">=</span> <span class="st">"transcriptomics by array"</span>, </span>
+<span>  platform <span class="op">=</span> <span class="st">"transcriptomics by array"</span>,</span>
 <span>  sample_type <span class="op">=</span> <span class="st">"liver"</span>, <span class="co"># use BRENDA ontology</span></span>
 <span></span>
 <span>  <span class="co"># optional cut-off attributes.</span></span>
@@ -198,7 +198,18 @@ For instance, it may include information about how the treatment was
 administered and how each group was defined.<br></p>
 </div>
 <div class="section level4">
-<h4 id="sample_type-and-platform">2.1.2 “sample_type” and “platform”<a class="anchor" aria-label="anchor" href="#sample_type-and-platform"></a>
+<h4 id="organism">2.1.2 “organism<a class="anchor" aria-label="anchor" href="#organism"></a>
+</h4>
+<p>“organism” is free-text. We provide a list of common organisms, which
+you can search using <code>searchOrganism</code>. Other entries are
+allowed, but please use standard naming conventions (e.g., “Homo
+sapiens”, “Mus musculus”) to ensure consistency.<br></p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/searchOrganism.html">searchOrganism</a></span><span class="op">(</span><span class="st">"homo"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] "Homo sapiens"</span></span></code></pre></div>
+</div>
+<div class="section level4">
+<h4 id="sample_type-and-platform">2.1.3 “sample_type” and “platform”<a class="anchor" aria-label="anchor" href="#sample_type-and-platform"></a>
 </h4>
 <p>While both “sample_type” and “platform” are free text, it is
 recommended that predefined terms are used. Thus, “sample_type” should
@@ -209,7 +220,7 @@ functions. See <a href="https://montilab.github.io/OmicSignature/articles/Sample
 Type &amp; Platform Info”</a> for details.<br></p>
 </div>
 <div class="section level4">
-<h4 id="direction_type">2.1.3 “direction_type”<a class="anchor" aria-label="anchor" href="#direction_type"></a>
+<h4 id="direction_type">2.1.4 “direction_type”<a class="anchor" aria-label="anchor" href="#direction_type"></a>
 </h4>
 <p><code>direction_type</code> must be one of the following:<br></p>
 <ul>
@@ -229,7 +240,7 @@ ANOVA.<br></p></li>
 </ul>
 </div>
 <div class="section level4">
-<h4 id="assay_type">2.1.4 “assay_type”<a class="anchor" aria-label="anchor" href="#assay_type"></a>
+<h4 id="assay_type">2.1.5 “assay_type”<a class="anchor" aria-label="anchor" href="#assay_type"></a>
 </h4>
 <p><code>assay_type</code> is one of the following:<br>
 - “transcriptomics” (e.g. RNA-seq, micro-array)<br>
@@ -273,7 +284,7 @@ the t-statistics, log-fold change, Z-score, or other summary
 statistics.<br></p>
 <p>Here we use an example from the differential expression analysis
 using the <code>limma</code> package.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Version reading from a txt file</span></span>
 <span><span class="co"># difexp &lt;- read.table(</span></span>
 <span><span class="co">#   file.path(</span></span>
@@ -307,7 +318,7 @@ using the <code>limma</code> package.</p>
 <p>Manually change the column names to match the requirement. The
 built-in function <code><a href="../reference/replaceDifexpCol.html">replaceDifexpCol()</a></code> designed to replace
 some frequently used alternative column names.<br></p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">difexp</span> <span class="op">&lt;-</span> <span class="va">difexp</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html" class="external-link">rename</a></span><span class="op">(</span>feature_name <span class="op">=</span> <span class="va">ensembl</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">difexp</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/replaceDifexpCol.html">replaceDifexpCol</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">difexp</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">difexp</span><span class="op">)</span></span>
@@ -339,7 +350,7 @@ An optional column “score” is recommended when applicable.<br></p>
 In this example, we create a bi-directional signature from the difexp
 using the <code>score_cutoff</code> and <code>adj_p_cutoff</code>
 specified in the metadata.<br></p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">signature</span> <span class="op">&lt;-</span> <span class="va">difexp</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">abs</a></span><span class="op">(</span><span class="va">score</span><span class="op">)</span> <span class="op">&gt;</span> <span class="va">metadata</span><span class="op">$</span><span class="va">score_cutoff</span> <span class="op">&amp;</span> <span class="va">adj_p</span> <span class="op">&lt;</span> <span class="va">metadata</span><span class="op">$</span><span class="va">adj_p_cutoff</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">probe_id</span>, <span class="va">feature_name</span>, <span class="va">score</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
@@ -354,7 +365,7 @@ specified in the metadata.<br></p>
 <span><span class="co">#&gt; 6 10345762 ENSMUSG00000026072 -13.543         -</span></span></code></pre></div>
 <p>Function <code><a href="../reference/standardizeSigDF.html">standardizeSigDF()</a></code> can help remove duplicated
 and empty names.</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">signature</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/standardizeSigDF.html">standardizeSigDF</a></span><span class="op">(</span><span class="va">signature</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">signature</span><span class="op">)</span></span>
 <span><span class="co">#&gt;   probe_id       feature_name   score direction</span></span>
@@ -385,7 +396,7 @@ For uni-directional signature:<br></p>
 <div class="section level3">
 <h3 id="create-the-omicsignature-object">2.4. Create the <code>OmicSignature</code> object<a class="anchor" aria-label="anchor" href="#create-the-omicsignature-object"></a>
 </h3>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">OmS</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/OmicSignature.html">OmicSignature</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span></span>
 <span>  metadata <span class="op">=</span> <span class="va">metadata</span>,</span>
 <span>  signature <span class="op">=</span> <span class="va">signature</span>,</span>
@@ -394,7 +405,7 @@ For uni-directional signature:<br></p>
 <span><span class="co">#&gt;   [Success] OmicSignature object Myc_reduce_mice_liver_24m created.</span></span></code></pre></div>
 <p>Set <code>print_message</code> = <code>TRUE</code> to see the
 messages.<br></p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">OmS</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/OmicSignature.html">OmicSignature</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span></span>
 <span>  metadata <span class="op">=</span> <span class="va">metadata</span>,</span>
 <span>  signature <span class="op">=</span> <span class="va">signature</span>,</span>
@@ -407,7 +418,7 @@ messages.<br></p>
 <span><span class="co">#&gt;   [Success] difexp is valid. </span></span>
 <span><span class="co">#&gt;   [Success] OmicSignature object Myc_reduce_mice_liver_24m created.</span></span></code></pre></div>
 <p>See the created object information:</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">OmS</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Signature Object: </span></span>
 <span><span class="co">#&gt;   Metadata: </span></span>
@@ -417,7 +428,7 @@ messages.<br></p>
 <span><span class="co">#&gt;     description = mice Myc haploinsufficient (Myc(+/-)) </span></span>
 <span><span class="co">#&gt;     direction_type = bi-directional </span></span>
 <span><span class="co">#&gt;     keywords = Myc, KO, longevity </span></span>
-<span><span class="co">#&gt;     organism = Mus Musculus </span></span>
+<span><span class="co">#&gt;     organism = Mus musculus </span></span>
 <span><span class="co">#&gt;     others = C57BL/6 </span></span>
 <span><span class="co">#&gt;     phenotype = Myc_reduce </span></span>
 <span><span class="co">#&gt;     platform = transcriptomics by array </span></span>
@@ -437,7 +448,7 @@ messages.<br></p>
 <p>Use new criteria to extract significant features:<br>
 (this does <em>not</em> change the <code>signature</code> saved in the
 object)</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">OmS</span><span class="op">$</span><span class="fu">extractSignature</span><span class="op">(</span><span class="st">"abs(score) &gt; 10; adj_p &lt; 0.01"</span><span class="op">)</span></span>
 <span><span class="co">#&gt;   probe_id       feature_name   score direction</span></span>
 <span><span class="co">#&gt; 1 10349648 ENSMUSG00000004552  14.762         +</span></span>
@@ -462,7 +473,7 @@ expert. Simply provide cutoffs (e.g. <code>adj_p_cutoff</code> and
 <code>difexp</code> has “adj_p” and “score” columns, and use
 <code><a href="../reference/OmicSigFromDifexp.html">OmicSigFromDifexp()</a></code> to automatically extract significant
 features and create the <code>OmicSignature</code> object.<br></p>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">OmS1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/OmicSigFromDifexp.html">OmicSigFromDifexp</a></span><span class="op">(</span><span class="va">difexp</span>, <span class="va">metadata</span><span class="op">)</span></span>
 <span><span class="co">#&gt; -- criterias used to extract signatures:  abs(score) &gt;= 5; adj_p &lt;= 0.05 . </span></span>
 <span><span class="co">#&gt; </span></span>
@@ -476,7 +487,7 @@ features and create the <code>OmicSignature</code> object.<br></p>
 <span><span class="co">#&gt;     description = mice Myc haploinsufficient (Myc(+/-)) </span></span>
 <span><span class="co">#&gt;     direction_type = bi-directional </span></span>
 <span><span class="co">#&gt;     keywords = Myc, KO, longevity </span></span>
-<span><span class="co">#&gt;     organism = Mus Musculus </span></span>
+<span><span class="co">#&gt;     organism = Mus musculus </span></span>
 <span><span class="co">#&gt;     others = C57BL/6 </span></span>
 <span><span class="co">#&gt;     phenotype = Myc_reduce </span></span>
 <span><span class="co">#&gt;     platform = transcriptomics by array </span></span>
