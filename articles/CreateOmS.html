@@ -393,8 +393,8 @@ For uni-directional signature:<br></p>
 <span>  signature <span class="op">=</span> <span class="va">signature</span>,</span>
 <span>  difexp <span class="op">=</span> <span class="va">difexp</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning in private$checkMetadata(metadata, v = print_message): platform is not</span></span>
-<span><span class="co">#&gt; a valid GEO platform accession ID. Set to be unknown.</span></span>
+<span><span class="co">#&gt; Warning in private$checkMetadata(metadata, v = print_message): Platform is not</span></span>
+<span><span class="co">#&gt; in the predefined list. Ignore this message if intentional.</span></span>
 <span><span class="co">#&gt;   [Success] OmicSignature object Myc_reduce_mice_liver_24m created.</span></span></code></pre></div>
 <p>Set <code>print_message</code> = <code>TRUE</code> to see the
 messages.<br></p>
@@ -406,8 +406,8 @@ messages.<br></p>
 <span>  print_message <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt;   --Required attributes for metadata: signature_name, phenotype, organism, direction_type, assay_type --</span></span>
-<span><span class="co">#&gt; Warning in private$checkMetadata(metadata, v = print_message): platform is not</span></span>
-<span><span class="co">#&gt; a valid GEO platform accession ID. Set to be unknown.</span></span>
+<span><span class="co">#&gt; Warning in private$checkMetadata(metadata, v = print_message): Platform is not</span></span>
+<span><span class="co">#&gt; in the predefined list. Ignore this message if intentional.</span></span>
 <span><span class="co">#&gt;   [Success] Metadata is saved. </span></span>
 <span><span class="co">#&gt;   [Success] Signature is valid. </span></span>
 <span><span class="co">#&gt;   [Success] difexp is valid. </span></span>
@@ -426,7 +426,7 @@ messages.<br></p>
 <span><span class="co">#&gt;     organism = Mus Musculus </span></span>
 <span><span class="co">#&gt;     others = C57BL/6 </span></span>
 <span><span class="co">#&gt;     phenotype = Myc_reduce </span></span>
-<span><span class="co">#&gt;     platform = unknown </span></span>
+<span><span class="co">#&gt;     platform = TRANSCRIPTOMICS BY ARRAY </span></span>
 <span><span class="co">#&gt;     PMID = 25619689 </span></span>
 <span><span class="co">#&gt;     sample_type = liver </span></span>
 <span><span class="co">#&gt;     score_cutoff = 5 </span></span>
@@ -471,8 +471,8 @@ features and create the <code>OmicSignature</code> object.<br></p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">OmS1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/OmicSigFromDifexp.html">OmicSigFromDifexp</a></span><span class="op">(</span><span class="va">difexp</span>, <span class="va">metadata</span><span class="op">)</span></span>
 <span><span class="co">#&gt; -- criterias used to extract signatures:  abs(score) &gt;= 5; adj_p &lt;= 0.05 .</span></span>
-<span><span class="co">#&gt; Warning in private$checkMetadata(metadata, v = print_message): platform is not</span></span>
-<span><span class="co">#&gt; a valid GEO platform accession ID. Set to be unknown.</span></span>
+<span><span class="co">#&gt; Warning in private$checkMetadata(metadata, v = print_message): Platform is not</span></span>
+<span><span class="co">#&gt; in the predefined list. Ignore this message if intentional.</span></span>
 <span><span class="co">#&gt;   [Success] OmicSignature object Myc_reduce_mice_liver_24m created.</span></span>
 <span><span class="va">OmS1</span></span>
 <span><span class="co">#&gt; Signature Object: </span></span>
@@ -486,7 +486,7 @@ features and create the <code>OmicSignature</code> object.<br></p>
 <span><span class="co">#&gt;     organism = Mus Musculus </span></span>
 <span><span class="co">#&gt;     others = C57BL/6 </span></span>
 <span><span class="co">#&gt;     phenotype = Myc_reduce </span></span>
-<span><span class="co">#&gt;     platform = unknown </span></span>
+<span><span class="co">#&gt;     platform = TRANSCRIPTOMICS BY ARRAY </span></span>
 <span><span class="co">#&gt;     PMID = 25619689 </span></span>
 <span><span class="co">#&gt;     sample_type = liver </span></span>
 <span><span class="co">#&gt;     score_cutoff = 5 </span></span>
