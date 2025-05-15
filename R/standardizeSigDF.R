@@ -8,6 +8,12 @@
 #' @return signature dataframe with empty, duplicate rows removed and ordered by score
 #' @export
 standardizeSigDF <- function(sigdf) {
+	## define the following to pass R check since they are viewed as variables in dplyr functions
+	feature_name <- NULL
+	probe_id <- NULL
+	score <- NULL
+	direction <- NULL
+	
   sigdf <- sigdf %>%
     dplyr::filter(feature_name != "") %>%
     dplyr::mutate(

@@ -22,5 +22,5 @@ updated 05/2025
 }
 \examples{
 searchPlatform("proteomics")
-searchPlatform(c("transcript", "single-cell"), contain_all = T)
+searchPlatform(c("transcript", "single-cell"), contain_all = TRUE)
 }

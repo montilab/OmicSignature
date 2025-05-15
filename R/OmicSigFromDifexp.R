@@ -9,7 +9,7 @@
 #' @param criteria A character string to specify criterias used to extract
 #' signatures from difexp. e.g. "logfc > 5; score > 10". Alternatively,
 #' they can be provided in metadata fields: list("logfc_cutoff" = 5, "score_cutoff" = 10)
-#' @importFrom dplyr filter select mutate arrange pull desc %>%
+#' @importFrom dplyr filter select mutate everything arrange pull desc %>%
 #' @importFrom rlang parse_exprs
 #' @return OmicSignature object
 #' @export
@@ -25,7 +25,7 @@ OmicSigFromDifexp <- function(difexp, metadata, criteria = NULL) {
 
   ## if probe_id is not provided in difexp, setup numeric counter as probe_id
   if (!"probe_id" %in% colnames(difexp)) {
-    difexp <- difexp %>% dplyr::mutate(probe_id = seq(nrow(difexp)), .before = everything())
+    difexp <- difexp %>% dplyr::mutate(probe_id = seq(nrow(difexp)), .before = dplyr::everything())
   }
 
   if (signatureType == "bi-directional") {

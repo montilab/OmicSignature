@@ -10,7 +10,7 @@ createMetadata(
   phenotype = "unknown",
   assay_type,
   covariates = "none",
-  platform = "GPLXXXXX",
+  platform = "unknown",
   direction_type,
   sample_type = NULL,
   signature_collection = NULL,
@@ -39,7 +39,7 @@ createMetadata(
 
 \item{covariates}{optional. e.g. "gender", "age".}
 
-\item{platform}{optional but highly recommended. GEO platform name. e.g. "GPL11154" is for Illumina HiSeq 2000 Homo sapiens. Use "GPLXXXXX" or NULL if not available.}
+\item{platform}{optional but highly recommended.}
 
 \item{direction_type}{required. the direction information of the signature.
 "uni" or "uni-directional" if signature has only one direction or no direction infomation.

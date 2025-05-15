@@ -9,7 +9,7 @@
 #' "categorical" if the signature contains more categories.
 #' @param assay_type required. e.g. "transcriptomics", "proteomics", "metabolomics", "methylomics", "methylomics", "genetic_variations", "DNA_binding_sites". some common misspell, e.g. "gene", "protein", "metab" will be changed automatically.
 #' @param organism required. e.g. "Homo Sapiens", "Mus Musculus".
-#' @param platform optional but highly recommended. GEO platform name. e.g. "GPL11154" is for Illumina HiSeq 2000 Homo sapiens. Use "GPLXXXXX" or NULL if not available.
+#' @param platform optional but highly recommended. 
 #' @param phenotype optional but highly recommended. e.g. "Gene KO", "Parkinson disease". Use "unknown" or NULL if not applicable.
 #' @param sample_type optional but highly recommended. a cell line or tissue from BRENDA ontology.
 #' @param covariates optional. e.g. "gender", "age".
@@ -95,7 +95,7 @@ createMetadata <- function(signature_name, organism, phenotype = "unknown", assa
     }
   }
 
-  # check if platform is a valid GPL platform
+  # check if platform is valid
   platform <- toupper(platform)
   if (is.null(platform) | platform == "unknown") {
     platform <- "unknown"

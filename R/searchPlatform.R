@@ -8,7 +8,7 @@
 #'
 #' @examples
 #' searchPlatform("proteomics")
-#' searchPlatform(c("transcript", "single-cell"), contain_all = T)
+#' searchPlatform(c("transcript", "single-cell"), contain_all = TRUE)
 #' @export
 searchPlatform <- function(x, platforms = predefined_platforms, contain_all = TRUE) {
   if (contain_all) {
