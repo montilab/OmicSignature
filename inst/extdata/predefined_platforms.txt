@@ -1,0 +1,28 @@
+unknown
+DNA assay by ChIP-seq
+DNA assay by ATAC-seq
+genotyping by array
+genotyping by whole-genome-sequencing
+transcriptomics by array
+transcriptomics by bulk RNA-seq
+transcriptomics by long-read sequencing
+transcriptomics by single-cell RNA-seq
+ribosome transcriptomics
+spatial transcriptomics
+single-cell spatial transcriptomics
+proteomics by array
+proteomics by mass spectrometry
+proteomics by NMR
+proteomics by antibody or aptamer
+proteomics by fluorescence
+single-cell proteomics by mass spectrometry
+metabolomics by mass spectrometry
+metabolomics by gas chromatography
+metabolomics by liquid chromatography HPLC
+metabolomics by NMR
+metabolomics by fluorescence
+methylation by array
+methylation by bisulfite sequencing
+methylation by immunoprecipitation
+single-cell CITE-seq
+cell flow cytometry

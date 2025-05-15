@@ -79,7 +79,7 @@ metadata <- list(
   "phenotype" = "Myc_reduce",
   "direction_type" = "bi-directional",
   "assay_type" = "transcriptomics", 
-  "platform" = "GPL6246"
+  "platform" = "transcriptomics by array"
 )
 ```
 
@@ -99,7 +99,7 @@ metadata <- createMetadata(
   # optional and recommended:
   covariates = "none",
   description = "mice Myc haploinsufficient (Myc(+/-))",
-  platform = "GPL6246", # use GEO platform ID
+  platform = "transcriptomics by array", 
   sample_type = "liver", # use BRENDA ontology
 
   # optional cut-off attributes.

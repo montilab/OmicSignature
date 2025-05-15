@@ -1,4 +1,4 @@
-#' @title template for creating a metadata list for an OmicSignature R6 object 
+#' @title template for creating a metadata list for an OmicSignature R6 object
 #' @description updated 02/2024
 #' @importFrom dplyr recode %>%
 #' @param signature_name required. name of the signature.
@@ -28,7 +28,7 @@
 #' @return a metadata list to create an OmicSignature R6 object.
 #' @export
 createMetadata <- function(signature_name, organism, phenotype = "unknown", assay_type,
-                           covariates = "none", platform = "GPLXXXXX", direction_type,
+                           covariates = "none", platform = "unknown", direction_type,
                            sample_type = NULL, signature_collection = NULL,
                            author = NULL, year = NULL, PMID = NULL,
                            keywords = NULL, description = NULL, category_num = NULL,
@@ -97,12 +97,12 @@ createMetadata <- function(signature_name, organism, phenotype = "unknown", assa
 
   # check if platform is a valid GPL platform
   platform <- toupper(platform)
-  if (is.null(platform) | platform == "GPLXXXXX") {
-    platform <- "GPLXXXXX"
+  if (is.null(platform) | platform == "unknown") {
+    platform <- "unknown"
     warning("Platform information unknown. Ignore this message if intentional. ")
-  } else if (!platform %in% GEOplatform$Accession) {
+  } else if (!platform %in% predefined_platforms) {
     warning(paste0(
-      "Input platform is not a valid GEO platform accession ID. Ignore this message if intentional. \n",
+      "Input platform is not a valid platform. Ignore this message if intentional. \n",
       "Use `searchPlatform()` to search for the correct accession ID to use. \n"
     ))
   }

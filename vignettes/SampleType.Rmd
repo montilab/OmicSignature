@@ -18,10 +18,11 @@ knitr::opts_chunk$set(echo = TRUE)
 devtools::load_all(".")
 ```
 
-We use BRENDA tissue ontology to indicate the tissue or cell-line of a signature, and GEO platform accession id for platform records.  
-BRENDA tissue ontology version: **10/2021**. The OBO file was downloaded at https://www.brenda-enzymes.org/ontology.php.  
-GEO platform IDs are manually downloaded at https://www.ncbi.nlm.nih.gov/geo/browse/?view=platforms. 25,827 platforms were downloaded as of 2024/02.  
-If you are not sure which BRENDA tissue ontology or GEO platform accession id to use, you can search for them as shown below.  
+We use BRENDA tissue ontology to indicate the tissue or cell-line of a signature. BRENDA tissue ontology version: **10/2021**. The OBO file was downloaded at https://www.brenda-enzymes.org/ontology.php. \
+
+To ensure accurate documentation of the technologies used in the experiment, we provided a predefined list of experimental platforms. \
+
+If you are not sure which BRENDA tissue ontology or platform name to use, you can search for them.  
 
 ## Search for sample type and platform 
 Multiple search terms are seperated by space " ". The search is case in-sensitive. \
@@ -36,13 +37,19 @@ searchSampleType("mcf cell", contain_all = TRUE)
 searchSampleType("MCF-10 MCF-7", contain_all = FALSE)
 ```
 
+Search for a single word: 
 ```{r}
-searchPlatform("illumina hiseq 3000", organism = "Homo Sapiens", contain_all = TRUE)
+searchPlatform("proteomics")
 ```
 
-Show only accession id:
+Search for multiple words: 
 ```{r}
-searchPlatform("illumina hiseq 3000", organism = "Homo Sapiens", contain_all = TRUE, accession_only = TRUE)
+searchPlatform(c("transcript", "single-cell"), contain_all = TRUE)
+```
+
+If `contain_all = FALSE`, results matching any of the key words will be returned. \
+```{r}
+searchPlatform(c("transcript", "single-cell"), contain_all = FALSE)
 ```
 
 </font>

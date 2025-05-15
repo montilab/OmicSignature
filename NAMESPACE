@@ -2,12 +2,12 @@
 
 export(BRENDA)
 export(BRENDAExistName)
-export(GEOplatform)
 export(OmicSigFromDifexp)
 export(OmicSignature)
 export(OmicSignatureCollection)
 export(createMetadata)
 export(diffAnalLm)
+export(predefined_platforms)
 export(readJson)
 export(replaceDifexpCol)
 export(searchPlatform)

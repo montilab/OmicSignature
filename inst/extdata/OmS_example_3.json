@@ -5,7 +5,7 @@
   "organism": ["Mus Musculus"],
   "p_cutoff": [0.05],
   "phenotype": ["new_experiment"],
-  "platform": ["GPL6246"],
+  "platform": ["transcriptomics by array"],
   "sample_type": ["heart"],
   "score_cutoff": [3],
   "signature_name": ["Experiment in heart"],
