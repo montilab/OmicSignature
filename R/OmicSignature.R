@@ -267,8 +267,7 @@ OmicSignature <-
         # check if platform is a valid GPL platform
         if (is.null(metadata$platform)) metadata$platform <- "unknown"
         if (!metadata$platform %in% predefined_platforms) {
-          metadata$platform <- "unknown"
-          warning("platform is not a valid GEO platform accession ID. Set to be unknown.")
+          warning("Platform is not in the predefined list. Ignore this message if intentional.")
         }
         private$verbose(v, "  [Success] Metadata is saved. \n")
         metadata <- metadata[order(names(metadata))]
