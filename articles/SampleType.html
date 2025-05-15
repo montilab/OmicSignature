@@ -79,13 +79,13 @@ Li</h4>
 <code class="sourceCode R"><span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org/reference/load_all.html" class="external-link">load_all</a></span><span class="op">(</span><span class="st">"."</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Loading <span style="color: #0000BB;">OmicSignature</span></span></span></code></pre>
 <p>We use BRENDA tissue ontology to indicate the tissue or cell-line of
-a signature, and GEO platform accession id for platform records.<br>
-BRENDA tissue ontology version: <strong>10/2021</strong>. The OBO file
-was downloaded at <a href="https://www.brenda-enzymes.org/ontology.php" class="external-link uri">https://www.brenda-enzymes.org/ontology.php</a>.<br>
-GEO platform IDs are manually downloaded at <a href="https://www.ncbi.nlm.nih.gov/geo/browse/?view=platforms" class="external-link uri">https://www.ncbi.nlm.nih.gov/geo/browse/?view=platforms</a>.
-25,827 platforms were downloaded as of 2024/02.<br>
-If you are not sure which BRENDA tissue ontology or GEO platform
-accession id to use, you can search for them as shown below.</p>
+a signature. BRENDA tissue ontology version: <strong>10/2021</strong>.
+The OBO file was downloaded at <a href="https://www.brenda-enzymes.org/ontology.php" class="external-link uri">https://www.brenda-enzymes.org/ontology.php</a>.<br></p>
+<p>To ensure accurate documentation of the technologies used in the
+experiment, we provided a predefined list of experimental
+platforms.<br></p>
+<p>If you are not sure which BRENDA tissue ontology or platform name to
+use, you can search for them.</p>
 <div class="section level2">
 <h2 id="search-for-sample-type-and-platform">Search for sample type and platform<a class="anchor" aria-label="anchor" href="#search-for-sample-type-and-platform"></a>
 </h2>
@@ -119,44 +119,33 @@ search terms.<br></p>
 <span><span class="co">## 3900 BTO:0003900      MCF-10F cell</span></span>
 <span><span class="co">## 5124 BTO:0005127 MCF-10A neoT cell</span></span>
 <span><span class="co">## 6395 BTO:0006398    MCF-10-2A cell</span></span></code></pre>
+<p>Search for a single word:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/searchPlatform.html">searchPlatform</a></span><span class="op">(</span><span class="st">"illumina hiseq 3000"</span>, organism <span class="op">=</span> <span class="st">"Homo Sapiens"</span>, contain_all <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">##       Accession</span></span>
-<span><span class="co">## 2681   GPL31935</span></span>
-<span><span class="co">## 3776   GPL30008</span></span>
-<span><span class="co">## 5877   GPL27044</span></span>
-<span><span class="co">## 6015   GPL26864</span></span>
-<span><span class="co">## 7794   GPL24496</span></span>
-<span><span class="co">## 8304   GPL23888</span></span>
-<span><span class="co">## 10569  GPL21290</span></span>
-<span><span class="co">##                                                                           Name</span></span>
-<span><span class="co">## 2681                          Illumina HiSeq 3000 (Homo sapiens; Myxoma virus)</span></span>
-<span><span class="co">## 3776    Illumina HiSeq 3000 (Homo sapiens; Human T-cell leukemia virus type I)</span></span>
-<span><span class="co">## 5877                                        Illumina Hiseq 3000 (Homo sapiens)</span></span>
-<span><span class="co">## 6015  Illumina HiSeq 3000 (Canis lupus familiaris; Homo sapiens; Mus musculus)</span></span>
-<span><span class="co">## 7794                          Illumina HiSeq 3000 (Homo sapiens; Mus musculus)</span></span>
-<span><span class="co">## 8304              Illumina HiSeq 3000 (Homo sapiens; Human gammaherpesvirus 8)</span></span>
-<span><span class="co">## 10569                                       Illumina HiSeq 3000 (Homo sapiens)</span></span>
-<span><span class="co">##                       Technology</span></span>
-<span><span class="co">## 2681  high-throughput sequencing</span></span>
-<span><span class="co">## 3776  high-throughput sequencing</span></span>
-<span><span class="co">## 5877  high-throughput sequencing</span></span>
-<span><span class="co">## 6015  high-throughput sequencing</span></span>
-<span><span class="co">## 7794  high-throughput sequencing</span></span>
-<span><span class="co">## 8304  high-throughput sequencing</span></span>
-<span><span class="co">## 10569 high-throughput sequencing</span></span>
-<span><span class="co">##                                               Organism</span></span>
-<span><span class="co">## 2681                         Homo sapiens;Myxoma virus</span></span>
-<span><span class="co">## 3776   Homo sapiens;Human T-cell leukemia virus type I</span></span>
-<span><span class="co">## 5877                                      Homo sapiens</span></span>
-<span><span class="co">## 6015  Canis lupus familiaris;Homo sapiens;Mus musculus</span></span>
-<span><span class="co">## 7794                         Homo sapiens;Mus musculus</span></span>
-<span><span class="co">## 8304             Homo sapiens;Human gammaherpesvirus 8</span></span>
-<span><span class="co">## 10569                                     Homo sapiens</span></span></code></pre>
-<p>Show only accession id:</p>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/searchPlatform.html">searchPlatform</a></span><span class="op">(</span><span class="st">"proteomics"</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## [1] "proteomics by array"                        </span></span>
+<span><span class="co">## [2] "proteomics by mass spectrometry"            </span></span>
+<span><span class="co">## [3] "proteomics by NMR"                          </span></span>
+<span><span class="co">## [4] "proteomics by antibody or aptamer"          </span></span>
+<span><span class="co">## [5] "proteomics by fluorescence"                 </span></span>
+<span><span class="co">## [6] "single-cell proteomics by mass spectrometry"</span></span></code></pre>
+<p>Search for multiple words:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/searchPlatform.html">searchPlatform</a></span><span class="op">(</span><span class="st">"illumina hiseq 3000"</span>, organism <span class="op">=</span> <span class="st">"Homo Sapiens"</span>, contain_all <span class="op">=</span> <span class="cn">TRUE</span>, accession_only <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## [1] "GPL31935" "GPL30008" "GPL27044" "GPL26864" "GPL24496" "GPL23888" "GPL21290"</span></span></code></pre>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/searchPlatform.html">searchPlatform</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"transcript"</span>, <span class="st">"single-cell"</span><span class="op">)</span>, contain_all <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## [1] "transcriptomics by single-cell RNA-seq"</span></span>
+<span><span class="co">## [2] "single-cell spatial transcriptomics"</span></span></code></pre>
+<p>If <code>contain_all = FALSE</code>, results matching any of the key
+words will be returned.<br></p>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/searchPlatform.html">searchPlatform</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"transcript"</span>, <span class="st">"single-cell"</span><span class="op">)</span>, contain_all <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## [1] "transcriptomics by single-cell RNA-seq"     </span></span>
+<span><span class="co">## [2] "single-cell spatial transcriptomics"        </span></span>
+<span><span class="co">## [3] "single-cell proteomics by mass spectrometry"</span></span>
+<span><span class="co">## [4] "single-cell CITE-seq"                       </span></span>
+<span><span class="co">## [5] "transcriptomics by array"                   </span></span>
+<span><span class="co">## [6] "transcriptomics by bulk RNA-seq"            </span></span>
+<span><span class="co">## [7] "transcriptomics by long-read sequencing"    </span></span>
+<span><span class="co">## [8] "ribosome transcriptomics"                   </span></span>
+<span><span class="co">## [9] "spatial transcriptomics"</span></span></code></pre>
 </div>
 <div class="section level2">
 <h2 id="section"></h2>
