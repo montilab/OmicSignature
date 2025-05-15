@@ -8,3 +8,9 @@ BRENDA <- readRDS(file.path(system.file("extdata", package = "OmicSignature"), "
 #' @export
 # GEOplatform <- readRDS(file.path(system.file("extdata", package = "OmicSignature"), "GEOplatform_2024.rds"))
 predefined_platforms <- readLines(file.path(system.file("extdata", package = "OmicSignature"), "predefined_platforms.txt"))
+
+#' @title predefined organism list
+#' @description a list of predefined organism names 
+#' @export
+predefined_organisms <- readLines(file.path(system.file("extdata", package = "OmicSignature"), "predefined_organisms.txt"))
+

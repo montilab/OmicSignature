@@ -31,7 +31,7 @@ createMetadata(
 \arguments{
 \item{signature_name}{required. name of the signature.}
 
-\item{organism}{required. e.g. "Homo Sapiens", "Mus Musculus".}
+\item{organism}{required. e.g. "Homo sapiens", "Mus musculus".}
 
 \item{phenotype}{optional but highly recommended. e.g. "Gene KO", "Parkinson disease". Use "unknown" or NULL if not applicable.}
 

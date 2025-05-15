@@ -8,8 +8,8 @@
 #' "bi" or "bi-directional" if signature contains "up" and "down" regulated features.
 #' "categorical" if the signature contains more categories.
 #' @param assay_type required. e.g. "transcriptomics", "proteomics", "metabolomics", "methylomics", "methylomics", "genetic_variations", "DNA_binding_sites". some common misspell, e.g. "gene", "protein", "metab" will be changed automatically.
-#' @param organism required. e.g. "Homo Sapiens", "Mus Musculus".
-#' @param platform optional but highly recommended. 
+#' @param organism required. e.g. "Homo sapiens", "Mus musculus".
+#' @param platform optional but highly recommended.
 #' @param phenotype optional but highly recommended. e.g. "Gene KO", "Parkinson disease". Use "unknown" or NULL if not applicable.
 #' @param sample_type optional but highly recommended. a cell line or tissue from BRENDA ontology.
 #' @param covariates optional. e.g. "gender", "age".
@@ -103,6 +103,17 @@ createMetadata <- function(signature_name, organism, phenotype = "unknown", assa
     warning(paste0(
       "Input platform is not in the pre-defined list. Ignore this message if intentional. \n",
       "Use `searchPlatform()` to search for the correct accession ID to use. \n"
+    ))
+  }
+
+  # check if organism is valid
+  if (is.null(organism) | organism == "unknown") {
+    organism <- "unknown"
+    warning("Organism information unknown. Ignore this message if intentional. ")
+  } else if (!organism %in% predefined_organisms) {
+    warning(paste0(
+      "Input organism is not in the pre-defined list. Ignore this message if intentional. \n",
+      "Use `searchOrganism()` to search for the correct accession ID to use. \n"
     ))
   }
 

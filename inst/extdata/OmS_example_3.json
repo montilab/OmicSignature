@@ -2,7 +2,7 @@
   "assay_type": ["transcriptomics"],
   "covariates": ["none"],
   "direction_type": ["bi-directional"],
-  "organism": ["Mus Musculus"],
+  "organism": ["Mus musculus"],
   "p_cutoff": [0.05],
   "phenotype": ["new_experiment"],
   "platform": ["transcriptomics by array"],

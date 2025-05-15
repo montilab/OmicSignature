@@ -5,7 +5,7 @@
   "description": ["mice MYC reduced expression"],
   "direction_type": ["bi-directional"],
   "keywords": ["Myc", "KO", "longevity"],
-  "organism": ["Mus Musculus"],
+  "organism": ["Mus musculus"],
   "others": {
     "animal_strain": ["C57BL/6"]
   },

@@ -264,11 +264,18 @@ OmicSignature <-
           warning("sample_type is not a valid BRENDA ontology term. Set to be unknown.")
         }
 
-        # check if platform is a valid GPL platform
+        # check if organism is in pre-defined list
+        if (is.null(metadata$organism)) metadata$organism <- "unknown"
+        if (!metadata$organism %in% predefined_organisms) {
+          warning("Organism is not in the predefined list. Ignore this message if intentional.")
+        }
+
+        # check if platform is in pre-defined list
         if (is.null(metadata$platform)) metadata$platform <- "unknown"
         if (!metadata$platform %in% predefined_platforms) {
           warning("Platform is not in the predefined list. Ignore this message if intentional.")
         }
+
         private$verbose(v, "  [Success] Metadata is saved. \n")
         metadata <- metadata[order(names(metadata))]
         return(metadata)
