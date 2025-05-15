@@ -10,7 +10,7 @@
     "animal_strain": ["C57BL/6"]
   },
   "phenotype": ["Myc_reduce"],
-  "platform": ["GPL6246"],
+  "platform": ["transcriptomics by array"],
   "PMID": [25619689],
   "sample_type": ["liver"],
   "score_cutoff": [5],
