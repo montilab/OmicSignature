@@ -1,5 +1,5 @@
 pandoc: 3.6.4
-pkgdown: 2.1.2
+pkgdown: 2.1.3
 pkgdown_sha: ~
 articles:
   CreateOmS: CreateOmS.html
@@ -8,7 +8,7 @@ articles:
   FunOmSC: FunOmSC.html
   ObjectStructure: ObjectStructure.html
   SampleType: SampleType.html
-last_built: 2025-05-15T17:08Z
+last_built: 2025-05-28T12:54Z
 urls:
   reference: https://montilab.github.io/OmicSignature/reference
   article: https://montilab.github.io/OmicSignature/articles
