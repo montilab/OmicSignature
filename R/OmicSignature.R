@@ -244,8 +244,8 @@ OmicSignature <-
 
         # check assay_type
         if (!metadata$assay_type %in% c("transcriptomics", "proteomics", "metabolomics", "methylomics", "genetic_variations", "DNA_binding_sites")) {
-          metadata$assay_type <- "others"
-          warning("assay_type is not one of the commonly used term: transcriptomics, proteomics, metabolomics, methylomics, genetic_variations, DNA_binding_sites. Set it to be \"others\". ")
+          metadata$assay_type <- "other"
+          warning("assay_type is not one of the commonly used term: transcriptomics, proteomics, metabolomics, methylomics, genetic_variations, DNA_binding_sites. Set it to be \"other\". ")
         }
 
         # check covariates
