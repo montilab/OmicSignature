@@ -2,8 +2,10 @@ Package: OmicSignature
 Type: Package
 Title: OmicSignature
 Version: 1.0.0
-Author: Vanessa Mengze Li
-Maintainer: Vanessa Mengze Li <vmli@bu.edu>
+Authors@R: c(person(given="Vanessa Mengze", family="Li", email="vmli@bu.edu", 
+             role=c("aut", "cre")),
+             person(given="Stefano", family="Monti", email="smonti@bu.edu", 
+             role=c("aut")))
 Description: As high-throughput technology evolves, a large number of omics-signatures are being derived. 
     This package contains OmicSignature and OmicSignatureCollection R6 objects, and can help to store signatures efficiently and retrieve them conveniently.
 Depends: R (>= 3.5.0)
