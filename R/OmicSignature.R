@@ -298,9 +298,9 @@ OmicSignature <-
           }
         } else if (is.vector(input)) {
           if (signatureType == "bi-directional") {
-            signature <- signatureVecToDF(input, bi_directional = TRUE)
+            signature <- signatureVecToDF(input, group_labels = c("Treatment", "Control"))
           } else if (signatureType == "uni-directional") {
-            signature <- signatureVecToDF(input, bi_directional = FALSE)
+            signature <- signatureVecToDF(input)
           } else {
             stop("Please provide signature as a dataframe. ")
           }
