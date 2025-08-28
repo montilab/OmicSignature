@@ -4,9 +4,9 @@
 #' @param signature_name required. name of the signature.
 #' @param signature_collection optional. collection name that the signature belongs to.
 #' @param direction_type required. the direction information of the signature.
-#' "uni" or "uni-directional" if signature has only one direction or no direction infomation.
-#' "bi" or "bi-directional" if signature contains "up" and "down" regulated features.
-#' "categorical" if the signature contains more categories.
+#' "uni" or "uni-directional" if the signature is derived from one category.
+#' "bi" or "bi-directional" if the signature is derived from group A vs group B, or it contains "up" and "down" regulated features for a continuous phenotype. 
+#' "categorical" if the signature is derived from comparisons between multiple groups, e.g. A vs B vs C. 
 #' @param assay_type required. e.g. "transcriptomics", "proteomics", "metabolomics", "methylomics", "methylomics", "genetic_variations", "DNA_binding_sites". some common misspell, e.g. "gene", "protein", "metab" will be changed automatically.
 #' @param organism required. e.g. "Homo sapiens", "Mus musculus".
 #' @param platform optional but highly recommended.

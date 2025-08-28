@@ -2,7 +2,7 @@
 title: "Create OmicSignature"
 output: rmarkdown::html_vignette
 author: "Vanessa Mengze Li"
-date: "05/15/2025"
+date: "08/28/2025"
 vignette: >
   %\VignetteIndexEntry{Create OmicSignature}
   %\VignetteEngine{knitr::rmarkdown}
@@ -37,7 +37,7 @@ An `OmicSignature` object contains three parts:\
     Required columns:\
     "**probe_id**" (unique identifier for each feature)\
     "**feature_name**" (e.g. ENSEMBL ID, Uniprot ID)\
-    Required for bi-directional and categorical signatures: "**direction**"\
+    Required for bi-directional and categorical signatures: "**group_label**"\
     Recommended optional column, if applicable: "score"\
 
 -   **difexp** (optional), a data frame of differential expression analysis results.\
@@ -142,7 +142,7 @@ While both "sample_type" and "platform" are free text, it is recommended that pr
 
 `direction_type` must be one of the following:\
 
--   "uni-directional". Only a list of significant feature names is available. Examples including "genes mutated in a disease" and "markers of a cell type".\
+-   "uni-directional". Only a list of significant feature names is available. Examples including "genes mutated in a disease" and "markers of a specific cell type".\
 
 -   "bi-directional". Significant features can be grouped into "up" and "down" categories. For example, when comparing treatment *vs.* control groups, some features will be higher ("up", or "+") and some will be lower ("down" or "-") in the treatment group. When the phenotype is a continuous trait, such as age, some features will increase ("up", or "+") with age, while others will decrease ("down", or "-") with age.\
 
@@ -161,8 +161,11 @@ While both "sample_type" and "platform" are free text, it is recommended that pr
 
 ### 2.2. Signature
 
-**signature** is a dataframe with columns **"probe_id"** and **"feature_name"**. If the signature is "bi-directional" or "categorical" (specified in `direction_type` in `metadata`), then column **"direction"** is also required.\
-An optional column "score" is recommended when applicable.\
+**signature** is a dataframe with columns **"probe_id"** and **"feature_name"**. \
+If the signature is "bi-directional" or "categorical" (specified in `direction_type` in `metadata`), then column **"group_label"** is also required. This column indicates in which phenotype a feature is more highly expressed or more significant. \
+For example, if the analysis is identifying genes differentially expressed in Treatment vs Control, all gene features with a positive score should be labeled "Treatment" in this column to show their higher expression in the Treatment group. Features with negative scores would instead be labeled "Control". Alternatively, if the analysis is about protein expression changes associated with BMI, protein features with a positive (or negative) score should be labeled "higher BMI" (or "lower BMI"). \
+ \
+An optional column "score" is highly recommended when applicable.\
 
 **Option 1**: Extract signature from a differential analysis results table.\
 In this example, we extract a bi-directional signature from a `difexp` object (see next section) using the `score_cutoff` and `adj_p_cutoff` specified in the metadata. A `difexp` object is simply a properly formatted data frame reporting the results of a differential analysis (e.g., by Limma). It looks something like this:
@@ -174,7 +177,7 @@ difexp <- readRDS(
     "difmatrix_Myc_mice_liver_24m.rds"
   )
 )
-difexp <- difexp %>% 
+difexp <- difexp %>%
   dplyr::select(-gene_symbol) %>%
   rename(feature_name = ensembl)
 colnames(difexp) <- replaceDifexpCol(colnames(difexp))
@@ -186,7 +189,7 @@ We can then extract the significant features as follows:
 signature <- difexp %>%
   dplyr::filter(abs(score) > metadata$score_cutoff & adj_p < metadata$adj_p_cutoff) %>%
   dplyr::select(probe_id, feature_name, score) %>%
-  dplyr::mutate(direction = ifelse(score > 0, "+", "-"))
+  dplyr::mutate(group_label = as.factor(ifelse(score > 0, "MYC Reduce", "WT")))
 head(signature)
 ```
 
@@ -211,18 +214,18 @@ signature <- data.frame(
   "probe_id" = c(1, 2, 3),
   "feature_name" = c("gene1", "gene2", "gene3"),
   "score" = c(0.45, -3.21, 2.44),
-  "direction" = c("+", "-", "+")
+  "group_label" = c("Treatment", "Control", "Treatment")
 )
 ```
 
-For categorical signature:\
+For multi-categorical signature:\
 
 ```         
 signature <- data.frame(
   "probe_id" = c(1, 2, 3, 4),
   "feature_name" = c("gene1", "gene2", "gene3", "gene4"),
   "score" = c(0.45, -3.21, 2.44, -2.45),
-  "direction" = c("group1", "group1", "group2", "group3")
+  "group_label" = c("group1", "group1", "group2", "group3")
 )
 ```
 
@@ -259,11 +262,13 @@ difexp <- readRDS(
 head(difexp)
 ```
 
-Manually change the column names to match the requirement. The built-in function `replaceDifexpCol()` is designed to replace some frequently used alternative column names.\
+Manually change the column names to match the requirement. The built-in function `replaceDifexpCol()` is designed to replace *some* of the frequently used alternative column names.\
 
 ```{r}
-difexp <- difexp %>% rename(feature_name = ensembl)
 colnames(difexp) <- replaceDifexpCol(colnames(difexp))
+difexp <- difexp %>%
+  rename(feature_name = ensembl) %>%
+  mutate(group_label = as.factor(ifelse(score > 0, "MYC Reduce", "WT")))
 head(difexp)
 ```
 
@@ -312,7 +317,7 @@ See more in ["Functionalities of OmicSignature"](https://montilab.github.io/Omic
 
 ## 3. Create an `OmicSignature` from `difexp` and `metadata`
 
-You can by-pass the generating signature process once you are an expert. Simply provide cutoffs (e.g. `adj_p_cutoff` and `score_cutoff`) in the `metadata`, make sure `difexp` has "adj_p" and "score" columns, and use `OmicSigFromDifexp()` to automatically extract significant features and create the `OmicSignature` object.\
+You can by-pass the generating signature process once you are an expert. Simply provide cutoffs (e.g. `adj_p_cutoff` and `score_cutoff`) in the `metadata`, make sure `difexp` has "adj_p", "score" and "group_label" columns, and use `OmicSigFromDifexp()` to automatically extract significant features and create the `OmicSignature` object.\
 
 ```{r}
 OmS1 <- OmicSigFromDifexp(difexp, metadata)

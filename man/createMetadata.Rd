@@ -42,9 +42,9 @@ createMetadata(
 \item{platform}{optional but highly recommended.}
 
 \item{direction_type}{required. the direction information of the signature.
-"uni" or "uni-directional" if signature has only one direction or no direction infomation.
-"bi" or "bi-directional" if signature contains "up" and "down" regulated features.
-"categorical" if the signature contains more categories.}
+"uni" or "uni-directional" if the signature is derived from one category.
+"bi" or "bi-directional" if the signature is derived from group A vs group B, or it contains "up" and "down" regulated features for a continuous phenotype. 
+"categorical" if the signature is derived from comparisons between multiple groups, e.g. A vs B vs C.}
 
 \item{sample_type}{optional but highly recommended. a cell line or tissue from BRENDA ontology.}
 
