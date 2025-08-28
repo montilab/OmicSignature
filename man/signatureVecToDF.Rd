@@ -5,7 +5,7 @@
 \title{change a signature vector into a dataframe to be saved into OmicSignature object
 updated 08/2025}
 \usage{
-signatureVecToDF(input, bi_directional = FALSE, group_labels = NULL)
+signatureVecToDF(input, group_labels = NULL)
 }
 \arguments{
 \item{input}{a character vector of the significant feature names, or a numeric vector of scores and named by feature names.}
