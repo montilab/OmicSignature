@@ -13,7 +13,7 @@
 #' signatureVecToDF(signatures, group_labels = c("Group1", "Group2"))
 #' @export
 #'
-signatureVecToDF <- function(input, bi_directional = FALSE, group_labels = NULL) {
+signatureVecToDF <- function(input, group_labels = NULL) {
   if (is.character(input) | is.factor(input)) {
     DF <- data.frame(
       "probe_id" = seq(length(input)),

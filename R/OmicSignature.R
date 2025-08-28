@@ -4,7 +4,7 @@
 #' @description a R6 object to store signatures generated from experiments. In cluding metadata, signature, and an optional differential expression analysis result dataframe.
 #' updated 08/2025
 #' @importFrom R6 R6Class
-#' @importFrom dplyr filter select mutate relocate arrange distinct recode bind_rows %>%
+#' @importFrom dplyr filter select mutate relocate arrange distinct recode bind_rows across everything %>%
 #' @importFrom jsonlite toJSON fromJSON
 #' @export
 OmicSignature <-
