@@ -22,5 +22,5 @@ they can be provided in metadata fields: list("logfc_cutoff" = 5, "score_cutoff"
 OmicSignature object
 }
 \description{
-updated 10/2024
+updated 08/2025
 }

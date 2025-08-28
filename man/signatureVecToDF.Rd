@@ -3,21 +3,21 @@
 \name{signatureVecToDF}
 \alias{signatureVecToDF}
 \title{change a signature vector into a dataframe to be saved into OmicSignature object
-updated 10/2024}
+updated 08/2025}
 \usage{
-signatureVecToDF(input, bi_directional = FALSE)
+signatureVecToDF(input, bi_directional = FALSE, group_labels = NULL)
 }
 \arguments{
-\item{input}{a character vector of the significant feature names, or a numeric vector which names are feature names and values are scores.}
+\item{input}{a character vector of the significant feature names, or a numeric vector of scores and named by feature names.}
 
-\item{bi_directional}{logical.}
+\item{group_labels}{optional. a character vector of length of 2. when group_labels = c("Group1", "Group2"), it indicates the analysis is Group1 vs Group2, and positive scores indicate a higher value in Group1.}
 }
 \value{
-signature dataframe with columns "feature_name", along with "score" and "direction" if applicable
+signature dataframe with columns "feature_name", along with "score" and "group_label" if applicable.
 }
 \description{
 change a signature vector into a dataframe to be saved into OmicSignature object
-updated 10/2024
+updated 08/2025
 }
 \examples{
 signatures <- c("gene1", "gene2", "gene3")
@@ -25,5 +25,6 @@ signatureVecToDF(signatures)
 
 signatures <- c(0.45, -3.21, 2.44)
 names(signatures) <- c("gene1", "gene2", "gene3")
-signatureVecToDF(signatures, bi_directional = TRUE)
+signatureVecToDF(signatures)
+signatureVecToDF(signatures, group_labels = c("Group1", "Group2"))
 }

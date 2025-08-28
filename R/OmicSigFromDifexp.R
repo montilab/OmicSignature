@@ -1,6 +1,6 @@
 #### OmicSigFromDifexp() ####
 #' @title create an OmicSignature object from differential expsignaturession matrix
-#' @description updated 10/2024
+#' @description updated 08/2025
 #' @param difexp Differential expression matrix
 #' @param metadata Metadata for the OmicSignature object. If `criteria` is `NULL`,
 #' the criterias to extract signatures will need to be provided in metadata.
@@ -19,7 +19,7 @@ OmicSigFromDifexp <- function(difexp, metadata, criteria = NULL) {
   probe_id <- NULL
   feature_name <- NULL
   score <- NULL
-  direction <- NULL
+  group_label <- NULL
 
   signatureType <- metadata$direction_type
 
@@ -29,9 +29,9 @@ OmicSigFromDifexp <- function(difexp, metadata, criteria = NULL) {
   }
 
   if (signatureType == "bi-directional") {
-    if (!"direction" %in% colnames(difexp)) {
-      if (!"score" %in% colnames(difexp)) stop("difexp must contain direction or score column.")
-      difexp <- difexp %>% dplyr::mutate(direction = ifelse(score < 0, "-", "+"), .after = score)
+    if (!"group_label" %in% colnames(difexp)) {
+      if (!"score" %in% colnames(difexp)) stop("difexp must contain group_label or score column.")
+      difexp <- difexp %>% dplyr::mutate(group_label = ifelse(score < 0, "-", "+"), .after = score)
     }
   }
 
@@ -53,7 +53,7 @@ OmicSigFromDifexp <- function(difexp, metadata, criteria = NULL) {
   if ("score" %in% colnames(difexp)) {
     if (signatureType %in% c("bi-directional", "categorical")) {
       signatures <- signatures %>%
-        dplyr::select(probe_id, feature_name, score, direction) %>%
+        dplyr::select(probe_id, feature_name, score, group_label) %>%
         dplyr::arrange(dplyr::desc(abs(score)))
     } else {
       signatures <- signatures %>%
@@ -62,7 +62,7 @@ OmicSigFromDifexp <- function(difexp, metadata, criteria = NULL) {
   } else {
     if (signatureType %in% c("bi-directional", "categorical")) {
       signatures <- signatures %>%
-        dplyr::select(probe_id, feature_name, direction)
+        dplyr::select(probe_id, feature_name, group_label)
     } else {
       signatures <- signatures %>%
         dplyr::select(probe_id, feature_name)

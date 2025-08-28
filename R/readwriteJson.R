@@ -3,7 +3,7 @@
 #' @description To avoid confusion, in the written json text file, the column
 #' names in signature dataframe and difexp dataframe will have prefix "sig_"
 #' and "difexp" added. This corresponds to readJson() function.
-#' updated 10/2024
+#' updated 08/2025
 #'
 #' @param OmicObj A OmicSignature object
 #' @param file file name to write
@@ -61,6 +61,9 @@ readJson <- function(filename) {
   if ("difexp_colnames" %in% names(readJson)) {
     readDifexp <- data.frame(dplyr::bind_rows(readJson[c(readJson$difexp_colnames)]))
     colnames(readDifexp) <- gsub("difexp_", "", colnames(readDifexp))
+    if ("group_label" %in% colnames(readDifexp)) {
+      readDifexp$group_label <- as.factor(as.character(readDifexp$group_label))
+    }
   } else {
     cat(paste("Notice: ", filename, "does not have difexp data. \n"))
   }
@@ -68,10 +71,10 @@ readJson <- function(filename) {
   #### sig df ####
   readSignature <- data.frame("probe_id" = readJson$sig_probe_id, "feature_name" = readJson$sig_feature_name)
   if (!is.null(readJson$sig_score)) {
-    readSignature$score <- readJson$sig_score
+    readSignature$score <- as.numeric(as.character(readJson$sig_score))
   }
-  if (!is.null(readJson$sig_direction)) {
-    readSignature$direction <- readJson$sig_direction
+  if (!is.null(readJson$sig_group_label)) {
+    readSignature$group_label <- as.factor(as.character(readJson$sig_group_label))
   }
 
   #### Obj ####

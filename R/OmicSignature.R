@@ -2,7 +2,7 @@
 
 #' @title OmicSignature R6 object
 #' @description a R6 object to store signatures generated from experiments. In cluding metadata, signature, and an optional differential expression analysis result dataframe.
-#' updated 10/2024
+#' updated 08/2025
 #' @importFrom R6 R6Class
 #' @importFrom dplyr filter select mutate relocate arrange distinct recode bind_rows %>%
 #' @importFrom jsonlite toJSON fromJSON
@@ -15,7 +15,7 @@ OmicSignature <-
       #' @description
       #' Create a new OmicSignature object
       #' @param metadata required. a list. See `createMetadata` for more information
-      #' @param signature required. a vector, or a dataframe including columns: "probe_id", "feature_name" and "direction", and an optional column "score"
+      #' @param signature required. a vector, or a dataframe including columns: "probe_id", "feature_name" and "group_label", and an optional column "score"
       #' @param difexp optional
       #' @param print_message use TRUE if want to see all messages printed
       #' @export
@@ -70,8 +70,8 @@ OmicSignature <-
           sh <- mapply(
             function(k, v) {
               cat("    ", k, " (", v, ")", "\n", sep = "")
-            }, names(summary(private$.signature$direction)),
-            summary(private$.signature$direction)
+            }, names(summary(private$.signature$group_label)),
+            summary(private$.signature$group_label)
           )
         } else {
           cat("    Length (", nrow(private$.signature), ")\n")
@@ -101,13 +101,12 @@ OmicSignature <-
               dplyr::arrange(desc(abs(score)))
           } else if (direction_type == "bi-directional") {
             res <- res %>%
-              dplyr::select(probe_id, feature_name, score) %>%
+              dplyr::select(probe_id, feature_name, score, group_label) %>%
               dplyr::filter(score != "") %>%
-              dplyr::mutate(direction = ifelse(score < 0, "-", "+")) %>%
               dplyr::arrange(desc(abs(score)))
           } else if (direction_type == "categorical") {
             res <- res %>%
-              dplyr::select(probe_id, feature_name, score, direction) %>%
+              dplyr::select(probe_id, feature_name, score, group_label) %>%
               dplyr::filter(score != "", ) %>%
               dplyr::arrange(desc(abs(score)))
           }
@@ -118,14 +117,13 @@ OmicSignature <-
           } else {
             res <- res %>%
               dplyr::filter(!!!v) %>%
-              dplyr::select(probe_id, feature_name, direction)
+              dplyr::select(probe_id, feature_name, group_label)
           }
         }
 
         res <- res %>%
           dplyr::filter(feature_name != "", complete.cases(.)) %>%
-          dplyr::distinct(feature_name, .keep_all = TRUE) %>%
-          dplyr::mutate(direction = as.character(direction))
+          dplyr::distinct(feature_name, .keep_all = TRUE) 
 
         return(res)
       }
@@ -141,7 +139,7 @@ OmicSignature <-
           private$.metadata <- private$checkMetadata(value, print_message)
         }
       },
-      #' @field signature a dataframe contains probe_id, feature_name, score (optional) and direction (optional)
+      #' @field signature a dataframe contains probe_id, feature_name, score (optional) and group_label (optional)
       signature = function(value, print_message = FALSE) {
         if (missing(value)) {
           private$.signature
@@ -186,7 +184,7 @@ OmicSignature <-
         if (nrow(difexp) == 0) stop("difexp is empty. ")
 
         ## check column names:
-        difexpColRequired <- c("probe_id", "feature_name", "score")
+        difexpColRequired <- c("probe_id", "feature_name", "score", "group_label")
         ## require any of p_value, q_value, or adj_p
         exist_p_columns <- intersect(colnames(difexp), c("p_value", "q_value", "adj_p"))
         if (length(exist_p_columns) > 0) {
@@ -203,8 +201,8 @@ OmicSignature <-
         }
 
         ## check column type:
-        ## "logfc","score","p_value","adj_p" should be numerical
-        for (difexpColNumeric in c("logfc", "score", "p_value", "adj_p", "q_value", "aveexpr")) {
+        ## "logfc", "score", "p_value", "adj_p" should be numerical
+        for (difexpColNumeric in c("logfc", "score", "p_value", "adj_p", "q_value", "aveexpr", "mean")) {
           if (difexpColNumeric %in% colnames(difexp)) {
             if (!is(difexp[, difexpColNumeric], "numeric")) {
               stop(paste("difexp:", difexpColNumeric, "is not numeric."))
@@ -215,6 +213,13 @@ OmicSignature <-
         if ("feature_name" %in% colnames(difexp)) {
           if (!is(difexp$feature_name, "character")) {
             stop("difexp: feature_name is not character.")
+          }
+        }
+
+        ## "group_label" should be factor
+        if ("group_label" %in% colnames(difexp)) {
+          if (!is(difexp$group_label, "factor")) {
+            stop("difexp: group_label is not factor.")
           }
         }
         private$verbose(v, "  [Success] difexp is valid. \n")
@@ -325,28 +330,23 @@ OmicSignature <-
         ## check column names
         signatureColRequired <- c("probe_id", "feature_name")
         if (signatureType != "uni-directional") {
-          signatureColRequired <- c(signatureColRequired, "direction")
+          signatureColRequired <- c(signatureColRequired, "group_label")
         }
         signatureColMissing <- setdiff(signatureColRequired, colnames(signature))
         if (length(signatureColMissing) > 0) {
           stop("Signature must contain the following columns: ", paste(signatureColRequired, collapse = ", "))
         }
 
-        ## bi-directional:
-        if (signatureType == "bi-directional") {
-          ## change direction to + and - :
-          signature$direction <- signature$direction %>%
-            tolower() %>%
-            dplyr::case_match(
-              .default = signature$direction,
-              "up" ~ "+", "increase" ~ "+", "more" ~ "+",
-              "dn" ~ "-", "down" ~ "-", "decrease" ~ "-", "less" ~ "-"
-            )
-          if (!all(as.character(unique(signature$direction)) %in% c("-", "+"))) {
-            stop("Direction for bi-directional signature should be either \"-\" and \"+\".")
-          }
+        ## check column types:
+        if (!is(signature$feature_name, "character")) {
+          stop("signature: feature_name is not character.")
         }
 
+        if (signatureType != "uni-directional") {
+          if (!is(signature$group_label, "factor")) {
+            stop("signature: group_label is not factor.")
+          }
+        }
         private$verbose(v, "  [Success] Signature is valid. \n")
         return(signature)
       }
