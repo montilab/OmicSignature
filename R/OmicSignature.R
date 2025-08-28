@@ -122,7 +122,7 @@ OmicSignature <-
         }
 
         res <- res %>%
-          dplyr::filter(feature_name != "", complete.cases(.)) %>%
+          dplyr::filter(feature_name != "", complete.cases(across(everything()))) %>%
           dplyr::distinct(feature_name, .keep_all = TRUE) 
 
         return(res)

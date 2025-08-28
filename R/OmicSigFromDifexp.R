@@ -71,7 +71,7 @@ OmicSigFromDifexp <- function(difexp, metadata, criteria = NULL) {
 
   signatures <- signatures %>%
     dplyr::distinct(feature_name, .keep_all = TRUE) %>%
-    filter(feature_name != "", complete.cases(.))
+    filter(feature_name != "", complete.cases(across(everything())))
 
   OmicSig <- OmicSignature$new(
     metadata = metadata,
