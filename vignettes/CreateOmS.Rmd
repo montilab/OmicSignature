@@ -45,6 +45,7 @@ An `OmicSignature` object contains three parts:\
     "**probe_id**" (unique identifier for each feature)\
     "**feature_name**" (e.g. ENSEMBL ID, Uniprot ID)\
     "**score**"\
+    Required for bi-directional and categorical signatures: "**group_label**"\
     At least one of the following: "**p_value**", "**q_value**", or "**adj_p**".\
     Recommended optional column, if applicable: "gene_symbol"\
 
@@ -162,12 +163,15 @@ While both "sample_type" and "platform" are free text, it is recommended that pr
 
 ### 2.2. Signature
 
-**signature** is a dataframe with the columns **"probe_id"** and **"feature_name"**. \
-If the signature is bi-directional or categorical (as specified in `direction_type` within `metadata`), an additional column, **"group_label"**, is also required. This column indicates the group in which a feature is more highly expressed or more significant. \
-
-For example, if the analysis identifies genes differentially expressed between Treatment and Control, all gene features with a positive score should be labeled "Treatment" in this column, indicating higher expression in the Treatment group. Features with negative scores should be labeled "Control". Similarly, if the analysis concerns protein expression changes associated with BMI, protein features with positive scores should be labeled "higher BMI", while those with negative scores should be labeled "lower BMI". \
- \
+**signature** is a dataframe with the columns **"probe_id"** and **"feature_name"**. If the signature is bi-directional or categorical (as specified in `direction_type` within `metadata`), an additional column, **"group_label"**, is also required. \
 An optional column **"score"** is highly recommended when applicable.\
+ \
+"**probe_id**" is a unique identifier, usually a platform-specific identifider (e.g., probe IDs for Affymetrix microarrays, or aptamer IDs for SomaScan assays). If not provided, it will be automatically generated.\
+"**feature_name**" is a name that identifies each feature, examples include ENSEMBL IDs for transcripts, UniProt IDs for proteins, and Refmet IDs for metabolites. To better identify the features, it is recommended to add an additional annotation column(s), e.g., "gene_symbol". For metabolite features, it is recommended to include multiple annotation columns if available, e.g., HMDB ID and InChI key.\
+**"group_label"** is a factor column. This column indicates the experimental group in which a feature is more highly expressed or more significant. For example, if the analysis identifies genes differentially expressed in *Treatment v.s. Control*, all gene features with a positive score should be labeled "Treatment" in this column, indicating their higher expression in the Treatment group. Features with negative scores should be labeled "Control". Similarly, if the analysis concerns protein expression changes associated with BMI, protein features with positive scores should be labeled "higher BMI", while those with negative scores should be labeled "lower BMI". \
+ \
+
+
 
 **Option 1**: Extract signature from a differential analysis results table.\
 In this example, we extract a bi-directional signature from a `difexp` object (see next section) using the `score_cutoff` and `adj_p_cutoff` specified in the metadata. A `difexp` object is a properly formatted data frame reporting the results of a differential analysis (e.g., by Limma). \
@@ -236,11 +240,9 @@ signature <- data.frame(
 A differential expression dataframe is optional but **recommended** if available. It facilitates downstream signature extraction, and signature comparison by rank-based test. \
 
 `difexp` is a dataframe with the following **required** columns:\
-"**probe_id**", "**feature_name**", "**score**", along with at least one of the following: "**p_value**", "**q_value**", or "**adj_p**".\
-
-"**probe_id**" is a unique identifier, usually a platform-specific identifider (e.g., probe IDs for Affymetrix microarrays, or aptamer IDs for SomaScan assays). If not provided, it will be automatically generated.\
-"**feature_name**" is a name that identifies each feature, examples include ENSEMBL IDs for transcripts, UniProt IDs for proteins, and Refmet IDs for metabolites. To better identify the features, it is recommended to add an additional annotation column(s), e.g., "gene_symbol". For metabolite features, it is recommended to include multiple annotation columns if available, e.g., HMDB ID and InChI key.\
-"**p_value**", "**q_value**", or "**adj_p**" refers to the p- or q-value representing the significance of each feature.\
+"**probe_id**", "**feature_name**", "**score**", along with at least one of the following: "**p_value**", "**q_value**", or "**adj_p**". Same as in the signature dataframe, **"group_label"** is also required when the signature is bi-directional or categorical.\
+Descriptions of probe_id, feature_name, and group_label were provided in the signature section above. \
+"**p_value**", "**q_value**", or "**adj_p**" refers to the p- or q-value representing the significance of each feature. \
 "**score**" is a numeric value that indicates the importance or significance of a feature. Depending on how the signature was derived, this can be the t-statistics, log-fold change, Z-score, or other summary statistics.\
  \
 Here we use an example from the differential expression analysis using the `limma` package.
