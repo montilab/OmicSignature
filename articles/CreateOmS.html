@@ -123,9 +123,10 @@ effects of Myc reduced expression by comparing liver profiles of
 24-month old
 <em>Myc</em><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi></mi><mrow><mi>+</mi><mi>/</mi><mo>+</mo></mrow></msup><annotation encoding="application/x-tex">^{+/+}</annotation></semantics></math><em>vs.</em>
 <em>Myc</em><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi></mi><mrow><mi>+</mi><mi>/</mi><mo>−</mo></mrow></msup><annotation encoding="application/x-tex">^{+/-}</annotation></semantics></math>
-mice. This is a <em>bi-directional</em> signature example, since it
-contains up and down regulated features (genes). For ease of exposition,
-only the top 1000 genes are here included.<br></p>
+mice. This is a <em>bi-directional</em> signature example, since it is a
+comparison between two groups, and contains up and down regulated
+features (genes). For ease of exposition, only the top 1000 genes are
+here included.<br></p>
 <div class="section level3">
 <h3 id="metadata">2.1. Metadata<a class="anchor" aria-label="anchor" href="#metadata"></a>
 </h3>
@@ -189,18 +190,18 @@ field.<br></p>
 <div class="section level4">
 <h4 id="phenotype">2.1.1 “phenotype”<a class="anchor" aria-label="anchor" href="#phenotype"></a>
 </h4>
-<p>“phenotype” is free text, one or two-word description of the
-experimental conditions, such as a drug treatment, a gene knock out, or
-a clinical trait. For example, <em>age</em> or <em>breast
-cancer</em>.<br>
-Providing a detailed (free text) “description” is highly recommended.
+<p>“‘phenotype’ is free text, usually a one- or two-word description of
+the experimental condition or trait under study, such as a drug
+treatment, a gene knockout, or a clinical characteristic. Examples
+include <em>age</em>, <em>breast cancer</em>, and <em>drug X</em>.</p>
+<p>Providing a detailed (free text) “description” is highly recommended.
 For instance, it may include information about how the treatment was
 administered and how each group was defined.<br></p>
 </div>
 <div class="section level4">
 <h4 id="organism">2.1.2 “organism<a class="anchor" aria-label="anchor" href="#organism"></a>
 </h4>
-<p>“organism” is free-text. We provide a list of common organisms, which
+<p>“organism” is free text. We provide a list of common organisms, which
 you can search using <code>searchOrganism</code>. Other entries are
 allowed, but please use standard naming conventions (e.g., “Homo
 sapiens”, “Mus musculus”) to ensure consistency.<br></p>
@@ -227,13 +228,13 @@ Type &amp; Platform Info”</a> for details.<br></p>
 <li><p>“uni-directional”. Only a list of significant feature names is
 available. Examples including “genes mutated in a disease” and “markers
 of a specific cell type”.<br></p></li>
-<li><p>“bi-directional”. Significant features can be grouped into “up”
-and “down” categories. For example, when comparing treatment
-<em>vs.</em> control groups, some features will be higher (“up”, or “+”)
-and some will be lower (“down” or “-”) in the treatment group. When the
-phenotype is a continuous trait, such as age, some features will
-increase (“up”, or “+”) with age, while others will decrease (“down”, or
-“-”) with age.<br></p></li>
+<li><p>“bi-directional”. Significant features are derived from
+comparison of two groups, or a single continuous trait. Thus, the
+resulting significant features can be grouped into two categories. For
+example, when comparing treatment <em>vs.</em> control groups, some
+features will be higher and some will be lower in the treatment group.
+When the phenotype is a continuous trait, such as age, some features
+will increase with age, while others will decrease with age.<br></p></li>
 <li><p>“categorical”. Used with multi-valued categorical phenotypes
 (e.g., “A” <em>vs.</em> “B” <em>vs.</em> “C”), usually analyzed by
 ANOVA.<br></p></li>
@@ -255,30 +256,31 @@ ANOVA.<br></p></li>
 <div class="section level3">
 <h3 id="signature">2.2. Signature<a class="anchor" aria-label="anchor" href="#signature"></a>
 </h3>
-<p><strong>signature</strong> is a dataframe with columns
+<p><strong>signature</strong> is a dataframe with the columns
 <strong>“probe_id”</strong> and <strong>“feature_name”</strong>.<br>
-If the signature is “bi-directional” or “categorical” (specified in
-<code>direction_type</code> in <code>metadata</code>), then column
-<strong>“group_label”</strong> is also required. This column indicates
-in which phenotype a feature is more highly expressed or more
-significant.<br>
-For example, if the analysis is identifying genes differentially
-expressed in Treatment vs Control, all gene features with a positive
-score should be labeled “Treatment” in this column to show their higher
-expression in the Treatment group. Features with negative scores would
-instead be labeled “Control”. Alternatively, if the analysis is about
-protein expression changes associated with BMI, protein features with a
-positive (or negative) score should be labeled “higher BMI” (or “lower
-BMI”).<br><br>
-An optional column “score” is highly recommended when applicable.<br></p>
+If the signature is bi-directional or categorical (as specified in
+<code>direction_type</code> within <code>metadata</code>), an additional
+column, <strong>“group_label”</strong>, is also required. This column
+indicates the group in which a feature is more highly expressed or more
+significant.<br></p>
+<p>For example, if the analysis identifies genes differentially
+expressed between Treatment and Control, all gene features with a
+positive score should be labeled “Treatment” in this column, indicating
+higher expression in the Treatment group. Features with negative scores
+should be labeled “Control”. Similarly, if the analysis concerns protein
+expression changes associated with BMI, protein features with positive
+scores should be labeled “higher BMI”, while those with negative scores
+should be labeled “lower BMI”.<br><br>
+An optional column <strong>“score”</strong> is highly recommended when
+applicable.<br></p>
 <p><strong>Option 1</strong>: Extract signature from a differential
 analysis results table.<br>
 In this example, we extract a bi-directional signature from a
 <code>difexp</code> object (see next section) using the
 <code>score_cutoff</code> and <code>adj_p_cutoff</code> specified in the
-metadata. A <code>difexp</code> object is simply a properly formatted
-data frame reporting the results of a differential analysis (e.g., by
-Limma). It looks something like this:</p>
+metadata. A <code>difexp</code> object is a properly formatted data
+frame reporting the results of a differential analysis (e.g., by
+Limma).<br></p>
 <pre><code><span><span class="co">#&gt;   probe_id  logfc  mean  score p_value adj_p      b       feature_name</span></span>
 <span><span class="co">#&gt; 1 10345228 -0.167 7.106 -1.470   0.186 0.560 -5.866 ENSMUSG00000103746</span></span>
 <span><span class="co">#&gt; 2 10354534  0.041 4.351  0.520   0.620 0.870 -6.780 ENSMUSG00000060715</span></span>
@@ -333,7 +335,7 @@ For uni-directional signature:<br></p>
 <div class="section level3">
 <h3 id="differential-expression-analysis-results-difexp">2.3. Differential expression analysis results (difexp)<a class="anchor" aria-label="anchor" href="#differential-expression-analysis-results-difexp"></a>
 </h3>
-<p>A differential expression dataframe is <strong>optional</strong> but
+<p>A differential expression dataframe is optional but
 <strong>recommended</strong> if available. It facilitates downstream
 signature extraction, and signature comparison by rank-based test.<br></p>
 <p><code>difexp</code> is a dataframe with the following
@@ -356,12 +358,12 @@ key.<br>
 “<strong>p_value</strong>”, “<strong>q_value</strong>”, or
 “<strong>adj_p</strong>” refers to the p- or q-value representing the
 significance of each feature.<br>
-“score” is a numeric value that indicates the importance or significance
-of a feature. Depending on how the signature was derived, this can be
-the t-statistics, log-fold change, Z-score, or other summary
-statistics.<br></p>
-<p>Here we use an example from the differential expression analysis
-using the <code>limma</code> package.</p>
+“<strong>score</strong>” is a numeric value that indicates the
+importance or significance of a feature. Depending on how the signature
+was derived, this can be the t-statistics, log-fold change, Z-score, or
+other summary statistics.<br><br>
+Here we use an example from the differential expression analysis using
+the <code>limma</code> package.</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Version reading from a txt file</span></span>
 <span><span class="co"># difexp &lt;- read.table(</span></span>
@@ -482,7 +484,7 @@ object)</p>
 <span><span class="co">#&gt; 3 10353192 ENSMUSG00000025932  10.487  MYC Reduce</span></span>
 <span><span class="co">#&gt; 4 10355259 ENSMUSG00000061816 -10.315          WT</span></span></code></pre></div>
 <p>Besides saving and reading OmicSignature object in <code>.rds</code>
-format, you can export the object as a json text file.<br></p>
+format, you can export the object as a text file in json format.<br></p>
 <pre><code><span><span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">saveRDS</a></span><span class="op">(</span><span class="va">OmS</span>, <span class="st">"Myc_reduce_mice_liver_24m_OmS.rds"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/writeJson.html">writeJson</a></span><span class="op">(</span><span class="va">OmS</span>, <span class="st">"Myc_reduce_mice_liver_24m_OmS.json"</span><span class="op">)</span></span></code></pre>
 <p>See more in <a href="https://montilab.github.io/OmicSignature/articles/FunOmS.html">“Functionalities
