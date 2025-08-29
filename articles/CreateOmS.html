@@ -104,6 +104,8 @@ Required columns:<br>
 “<strong>probe_id</strong>” (unique identifier for each feature)<br>
 “<strong>feature_name</strong>” (e.g. ENSEMBL ID, Uniprot ID)<br>
 “<strong>score</strong>”<br>
+Required for bi-directional and categorical signatures:
+“<strong>group_label</strong>”<br>
 At least one of the following: “<strong>p_value</strong>”,
 “<strong>q_value</strong>”, or “<strong>adj_p</strong>”.<br>
 Recommended optional column, if applicable: “gene_symbol”<br></p></li>
@@ -257,22 +259,32 @@ ANOVA.<br></p></li>
 <h3 id="signature">2.2. Signature<a class="anchor" aria-label="anchor" href="#signature"></a>
 </h3>
 <p><strong>signature</strong> is a dataframe with the columns
-<strong>“probe_id”</strong> and <strong>“feature_name”</strong>.<br>
-If the signature is bi-directional or categorical (as specified in
+<strong>“probe_id”</strong> and <strong>“feature_name”</strong>. If the
+signature is bi-directional or categorical (as specified in
 <code>direction_type</code> within <code>metadata</code>), an additional
-column, <strong>“group_label”</strong>, is also required. This column
-indicates the group in which a feature is more highly expressed or more
-significant.<br></p>
-<p>For example, if the analysis identifies genes differentially
-expressed between Treatment and Control, all gene features with a
-positive score should be labeled “Treatment” in this column, indicating
-higher expression in the Treatment group. Features with negative scores
-should be labeled “Control”. Similarly, if the analysis concerns protein
-expression changes associated with BMI, protein features with positive
-scores should be labeled “higher BMI”, while those with negative scores
-should be labeled “lower BMI”.<br><br>
+column, <strong>“group_label”</strong>, is also required.<br>
 An optional column <strong>“score”</strong> is highly recommended when
-applicable.<br></p>
+applicable.<br><br>
+“<strong>probe_id</strong>” is a unique identifier, usually a
+platform-specific identifider (e.g., probe IDs for Affymetrix
+microarrays, or aptamer IDs for SomaScan assays). If not provided, it
+will be automatically generated.<br>
+“<strong>feature_name</strong>” is a name that identifies each feature,
+examples include ENSEMBL IDs for transcripts, UniProt IDs for proteins,
+and Refmet IDs for metabolites. To better identify the features, it is
+recommended to add an additional annotation column(s), e.g.,
+“gene_symbol”. For metabolite features, it is recommended to include
+multiple annotation columns if available, e.g., HMDB ID and InChI
+key.<br><strong>“group_label”</strong> is a factor column. This column indicates
+the experimental group in which a feature is more highly expressed or
+more significant. For example, if the analysis identifies genes
+differentially expressed in <em>Treatment v.s. Control</em>, all gene
+features with a positive score should be labeled “Treatment” in this
+column, indicating their higher expression in the Treatment group.
+Features with negative scores should be labeled “Control”. Similarly, if
+the analysis concerns protein expression changes associated with BMI,
+protein features with positive scores should be labeled “higher BMI”,
+while those with negative scores should be labeled “lower BMI”.<br><br></p>
 <p><strong>Option 1</strong>: Extract signature from a differential
 analysis results table.<br>
 In this example, we extract a bi-directional signature from a
@@ -343,18 +355,11 @@ signature extraction, and signature comparison by rank-based test.<br></p>
 “<strong>probe_id</strong>”, “<strong>feature_name</strong>”,
 “<strong>score</strong>”, along with at least one of the following:
 “<strong>p_value</strong>”, “<strong>q_value</strong>”, or
-“<strong>adj_p</strong>”.<br></p>
-<p>“<strong>probe_id</strong>” is a unique identifier, usually a
-platform-specific identifider (e.g., probe IDs for Affymetrix
-microarrays, or aptamer IDs for SomaScan assays). If not provided, it
-will be automatically generated.<br>
-“<strong>feature_name</strong>” is a name that identifies each feature,
-examples include ENSEMBL IDs for transcripts, UniProt IDs for proteins,
-and Refmet IDs for metabolites. To better identify the features, it is
-recommended to add an additional annotation column(s), e.g.,
-“gene_symbol”. For metabolite features, it is recommended to include
-multiple annotation columns if available, e.g., HMDB ID and InChI
-key.<br>
+“<strong>adj_p</strong>”. Same as in the signature dataframe,
+<strong>“group_label”</strong> is also required when the signature is
+bi-directional or categorical.<br>
+Descriptions of probe_id, feature_name, and group_label were provided in
+the signature section above.<br>
 “<strong>p_value</strong>”, “<strong>q_value</strong>”, or
 “<strong>adj_p</strong>” refers to the p- or q-value representing the
 significance of each feature.<br>
