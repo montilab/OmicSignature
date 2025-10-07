@@ -1,5 +1,5 @@
 #' @title change a signature vector into a dataframe to be saved into OmicSignature object
-#' updated 08/2025
+#' @description updated 08/2025
 #' @param input a character vector of the significant feature names, or a numeric vector of scores and named by feature names.
 #' @param group_labels optional. a character vector of length of 2. when group_labels = c("Group1", "Group2"), it indicates the analysis is Group1 vs Group2, and positive scores indicate a higher value in Group1.
 #' @return signature dataframe with columns "feature_name", along with "score" and "group_label" if applicable.

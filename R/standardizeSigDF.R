@@ -1,6 +1,5 @@
 #' @title Standardize signature data frame
-#' @description remove missing and duplicated symbols.
-#' updated 08/2025.
+#' @description remove missing and duplicated symbols. updated 08/2025.
 #'
 #' @importFrom dplyr filter arrange mutate %>%
 #' @importFrom stats complete.cases

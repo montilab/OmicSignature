@@ -1,14 +1,14 @@
-#' @title searchOrganism
-#' @description search for organism
-#' updated 05/2025
-#' @param x a string or character vector to search for. input character vector if searching for multiple terms.
+#' @title search for a pre-defined organism name to use
+#' @description updated 05/2025
+#' @param x a string to search for (case-insensitive). if empty, will return all available organisms.
 #' @param organism pre-defined organism character variable.
 #' @return character of search result
 #'
 #' @examples
-#' searchOrganism("Homo")
+#' searchOrganism()
+#' searchOrganism("homo")
 #' @export
-searchOrganism <- function(x, organism = predefined_organisms) {
+searchOrganism <- function(x = "", organism = predefined_organisms) {
   result <- grep(x, organism, ignore.case = TRUE)
   return(organism[result])
 }

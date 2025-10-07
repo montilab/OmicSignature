@@ -1,5 +1,5 @@
 #' @title rename the columns of a differential analysis matrix for OmicSignature R6 object
-#' updated 10/2024
+#' @description updated 10/2024
 #'
 #' @importFrom dplyr %>%
 #' @importFrom methods is

@@ -13,6 +13,5 @@ standardizeSigDF(sigdf)
 signature dataframe with empty, duplicate rows removed and ordered by score
 }
 \description{
-remove missing and duplicated symbols.
-updated 08/2025.
+remove missing and duplicated symbols. updated 08/2025.
 }

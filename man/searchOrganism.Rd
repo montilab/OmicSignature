@@ -2,12 +2,12 @@
 % Please edit documentation in R/searchOrganism.R
 \name{searchOrganism}
 \alias{searchOrganism}
-\title{searchOrganism}
+\title{search for a pre-defined organism name to use}
 \usage{
-searchOrganism(x, organism = predefined_organisms)
+searchOrganism(x = "", organism = predefined_organisms)
 }
 \arguments{
-\item{x}{a string or character vector to search for. input character vector if searching for multiple terms.}
+\item{x}{a string to search for (case-insensitive). if empty, will return all available organisms.}
 
 \item{organism}{pre-defined organism character variable.}
 }
@@ -15,9 +15,9 @@ searchOrganism(x, organism = predefined_organisms)
 character of search result
 }
 \description{
-search for organism
 updated 05/2025
 }
 \examples{
-searchOrganism("Homo")
+searchOrganism()
+searchOrganism("homo")
 }

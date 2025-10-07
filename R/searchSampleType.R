@@ -1,6 +1,5 @@
-#' @title BRENDAExistName
-#' @description search if a string is a valid BRENDA tissue name
-#' updated 02/2024
+#' @title search for a valid BRENDA ontology term to use for sample type
+#' @description updated 02/2024. Using BRENDA ontology version 2021.
 #' @param x A name to search for
 #' @param file The BRENDA data frame, has columns ID and Name
 #' @return TRUE or FALSE
@@ -20,8 +19,8 @@ BRENDAExistName <- function(x, file = BRENDA) {
 #' @title searchSampleType
 #' @description search for BRENDA tissue name
 #' updated 02/2024
-#' @param x A string or character vector to search for. Multiple search terms
-#' are separated by space.
+#' @param x A string or character vector to search for (case-insensitive).
+#' Multiple search terms can be separated by space, or input them as a character vector.
 #' @param file The BRENDA data frame, has columns ID and Name.
 #' @param contain_all if TRUE, will only return the results contain all search terms.
 #' if FALSE, will return results contain any of the given pattern.

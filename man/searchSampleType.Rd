@@ -7,8 +7,8 @@
 searchSampleType(x, file = BRENDA, contain_all = TRUE)
 }
 \arguments{
-\item{x}{A string or character vector to search for. Multiple search terms
-are separated by space.}
+\item{x}{A string or character vector to search for (case-insensitive).
+Multiple search terms can be separated by space, or input them as a character vector.}
 
 \item{file}{The BRENDA data frame, has columns ID and Name.}
 

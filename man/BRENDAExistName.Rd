@@ -2,7 +2,7 @@
 % Please edit documentation in R/searchSampleType.R
 \name{BRENDAExistName}
 \alias{BRENDAExistName}
-\title{BRENDAExistName}
+\title{search for a valid BRENDA ontology term to use for sample type}
 \usage{
 BRENDAExistName(x, file = BRENDA)
 }
@@ -15,8 +15,7 @@ BRENDAExistName(x, file = BRENDA)
 TRUE or FALSE
 }
 \description{
-search if a string is a valid BRENDA tissue name
-updated 02/2024
+updated 02/2024. Using BRENDA ontology version 2021.
 }
 \examples{
 BRENDAExistName("blood plasma")

@@ -2,12 +2,12 @@
 % Please edit documentation in R/searchPlatform.R
 \name{searchPlatform}
 \alias{searchPlatform}
-\title{searchPlatform}
+\title{search for a platform name to use}
 \usage{
-searchPlatform(x, platforms = predefined_platforms, contain_all = TRUE)
+searchPlatform(x = "", platforms = predefined_platforms, contain_all = TRUE)
 }
 \arguments{
-\item{x}{a string or character vector to search for. input character vector if searching for multiple terms.}
+\item{x}{a string or character vector to search for. input a character vector if searching for multiple terms. if empty, will return all available organisms.}
 
 \item{platforms}{pre-defined platform information character variable.}
 
@@ -17,10 +17,10 @@ searchPlatform(x, platforms = predefined_platforms, contain_all = TRUE)
 character or dataframe of search result
 }
 \description{
-search for platform
 updated 05/2025
 }
 \examples{
+searchPlatform()
 searchPlatform("proteomics")
 searchPlatform(c("transcript", "single-cell"), contain_all = TRUE)
 }

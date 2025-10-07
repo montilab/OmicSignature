@@ -2,8 +2,7 @@
 % Please edit documentation in R/signatureVecToDF.R
 \name{signatureVecToDF}
 \alias{signatureVecToDF}
-\title{change a signature vector into a dataframe to be saved into OmicSignature object
-updated 08/2025}
+\title{change a signature vector into a dataframe to be saved into OmicSignature object}
 \usage{
 signatureVecToDF(input, group_labels = NULL)
 }
@@ -16,7 +15,6 @@ signatureVecToDF(input, group_labels = NULL)
 signature dataframe with columns "feature_name", along with "score" and "group_label" if applicable.
 }
 \description{
-change a signature vector into a dataframe to be saved into OmicSignature object
 updated 08/2025
 }
 \examples{
