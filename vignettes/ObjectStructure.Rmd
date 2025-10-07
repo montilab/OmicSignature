@@ -2,7 +2,7 @@
 title: "Structure of OmicSignature & OmicSignatureCollection"
 output: rmarkdown::html_vignette
 author: "Vanessa Mengze Li"
-date: "10/24/2024"
+date: "`r Sys.Date()`"
 vignette: >
   %\VignetteIndexEntry{Structure of OmicSignature & OmicSignatureCollection}
   %\VignetteEngine{knitr::rmarkdown}
@@ -16,8 +16,10 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r echo=FALSE, out.height="80%", out.width="80%"}
-knitr::include_graphics("figs/OmS_OmSC_structure.png")
+<font color = "#000000">
+
+```{r echo=FALSE, out.height="90%", out.width="90%"}
+knitr::include_graphics("figs/OmS_OmSC_structure_2510.png")
 ```
 
 ## OmicSignature object structure
@@ -37,12 +39,13 @@ See [here](https://montilab.github.io/OmicSignature/articles/CreateOmSC.html) fo
 
 ## Cheat-Sheet of main functionalities
 ```{r echo=FALSE, out.height="60%", out.width="60%"}
-knitr::include_graphics("figs/OmS_function.png")
+knitr::include_graphics("figs/OmS_function_2510.png")
 ```
 
-```{r echo=FALSE, out.height="80%", out.width="80%"}
-knitr::include_graphics("figs/OmSC_function.png")
+```{r echo=FALSE, out.height="60%", out.width="60%"}
+knitr::include_graphics("figs/OmSC_function_2510.png")
 ```
 
 --
 
+</font>

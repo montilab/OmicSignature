@@ -2,7 +2,7 @@
 title: "Functionalities of OmicSignatureCollection"
 output: rmarkdown::html_vignette
 author: "Vanessa Mengze Li"
-date: "08/28/2025"
+date: "`r Sys.Date()`"
 vignette: >
   %\VignetteIndexEntry{Functionalities of OmicSignatureCollection}
   %\VignetteEngine{knitr::rmarkdown}
@@ -23,7 +23,7 @@ library(dplyr)
 <font color = "#000000">
 
 ```{r echo=FALSE, out.height="60%", out.width="60%"}
-knitr::include_graphics("figs/OmSC_function.png")
+knitr::include_graphics("figs/OmSC_function_2510.png")
 ```
 
 First, create an `OmicSignatureCollection` object. \
@@ -37,7 +37,7 @@ ColMeta <- list(
   "collection_name" = "OmS_example_Collection",
   "description" = "An example of signature collection",
   "organism" = "Mus Musculus",
-  "author" = "me"
+  "author" = "vmli"
 )
 OmSC <- OmicSignatureCollection$new(
   OmicSigList = list(OmS1, OmS2, OmS3),

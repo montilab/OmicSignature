@@ -2,7 +2,7 @@
 title: "Sample Type & Platform Info"
 output: rmarkdown::html_vignette
 author: "Vanessa Mengze Li"
-date: "05/15/2025"
+date: "`r Sys.Date()`"
 vignette: >
   %\VignetteIndexEntry{Sample Type & Platform Info}
   %\VignetteEngine{knitr::rmarkdown}
