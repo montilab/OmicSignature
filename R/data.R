@@ -14,3 +14,7 @@ predefined_platforms <- readLines(file.path(system.file("extdata", package = "Om
 #' @export
 predefined_organisms <- readLines(file.path(system.file("extdata", package = "OmicSignature"), "predefined_organisms.txt"))
 
+#' @title predefined assay type list
+#' @description a list of predefined assay type names 
+#' @export
+predefined_assaytypes <- readLines(file.path(system.file("extdata", package = "OmicSignature"), "predefined_assaytypes.txt"))

@@ -1,0 +1,7 @@
+transcriptomics
+proteomics
+metabolomics
+methylomics
+genetic_variations
+DNA_binding_sites
+other
