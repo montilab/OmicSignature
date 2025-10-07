@@ -1,5 +1,6 @@
 {
-  "assay_type": ["transcriptomics"],
+	"assay_type": ["transcriptomics"],
+  "author": ["vmli"],
   "covariates": ["none"],
   "direction_type": ["bi-directional"],
   "organism": ["Mus musculus"],
@@ -9,7 +10,7 @@
   "sample_type": ["brain"],
   "score_cutoff": [3],
   "signature_name": ["Experiment in brain"],
-  "metadata_length": [10],
+  "metadata_length": [11],
   "sig_probe_id": [14, 9, 15, 25, 16, 2, 50, 27, 41, 33, 20, 43, 49, 1, 17, 48, 8, 7, 22, 31, 34, 30], 
   "sig_feature_name": ["gene14", "gene9", "gene15", "gene25", "gene16", "gene2", "gene50", "gene27", "gene41", "gene33", "gene20", "gene43", "gene49", "gene1", "gene17", "gene48", "gene8", "gene7", "gene22", "gene31", "gene34", "gene30"],
   "sig_score": [-4.99, -4.86, -4.77, -4.62, -4.59, 4.48, -4.44, -4.17, 4.13, -4.11, -4, 3.78, 3.49, 3.45, -3.42, -3.3, -3.28, -3.27, -3.2, -3.05, -3.04, -3.03],

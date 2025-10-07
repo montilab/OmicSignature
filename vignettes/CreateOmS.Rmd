@@ -29,7 +29,7 @@ An `OmicSignature` object contains three parts:\
 
 -   **metadata**, a list.\
     Required fields:\
-    "**signature_name**", "**organism**", "**direction_type**", "**assay_type**", "**phenotype**".\
+    "**signature_name**", "**organism**", "**direction_type**", "**assay_type**", "**phenotype**", "**author**".\
     Recommended optional fields, if applicable:\
     "platform", "sample_type", "description", "covariates", "score_cutoff", "adj_p_cutoff".\
 
@@ -66,7 +66,7 @@ The example provided below is from an experiment evaluating the effects of Myc r
 ### 2.1. Metadata
 
 A list with the following required fields:\
-"**signature_name**", "**organism**", "**direction_type**", "**assay_type**", "**phenotype**".\
+"**signature_name**", "**organism**", "**direction_type**", "**assay_type**", "**phenotype**", "**author**".\
 Not required, but highly recommended fields:\
 "**platform**", "**sample_type**", "**description**", "**covariates**", "**score_cutoff**", "**adj_p_cutoff**", "**logfc_cutoff**".\
 
@@ -80,7 +80,8 @@ metadata <- list(
   "phenotype" = "Myc_reduce",
   "direction_type" = "bi-directional",
   "assay_type" = "transcriptomics", 
-  "platform" = "transcriptomics by array"
+  "platform" = "transcriptomics by array",
+  "author" = "Researcher1"
 )
 ```
 
@@ -96,6 +97,7 @@ metadata <- createMetadata(
   direction_type = "bi-directional",
   assay_type = "transcriptomics",
   phenotype = "Myc_reduce",
+  author = "Researcher1",
 
   # optional and recommended:
   covariates = "none",
@@ -113,7 +115,6 @@ metadata <- createMetadata(
   # other optional built-in attributes:
   keywords = c("Myc", "KO", "longevity"),
   cutoff_description = NULL,
-  author = NULL,
   PMID = 25619689,
   year = 2015,
 
@@ -126,11 +127,11 @@ metadata <- createMetadata(
 
 "'phenotype' is free text, usually a one- or two-word description of the experimental condition or trait under study, such as a drug treatment, a gene knockout, or a clinical characteristic. Examples include *age*, *breast cancer*, and *drug X*.
 
-Providing a detailed (free text) "description" is highly recommended. For instance, it may include information about how the treatment was administered and how each group was defined.\
+Providing a detailed (free text) "description" is highly recommended. For instance, it may include information about how the treatment was administered and how each group was defined. The character limit of the description is 65,535 (16-bit storage), space included. \
 
 #### 2.1.2 "organism
 
-"organism" is free text. We provide a list of common organisms, which you can search using `searchOrganism`. Other entries are allowed, but please use standard naming conventions (e.g., "Homo sapiens", "Mus musculus") to ensure consistency.\
+"organism" is free text. We provide a pre-defined list of common organisms, which you can search using `searchOrganism()`. Other entries are allowed, but please use standard naming conventions (e.g., "Homo sapiens", "Mus musculus") to ensure consistency.\
 
 ```{r}
 searchOrganism("homo")
@@ -160,6 +161,8 @@ While both "sample_type" and "platform" are free text, it is recommended that pr
 - "genetic_variations" (e.g. SNP, GWAS)\
 - "DNA_binding_sites" (e.g. ChIP-seq)\
 - "other"\
+
+You can also use `searchAssayType()` to see the list above. \
 
 ### 2.2. Signature
 

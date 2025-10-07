@@ -1,6 +1,7 @@
 {
   "adj_p_cutoff": [0.05],
   "assay_type": ["transcriptomics"],
+  "author": ["vmli"],
   "covariates": ["none"],
   "description": ["mice MYC reduced expression"],
   "direction_type": ["bi-directional"],
@@ -16,7 +17,7 @@
   "score_cutoff": [5],
   "signature_name": ["Myc_reduce_mice_liver_24m"],
   "year": [2015],
-  "metadata_length": [15],
+  "metadata_length": [16],
   "sig_probe_id": ["10349648", "10345762", "10353192", "10355259", "10351477", "10353878", "10350438", "10346882", "10355050", "10355278", "10345527", "10352756", "10347741", "10351380", "10347748"],
   "sig_feature_name": ["ENSMUSG00000004552", "ENSMUSG00000026072", "ENSMUSG00000025932", "ENSMUSG00000061816", "ENSMUSG00000102418", "ENSMUSG00000067653", "ENSMUSG00000052726", "ENSMUSG00000025964", "ENSMUSG00000026014", "ENSMUSG00000062209", "ENSMUSG00000119706", "ENSMUSG00000026623", "ENSMUSG00000012187", "ENSMUSG00000040612", "ENSMUSG00000079470"],
   "sig_score": [14.762, -13.543, 10.487, -10.315, 8.818, -7.867, -7.728, -6.99, -6.571, 6.083, -5.953, -5.574, 5.496, -5.429, -5.404],
