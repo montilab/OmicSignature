@@ -1,5 +1,5 @@
 Package: OmicSignature
-Type: Package
+Type: An R package to store omics signatures as an R6 object
 Title: OmicSignature
 Version: 1.2.0
 Authors@R: c(person(given="Vanessa Mengze", family="Li", email="vmli@bu.edu", 
@@ -10,9 +10,11 @@ Description: As high-throughput technology evolves, a large number of omics-sign
     This package contains OmicSignature and OmicSignatureCollection R6 objects, and can help to store signatures efficiently and retrieve them conveniently.
 Depends: R (>= 3.5.0)
 License: GPL-3 + file LICENSE
+URL: https://github.com/montilab/OmicSignature
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.2.3
+LazyData: false
 Imports:
 	dplyr,
 	rlang,
@@ -26,3 +28,4 @@ Suggests:
 	pkgdown,
 	devtools
 VignetteBuilder: knitr
+BugReports: https://github.com/montilab/OmicSignature/issues
