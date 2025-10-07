@@ -123,7 +123,7 @@ OmicSignature <-
 
         res <- res %>%
           dplyr::filter(feature_name != "", complete.cases(across(everything()))) %>%
-          dplyr::distinct(feature_name, .keep_all = TRUE) 
+          dplyr::distinct(feature_name, .keep_all = TRUE)
 
         return(res)
       }
@@ -229,7 +229,7 @@ OmicSignature <-
         stopifnot(is(metadata, "list"))
 
         # check required metadata fields
-        metadataRequired <- c("signature_name", "phenotype", "organism", "direction_type", "assay_type")
+        metadataRequired <- c("signature_name", "phenotype", "organism", "direction_type", "assay_type", "author")
         metadataMissing <- setdiff(metadataRequired, names(metadata))
         private$verbose(v, paste("  --Required attributes for metadata: ",
           paste(metadataRequired, collapse = ", "), " --\n",
@@ -280,6 +280,12 @@ OmicSignature <-
         if (!metadata$platform %in% predefined_platforms) {
           warning("Platform is not in the predefined list. Ignore this message if intentional.")
         }
+
+        # check description character count
+        if (is.null(metadata$description)) metadata$description <- metadata$signature_name
+        stopifnot(is.character(metadata$description))
+        stopifnot(length(metadata$description) == 1)
+        stopifnot(nchar(metadata$description) < 65535)
 
         private$verbose(v, "  [Success] Metadata is saved. \n")
         metadata <- metadata[order(names(metadata))]
