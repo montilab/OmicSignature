@@ -87,7 +87,7 @@ Li</h4>
 Required fields:<br>
 “<strong>signature_name</strong>”, “<strong>organism</strong>”,
 “<strong>direction_type</strong>”, “<strong>assay_type</strong>”,
-“<strong>phenotype</strong>”.<br>
+“<strong>phenotype</strong>”, “<strong>author</strong>”.<br>
 Recommended optional fields, if applicable:<br>
 “platform”, “sample_type”, “description”, “covariates”, “score_cutoff”,
 “adj_p_cutoff”.<br></p></li>
@@ -135,7 +135,7 @@ here included.<br></p>
 <p>A list with the following required fields:<br>
 “<strong>signature_name</strong>”, “<strong>organism</strong>”,
 “<strong>direction_type</strong>”, “<strong>assay_type</strong>”,
-“<strong>phenotype</strong>”.<br>
+“<strong>phenotype</strong>”, “<strong>author</strong>”.<br>
 Not required, but highly recommended fields:<br>
 “<strong>platform</strong>”, “<strong>sample_type</strong>”,
 “<strong>description</strong>”, “<strong>covariates</strong>”,
@@ -150,7 +150,8 @@ recommended, because typos can occur.<br></p>
 <span>  <span class="st">"phenotype"</span> <span class="op">=</span> <span class="st">"Myc_reduce"</span>,</span>
 <span>  <span class="st">"direction_type"</span> <span class="op">=</span> <span class="st">"bi-directional"</span>,</span>
 <span>  <span class="st">"assay_type"</span> <span class="op">=</span> <span class="st">"transcriptomics"</span>, </span>
-<span>  <span class="st">"platform"</span> <span class="op">=</span> <span class="st">"transcriptomics by array"</span></span>
+<span>  <span class="st">"platform"</span> <span class="op">=</span> <span class="st">"transcriptomics by array"</span>,</span>
+<span>  <span class="st">"author"</span> <span class="op">=</span> <span class="st">"Researcher1"</span></span>
 <span><span class="op">)</span></span></code></pre>
 <p>Option 2: Use <code><a href="../reference/createMetadata.html">createMetadata()</a></code> (recommended).<br>
 This function helps remind you of the built-in attributes. The full list
@@ -165,6 +166,7 @@ field.<br></p>
 <span>  direction_type <span class="op">=</span> <span class="st">"bi-directional"</span>,</span>
 <span>  assay_type <span class="op">=</span> <span class="st">"transcriptomics"</span>,</span>
 <span>  phenotype <span class="op">=</span> <span class="st">"Myc_reduce"</span>,</span>
+<span>  author <span class="op">=</span> <span class="st">"Researcher1"</span>,</span>
 <span></span>
 <span>  <span class="co"># optional and recommended:</span></span>
 <span>  covariates <span class="op">=</span> <span class="st">"none"</span>,</span>
@@ -182,7 +184,6 @@ field.<br></p>
 <span>  <span class="co"># other optional built-in attributes:</span></span>
 <span>  keywords <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Myc"</span>, <span class="st">"KO"</span>, <span class="st">"longevity"</span><span class="op">)</span>,</span>
 <span>  cutoff_description <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  author <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  PMID <span class="op">=</span> <span class="fl">25619689</span>,</span>
 <span>  year <span class="op">=</span> <span class="fl">2015</span>,</span>
 <span></span>
@@ -198,15 +199,16 @@ treatment, a gene knockout, or a clinical characteristic. Examples
 include <em>age</em>, <em>breast cancer</em>, and <em>drug X</em>.</p>
 <p>Providing a detailed (free text) “description” is highly recommended.
 For instance, it may include information about how the treatment was
-administered and how each group was defined.<br></p>
+administered and how each group was defined. The character limit of the
+description is 65,535 (16-bit storage), space included.<br></p>
 </div>
 <div class="section level4">
 <h4 id="organism">2.1.2 “organism<a class="anchor" aria-label="anchor" href="#organism"></a>
 </h4>
-<p>“organism” is free text. We provide a list of common organisms, which
-you can search using <code>searchOrganism</code>. Other entries are
-allowed, but please use standard naming conventions (e.g., “Homo
-sapiens”, “Mus musculus”) to ensure consistency.<br></p>
+<p>“organism” is free text. We provide a pre-defined list of common
+organisms, which you can search using <code><a href="../reference/searchOrganism.html">searchOrganism()</a></code>.
+Other entries are allowed, but please use standard naming conventions
+(e.g., “Homo sapiens”, “Mus musculus”) to ensure consistency.<br></p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/searchOrganism.html">searchOrganism</a></span><span class="op">(</span><span class="st">"homo"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "Homo sapiens"</span></span></code></pre></div>
@@ -253,6 +255,8 @@ ANOVA.<br></p></li>
 - “genetic_variations” (e.g. SNP, GWAS)<br>
 - “DNA_binding_sites” (e.g. ChIP-seq)<br>
 - “other”<br></p>
+<p>You can also use <code><a href="../reference/searchAssayType.html">searchAssayType()</a></code> to see the list
+above.<br></p>
 </div>
 </div>
 <div class="section level3">
@@ -446,7 +450,7 @@ messages.<br></p>
 <span>  difexp <span class="op">=</span> <span class="va">difexp</span>,</span>
 <span>  print_message <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt;   --Required attributes for metadata: signature_name, phenotype, organism, direction_type, assay_type --</span></span>
+<span><span class="co">#&gt;   --Required attributes for metadata: signature_name, phenotype, organism, direction_type, assay_type, author --</span></span>
 <span><span class="co">#&gt;   [Success] Metadata is saved. </span></span>
 <span><span class="co">#&gt;   [Success] Signature is valid. </span></span>
 <span><span class="co">#&gt;   [Success] difexp is valid. </span></span>
@@ -458,6 +462,7 @@ messages.<br></p>
 <span><span class="co">#&gt;   Metadata: </span></span>
 <span><span class="co">#&gt;     adj_p_cutoff = 0.05 </span></span>
 <span><span class="co">#&gt;     assay_type = transcriptomics </span></span>
+<span><span class="co">#&gt;     author = Researcher1 </span></span>
 <span><span class="co">#&gt;     covariates = none </span></span>
 <span><span class="co">#&gt;     description = mice Myc haploinsufficient (Myc(+/-)) </span></span>
 <span><span class="co">#&gt;     direction_type = bi-directional </span></span>
@@ -517,6 +522,7 @@ object.<br></p>
 <span><span class="co">#&gt;   Metadata: </span></span>
 <span><span class="co">#&gt;     adj_p_cutoff = 0.05 </span></span>
 <span><span class="co">#&gt;     assay_type = transcriptomics </span></span>
+<span><span class="co">#&gt;     author = Researcher1 </span></span>
 <span><span class="co">#&gt;     covariates = none </span></span>
 <span><span class="co">#&gt;     description = mice Myc haploinsufficient (Myc(+/-)) </span></span>
 <span><span class="co">#&gt;     direction_type = bi-directional </span></span>
