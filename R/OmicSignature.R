@@ -229,7 +229,7 @@ OmicSignature <-
         stopifnot(is(metadata, "list"))
 
         # check required metadata fields
-        metadataRequired <- c("signature_name", "phenotype", "organism", "direction_type", "assay_type", "author")
+        metadataRequired <- c("signature_name", "phenotype", "organism", "direction_type", "assay_type")
         metadataMissing <- setdiff(metadataRequired, names(metadata))
         private$verbose(v, paste("  --Required attributes for metadata: ",
           paste(metadataRequired, collapse = ", "), " --\n",
