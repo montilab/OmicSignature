@@ -5,7 +5,7 @@
 \title{OmicSignature R6 object}
 \description{
 a R6 object to store signatures generated from experiments. In cluding metadata, signature, and an optional differential expression analysis result dataframe.
-updated 08/2025
+updated 10/2025
 }
 \section{Active bindings}{
 \if{html}{\out{<div class="r6-active-bindings">}}

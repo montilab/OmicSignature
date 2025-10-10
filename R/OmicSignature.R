@@ -2,7 +2,7 @@
 
 #' @title OmicSignature R6 object
 #' @description a R6 object to store signatures generated from experiments. In cluding metadata, signature, and an optional differential expression analysis result dataframe.
-#' updated 08/2025
+#' updated 10/2025
 #' @importFrom R6 R6Class
 #' @importFrom dplyr filter select mutate relocate arrange distinct recode bind_rows across everything %>%
 #' @importFrom jsonlite toJSON fromJSON
@@ -20,31 +20,44 @@ OmicSignature <-
       #' @param print_message use TRUE if want to see all messages printed
       #' @export
       initialize = function(metadata, signature, difexp = NULL, print_message = FALSE) {
-        ## if probe_id is not provided, setup numeric counter as probe_id
         if (!is.null(difexp)) {
+          ## when difexp is available,
           if (!"probe_id" %in% colnames(difexp)) {
+            ## if probe_id is missing, set numeric counter as probe id
             difexp <- difexp %>% dplyr::mutate(probe_id = paste0("feature_", seq(nrow(difexp))), .before = everything())
           }
-          signature$probe_id <- NULL
-          signature <- merge(
-            x = difexp[, c("probe_id", "feature_name")],
-            y = signature, by = "feature_name", all.x = FALSE, all.y = TRUE
-          )
-          signature <- signature %>% dplyr::relocate(probe_id, .before = everything())
+          if (!"probe_id" %in% colnames(signature)) {
+            ## in signature, if probe_id is missing, use the probe_id in difexp
+            signature <- merge(
+              x = difexp[, c("probe_id", "feature_name")],
+              y = signature, by = "feature_name", all.x = FALSE, all.y = TRUE
+            )
+            signature <- signature %>% dplyr::relocate(probe_id, .before = everything())
+          } else {
+            ## in signature, if probe_id is present, check if it's a subset of difexp
+            ## omit NA at this point. missing probe ids will be checked separately in signature and difexp
+            if (!all(na.omit(signature$probe_id) %in% na.omit(difexp$probe_id))) {
+              stop("Some probe_id in the signature are not included in the probe_id in the difexp.")
+            }
+          }
         } else {
-          signature <- signature %>%
-            dplyr::mutate(probe_id = seq(paste0("feature_", nrow(signature))), .before = everything())
+          ## when difexp is not available,
+          if (!"probe_id" %in% colnames(signature)) {
+            ## in signature, if probe_id is missing, use numeric counter as probe id
+            signature <- signature %>%
+              dplyr::mutate(probe_id = seq(paste0("feature_", nrow(signature))), .before = everything())
+          }
         }
 
-        private$.metadata <- private$checkMetadata(metadata, v = print_message)
+        private$.metadata <- private$checkMetadata(metadata, signatureType = metadata$direction_type, v = print_message)
         private$.signature <- private$checkSignature(signature, signatureType = metadata$direction_type, v = print_message)
         if (!is.null(difexp)) {
-          difexp <- private$checkDifexp(difexp, v = print_message)
+          difexp <- private$checkDifexp(difexp, signatureType = metadata$direction_type, v = print_message)
           private$.difexp <- difexp
-          if (!all(signature$probe_id %in% difexp$probe_id)) {
-            stop("Some probe_id in the signature are not included in the probe_id in the difexp.")
-          }
-          if (!all(signature$feature_name %in% difexp$feature_name)) {
+
+          ## check signature feature name is a subset of difexp feature name
+          ## omit NA at this point. missing probe ids will be checked separately in signature and difexp
+          if (!all(na.omit(signature$feature_name) %in% na.omit(difexp$feature_name))) {
             stop("Some feature_name in the signature are not included in the feature_name in the difexp.")
           }
         }
@@ -174,7 +187,7 @@ OmicSignature <-
       verbose = function(v, ...) {
         if (v) cat(...)
       },
-      checkDifexp = function(difexp, v = FALSE) {
+      checkDifexp = function(difexp, signatureType = NULL, v = FALSE) {
         if (is.null(difexp)) stop("Please use build-in function $removeDifexp.")
         if (is(difexp, "OmicSignature")) difexp <- difexp$difexp
         if (is(difexp, "matrix")) difexp <- as.data.frame(difexp)
@@ -185,6 +198,10 @@ OmicSignature <-
 
         ## check column names:
         difexpColRequired <- c("probe_id", "feature_name", "score", "group_label")
+        if (signatureType != "uni-directional") {
+          difexpColRequired <- c(difexpColRequired, "group_label")
+        }
+
         ## require any of p_value, q_value, or adj_p
         exist_p_columns <- intersect(colnames(difexp), c("p_value", "q_value", "adj_p"))
         if (length(exist_p_columns) > 0) {
@@ -200,8 +217,7 @@ OmicSignature <-
           )
         }
 
-        ## check column type:
-        ## "logfc", "score", "p_value", "adj_p" should be numerical
+        ## check column type
         for (difexpColNumeric in c("logfc", "score", "p_value", "adj_p", "q_value", "aveexpr", "mean")) {
           if (difexpColNumeric %in% colnames(difexp)) {
             if (!is(difexp[, difexpColNumeric], "numeric")) {
@@ -209,29 +225,36 @@ OmicSignature <-
             }
           }
         }
-        ## "feature_name" should be character
-        if ("feature_name" %in% colnames(difexp)) {
-          if (!is(difexp$feature_name, "character")) {
-            stop("difexp: feature_name is not character.")
-          }
+        if (!is(difexp$feature_name, "character")) {
+          stop("difexp: feature_name is not character.")
         }
-
-        ## "group_label" should be factor
-        if ("group_label" %in% colnames(difexp)) {
+        if (signatureType != "uni-directional") {
           if (!is(difexp$group_label, "factor")) {
             stop("difexp: group_label is not factor.")
           }
         }
+
+        ## check column content
+        cols_to_check <- c("probe_id", "feature_name", "score")
+        if (signatureType != "uni-directional") {
+          cols_to_check <- c(cols_to_check, "group_label")
+        }
+        for (col in cols_to_check) {
+          if (any(is.na(difexp[, col]) | difexp[, col] == "")) {
+            stop(paste0("difexp: column ", col, " contains missing or empty values.\n"))
+          }
+        }
+
         private$verbose(v, "  [Success] difexp is valid. \n")
         return(difexp)
       },
-      checkMetadata = function(metadata, v = FALSE) {
+      checkMetadata = function(metadata, signatureType = NULL, v = FALSE) {
         stopifnot(is(metadata, "list"))
 
         # check required metadata fields
         metadataRequired <- c("signature_name", "phenotype", "organism", "direction_type", "assay_type")
         metadataMissing <- setdiff(metadataRequired, names(metadata))
-        private$verbose(v, paste("  --Required attributes for metadata: ",
+        private$verbose(v, paste("  -- Required attributes for metadata: ",
           paste(metadataRequired, collapse = ", "), " --\n",
           sep = ""
         ))
@@ -296,7 +319,6 @@ OmicSignature <-
 
         if (is(input, "OmicSignature")) {
           signature <- input$signature
-          signatureType <- input$metadata$direction_type
           if (signatureType == "categorical") {
             if (is.null(input$metadata$category_num)) {
               stop("Signature is specified as categorical, but category_num not specified. This is the number of categories or group analyzed. ")
@@ -330,9 +352,6 @@ OmicSignature <-
           stop("Signature type not specified. It needs to be uni-directional, bi-directional or categorical.")
         }
 
-        ## standardize content and column names:
-        signature <- standardizeSigDF(signature)
-
         ## check column names
         signatureColRequired <- c("probe_id", "feature_name")
         if (signatureType != "uni-directional") {
@@ -343,16 +362,31 @@ OmicSignature <-
           stop("Signature must contain the following columns: ", paste(signatureColRequired, collapse = ", "))
         }
 
-        ## check column types:
+        ## check column types
         if (!is(signature$feature_name, "character")) {
           stop("signature: feature_name is not character.")
         }
-
         if (signatureType != "uni-directional") {
           if (!is(signature$group_label, "factor")) {
             stop("signature: group_label is not factor.")
           }
         }
+
+        ## check column content
+        cols_to_check <- c("probe_id", "feature_name")
+        if (signatureType != "uni-directional") {
+          cols_to_check <- c(cols_to_check, "group_label")
+        }
+        for (col in cols_to_check) {
+          if (any(is.na(signature[, col]) | signature[, col] == "")) {
+            stop(paste0("signature: column ", col, " contains missing or empty values.\n"))
+          }
+        }
+
+        ## arrange signature if score is present
+        ## run this after the check function, so all checks for missing entries will be done
+        signature <- standardizeSigDF(signature)
+
         private$verbose(v, "  [Success] Signature is valid. \n")
         return(signature)
       }
@@ -494,7 +528,7 @@ OmicSignatureCollection <- R6Class(
       metadataRequired <- c(
         "collection_name", "description"
       )
-      private$verbose(v, paste("  --Required attributes for metadata: ",
+      private$verbose(v, paste("  -- Required attributes for metadata: ",
         paste(metadataRequired, collapse = ", "), " --\n",
         sep = ""
       ))

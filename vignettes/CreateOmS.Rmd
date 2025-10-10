@@ -270,9 +270,14 @@ head(difexp)
 ```
 
 Manually change the column names to match the requirement. The built-in function `replaceDifexpCol()` is designed to replace *some* of the frequently used alternative column names.\
+If some required columns are not in the difexp, it will give you a warning:\
 
 ```{r}
 colnames(difexp) <- replaceDifexpCol(colnames(difexp))
+```
+
+Create the required columns "feature_name" and "group_label":
+```{r}
 difexp <- difexp %>%
   rename(feature_name = ensembl) %>%
   mutate(group_label = as.factor(ifelse(score > 0, "MYC Reduce", "WT")))
@@ -289,7 +294,7 @@ OmS <- OmicSignature$new(
 )
 ```
 
-Set `print_message` = `TRUE` to see the messages.\
+Set `print_message` = `TRUE` to see all the messages.\
 
 ```{r}
 OmS <- OmicSignature$new(
