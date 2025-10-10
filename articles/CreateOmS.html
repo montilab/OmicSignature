@@ -67,7 +67,7 @@
                         <h4 data-toc-skip class="author">Vanessa Mengze
 Li</h4>
             
-            <h4 data-toc-skip class="date">2025-10-08</h4>
+            <h4 data-toc-skip class="date">2025-10-10</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/montilab/OmicSignature/blob/main/vignettes/CreateOmS.Rmd" class="external-link"><code>vignettes/CreateOmS.Rmd</code></a></small>
       <div class="d-none name"><code>CreateOmS.Rmd</code></div>
@@ -407,13 +407,17 @@ the <code>limma</code> package.</p>
 <span><span class="co">#&gt; 6 2810025M15Rik</span></span></code></pre></div>
 <p>Manually change the column names to match the requirement. The
 built-in function <code><a href="../reference/replaceDifexpCol.html">replaceDifexpCol()</a></code> is designed to replace
-<em>some</em> of the frequently used alternative column names.<br></p>
+<em>some</em> of the frequently used alternative column names.<br>
+If some required columns are not in the difexp, it will give you a
+warning:<br></p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">difexp</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/replaceDifexpCol.html">replaceDifexpCol</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">difexp</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Warning in replaceDifexpCol(colnames(difexp)): Required column for</span></span>
 <span><span class="co">#&gt; OmicSignature object difexp: feature_name, is not found in your input. This may</span></span>
-<span><span class="co">#&gt; cause problem when creating your OmicSignature object.</span></span>
-<span><span class="va">difexp</span> <span class="op">&lt;-</span> <span class="va">difexp</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span><span class="co">#&gt; cause problem when creating your OmicSignature object.</span></span></code></pre></div>
+<p>Create the required columns “feature_name” and “group_label”:</p>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">difexp</span> <span class="op">&lt;-</span> <span class="va">difexp</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html" class="external-link">rename</a></span><span class="op">(</span>feature_name <span class="op">=</span> <span class="va">ensembl</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>group_label <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">as.factor</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">score</span> <span class="op">&gt;</span> <span class="fl">0</span>, <span class="st">"MYC Reduce"</span>, <span class="st">"WT"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">difexp</span><span class="op">)</span></span>
@@ -435,29 +439,29 @@ built-in function <code><a href="../reference/replaceDifexpCol.html">replaceDife
 <div class="section level3">
 <h3 id="create-the-omicsignature-object">2.4. Create the <code>OmicSignature</code> object<a class="anchor" aria-label="anchor" href="#create-the-omicsignature-object"></a>
 </h3>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">OmS</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/OmicSignature.html">OmicSignature</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span></span>
 <span>  metadata <span class="op">=</span> <span class="va">metadata</span>,</span>
 <span>  signature <span class="op">=</span> <span class="va">signature</span>,</span>
 <span>  difexp <span class="op">=</span> <span class="va">difexp</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt;   [Success] OmicSignature object Myc_reduce_mice_liver_24m created.</span></span></code></pre></div>
-<p>Set <code>print_message</code> = <code>TRUE</code> to see the
+<p>Set <code>print_message</code> = <code>TRUE</code> to see all the
 messages.<br></p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">OmS</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/OmicSignature.html">OmicSignature</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span></span>
 <span>  metadata <span class="op">=</span> <span class="va">metadata</span>,</span>
 <span>  signature <span class="op">=</span> <span class="va">signature</span>,</span>
 <span>  difexp <span class="op">=</span> <span class="va">difexp</span>,</span>
 <span>  print_message <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt;   --Required attributes for metadata: signature_name, phenotype, organism, direction_type, assay_type --</span></span>
+<span><span class="co">#&gt;   -- Required attributes for metadata: signature_name, phenotype, organism, direction_type, assay_type --</span></span>
 <span><span class="co">#&gt;   [Success] Metadata is saved. </span></span>
 <span><span class="co">#&gt;   [Success] Signature is valid. </span></span>
 <span><span class="co">#&gt;   [Success] difexp is valid. </span></span>
 <span><span class="co">#&gt;   [Success] OmicSignature object Myc_reduce_mice_liver_24m created.</span></span></code></pre></div>
 <p>See the created object information:</p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">OmS</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Signature Object: </span></span>
 <span><span class="co">#&gt;   Metadata: </span></span>
@@ -487,7 +491,7 @@ messages.<br></p>
 <p>Use new criteria to extract significant features:<br>
 (this does <em>not</em> change the <code>signature</code> saved in the
 object)</p>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">OmS</span><span class="op">$</span><span class="fu">extractSignature</span><span class="op">(</span><span class="st">"abs(score) &gt; 10; adj_p &lt; 0.01"</span><span class="op">)</span></span>
 <span><span class="co">#&gt;   probe_id       feature_name   score group_label</span></span>
 <span><span class="co">#&gt; 1 10349648 ENSMUSG00000004552  14.762  MYC Reduce</span></span>
@@ -513,7 +517,7 @@ expert. Simply provide cutoffs (e.g. <code>adj_p_cutoff</code> and
 use <code><a href="../reference/OmicSigFromDifexp.html">OmicSigFromDifexp()</a></code> to automatically extract
 significant features and create the <code>OmicSignature</code>
 object.<br></p>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">OmS1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/OmicSigFromDifexp.html">OmicSigFromDifexp</a></span><span class="op">(</span><span class="va">difexp</span>, <span class="va">metadata</span><span class="op">)</span></span>
 <span><span class="co">#&gt; -- criterias used to extract signatures:  abs(score) &gt;= 5; adj_p &lt;= 0.05 . </span></span>
 <span><span class="co">#&gt; </span></span>
