@@ -1,7 +1,7 @@
 {
   "assay_type": ["transcriptomics"],
   "author": ["vmli"],
-  "covariates": ["none"],
+  "covariates": ["age, gender"],
   "direction_type": ["bi-directional"],
   "organism": ["Mus musculus"],
   "p_cutoff": [0.05],

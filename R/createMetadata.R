@@ -12,7 +12,7 @@
 #' @param platform optional but highly recommended.
 #' @param phenotype optional but highly recommended. e.g. "Gene KO", "Parkinson disease". Use "unknown" or NULL if not applicable.
 #' @param sample_type optional but highly recommended. a cell line or tissue from BRENDA ontology.
-#' @param covariates optional. e.g. "gender", "age".
+#' @param covariates optional. e.g. "age, gender".
 #' @param author optional. the author name.
 #' @param year optional. the year when the signature was created or published.
 #' @param PMID optional. the PubMed ID if the signature is from a published article.
@@ -28,7 +28,7 @@
 #' @return a metadata list to create an OmicSignature R6 object.
 #' @export
 createMetadata <- function(signature_name, organism, phenotype = "unknown", assay_type,
-                           covariates = "none", platform = "unknown", direction_type,
+                           covariates = NULL, platform = "unknown", direction_type,
                            sample_type = NULL, signature_collection = NULL,
                            author = NULL, year = NULL, PMID = NULL,
                            keywords = NULL, description = NULL, category_num = NULL,

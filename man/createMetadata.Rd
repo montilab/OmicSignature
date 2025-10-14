@@ -9,7 +9,7 @@ createMetadata(
   organism,
   phenotype = "unknown",
   assay_type,
-  covariates = "none",
+  covariates = NULL,
   platform = "unknown",
   direction_type,
   sample_type = NULL,
@@ -37,7 +37,7 @@ createMetadata(
 
 \item{assay_type}{required. e.g. "transcriptomics", "proteomics", "metabolomics", "methylomics", "methylomics", "genetic_variations", "DNA_binding_sites". some common misspell, e.g. "gene", "protein", "metab" will be changed automatically.}
 
-\item{covariates}{optional. e.g. "gender", "age".}
+\item{covariates}{optional. e.g. "age, gender".}
 
 \item{platform}{optional but highly recommended.}
 

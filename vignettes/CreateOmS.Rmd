@@ -32,6 +32,7 @@ An `OmicSignature` object contains three parts:\
     "**signature_name**", "**organism**", "**direction_type**", "**assay_type**", "**phenotype**", "**author**".\
     Recommended optional fields, if applicable:\
     "platform", "sample_type", "description", "covariates", "score_cutoff", "adj_p_cutoff".\
+    All of the above information should be provided as a string (spaces and punctuation are allowed) or one numeric value, not as a multi-length vector. \
 
 -   **signature**, a data frame.\
     Required columns:\
@@ -100,7 +101,7 @@ metadata <- createMetadata(
   author = "Researcher1",
 
   # optional and recommended:
-  covariates = "none",
+  covariates = "age, gender",
   description = "mice Myc haploinsufficient (Myc(+/-))",
   platform = "transcriptomics by array",
   sample_type = "liver", # use BRENDA ontology

@@ -277,7 +277,15 @@ OmicSignature <-
         }
 
         # check covariates
-        if (is.null(metadata$covariates)) metadata$covariates <- "none"
+        if (is.null(metadata$covariates)) {
+          metadata$covariates <- "NA"
+        } else if (is.na(metadata$covariates)) {
+          metadata$covariates <- "NA"
+        } else {
+          stopifnot(is.character(metadata$covariates))
+          ## concatenate multiple covariates into a single string
+          metadata$covariates <- paste(metadata$covariates, collapse = ", ")
+        }
 
         # check phenotype
         if (is.null(metadata$phenotype)) {
