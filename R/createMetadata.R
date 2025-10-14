@@ -1,29 +1,29 @@
 #' @title template for creating a metadata list for an OmicSignature R6 object
-#' @description updated 02/2024
+#' @description updated 10/2025
 #' @importFrom dplyr recode %>%
 #' @param signature_name required. name of the signature.
-#' @param signature_collection optional. collection name that the signature belongs to.
+#' @param signature_collection optional. the collection name that the signature belongs to.
 #' @param direction_type required. the direction information of the signature.
 #' "uni" or "uni-directional" if the signature is derived from one category.
-#' "bi" or "bi-directional" if the signature is derived from group A vs group B, or it contains "up" and "down" regulated features for a continuous phenotype. 
-#' "categorical" if the signature is derived from comparisons between multiple groups, e.g. A vs B vs C. 
-#' @param assay_type required. e.g. "transcriptomics", "proteomics", "metabolomics", "methylomics", "methylomics", "genetic_variations", "DNA_binding_sites". some common misspell, e.g. "gene", "protein", "metab" will be changed automatically.
+#' "bi" or "bi-directional" if the signature is derived from group A vs group B, or it contains "up" and "down" regulated features for a continuous phenotype.
+#' "categorical" if the signature is derived from comparisons between multiple groups, e.g. A vs B vs C.
+#' @param assay_type required. must be one of the following: "transcriptomics", "proteomics", "metabolomics", "methylomics", "methylomics", "genetic_variations", "DNA_binding_sites", or "others". some of the common misspells, e.g. "gene", "protein" and "metab" will be changed automatically.
 #' @param organism required. e.g. "Homo sapiens", "Mus musculus".
-#' @param platform optional but highly recommended.
-#' @param phenotype optional but highly recommended. e.g. "Gene KO", "Parkinson disease". Use "unknown" or NULL if not applicable.
+#' @param platform optional but highly recommended. input as a single string. e.g. "transcriptomics by single-cell RNA-seq".
+#' @param phenotype optional but highly recommended. input as a single string. e.g. "Gene KO", "Parkinson disease". Use "unknown" or NULL if not applicable.
 #' @param sample_type optional but highly recommended. a cell line or tissue from BRENDA ontology.
-#' @param covariates optional. e.g. "age, gender".
-#' @param author optional. the author name.
-#' @param year optional. the year when the signature was created or published.
-#' @param PMID optional. the PubMed ID if the signature is from a published article.
-#' @param keywords optional. key words for the signature. examples are "longevity", "perturbation". "drug".
-#' @param description optional. free text to describe the signature.
-#' @param category_num required when direction_type = "categorical". numeric. indicates how many categories or class the signature contains.
-#' @param logfc_cutoff optional. log fold change cutoff used to generate the signature, if applicable.
-#' @param p_value_cutoff optional. p value cutoff used to generate the signature, if applicable.
-#' @param adj_p_cutoff optional. adjusted p-value, e.g. fdr, cutoff used to generate the signature, if applicable.
-#' @param score_cutoff optional. score cutoff used to generate the signature, if applicable.
-#' @param cutoff_description optional. discription of the cutoff, if applicable.
+#' @param covariates optional. input covariates as a single string, and separate multiple covariates using comma, e.g. "age, gender".
+#' @param author optional. the author's name.
+#' @param year optional. a single-length numeric value. the year when the signature was created or published.
+#' @param PMID optional. a single-length character value. the PubMed ID if the signature is from a published article.
+#' @param keywords optional. key words for the signature. input as a multi-length character vector, e.g. c("longevity", "perturbation", "health").
+#' @param description optional. free text to describe the signature. input as a single-length string. the character limit (including all spaces and symbols) is 65,535.
+#' @param category_num required when direction_type = "categorical". numeric. a number indicates how many categories or class the signature contains.
+#' @param logfc_cutoff optional. a single-length numeric value. log fold change cutoff used to generate the signature, if applicable.
+#' @param p_value_cutoff optional. a single-length numeric value. p value cutoff used to generate the signature, if applicable.
+#' @param adj_p_cutoff optional. a single-length numeric value. adjusted p-value, e.g. fdr, cutoff used to generate the signature, if applicable.
+#' @param score_cutoff optional. a single-length numeric value. score cutoff used to generate the signature, if applicable.
+#' @param cutoff_description optional. description of the cutoff, if applicable.
 #' @param others provide additional user-defined metadata fields as a list. for example, others = list("animal_strain" = "C57BL/6", "lab" = "new_lab").
 #' @return a metadata list to create an OmicSignature R6 object.
 #' @export
@@ -53,8 +53,9 @@ createMetadata <- function(signature_name, organism, phenotype = "unknown", assa
     dplyr::case_match(
       .default = assay_type,
       "rna" ~ "transcriptomics",
-      "RNA" ~ "transcriptomics",
+      "gene" ~ "transcriptomics",
       "transcript" ~ "transcriptomics",
+      "transcripts" ~ "transcriptomics",
       "transcriptomic" ~ "transcriptomics",
       "protein" ~ "proteomics",
       "proteomic" ~ "proteomics",
@@ -66,16 +67,15 @@ createMetadata <- function(signature_name, organism, phenotype = "unknown", assa
       "methyl" ~ "methylomics",
       "methylation" ~ "methylomics",
       "methylomic" ~ "methylomics",
-      "dna" ~ "genetic_variations",
-      "DNA" ~ "genetic_variations",
-      "SNP" ~ "genetic_variations",
+      "snp" ~ "genetic_variations",
+      "snps" ~ "genetic_variations",
       "genetic" ~ "genetic_variations",
       "genetics" ~ "genetic_variations",
       "genetic_variation" ~ "genetic_variations",
       "chip-seq" ~ "DNA_binding_sites",
-      "ChIP-seq" ~ "DNA_binding_sites",
-      "DNA binding" ~ "DNA_binding_sites",
-      "DNA_binding_site" ~ "DNA_binding_sites"
+      "chip seq" ~ "DNA_binding_sites",
+      "dna binding" ~ "DNA_binding_sites",
+      "dna_binding_site" ~ "DNA_binding_sites"
     )
   if (!assay_type %in% c("transcriptomics", "proteomics", "metabolomics", "methylomics", "genetic_variations", "DNA_binding_sites")) {
     assay_type <- "others"

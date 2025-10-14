@@ -33,44 +33,44 @@ createMetadata(
 
 \item{organism}{required. e.g. "Homo sapiens", "Mus musculus".}
 
-\item{phenotype}{optional but highly recommended. e.g. "Gene KO", "Parkinson disease". Use "unknown" or NULL if not applicable.}
+\item{phenotype}{optional but highly recommended. input as a single string. e.g. "Gene KO", "Parkinson disease". Use "unknown" or NULL if not applicable.}
 
-\item{assay_type}{required. e.g. "transcriptomics", "proteomics", "metabolomics", "methylomics", "methylomics", "genetic_variations", "DNA_binding_sites". some common misspell, e.g. "gene", "protein", "metab" will be changed automatically.}
+\item{assay_type}{required. must be one of the following: "transcriptomics", "proteomics", "metabolomics", "methylomics", "methylomics", "genetic_variations", "DNA_binding_sites", or "others". some of the common misspells, e.g. "gene", "protein" and "metab" will be changed automatically.}
 
-\item{covariates}{optional. e.g. "age, gender".}
+\item{covariates}{optional. input covariates as a single string, and separate multiple covariates using comma, e.g. "age, gender".}
 
-\item{platform}{optional but highly recommended.}
+\item{platform}{optional but highly recommended. input as a single string. e.g. "transcriptomics by single-cell RNA-seq".}
 
 \item{direction_type}{required. the direction information of the signature.
 "uni" or "uni-directional" if the signature is derived from one category.
-"bi" or "bi-directional" if the signature is derived from group A vs group B, or it contains "up" and "down" regulated features for a continuous phenotype. 
+"bi" or "bi-directional" if the signature is derived from group A vs group B, or it contains "up" and "down" regulated features for a continuous phenotype.
 "categorical" if the signature is derived from comparisons between multiple groups, e.g. A vs B vs C.}
 
 \item{sample_type}{optional but highly recommended. a cell line or tissue from BRENDA ontology.}
 
-\item{signature_collection}{optional. collection name that the signature belongs to.}
+\item{signature_collection}{optional. the collection name that the signature belongs to.}
 
-\item{author}{optional. the author name.}
+\item{author}{optional. the author's name.}
 
-\item{year}{optional. the year when the signature was created or published.}
+\item{year}{optional. a single-length numeric value. the year when the signature was created or published.}
 
-\item{PMID}{optional. the PubMed ID if the signature is from a published article.}
+\item{PMID}{optional. a single-length character value. the PubMed ID if the signature is from a published article.}
 
-\item{keywords}{optional. key words for the signature. examples are "longevity", "perturbation". "drug".}
+\item{keywords}{optional. key words for the signature. input as a multi-length character vector, e.g. c("longevity", "perturbation", "health").}
 
-\item{description}{optional. free text to describe the signature.}
+\item{description}{optional. free text to describe the signature. input as a single-length string. the character limit (including all spaces and symbols) is 65,535.}
 
-\item{category_num}{required when direction_type = "categorical". numeric. indicates how many categories or class the signature contains.}
+\item{category_num}{required when direction_type = "categorical". numeric. a number indicates how many categories or class the signature contains.}
 
-\item{logfc_cutoff}{optional. log fold change cutoff used to generate the signature, if applicable.}
+\item{logfc_cutoff}{optional. a single-length numeric value. log fold change cutoff used to generate the signature, if applicable.}
 
-\item{p_value_cutoff}{optional. p value cutoff used to generate the signature, if applicable.}
+\item{p_value_cutoff}{optional. a single-length numeric value. p value cutoff used to generate the signature, if applicable.}
 
-\item{adj_p_cutoff}{optional. adjusted p-value, e.g. fdr, cutoff used to generate the signature, if applicable.}
+\item{adj_p_cutoff}{optional. a single-length numeric value. adjusted p-value, e.g. fdr, cutoff used to generate the signature, if applicable.}
 
-\item{score_cutoff}{optional. score cutoff used to generate the signature, if applicable.}
+\item{score_cutoff}{optional. a single-length numeric value. score cutoff used to generate the signature, if applicable.}
 
-\item{cutoff_description}{optional. discription of the cutoff, if applicable.}
+\item{cutoff_description}{optional. description of the cutoff, if applicable.}
 
 \item{others}{provide additional user-defined metadata fields as a list. for example, others = list("animal_strain" = "C57BL/6", "lab" = "new_lab").}
 }
@@ -78,5 +78,5 @@ createMetadata(
 a metadata list to create an OmicSignature R6 object.
 }
 \description{
-updated 02/2024
+updated 10/2025
 }
