@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">OmicSignature</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.2.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -67,7 +67,7 @@
                         <h4 data-toc-skip class="author">Vanessa Mengze
 Li</h4>
             
-            <h4 data-toc-skip class="date">2025-10-10</h4>
+            <h4 data-toc-skip class="date">2025-10-14</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/montilab/OmicSignature/blob/main/vignettes/CreateOmS.Rmd" class="external-link"><code>vignettes/CreateOmS.Rmd</code></a></small>
       <div class="d-none name"><code>CreateOmS.Rmd</code></div>
@@ -91,7 +91,10 @@ Required fields:<br>
 “<strong>phenotype</strong>”, “<strong>author</strong>”.<br>
 Recommended optional fields, if applicable:<br>
 “platform”, “sample_type”, “description”, “covariates”, “score_cutoff”,
-“adj_p_cutoff”.<br></p></li>
+“adj_p_cutoff”.<br>
+All of the above information should be provided as a string (spaces and
+punctuation are allowed) or one numeric value, not as a multi-length
+vector.<br></p></li>
 <li><p><strong>signature</strong>, a data frame.<br>
 Required columns:<br>
 “<strong>probe_id</strong>” (unique identifier for each feature)<br>
@@ -170,7 +173,7 @@ field.<br></p>
 <span>  author <span class="op">=</span> <span class="st">"Researcher1"</span>,</span>
 <span></span>
 <span>  <span class="co"># optional and recommended:</span></span>
-<span>  covariates <span class="op">=</span> <span class="st">"none"</span>,</span>
+<span>  covariates <span class="op">=</span> <span class="st">"age, gender"</span>,</span>
 <span>  description <span class="op">=</span> <span class="st">"mice Myc haploinsufficient (Myc(+/-))"</span>,</span>
 <span>  platform <span class="op">=</span> <span class="st">"transcriptomics by array"</span>,</span>
 <span>  sample_type <span class="op">=</span> <span class="st">"liver"</span>, <span class="co"># use BRENDA ontology</span></span>
@@ -468,7 +471,7 @@ messages.<br></p>
 <span><span class="co">#&gt;     adj_p_cutoff = 0.05 </span></span>
 <span><span class="co">#&gt;     assay_type = transcriptomics </span></span>
 <span><span class="co">#&gt;     author = Researcher1 </span></span>
-<span><span class="co">#&gt;     covariates = none </span></span>
+<span><span class="co">#&gt;     covariates = age, gender </span></span>
 <span><span class="co">#&gt;     description = mice Myc haploinsufficient (Myc(+/-)) </span></span>
 <span><span class="co">#&gt;     direction_type = bi-directional </span></span>
 <span><span class="co">#&gt;     keywords = Myc, KO, longevity </span></span>
@@ -528,7 +531,7 @@ object.<br></p>
 <span><span class="co">#&gt;     adj_p_cutoff = 0.05 </span></span>
 <span><span class="co">#&gt;     assay_type = transcriptomics </span></span>
 <span><span class="co">#&gt;     author = Researcher1 </span></span>
-<span><span class="co">#&gt;     covariates = none </span></span>
+<span><span class="co">#&gt;     covariates = age, gender </span></span>
 <span><span class="co">#&gt;     description = mice Myc haploinsufficient (Myc(+/-)) </span></span>
 <span><span class="co">#&gt;     direction_type = bi-directional </span></span>
 <span><span class="co">#&gt;     keywords = Myc, KO, longevity </span></span>
