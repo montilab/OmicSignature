@@ -100,13 +100,13 @@ metadata <- createMetadata(
   phenotype = "Myc_reduce",
   author = "Researcher1",
 
-  # optional and recommended:
+  # optional and recommended attributes:
   covariates = "age, gender",
   description = "mice Myc haploinsufficient (Myc(+/-))",
   platform = "transcriptomics by array",
-  sample_type = "liver", # use BRENDA ontology
+  sample_type = "liver", # recommended using BRENDA ontology
 
-  # optional cut-off attributes.
+  # optional cut-off attributes:
   # specifying them can facilitate the extraction of signatures.
   logfc_cutoff = NULL,
   p_value_cutoff = NULL,
@@ -114,12 +114,11 @@ metadata <- createMetadata(
   score_cutoff = 5,
 
   # other optional built-in attributes:
-  keywords = c("Myc", "KO", "longevity"),
-  cutoff_description = NULL,
-  PMID = 25619689,
+  keywords = "Myc, KO, longevity",
+  PMID = "25619689",
   year = 2015,
 
-  # example of customized attributes:
+  # example of other customized attributes:
   others = list("animal_strain" = "C57BL/6")
 )
 ```
@@ -174,9 +173,7 @@ An optional column **"score"** is highly recommended when applicable.\
 "**feature_name**" is a name that identifies each feature, examples include ENSEMBL IDs for transcripts, UniProt IDs for proteins, and Refmet IDs for metabolites. To better identify the features, it is recommended to add an additional annotation column(s), e.g., "gene_symbol". For metabolite features, it is recommended to include multiple annotation columns if available, e.g., HMDB ID and InChI key.\
 **"group_label"** is a factor column. This column indicates the experimental group in which a feature is more highly expressed or more significant. For example, if the analysis identifies genes differentially expressed in *Treatment v.s. Control*, all gene features with a positive score should be labeled "Treatment" in this column, indicating their higher expression in the Treatment group. Features with negative scores should be labeled "Control". Similarly, if the analysis concerns protein expression changes associated with BMI, protein features with positive scores should be labeled "higher BMI", while those with negative scores should be labeled "lower BMI". \
  \
-
-
-
+ \
 **Option 1**: Extract signature from a differential analysis results table.\
 In this example, we extract a bi-directional signature from a `difexp` object (see next section) using the `score_cutoff` and `adj_p_cutoff` specified in the metadata. A `difexp` object is a properly formatted data frame reporting the results of a differential analysis (e.g., by Limma). \
 

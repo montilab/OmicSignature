@@ -276,17 +276,6 @@ OmicSignature <-
           warning("assay_type is not one of the commonly used term: transcriptomics, proteomics, metabolomics, methylomics, genetic_variations, DNA_binding_sites. Set it to be \"other\". ")
         }
 
-        # check covariates
-        if (is.null(metadata$covariates)) {
-          metadata$covariates <- "NA"
-        } else if (is.na(metadata$covariates)) {
-          metadata$covariates <- "NA"
-        } else {
-          stopifnot(is.character(metadata$covariates))
-          ## concatenate multiple covariates into a single string
-          metadata$covariates <- paste(metadata$covariates, collapse = ", ")
-        }
-
         # check phenotype
         if (is.null(metadata$phenotype)) {
           metadata$phenotype <- "unknown"
@@ -312,11 +301,37 @@ OmicSignature <-
           warning("Platform is not in the predefined list. Ignore this message if intentional.")
         }
 
-        # check description character count
-        if (is.null(metadata$description)) metadata$description <- metadata$signature_name
-        stopifnot(is.character(metadata$description))
-        stopifnot(length(metadata$description) == 1)
-        stopifnot(nchar(metadata$description) < 65535)
+        # check covariates
+        if (!is.null(metadata$covariates)) {
+          if (!is.na(metadata$covariates)) {
+            stopifnot(is.character(metadata$covariates))
+            metadata$covariates <- paste(metadata$covariates, collapse = ", ")
+          }
+        }
+
+        # check keywords
+        if (!is.null(metadata$keywords)) {
+          if (!is.na(metadata$keywords)) {
+            stopifnot(is.character(metadata$keywords))
+            metadata$keywords <- paste(metadata$keywords, collapse = ", ")
+          }
+        }
+
+        # check PMID
+        if (!is.null(metadata$PMID)) {
+          if (!is.na(metadata$PMID)) {
+            stopifnot(is.character(metadata$PMID))
+            stopifnot(length(metadata$PMID) == 1)
+          }
+        }
+
+        # check description
+        if (!is.null(metadata$description)) {
+          if (!is.na(metadata$description)) {
+            stopifnot(is.character(metadata$description))
+            stopifnot(length(metadata$description) == 1)
+          }
+        }
 
         private$verbose(v, "  [Success] Metadata is saved. \n")
         metadata <- metadata[order(names(metadata))]
