@@ -12,6 +12,10 @@
 <url><loc>https://montilab.github.io/OmicSignature/index.html</loc></url>
 <url><loc>https://montilab.github.io/OmicSignature/reference/BRENDA.html</loc></url>
 <url><loc>https://montilab.github.io/OmicSignature/reference/BRENDAExistName.html</loc></url>
+<url><loc>https://montilab.github.io/OmicSignature/reference/OmicS_searchAssayType.html</loc></url>
+<url><loc>https://montilab.github.io/OmicSignature/reference/OmicS_searchOrganism.html</loc></url>
+<url><loc>https://montilab.github.io/OmicSignature/reference/OmicS_searchPlatform.html</loc></url>
+<url><loc>https://montilab.github.io/OmicSignature/reference/OmicS_searchSampleType.html</loc></url>
 <url><loc>https://montilab.github.io/OmicSignature/reference/OmicSigFromDifexp.html</loc></url>
 <url><loc>https://montilab.github.io/OmicSignature/reference/OmicSignature.html</loc></url>
 <url><loc>https://montilab.github.io/OmicSignature/reference/OmicSignatureCollection.html</loc></url>
@@ -23,10 +27,6 @@
 <url><loc>https://montilab.github.io/OmicSignature/reference/predefined_platforms.html</loc></url>
 <url><loc>https://montilab.github.io/OmicSignature/reference/readJson.html</loc></url>
 <url><loc>https://montilab.github.io/OmicSignature/reference/replaceDifexpCol.html</loc></url>
-<url><loc>https://montilab.github.io/OmicSignature/reference/searchAssayType.html</loc></url>
-<url><loc>https://montilab.github.io/OmicSignature/reference/searchOrganism.html</loc></url>
-<url><loc>https://montilab.github.io/OmicSignature/reference/searchPlatform.html</loc></url>
-<url><loc>https://montilab.github.io/OmicSignature/reference/searchSampleType.html</loc></url>
 <url><loc>https://montilab.github.io/OmicSignature/reference/signatureVecToDF.html</loc></url>
 <url><loc>https://montilab.github.io/OmicSignature/reference/standardizeSigDF.html</loc></url>
 <url><loc>https://montilab.github.io/OmicSignature/reference/writeJson.html</loc></url>

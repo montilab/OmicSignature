@@ -209,11 +209,12 @@ description is 65,535 (16-bit storage), space included.<br></p>
 <h4 id="organism">2.1.2 “organism<a class="anchor" aria-label="anchor" href="#organism"></a>
 </h4>
 <p>“organism” is free text. We provide a pre-defined list of common
-organisms, which you can search using <code><a href="../reference/searchOrganism.html">searchOrganism()</a></code>.
-Other entries are allowed, but please use standard naming conventions
-(e.g., “Homo sapiens”, “Mus musculus”) to ensure consistency.<br></p>
+organisms, which you can search using
+<code><a href="../reference/OmicS_searchOrganism.html">OmicS_searchOrganism()</a></code>. Other entries are allowed, but
+please use standard naming conventions (e.g., “Homo sapiens”, “Mus
+musculus”) to ensure consistency.<br></p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/searchOrganism.html">searchOrganism</a></span><span class="op">(</span><span class="st">"homo"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/OmicS_searchOrganism.html">OmicS_searchOrganism</a></span><span class="op">(</span><span class="st">"homo"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "Homo sapiens"</span></span></code></pre></div>
 </div>
 <div class="section level4">
@@ -223,8 +224,8 @@ Other entries are allowed, but please use standard naming conventions
 recommended that predefined terms are used. Thus, “sample_type” should
 be a BRENDA ontology term, and “platform” should be one of a set of
 predefined platforms, if appropriate. You can search for predefined
-terms via the <code>searchSampleType</code> and
-<code>searchPlatform</code> functions. See <a href="https://montilab.github.io/OmicSignature/articles/SampleType.html">“Sample
+terms via the <code>OmicS_searchSampleType</code> and
+<code>OmicS_searchPlatform</code> functions. See <a href="https://montilab.github.io/OmicSignature/articles/SampleType.html">“Sample
 Type &amp; Platform Info”</a> for details.<br></p>
 </div>
 <div class="section level4">
@@ -258,7 +259,7 @@ ANOVA.<br></p></li>
 - “genetic_variations” (e.g. SNP, GWAS)<br>
 - “DNA_binding_sites” (e.g. ChIP-seq)<br>
 - “other”<br></p>
-<p>You can also use <code><a href="../reference/searchAssayType.html">searchAssayType()</a></code> to see the list
+<p>You can also use <code><a href="../reference/OmicS_searchAssayType.html">OmicS_searchAssayType()</a></code> to see the list
 above.<br></p>
 </div>
 </div>
