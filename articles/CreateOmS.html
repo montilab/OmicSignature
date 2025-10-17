@@ -67,7 +67,7 @@
                         <h4 data-toc-skip class="author">Vanessa Mengze
 Li</h4>
             
-            <h4 data-toc-skip class="date">2025-10-14</h4>
+            <h4 data-toc-skip class="date">2025-10-17</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/montilab/OmicSignature/blob/main/vignettes/CreateOmS.Rmd" class="external-link"><code>vignettes/CreateOmS.Rmd</code></a></small>
       <div class="d-none name"><code>CreateOmS.Rmd</code></div>
@@ -172,13 +172,13 @@ field.<br></p>
 <span>  phenotype <span class="op">=</span> <span class="st">"Myc_reduce"</span>,</span>
 <span>  author <span class="op">=</span> <span class="st">"Researcher1"</span>,</span>
 <span></span>
-<span>  <span class="co"># optional and recommended:</span></span>
+<span>  <span class="co"># optional and recommended attributes:</span></span>
 <span>  covariates <span class="op">=</span> <span class="st">"age, gender"</span>,</span>
 <span>  description <span class="op">=</span> <span class="st">"mice Myc haploinsufficient (Myc(+/-))"</span>,</span>
 <span>  platform <span class="op">=</span> <span class="st">"transcriptomics by array"</span>,</span>
-<span>  sample_type <span class="op">=</span> <span class="st">"liver"</span>, <span class="co"># use BRENDA ontology</span></span>
+<span>  sample_type <span class="op">=</span> <span class="st">"liver"</span>, <span class="co"># recommended using BRENDA ontology</span></span>
 <span></span>
-<span>  <span class="co"># optional cut-off attributes.</span></span>
+<span>  <span class="co"># optional cut-off attributes:</span></span>
 <span>  <span class="co"># specifying them can facilitate the extraction of signatures.</span></span>
 <span>  logfc_cutoff <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  p_value_cutoff <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -186,12 +186,11 @@ field.<br></p>
 <span>  score_cutoff <span class="op">=</span> <span class="fl">5</span>,</span>
 <span></span>
 <span>  <span class="co"># other optional built-in attributes:</span></span>
-<span>  keywords <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Myc"</span>, <span class="st">"KO"</span>, <span class="st">"longevity"</span><span class="op">)</span>,</span>
-<span>  cutoff_description <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  PMID <span class="op">=</span> <span class="fl">25619689</span>,</span>
+<span>  keywords <span class="op">=</span> <span class="st">"Myc, KO, longevity"</span>,</span>
+<span>  PMID <span class="op">=</span> <span class="st">"25619689"</span>,</span>
 <span>  year <span class="op">=</span> <span class="fl">2015</span>,</span>
 <span></span>
-<span>  <span class="co"># example of customized attributes:</span></span>
+<span>  <span class="co"># example of other customized attributes:</span></span>
 <span>  others <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"animal_strain"</span> <span class="op">=</span> <span class="st">"C57BL/6"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <div class="section level4">
@@ -292,8 +291,7 @@ column, indicating their higher expression in the Treatment group.
 Features with negative scores should be labeled “Control”. Similarly, if
 the analysis concerns protein expression changes associated with BMI,
 protein features with positive scores should be labeled “higher BMI”,
-while those with negative scores should be labeled “lower BMI”.<br><br></p>
-<p><strong>Option 1</strong>: Extract signature from a differential
+while those with negative scores should be labeled “lower BMI”.<br><br><br><strong>Option 1</strong>: Extract signature from a differential
 analysis results table.<br>
 In this example, we extract a bi-directional signature from a
 <code>difexp</code> object (see next section) using the
