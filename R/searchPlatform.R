@@ -6,11 +6,11 @@
 #' @return character or dataframe of search result
 #'
 #' @examples
-#' searchPlatform()
-#' searchPlatform("proteomics")
-#' searchPlatform(c("transcript", "single-cell"), contain_all = TRUE)
+#' OmicS_searchPlatform()
+#' OmicS_searchPlatform("proteomics")
+#' OmicS_searchPlatform(c("transcript", "single-cell"), contain_all = TRUE)
 #' @export
-searchPlatform <- function(x = "", platforms = predefined_platforms, contain_all = TRUE) {
+OmicS_searchPlatform <- function(x = "", platforms = predefined_platforms, contain_all = TRUE) {
   if (contain_all) {
     result <- seq(length(platforms))
     for (i in x) {

@@ -5,10 +5,10 @@
 #' @return character of search result
 #'
 #' @examples
-#' searchOrganism()
-#' searchOrganism("homo")
+#' OmicS_searchOrganism()
+#' OmicS_searchOrganism("homo")
 #' @export
-searchOrganism <- function(x = "", organism = predefined_organisms) {
+OmicS_searchOrganism <- function(x = "", organism = predefined_organisms) {
   result <- grep(x, organism, ignore.case = TRUE)
   return(organism[result])
 }

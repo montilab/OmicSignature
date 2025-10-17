@@ -16,7 +16,7 @@ BRENDAExistName <- function(x, file = BRENDA) {
 }
 
 
-#' @title searchSampleType
+#' @title OmicS_searchSampleType
 #' @description search for BRENDA tissue name
 #' updated 02/2024
 #' @param x A string or character vector to search for (case-insensitive).
@@ -27,17 +27,17 @@ BRENDAExistName <- function(x, file = BRENDA) {
 #' @return matrix including search result
 #' @examples
 #' # search for results that contain all of "HEK" "293" and "T":
-#' searchSampleType("HEK 293 T", contain_all = TRUE)
-#' searchSampleType(c("HEK", "293", "T"), contain_all = TRUE)
-#' searchSampleType(c("HEK 293", "T"), contain_all = TRUE)
+#' OmicS_searchSampleType("HEK 293 T", contain_all = TRUE)
+#' OmicS_searchSampleType(c("HEK", "293", "T"), contain_all = TRUE)
+#' OmicS_searchSampleType(c("HEK 293", "T"), contain_all = TRUE)
 #'
 #' # search for results that contain any of "HEK", "SUM" or "HeLa":
-#' searchSampleType("HEK SUM HeLa", contain_all = FALSE)
-#' searchSampleType(c("HEK", "SUM", "HeLa"), contain_all = FALSE)
-#' searchSampleType(c("HEK SUM", "HeLa"), contain_all = FALSE)
+#' OmicS_searchSampleType("HEK SUM HeLa", contain_all = FALSE)
+#' OmicS_searchSampleType(c("HEK", "SUM", "HeLa"), contain_all = FALSE)
+#' OmicS_searchSampleType(c("HEK SUM", "HeLa"), contain_all = FALSE)
 #'
 #' @export
-searchSampleType <- function(x, file = BRENDA, contain_all = TRUE) {
+OmicS_searchSampleType <- function(x, file = BRENDA, contain_all = TRUE) {
   x <- unlist(strsplit(x, split = " "))
   if (contain_all) {
     result <- c(1:nrow(file))

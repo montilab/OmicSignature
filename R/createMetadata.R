@@ -90,7 +90,7 @@ createMetadata <- function(signature_name, organism, phenotype = "unknown", assa
     if (!BRENDAExistName(sample_type)) {
       warning(paste0(
         "sample_type is not a valid BRENDA ontology term. Ignore this message if intentional. \n",
-        "Use searchSampleType() to search for the correct BRENDA ontology term to use. \n"
+        "Use OmicS_searchSampleType() to search for the correct BRENDA ontology term to use. \n"
       ))
     }
   }
@@ -102,7 +102,7 @@ createMetadata <- function(signature_name, organism, phenotype = "unknown", assa
   } else if (!platform %in% predefined_platforms) {
     warning(paste0(
       "Input platform is not in the pre-defined list. Ignore this message if intentional. \n",
-      "Use `searchPlatform()` to search for the correct accession ID to use. \n"
+      "Use `OmicS_searchPlatform()` to search for the correct accession ID to use. \n"
     ))
   }
 
@@ -113,7 +113,7 @@ createMetadata <- function(signature_name, organism, phenotype = "unknown", assa
   } else if (!organism %in% predefined_organisms) {
     warning(paste0(
       "Input organism is not in the pre-defined list. Ignore this message if intentional. \n",
-      "Use `searchOrganism()` to search for the correct accession ID to use. \n"
+      "Use `OmicS_searchOrganism()` to search for the correct accession ID to use. \n"
     ))
   }
 

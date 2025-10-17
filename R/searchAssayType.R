@@ -4,10 +4,10 @@
 #' @return search result
 #'
 #' @examples
-#' searchAssayType()
-#' searchAssayType("transcript")
+#' OmicS_searchAssayType()
+#' OmicS_searchAssayType("transcript")
 #' @export
-searchAssayType <- function(x = "") {
+OmicS_searchAssayType <- function(x = "") {
   result <- grep(x, predefined_assaytypes, ignore.case = TRUE)
   return(predefined_assaytypes[result])
 }

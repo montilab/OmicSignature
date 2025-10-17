@@ -30,26 +30,26 @@ Set `contain_all = TRUE` to show results include all search terms. \
 Set `contain_all = FALSE` to show results include any of the search terms. \
 
 ```{r}
-searchSampleType("mcf cell", contain_all = TRUE)
+OmicS_searchSampleType("mcf cell", contain_all = TRUE)
 ```
 
 ```{r}
-searchSampleType("MCF-10 MCF-7", contain_all = FALSE)
+OmicS_searchSampleType("MCF-10 MCF-7", contain_all = FALSE)
 ```
 
 Search for a single word: 
 ```{r}
-searchPlatform("proteomics")
+OmicS_searchPlatform("proteomics")
 ```
 
 Search for multiple words: 
 ```{r}
-searchPlatform(c("transcript", "single-cell"), contain_all = TRUE)
+OmicS_searchPlatform(c("transcript", "single-cell"), contain_all = TRUE)
 ```
 
 If `contain_all = FALSE`, results matching any of the key words will be returned. \
 ```{r}
-searchPlatform(c("transcript", "single-cell"), contain_all = FALSE)
+OmicS_searchPlatform(c("transcript", "single-cell"), contain_all = FALSE)
 ```
 
 </font>
