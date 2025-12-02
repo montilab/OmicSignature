@@ -34,7 +34,7 @@ jobs:
       #    sudo -s eval "$sysreqs"
       - name: Install dependencies
         run: |
-          BiocManager::install(version = "3.22", ask = FALSE)
+          BiocManager::install(version = "3.23", ask = FALSE)
           remotes::install_deps(dependencies = TRUE, repos = BiocManager::repositories())
           remotes::install_cran("rcmdcheck")
         shell: Rscript {0}
