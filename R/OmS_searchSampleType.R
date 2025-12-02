@@ -1,5 +1,5 @@
-#' @title search for a valid BRENDA ontology term to use for sample type
-#' @description updated 02/2024. Using BRENDA ontology version 2021.
+#' @title search for a valid BRENDA ontology term to use for sample type (deprecated 10/2025)
+#' @description Using BRENDA ontology version 2021.
 #' @param x A name to search for
 #' @param file The BRENDA data frame, has columns ID and Name
 #' @return TRUE or FALSE

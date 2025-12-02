@@ -2,7 +2,7 @@
 % Please edit documentation in R/OmS_searchAssayType.R
 \name{OmicS_searchAssayType}
 \alias{OmicS_searchAssayType}
-\title{search for an assay type to use}
+\title{search for an assay type to use (deprecated 10/2025)}
 \usage{
 OmicS_searchAssayType(x = "")
 }
@@ -13,7 +13,7 @@ OmicS_searchAssayType(x = "")
 search result
 }
 \description{
-updated 10/2025
+search for an assay type to use (deprecated 10/2025)
 }
 \examples{
 OmicS_searchAssayType()

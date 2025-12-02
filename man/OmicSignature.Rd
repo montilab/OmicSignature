@@ -4,7 +4,7 @@
 \alias{OmicSignature}
 \title{OmicSignature R6 object}
 \description{
-a R6 object to store signatures generated from experiments. In cluding metadata, signature, and an optional differential expression analysis result dataframe.
+a R6 object to store signatures generated from experiments. Including metadata, signature, and an optional differential expression analysis result dataframe.
 updated 10/2025
 }
 \section{Active bindings}{

@@ -2,7 +2,7 @@
 % Please edit documentation in R/OmS_searchSampleType.R
 \name{BRENDAExistName}
 \alias{BRENDAExistName}
-\title{search for a valid BRENDA ontology term to use for sample type}
+\title{search for a valid BRENDA ontology term to use for sample type (deprecated 10/2025)}
 \usage{
 BRENDAExistName(x, file = BRENDA)
 }
@@ -15,7 +15,7 @@ BRENDAExistName(x, file = BRENDA)
 TRUE or FALSE
 }
 \description{
-updated 02/2024. Using BRENDA ontology version 2021.
+Using BRENDA ontology version 2021.
 }
 \examples{
 BRENDAExistName("blood plasma")

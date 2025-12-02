@@ -1,7 +1,7 @@
 #### OmicSigObj ####
 
 #' @title OmicSignature R6 object
-#' @description a R6 object to store signatures generated from experiments. In cluding metadata, signature, and an optional differential expression analysis result dataframe.
+#' @description a R6 object to store signatures generated from experiments. Including metadata, signature, and an optional differential expression analysis result dataframe.
 #' updated 10/2025
 #' @importFrom R6 R6Class
 #' @importFrom dplyr filter select mutate relocate arrange distinct recode bind_rows across everything %>%

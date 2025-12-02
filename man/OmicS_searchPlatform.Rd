@@ -2,7 +2,7 @@
 % Please edit documentation in R/OmS_searchPlatform.R
 \name{OmicS_searchPlatform}
 \alias{OmicS_searchPlatform}
-\title{search for a platform name to use}
+\title{search for a platform name to use (deprecated 10/2025)}
 \usage{
 OmicS_searchPlatform(
   x = "",
@@ -21,7 +21,7 @@ OmicS_searchPlatform(
 character or dataframe of search result
 }
 \description{
-updated 05/2025
+search for a platform name to use (deprecated 10/2025)
 }
 \examples{
 OmicS_searchPlatform()

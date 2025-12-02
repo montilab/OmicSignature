@@ -2,7 +2,7 @@
 % Please edit documentation in R/OmS_searchOrganism.R
 \name{OmicS_searchOrganism}
 \alias{OmicS_searchOrganism}
-\title{search for a pre-defined organism name to use}
+\title{search for a pre-defined organism name to use (deprecated 10/2025)}
 \usage{
 OmicS_searchOrganism(x = "", organism = predefined_organisms)
 }
@@ -15,7 +15,7 @@ OmicS_searchOrganism(x = "", organism = predefined_organisms)
 character of search result
 }
 \description{
-updated 05/2025
+search for a pre-defined organism name to use (deprecated 10/2025)
 }
 \examples{
 OmicS_searchOrganism()

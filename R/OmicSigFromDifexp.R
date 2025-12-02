@@ -1,5 +1,5 @@
 #### OmicSigFromDifexp() ####
-#' @title create an OmicSignature object from differential expsignaturession matrix
+#' @title create an OmicSignature object from differential expression matrix
 #' @description updated 08/2025
 #' @param difexp Differential expression matrix
 #' @param metadata Metadata for the OmicSignature object. If `criteria` is `NULL`,

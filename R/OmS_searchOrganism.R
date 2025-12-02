@@ -1,5 +1,4 @@
-#' @title search for a pre-defined organism name to use
-#' @description updated 05/2025
+#' @title search for a pre-defined organism name to use (deprecated 10/2025)
 #' @param x a string to search for (case-insensitive). if empty, will return all available organisms.
 #' @param organism pre-defined organism character variable.
 #' @return character of search result

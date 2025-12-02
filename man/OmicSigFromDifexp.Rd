@@ -2,7 +2,7 @@
 % Please edit documentation in R/OmicSigFromDifexp.R
 \name{OmicSigFromDifexp}
 \alias{OmicSigFromDifexp}
-\title{create an OmicSignature object from differential expsignaturession matrix}
+\title{create an OmicSignature object from differential expression matrix}
 \usage{
 OmicSigFromDifexp(difexp, metadata, criteria = NULL)
 }

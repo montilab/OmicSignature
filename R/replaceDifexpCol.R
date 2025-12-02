@@ -1,22 +1,26 @@
-#' @title rename the columns of a differential analysis matrix for OmicSignature R6 object
-#' @description updated 10/2024
+#' @title Standardize the column names of difexp
+#' @description A helper function that rename some of the commonly used columns 
+#' of a differential expression dataframe or matrix. 
+#' (updated 10/2024)
 #'
 #' @importFrom dplyr %>%
 #' @importFrom methods is
-#' @param colname a character vector, especially the column name of the differential analysis matrix, i.e. colnames(difexp)
-#' or, if it's the difexp matrix itself, its column name will be modified and the matrix will be returned.
-#' @return standardized column names of the difexp matrix before creating the OmicSignature R6 object
+#' @param x A single character vector specifying the column names of the differential 
+#' expression dataframe or matrix. Alternatively, the differential 
+#' expression dataframe or matrix itself. If the latter, its column name will be 
+#' modified and the matrix will be returned.
+#' @return standardized column names or standardized matrix 
 #' @export
-replaceDifexpCol <- function(colname) {
+replaceDifexpCol <- function(x) {
   difexp <- NULL
-  if (methods::is(colname, "matrix") | methods::is(colname, "data.frame")) {
-    difexp <- colname
-    colname <- colnames(difexp)
+  if (methods::is(x, "matrix") | methods::is(x, "data.frame")) {
+    difexp <- x
+    x <- xs(difexp)
   }
-  if (!methods::is(colname, "character")) {
-    stop("Input should be the column names of a difexp matrix, e.g. colnames(difexp)")
+  if (!methods::is(x, "character")) {
+    stop("Input should be the column names of a difexp matrix, e.g. xs(difexp)")
   }
-  colname <- colname %>%
+  x <- x %>%
     tolower() %>%
     dplyr::recode(
       # old = new
@@ -29,19 +33,19 @@ replaceDifexpCol <- function(colname) {
       "adj.p.val" = "adj_p", "adj.p.value" = "adj_p", "adj.p" = "adj_p", "fdr" = "adj_p",
       "q.value" = "q_value", "qval" = "q_value"
     )
-  colnameMissing <- setdiff(c("probe_id", "feature_name", "score"), colname)
-  if (length(colnameMissing) > 0) {
+  xMissing <- setdiff(c("probe_id", "feature_name", "score"), x)
+  if (length(xMissing) > 0) {
     warning(
-      "Required column for OmicSignature object difexp: ", paste(colnameMissing, collapse = ", "),
+      "Required column for OmicSignature object difexp: ", paste(xMissing, collapse = ", "),
       ", is not found in your input. This may cause problem when creating your OmicSignature object."
     )
   }
-  exist_p_columns <- intersect(colname, c("adj_p", "p_value", "q_value"))
+  exist_p_columns <- intersect(x, c("adj_p", "p_value", "q_value"))
   if (length(exist_p_columns) == 0) {
     warning("difexp need to contain at least one of the following: p_value, q_value, adj_p.")
   }
   if (is.null(difexp)) {
-    return(colname)
+    return(x)
   } else {
     return(difexp)
   }

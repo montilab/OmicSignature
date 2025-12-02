@@ -68,9 +68,12 @@ The example provided below is from an experiment evaluating the effects of Myc r
 
 A list with the following required fields:\
 "**signature_name**", "**organism**", "**direction_type**", "**assay_type**", "**phenotype**", "**author**".\
+ \
+To make collaboration easier, we recommend including your work email address along with your name in the author field. \
+ \
 Not required, but highly recommended fields:\
 "**platform**", "**sample_type**", "**description**", "**covariates**", "**score_cutoff**", "**adj_p_cutoff**", "**logfc_cutoff**".\
-
+ \
 Option 1: Create `metadata` by hand. This is not recommended, because typos can occur.\
 
 ```         
@@ -82,7 +85,7 @@ metadata <- list(
   "direction_type" = "bi-directional",
   "assay_type" = "transcriptomics", 
   "platform" = "transcriptomics by array",
-  "author" = "Researcher1"
+  "author" = "researcher@institute.edu"
 )
 ```
 
@@ -98,7 +101,7 @@ metadata <- createMetadata(
   direction_type = "bi-directional",
   assay_type = "transcriptomics",
   phenotype = "Myc_reduce",
-  author = "Researcher1",
+  author = "researcher@institute.edu",
 
   # optional and recommended attributes:
   covariates = "age, gender",

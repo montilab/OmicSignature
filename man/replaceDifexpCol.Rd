@@ -2,17 +2,21 @@
 % Please edit documentation in R/replaceDifexpCol.R
 \name{replaceDifexpCol}
 \alias{replaceDifexpCol}
-\title{rename the columns of a differential analysis matrix for OmicSignature R6 object}
+\title{Standardize the column names of difexp}
 \usage{
-replaceDifexpCol(colname)
+replaceDifexpCol(x)
 }
 \arguments{
-\item{colname}{a character vector, especially the column name of the differential analysis matrix, i.e. colnames(difexp)
-or, if it's the difexp matrix itself, its column name will be modified and the matrix will be returned.}
+\item{x}{A single character vector specifying the column names of the differential 
+expression dataframe or matrix. Alternatively, the differential 
+expression dataframe or matrix itself. If the latter, its column name will be 
+modified and the matrix will be returned.}
 }
 \value{
-standardized column names of the difexp matrix before creating the OmicSignature R6 object
+standardized column names or standardized matrix
 }
 \description{
-updated 10/2024
+A helper function that rename some of the commonly used columns 
+of a differential expression dataframe or matrix. 
+(updated 10/2024)
 }

@@ -1,5 +1,4 @@
-#' @title search for an assay type to use
-#' @description updated 10/2025
+#' @title search for an assay type to use (deprecated 10/2025)
 #' @param x a string to search for. if empty, will return all available assay types.
 #' @return search result
 #'
