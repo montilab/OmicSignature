@@ -67,7 +67,7 @@
                         <h4 data-toc-skip class="author">Vanessa Mengze
 Li</h4>
             
-            <h4 data-toc-skip class="date">2025-10-17</h4>
+            <h4 data-toc-skip class="date">2025-12-02</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/montilab/OmicSignature/blob/main/vignettes/CreateOmS.Rmd" class="external-link"><code>vignettes/CreateOmS.Rmd</code></a></small>
       <div class="d-none name"><code>CreateOmS.Rmd</code></div>
@@ -139,14 +139,16 @@ here included.<br></p>
 <p>A list with the following required fields:<br>
 “<strong>signature_name</strong>”, “<strong>organism</strong>”,
 “<strong>direction_type</strong>”, “<strong>assay_type</strong>”,
-“<strong>phenotype</strong>”, “<strong>author</strong>”.<br>
+“<strong>phenotype</strong>”, “<strong>author</strong>”.<br><br>
+To make collaboration easier, we recommend including your work email
+address along with your name in the author field.<br><br>
 Not required, but highly recommended fields:<br>
 “<strong>platform</strong>”, “<strong>sample_type</strong>”,
 “<strong>description</strong>”, “<strong>covariates</strong>”,
 “<strong>score_cutoff</strong>”, “<strong>adj_p_cutoff</strong>”,
-“<strong>logfc_cutoff</strong>”.<br></p>
-<p>Option 1: Create <code>metadata</code> by hand. This is not
-recommended, because typos can occur.<br></p>
+“<strong>logfc_cutoff</strong>”.<br><br>
+Option 1: Create <code>metadata</code> by hand. This is not recommended,
+because typos can occur.<br></p>
 <pre><code><span><span class="va">metadata</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>  <span class="st">"signature_name"</span> <span class="op">=</span> <span class="va">Myc_reduce_mice_liver_24m</span>,</span>
 <span>  <span class="st">"organism"</span> <span class="op">=</span> <span class="st">"Mus musculus"</span>,</span>
@@ -155,7 +157,7 @@ recommended, because typos can occur.<br></p>
 <span>  <span class="st">"direction_type"</span> <span class="op">=</span> <span class="st">"bi-directional"</span>,</span>
 <span>  <span class="st">"assay_type"</span> <span class="op">=</span> <span class="st">"transcriptomics"</span>, </span>
 <span>  <span class="st">"platform"</span> <span class="op">=</span> <span class="st">"transcriptomics by array"</span>,</span>
-<span>  <span class="st">"author"</span> <span class="op">=</span> <span class="st">"Researcher1"</span></span>
+<span>  <span class="st">"author"</span> <span class="op">=</span> <span class="st">"researcher@institute.edu"</span></span>
 <span><span class="op">)</span></span></code></pre>
 <p>Option 2: Use <code><a href="../reference/createMetadata.html">createMetadata()</a></code> (recommended).<br>
 This function helps remind you of the built-in attributes. The full list
@@ -170,7 +172,7 @@ field.<br></p>
 <span>  direction_type <span class="op">=</span> <span class="st">"bi-directional"</span>,</span>
 <span>  assay_type <span class="op">=</span> <span class="st">"transcriptomics"</span>,</span>
 <span>  phenotype <span class="op">=</span> <span class="st">"Myc_reduce"</span>,</span>
-<span>  author <span class="op">=</span> <span class="st">"Researcher1"</span>,</span>
+<span>  author <span class="op">=</span> <span class="st">"researcher@institute.edu"</span>,</span>
 <span></span>
 <span>  <span class="co"># optional and recommended attributes:</span></span>
 <span>  covariates <span class="op">=</span> <span class="st">"age, gender"</span>,</span>
@@ -469,7 +471,7 @@ messages.<br></p>
 <span><span class="co">#&gt;   Metadata: </span></span>
 <span><span class="co">#&gt;     adj_p_cutoff = 0.05 </span></span>
 <span><span class="co">#&gt;     assay_type = transcriptomics </span></span>
-<span><span class="co">#&gt;     author = Researcher1 </span></span>
+<span><span class="co">#&gt;     author = researcher@institute.edu </span></span>
 <span><span class="co">#&gt;     covariates = age, gender </span></span>
 <span><span class="co">#&gt;     description = mice Myc haploinsufficient (Myc(+/-)) </span></span>
 <span><span class="co">#&gt;     direction_type = bi-directional </span></span>
@@ -529,7 +531,7 @@ object.<br></p>
 <span><span class="co">#&gt;   Metadata: </span></span>
 <span><span class="co">#&gt;     adj_p_cutoff = 0.05 </span></span>
 <span><span class="co">#&gt;     assay_type = transcriptomics </span></span>
-<span><span class="co">#&gt;     author = Researcher1 </span></span>
+<span><span class="co">#&gt;     author = researcher@institute.edu </span></span>
 <span><span class="co">#&gt;     covariates = age, gender </span></span>
 <span><span class="co">#&gt;     description = mice Myc haploinsufficient (Myc(+/-)) </span></span>
 <span><span class="co">#&gt;     direction_type = bi-directional </span></span>
@@ -565,7 +567,7 @@ object.<br></p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer>
