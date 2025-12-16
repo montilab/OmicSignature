@@ -271,22 +271,19 @@ OmicSignature <-
         }
 
         # check assay_type
-        if (!metadata$assay_type %in% c("transcriptomics", "proteomics", "metabolomics", "methylomics", "genetic_variations", "DNA_binding_sites")) {
-          metadata$assay_type <- "other"
-          warning("assay_type is not one of the commonly used term: transcriptomics, proteomics, metabolomics, methylomics, genetic_variations, DNA_binding_sites. Set it to be \"other\". ")
+        if (!metadata$assay_type %in% predefined_assaytypes) {
+          warning("assay_type is not one of the commonly used assay_type terms. Ignore this message if intentional.\n")
         }
 
         # check phenotype
         if (is.null(metadata$phenotype)) {
           metadata$phenotype <- "unknown"
-          warning("Phenotype information unknown. ")
         }
 
         # check if sample_type is a valid BRENDA term
         if (is.null(metadata$sample_type)) metadata$sample_type <- "unknown"
         if (!BRENDAExistName(metadata$sample_type)) {
-          metadata$sample_type <- "unknown"
-          warning("sample_type is not a valid BRENDA ontology term. Set to be unknown.")
+          warning("sample_type is not a valid BRENDA ontology term. Ignore this message if intentional.")
         }
 
         # check if organism is in pre-defined list

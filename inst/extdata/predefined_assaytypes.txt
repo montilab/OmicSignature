@@ -2,6 +2,6 @@ transcriptomics
 proteomics
 metabolomics
 methylomics
-genetic_variations
+genetic_variants
 DNA_binding_sites
 other

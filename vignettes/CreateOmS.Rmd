@@ -161,7 +161,7 @@ While both "sample_type" and "platform" are free text, it is recommended that pr
 - "proteomics"\
 - "metabolomics"\
 - "methylomics"\
-- "genetic_variations" (e.g. SNP, GWAS)\
+- "genetic_variants" (e.g. GWAS results)\
 - "DNA_binding_sites" (e.g. ChIP-seq)\
 - "other"\
 

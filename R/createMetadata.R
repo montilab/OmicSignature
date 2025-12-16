@@ -77,12 +77,8 @@ createMetadata <- function(signature_name, organism, phenotype = "unknown", assa
       "dna binding" ~ "DNA_binding_sites",
       "dna_binding_site" ~ "DNA_binding_sites"
     )
-  if (!assay_type %in% c("transcriptomics", "proteomics", "metabolomics", "methylomics", "genetic_variations", "DNA_binding_sites")) {
-    assay_type <- "others"
-    warning(paste0(
-      "assay_type is not one of the following: transcriptomics, proteomics, metabolomics, methylomics, genetic_variations, DNA_binding_sites. \n",
-      "Set it to be \"others\". \n"
-    ))
+  if (!assay_type %in% predefined_assaytypes) {
+    warning("assay_type is not one of the commonly used assay_type terms. Ignore this message if intentional.\n")
   }
 
   # check if sample_type is a valid BRENDA term
