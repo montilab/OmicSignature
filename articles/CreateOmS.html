@@ -67,7 +67,7 @@
                         <h4 data-toc-skip class="author">Vanessa Mengze
 Li</h4>
             
-            <h4 data-toc-skip class="date">2025-12-02</h4>
+            <h4 data-toc-skip class="date">2025-12-16</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/montilab/OmicSignature/blob/main/vignettes/CreateOmS.Rmd" class="external-link"><code>vignettes/CreateOmS.Rmd</code></a></small>
       <div class="d-none name"><code>CreateOmS.Rmd</code></div>
@@ -258,7 +258,7 @@ ANOVA.<br></p></li>
 - “proteomics”<br>
 - “metabolomics”<br>
 - “methylomics”<br>
-- “genetic_variations” (e.g. SNP, GWAS)<br>
+- “genetic_variants” (e.g. GWAS results)<br>
 - “DNA_binding_sites” (e.g. ChIP-seq)<br>
 - “other”<br></p>
 <p>You can also use <code><a href="../reference/OmicS_searchAssayType.html">OmicS_searchAssayType()</a></code> to see the list
@@ -302,7 +302,10 @@ In this example, we extract a bi-directional signature from a
 metadata. A <code>difexp</code> object is a properly formatted data
 frame reporting the results of a differential analysis (e.g., by
 Limma).<br></p>
-<pre><code><span><span class="co">#&gt;   probe_id  logfc  mean  score p_value adj_p      b       feature_name</span></span>
+<pre><code><span><span class="co">#&gt; Warning in replaceDifexpCol(colnames(difexp)): Required column for</span></span>
+<span><span class="co">#&gt; OmicSignature object difexp: group_label, is not found in your input. This may</span></span>
+<span><span class="co">#&gt; cause problem when creating your OmicSignature object.</span></span>
+<span><span class="co">#&gt;   probe_id  logfc  mean  score p_value adj_p      b       feature_name</span></span>
 <span><span class="co">#&gt; 1 10345228 -0.167 7.106 -1.470   0.186 0.560 -5.866 ENSMUSG00000103746</span></span>
 <span><span class="co">#&gt; 2 10354534  0.041 4.351  0.520   0.620 0.870 -6.780 ENSMUSG00000060715</span></span>
 <span><span class="co">#&gt; 3 10354529 -0.175 4.955 -0.941   0.379 0.731 -6.458 ENSMUSG00000043629</span></span>
@@ -417,8 +420,8 @@ warning:<br></p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">difexp</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/replaceDifexpCol.html">replaceDifexpCol</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">difexp</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Warning in replaceDifexpCol(colnames(difexp)): Required column for</span></span>
-<span><span class="co">#&gt; OmicSignature object difexp: feature_name, is not found in your input. This may</span></span>
-<span><span class="co">#&gt; cause problem when creating your OmicSignature object.</span></span></code></pre></div>
+<span><span class="co">#&gt; OmicSignature object difexp: feature_name, group_label, is not found in your</span></span>
+<span><span class="co">#&gt; input. This may cause problem when creating your OmicSignature object.</span></span></code></pre></div>
 <p>Create the required columns “feature_name” and “group_label”:</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">difexp</span> <span class="op">&lt;-</span> <span class="va">difexp</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>

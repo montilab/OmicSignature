@@ -191,7 +191,7 @@ for details.
 - “proteomics”  
 - “metabolomics”  
 - “methylomics”  
-- “genetic_variations” (e.g. SNP, GWAS)  
+- “genetic_variants” (e.g. GWAS results)  
 - “DNA_binding_sites” (e.g. ChIP-seq)  
 - “other”  
 
@@ -237,6 +237,9 @@ specified in the metadata. A `difexp` object is a properly formatted
 data frame reporting the results of a differential analysis (e.g., by
 Limma).  
 
+    #> Warning in replaceDifexpCol(colnames(difexp)): Required column for
+    #> OmicSignature object difexp: group_label, is not found in your input. This may
+    #> cause problem when creating your OmicSignature object.
     #>   probe_id  logfc  mean  score p_value adj_p      b       feature_name
     #> 1 10345228 -0.167 7.106 -1.470   0.186 0.560 -5.866 ENSMUSG00000103746
     #> 2 10354534  0.041 4.351  0.520   0.620 0.870 -6.780 ENSMUSG00000060715
@@ -372,8 +375,8 @@ warning:
 
 colnames(difexp) <- replaceDifexpCol(colnames(difexp))
 #> Warning in replaceDifexpCol(colnames(difexp)): Required column for
-#> OmicSignature object difexp: feature_name, is not found in your input. This may
-#> cause problem when creating your OmicSignature object.
+#> OmicSignature object difexp: feature_name, group_label, is not found in your
+#> input. This may cause problem when creating your OmicSignature object.
 ```
 
 Create the required columns “feature_name” and “group_label”:

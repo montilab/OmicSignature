@@ -23,9 +23,9 @@ search result
 
 ``` r
 OmicS_searchAssayType()
-#> [1] "transcriptomics"    "proteomics"         "metabolomics"      
-#> [4] "methylomics"        "genetic_variations" "DNA_binding_sites" 
-#> [7] "other"             
+#> [1] "transcriptomics"   "proteomics"        "metabolomics"     
+#> [4] "methylomics"       "genetic_variants"  "DNA_binding_sites"
+#> [7] "other"            
 OmicS_searchAssayType("transcript")
 #> [1] "transcriptomics"
 ```
