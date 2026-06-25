@@ -22,9 +22,15 @@ Imports:
 	R6,
 	jsonlite
 Suggests:
+  cba,
+  ComplexHeatmap,
+  circlize,
+  fgsea,
 	rmarkdown,
   knitr,
 	pkgdown,
-	devtools
+	devtools,
+	testthat (>= 3.0.0)
 VignetteBuilder: knitr
+Config/testthat/edition: 3
 BugReports: https://github.com/montilab/OmicSignature/issues
