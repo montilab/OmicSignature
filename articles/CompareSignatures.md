@@ -8,7 +8,7 @@ snippets rather than bundled example signature files.
 ## Compare one list of signatures
 
 Use
-[`compare_omics_signatures()`](https://montilab.github.io/OmicSignature/reference/compare_omics_signatures.md)
+[`compare_omic_signatures()`](https://montilab.github.io/OmicSignature/reference/compare_omic_signatures.md)
 with a named list of `OmicSignature` objects to compare every signature
 against every other signature in the list. For bi-directional
 signatures, the function compares the first factor level against the
@@ -22,7 +22,7 @@ library(OmicSignature)
 data(compare_signatures_example)
 signature_list <- compare_signatures_example
 
-overlap_res <- compare_omics_signatures(
+overlap_res <- compare_omic_signatures(
   sig_list1 = signature_list,
   method = "overlap",
   score_cutoff = log2(1.25),
@@ -55,7 +55,7 @@ cohorts, platforms, or perturbation screens.
 reference_signatures <- compare_signatures_example[1:2]
 query_signatures <- compare_signatures_example[3:4]
 
-cross_res <- compare_omics_signatures(
+cross_res <- compare_omic_signatures(
   sig_list1 = query_signatures,
   sig_list2 = reference_signatures,
   method = "overlap",
@@ -81,7 +81,7 @@ signatures need explicit matching.
 
 ``` r
 
-paired_res <- compare_omics_signatures(
+paired_res <- compare_omic_signatures(
   sig_list1 = signature_list,
   method = "overlap",
   label_pairing = list(
@@ -101,7 +101,7 @@ retain their `difexp` tables.
 
 ``` r
 
-ks_res <- compare_omics_signatures(
+ks_res <- compare_omic_signatures(
   sig_list1 = signature_list,
   method = "ks",
   adj_p_cutoff = 0.05,
@@ -117,7 +117,7 @@ GSEA requires the optional `fgsea` package.
 
 ``` r
 
-gsea_res <- compare_omics_signatures(
+gsea_res <- compare_omic_signatures(
   sig_list1 = signature_list,
   method = "gsea",
   adj_p_cutoff = 0.05,
@@ -133,7 +133,7 @@ gsea_res <- compare_omics_signatures(
 Use
 [`signature_similarity_heatmap()`](https://montilab.github.io/OmicSignature/reference/signature_similarity_heatmap.md)
 to visualize square self-comparison output from
-`compare_omics_signatures(method = "overlap")`. The heatmap function
+`compare_omic_signatures(method = "overlap")`. The heatmap function
 requires the optional `ComplexHeatmap` and `circlize` packages.
 
 ``` r
@@ -155,3 +155,25 @@ signature_similarity_heatmap(
 
 For `measure = "pvalue"`, values are plotted as `-log10(pvalue)`. Larger
 values therefore indicate stronger overlap enrichment.
+
+Rank-based KS and GSEA outputs can be visualized with
+`measure = "score"` or `measure = "pvalue"`. Because these matrices are
+directional rather than symmetric, `mode = "combined"` draws only the
+upper triangle and splits each cell between the two label levels.
+`mode = "separate"` draws one full heatmap for each label level.
+
+``` r
+
+signature_similarity_heatmap(
+  ks_res,
+  measure = "score",
+  mode = "combined",
+  triangle = "upper"
+)
+
+signature_similarity_heatmap(
+  ks_res,
+  measure = "pvalue",
+  mode = "separate"
+)
+```

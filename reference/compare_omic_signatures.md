@@ -6,7 +6,7 @@ overlap, a two-sample Kolmogorov-Smirnov test, or fgsea.
 ## Usage
 
 ``` r
-compare_omics_signatures(
+compare_omic_signatures(
   sig_list1,
   sig_list2 = NULL,
   method = c("overlap", "ks", "gsea"),
@@ -137,7 +137,7 @@ each element contains \`jaccard\`, \`pvalue\`, and \`counts\` matrices.
 ``` r
 data(compare_signatures_example)
 
-overlap_res <- compare_omics_signatures(
+overlap_res <- compare_omic_signatures(
   compare_signatures_example[1:2],
   method = "overlap",
   score_cutoff = log2(1.025),

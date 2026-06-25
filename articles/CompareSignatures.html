@@ -80,7 +80,7 @@ signature files.</p>
 <div class="section level2">
 <h2 id="compare-one-list-of-signatures">Compare one list of signatures<a class="anchor" aria-label="anchor" href="#compare-one-list-of-signatures"></a>
 </h2>
-<p>Use <code><a href="../reference/compare_omics_signatures.html">compare_omics_signatures()</a></code> with a named list of
+<p>Use <code><a href="../reference/compare_omic_signatures.html">compare_omic_signatures()</a></code> with a named list of
 <code>OmicSignature</code> objects to compare every signature against
 every other signature in the list. For bi-directional signatures, the
 function compares the first factor level against the first factor level
@@ -91,7 +91,7 @@ and the second factor level against the second factor level.</p>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">compare_signatures_example</span><span class="op">)</span></span>
 <span><span class="va">signature_list</span> <span class="op">&lt;-</span> <span class="va">compare_signatures_example</span></span>
 <span></span>
-<span><span class="va">overlap_res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/compare_omics_signatures.html">compare_omics_signatures</a></span><span class="op">(</span></span>
+<span><span class="va">overlap_res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/compare_omic_signatures.html">compare_omic_signatures</a></span><span class="op">(</span></span>
 <span>  sig_list1 <span class="op">=</span> <span class="va">signature_list</span>,</span>
 <span>  method <span class="op">=</span> <span class="st">"overlap"</span>,</span>
 <span>  score_cutoff <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log2</a></span><span class="op">(</span><span class="fl">1.25</span><span class="op">)</span>,</span>
@@ -128,7 +128,7 @@ screens.</p>
 <code class="sourceCode R"><span><span class="va">reference_signatures</span> <span class="op">&lt;-</span> <span class="va">compare_signatures_example</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">]</span></span>
 <span><span class="va">query_signatures</span> <span class="op">&lt;-</span> <span class="va">compare_signatures_example</span><span class="op">[</span><span class="fl">3</span><span class="op">:</span><span class="fl">4</span><span class="op">]</span></span>
 <span></span>
-<span><span class="va">cross_res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/compare_omics_signatures.html">compare_omics_signatures</a></span><span class="op">(</span></span>
+<span><span class="va">cross_res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/compare_omic_signatures.html">compare_omic_signatures</a></span><span class="op">(</span></span>
 <span>  sig_list1 <span class="op">=</span> <span class="va">query_signatures</span>,</span>
 <span>  sig_list2 <span class="op">=</span> <span class="va">reference_signatures</span>,</span>
 <span>  method <span class="op">=</span> <span class="st">"overlap"</span>,</span>
@@ -152,7 +152,7 @@ signature’s <code>group_label</code> column. Use
 <code>label_pairing</code> and <code>label_pairing2</code> when
 signatures need explicit matching.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">paired_res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/compare_omics_signatures.html">compare_omics_signatures</a></span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="va">paired_res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/compare_omic_signatures.html">compare_omic_signatures</a></span><span class="op">(</span></span>
 <span>  sig_list1 <span class="op">=</span> <span class="va">signature_list</span>,</span>
 <span>  method <span class="op">=</span> <span class="st">"overlap"</span>,</span>
 <span>  label_pairing <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
@@ -171,7 +171,7 @@ scores from another signature. These methods require the compared
 <code>OmicSignature</code> objects to retain their <code>difexp</code>
 tables.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">ks_res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/compare_omics_signatures.html">compare_omics_signatures</a></span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="va">ks_res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/compare_omic_signatures.html">compare_omic_signatures</a></span><span class="op">(</span></span>
 <span>  sig_list1 <span class="op">=</span> <span class="va">signature_list</span>,</span>
 <span>  method <span class="op">=</span> <span class="st">"ks"</span>,</span>
 <span>  adj_p_cutoff <span class="op">=</span> <span class="fl">0.05</span>,</span>
@@ -183,7 +183,7 @@ tables.</p>
 <span><span class="va">ks_res</span><span class="op">$</span><span class="va">comparisons</span><span class="op">$</span><span class="va">level1_vs_level1</span><span class="op">$</span><span class="va">pvalue</span></span></code></pre></div>
 <p>GSEA requires the optional <code>fgsea</code> package.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">gsea_res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/compare_omics_signatures.html">compare_omics_signatures</a></span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="va">gsea_res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/compare_omic_signatures.html">compare_omic_signatures</a></span><span class="op">(</span></span>
 <span>  sig_list1 <span class="op">=</span> <span class="va">signature_list</span>,</span>
 <span>  method <span class="op">=</span> <span class="st">"gsea"</span>,</span>
 <span>  adj_p_cutoff <span class="op">=</span> <span class="fl">0.05</span>,</span>
@@ -198,7 +198,7 @@ tables.</p>
 </h2>
 <p>Use <code><a href="../reference/signature_similarity_heatmap.html">signature_similarity_heatmap()</a></code> to visualize square
 self-comparison output from
-<code>compare_omics_signatures(method = "overlap")</code>. The heatmap
+<code>compare_omic_signatures(method = "overlap")</code>. The heatmap
 function requires the optional <code>ComplexHeatmap</code> and
 <code>circlize</code> packages.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
@@ -218,6 +218,25 @@ function requires the optional <code>ComplexHeatmap</code> and
 <p>For <code>measure = "pvalue"</code>, values are plotted as
 <code>-log10(pvalue)</code>. Larger values therefore indicate stronger
 overlap enrichment.</p>
+<p>Rank-based KS and GSEA outputs can be visualized with
+<code>measure = "score"</code> or <code>measure = "pvalue"</code>.
+Because these matrices are directional rather than symmetric,
+<code>mode = "combined"</code> draws only the upper triangle and splits
+each cell between the two label levels. <code>mode = "separate"</code>
+draws one full heatmap for each label level.</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/signature_similarity_heatmap.html">signature_similarity_heatmap</a></span><span class="op">(</span></span>
+<span>  <span class="va">ks_res</span>,</span>
+<span>  measure <span class="op">=</span> <span class="st">"score"</span>,</span>
+<span>  mode <span class="op">=</span> <span class="st">"combined"</span>,</span>
+<span>  triangle <span class="op">=</span> <span class="st">"upper"</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="../reference/signature_similarity_heatmap.html">signature_similarity_heatmap</a></span><span class="op">(</span></span>
+<span>  <span class="va">ks_res</span>,</span>
+<span>  measure <span class="op">=</span> <span class="st">"pvalue"</span>,</span>
+<span>  mode <span class="op">=</span> <span class="st">"separate"</span></span>
+<span><span class="op">)</span></span></code></pre></div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>

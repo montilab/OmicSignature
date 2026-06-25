@@ -21,7 +21,7 @@
   : OmicSignature R6 object
 - [`OmicSignatureCollection`](https://montilab.github.io/OmicSignature/reference/OmicSignatureCollection.md)
   : OmicSignatureCollection R6 object
-- [`compare_omics_signatures()`](https://montilab.github.io/OmicSignature/reference/compare_omics_signatures.md)
+- [`compare_omic_signatures()`](https://montilab.github.io/OmicSignature/reference/compare_omic_signatures.md)
   : Compare OmicSignature objects
 - [`compare_signatures_example`](https://montilab.github.io/OmicSignature/reference/compare_signatures_example.md)
   : Example signatures for comparing OmicSignature lists
