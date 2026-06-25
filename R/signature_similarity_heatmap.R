@@ -5,16 +5,21 @@
 #' Plot signature similarity heatmaps
 #'
 #' Plot one or more ComplexHeatmap heatmaps from the object returned by
-#' `compare_omics_signatures()`. Similarity can be shown as Jaccard similarity
-#' or as p-value-based similarity on a `-log10(p-value)` scale.
+#' `compare_omic_signatures()`. Overlap comparisons can show Jaccard
+#' similarity or p-value-based similarity on a `-log10(p-value)` scale.
+#' Rank-based comparisons can show score or `-log10(p-value)` matrices.
+#' For rank-based KS and GSEA comparisons, `mode = "combined"` draws the upper
+#' triangle with split cells: the top-right triangle shows `level2_vs_level2`
+#' and the bottom-left triangle shows `level1_vs_level1`. `mode = "separate"`
+#' draws one full heatmap per level, and `mode = "split"` is invalid.
 #'
-#' @param comparison Output from `compare_omics_signatures(method = "overlap")`.
-#' @param measure One of `"jaccard"` or `"pvalue"`.
+#' @param comparison Output from `compare_omic_signatures()`.
+#' @param measure One of `"jaccard"`, `"score"`, or `"pvalue"`.
 #' @param mode One of `"separate"`, `"combined"`, or `"split"`.
 #' @param annotation Optional ComplexHeatmap::HeatmapAnnotation object.
 #' @param annotation_side Where to place annotation: `"column"` or `"row"`.
-#' @param triangle Triangle to display for symmetric heatmaps in `"separate"`
-#'   and `"combined"` modes.
+#' @param triangle Triangle to display for symmetric overlap heatmaps in
+#'   `"separate"` and `"combined"` modes.
 #' @param cluster_method Hierarchical clustering method passed to hclust or cba.
 #' @param col_fun Color function for separate heatmaps.
 #' @param pos_col_fun Color function for first-level triangles in combined mode.
@@ -30,7 +35,7 @@
 #' @examples
 #' data(compare_signatures_example)
 #'
-#' overlap_res <- compare_omics_signatures(
+#' overlap_res <- compare_omic_signatures(
 #'   compare_signatures_example[1:2],
 #'   method = "overlap",
 #'   score_cutoff = log2(1.025),
@@ -43,10 +48,27 @@
 #'   signature_similarity_heatmap(overlap_res, draw = FALSE)
 #' }
 #'
+#' ks_res <- compare_omic_signatures(
+#'   compare_signatures_example[1:2],
+#'   method = "ks",
+#'   adj_p_cutoff = 0.01,
+#'   min_features = 10
+#' )
+#'
+#' if (requireNamespace("ComplexHeatmap", quietly = TRUE) &&
+#'     requireNamespace("circlize", quietly = TRUE)) {
+#'   signature_similarity_heatmap(
+#'     ks_res,
+#'     measure = "score",
+#'     mode = "combined",
+#'     draw = FALSE
+#'   )
+#' }
+#'
 #' @export
 signature_similarity_heatmap <- function(
     comparison,
-    measure = c("jaccard", "pvalue"),
+    measure = c("jaccard", "score", "pvalue"),
     mode = c("separate", "combined", "split"),
     annotation = NULL,
     annotation_side = c("column", "row"),
@@ -84,21 +106,37 @@ signature_similarity_heatmap <- function(
   ## Convert comparison output into one or two plottable similarity matrices.
   sim <- .ssh_similarity_from_comparison(comparison, measure)
   sim_names <- attr(sim, "comparison_names")
+  comparison_method <- attr(sim, "comparison_method")
+  is_rank_based <- comparison_method %in% c("ks", "gsea")
   if (mode %in% c("combined", "split") && is.null(sim$negative)) {
     stop(mode, " mode requires two similarity matrices.")
   }
+  if (is_rank_based && mode == "split") {
+    stop("split mode is not supported for rank-based comparisons.")
+  }
 
   ## Choose default color scales from the observed similarity range.
-  max_value <- max(unlist(sim, use.names = FALSE), na.rm = TRUE)
+  value_range <- range(unlist(sim, use.names = FALSE), na.rm = TRUE)
+  if (!all(is.finite(value_range))) value_range <- c(0, 1)
+  max_abs_value <- max(abs(value_range))
+  if (!is.finite(max_abs_value) || max_abs_value <= 0) max_abs_value <- 1
+  max_value <- max(value_range)
   if (!is.finite(max_value) || max_value <= 0) max_value <- 1
   if (is.null(col_fun)) {
-    col_fun <- circlize::colorRamp2(c(0, max_value), c("white", "#b2182b"))
+    col_fun <- if (value_range[1] < 0) {
+      circlize::colorRamp2(
+        c(-max_abs_value, 0, max_abs_value),
+        c("#2166ac", "white", "#b2182b")
+      )
+    } else {
+      circlize::colorRamp2(c(0, max_value), c("white", "#b2182b"))
+    }
   }
   if (is.null(pos_col_fun)) {
-    pos_col_fun <- circlize::colorRamp2(c(0, max_value), c("white", "#b2182b"))
+    pos_col_fun <- col_fun
   }
   if (is.null(neg_col_fun)) {
-    neg_col_fun <- circlize::colorRamp2(c(0, max_value), c("white", "#2166ac"))
+    neg_col_fun <- col_fun
   }
 
   heatmap_args <- list(...)
@@ -118,6 +156,7 @@ signature_similarity_heatmap <- function(
 
   mask_redundant_triangle <- function(mat) {
     ## Hide the redundant half of symmetric self-comparison matrices.
+    if (is_rank_based) return(mat)
     row_pos <- match(rownames(mat), feature_order)
     col_pos <- match(colnames(mat), feature_order)
     displayed_lower <- outer(row_pos, col_pos, `>`)
@@ -131,6 +170,7 @@ signature_similarity_heatmap <- function(
   }
   is_visible_triangle_cell <- function(i, j) {
     ## Restrict custom triangle drawing to the requested matrix half.
+    if (is_rank_based) return(i <= j)
     row_pos <- match(rownames(order_basis)[i], feature_order)
     col_pos <- match(colnames(order_basis)[j], feature_order)
     if (row_pos == col_pos) return(TRUE)
@@ -221,17 +261,25 @@ signature_similarity_heatmap <- function(
             rect_gp = grid::gpar(type = "none"),
             cell_fun = function(j, i, x, y, width, height, fill) {
               if (!is_visible_triangle_cell(i, j)) return(NULL)
-              pos_value <- sim$positive[i, j]
-              neg_value <- sim$negative[i, j]
+              top_right_value <- if (is_rank_based) {
+                sim$negative[i, j]
+              } else {
+                sim$positive[i, j]
+              }
+              bottom_left_value <- if (is_rank_based) {
+                sim$positive[i, j]
+              } else {
+                sim$negative[i, j]
+              }
               grid::grid.polygon(
                 x = grid::unit.c(x - width / 2, x + width / 2, x + width / 2),
                 y = grid::unit.c(y + height / 2, y + height / 2, y - height / 2),
-                gp = grid::gpar(col = NA, fill = pos_col_fun(pos_value))
+                gp = grid::gpar(col = NA, fill = pos_col_fun(top_right_value))
               )
               grid::grid.polygon(
                 x = grid::unit.c(x - width / 2, x - width / 2, x + width / 2),
                 y = grid::unit.c(y + height / 2, y - height / 2, y - height / 2),
-                gp = grid::gpar(col = NA, fill = neg_col_fun(neg_value))
+                gp = grid::gpar(col = NA, fill = neg_col_fun(bottom_left_value))
               )
               grid::grid.rect(
                 x = x,
@@ -248,6 +296,11 @@ signature_similarity_heatmap <- function(
     } else {
       ## Fall back to the average similarity for large combined heatmaps.
       average_mat <- mask_redundant_triangle((sim$positive + sim$negative) / 2)
+      if (is_rank_based) {
+        row_pos <- seq_len(nrow(average_mat))
+        col_pos <- seq_len(ncol(average_mat))
+        average_mat[outer(row_pos, col_pos, `>`)] <- NA_real_
+      }
       ht <- do.call(
         ComplexHeatmap::Heatmap,
         c(
@@ -270,14 +323,26 @@ signature_similarity_heatmap <- function(
 }
 
 .ssh_similarity_from_comparison <- function(comparison, measure) {
-  ## Extract Jaccard or transformed p-value matrices from comparison output.
+  ## Extract Jaccard, score, or transformed p-value matrices.
   if (!is.list(comparison) || is.null(comparison$comparisons)) {
-    stop("comparison must be an object returned by compare_omics_signatures().")
+    stop("comparison must be an object returned by compare_omic_signatures().")
+  }
+  comparison_method <- comparison$method
+  if (is.null(comparison_method)) comparison_method <- "overlap"
+  if (measure == "jaccard" && comparison_method != "overlap") {
+    stop("measure = 'jaccard' is only available for overlap comparisons.")
+  }
+  if (measure == "score" && comparison_method == "overlap") {
+    stop("measure = 'score' is only available for rank-based comparisons.")
   }
   matrices <- lapply(comparison$comparisons, function(x) {
     if (measure == "jaccard") {
       if (is.null(x$jaccard)) stop("Comparison object does not contain jaccard matrices.")
       return(x$jaccard)
+    }
+    if (measure == "score") {
+      if (is.null(x$score)) stop("Comparison object does not contain score matrices.")
+      return(x$score)
     }
     if (is.null(x$pvalue)) stop("Comparison object does not contain pvalue matrices.")
     -log10(pmax(x$pvalue, .Machine$double.eps, na.rm = FALSE))
@@ -289,10 +354,12 @@ signature_similarity_heatmap <- function(
   if (length(matrices) == 1) {
     out <- list(positive = matrices[[1]])
     attr(out, "comparison_names") <- names(matrices)[1]
+    attr(out, "comparison_method") <- comparison_method
     return(out)
   }
   out <- list(positive = matrices[[1]], negative = matrices[[2]])
   attr(out, "comparison_names") <- names(matrices)[seq_along(out)]
+  attr(out, "comparison_method") <- comparison_method
   out
 }
 

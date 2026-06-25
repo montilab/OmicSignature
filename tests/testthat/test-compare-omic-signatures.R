@@ -1,7 +1,7 @@
 test_that("overlap comparison returns symmetric Jaccard and count matrices", {
   sigs <- make_test_signature_list()
 
-  res <- compare_omics_signatures(
+  res <- compare_omic_signatures(
     sigs,
     method = "overlap",
     adj_p_cutoff = 0.05,
@@ -23,7 +23,7 @@ test_that("overlap comparison returns symmetric Jaccard and count matrices", {
 test_that("overlap comparison supports comparing two signature lists", {
   sigs <- make_test_signature_list()
 
-  res <- compare_omics_signatures(
+  res <- compare_omic_signatures(
     sig_list1 = sigs[1],
     sig_list2 = sigs[2],
     method = "overlap",
@@ -41,7 +41,7 @@ test_that("overlap comparison supports comparing two signature lists", {
 test_that("KS comparison returns score and p-value matrices", {
   sigs <- make_test_signature_list()
 
-  res <- compare_omics_signatures(
+  res <- compare_omic_signatures(
     sigs,
     method = "ks",
     min_features = 1,
@@ -58,11 +58,11 @@ test_that("comparison validates cutoffs and signature inputs", {
   sigs <- make_test_signature_list()
 
   expect_error(
-    compare_omics_signatures(sigs, score_cutoff = -1),
+    compare_omic_signatures(sigs, score_cutoff = -1),
     "score_cutoff"
   )
   expect_error(
-    compare_omics_signatures(list(not_a_signature = data.frame())),
+    compare_omic_signatures(list(not_a_signature = data.frame())),
     "not OmicSignature"
   )
 })

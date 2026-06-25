@@ -7,7 +7,7 @@ test_that("compare_signatures_example supports overlap examples", {
     c("e7386_hsc3", "e7386_cal27", "icg001_hsc3", "icg001_cal27")
   )
 
-  res <- compare_omics_signatures(
+  res <- compare_omic_signatures(
     compare_signatures_example[1:2],
     method = "overlap",
     score_cutoff = log2(1.025),

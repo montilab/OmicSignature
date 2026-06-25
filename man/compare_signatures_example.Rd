@@ -23,7 +23,7 @@ data(compare_signatures_example)
 }
 \description{
 A named list of four `OmicSignature` objects prepared for examples and
-vignettes that demonstrate `compare_omics_signatures()` and
+vignettes that demonstrate `compare_omic_signatures()` and
 `signature_similarity_heatmap()`. The objects come from local signature RDS
 files used in the comparison workflow and have their `difexp` tables reduced
 to the union of features present in the stored signatures to keep the package

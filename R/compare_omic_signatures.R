@@ -1,5 +1,5 @@
 #######################################################################
-## function: COMPARE OMICS SIGNATURES
+## function: COMPARE OMIC SIGNATURES
 ##
 ## Pairwise comparison of OmicSignature objects by overlap, KS, or GSEA.
 #######################################################################
@@ -44,7 +44,7 @@
 #' @examples
 #' data(compare_signatures_example)
 #'
-#' overlap_res <- compare_omics_signatures(
+#' overlap_res <- compare_omic_signatures(
 #'   compare_signatures_example[1:2],
 #'   method = "overlap",
 #'   score_cutoff = log2(1.025),
@@ -54,7 +54,7 @@
 #' overlap_res$comparisons$level1_vs_level1$jaccard
 #'
 #' @export
-compare_omics_signatures <- function(
+compare_omic_signatures <- function(
     sig_list1,
     sig_list2 = NULL,
     method = c("overlap", "ks", "gsea"),

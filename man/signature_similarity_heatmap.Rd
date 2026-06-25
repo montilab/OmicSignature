@@ -6,7 +6,7 @@
 \usage{
 signature_similarity_heatmap(
   comparison,
-  measure = c("jaccard", "pvalue"),
+  measure = c("jaccard", "score", "pvalue"),
   mode = c("separate", "combined", "split"),
   annotation = NULL,
   annotation_side = c("column", "row"),
@@ -21,9 +21,9 @@ signature_similarity_heatmap(
 )
 }
 \arguments{
-\item{comparison}{Output from `compare_omics_signatures(method = "overlap")`.}
+\item{comparison}{Output from `compare_omic_signatures()`.}
 
-\item{measure}{One of `"jaccard"` or `"pvalue"`.}
+\item{measure}{One of `"jaccard"`, `"score"`, or `"pvalue"`.}
 
 \item{mode}{One of `"separate"`, `"combined"`, or `"split"`.}
 
@@ -31,8 +31,8 @@ signature_similarity_heatmap(
 
 \item{annotation_side}{Where to place annotation: `"column"` or `"row"`.}
 
-\item{triangle}{Triangle to display for symmetric heatmaps in `"separate"`
-and `"combined"` modes.}
+\item{triangle}{Triangle to display for symmetric overlap heatmaps in
+`"separate"` and `"combined"` modes.}
 
 \item{cluster_method}{Hierarchical clustering method passed to hclust or cba.}
 
@@ -55,13 +55,18 @@ A ComplexHeatmap Heatmap or HeatmapList object, invisibly if
 }
 \description{
 Plot one or more ComplexHeatmap heatmaps from the object returned by
-`compare_omics_signatures()`. Similarity can be shown as Jaccard similarity
-or as p-value-based similarity on a `-log10(p-value)` scale.
+`compare_omic_signatures()`. Overlap comparisons can show Jaccard
+similarity or p-value-based similarity on a `-log10(p-value)` scale.
+Rank-based comparisons can show score or `-log10(p-value)` matrices.
+For rank-based KS and GSEA comparisons, `mode = "combined"` draws the upper
+triangle with split cells: the top-right triangle shows `level2_vs_level2`
+and the bottom-left triangle shows `level1_vs_level1`. `mode = "separate"`
+draws one full heatmap per level, and `mode = "split"` is invalid.
 }
 \examples{
 data(compare_signatures_example)
 
-overlap_res <- compare_omics_signatures(
+overlap_res <- compare_omic_signatures(
   compare_signatures_example[1:2],
   method = "overlap",
   score_cutoff = log2(1.025),
@@ -72,5 +77,22 @@ overlap_res <- compare_omics_signatures(
 if (requireNamespace("ComplexHeatmap", quietly = TRUE) &&
     requireNamespace("circlize", quietly = TRUE)) {
   signature_similarity_heatmap(overlap_res, draw = FALSE)
+}
+
+ks_res <- compare_omic_signatures(
+  compare_signatures_example[1:2],
+  method = "ks",
+  adj_p_cutoff = 0.01,
+  min_features = 10
+)
+
+if (requireNamespace("ComplexHeatmap", quietly = TRUE) &&
+    requireNamespace("circlize", quietly = TRUE)) {
+  signature_similarity_heatmap(
+    ks_res,
+    measure = "score",
+    mode = "combined",
+    draw = FALSE
+  )
 }
 }
