@@ -23,6 +23,8 @@
   : OmicSignatureCollection R6 object
 - [`compare_omics_signatures()`](https://montilab.github.io/OmicSignature/reference/compare_omics_signatures.md)
   : Compare OmicSignature objects
+- [`compare_signatures_example`](https://montilab.github.io/OmicSignature/reference/compare_signatures_example.md)
+  : Example signatures for comparing OmicSignature lists
 - [`createMetadata()`](https://montilab.github.io/OmicSignature/reference/createMetadata.md)
   : template for creating a metadata list for an OmicSignature R6 object
 - [`diffAnalLm()`](https://montilab.github.io/OmicSignature/reference/diffAnalLm.md)

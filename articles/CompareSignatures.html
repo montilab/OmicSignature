@@ -88,11 +88,8 @@ and the second factor level against the second factor level.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/montilab/OmicSignature" class="external-link">OmicSignature</a></span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">signature_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span>  signature_a <span class="op">=</span> <span class="va">sig_a</span>,</span>
-<span>  signature_b <span class="op">=</span> <span class="va">sig_b</span>,</span>
-<span>  signature_c <span class="op">=</span> <span class="va">sig_c</span></span>
-<span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">compare_signatures_example</span><span class="op">)</span></span>
+<span><span class="va">signature_list</span> <span class="op">&lt;-</span> <span class="va">compare_signatures_example</span></span>
 <span></span>
 <span><span class="va">overlap_res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/compare_omics_signatures.html">compare_omics_signatures</a></span><span class="op">(</span></span>
 <span>  sig_list1 <span class="op">=</span> <span class="va">signature_list</span>,</span>
@@ -128,22 +125,13 @@ compare signatures across collections. This is useful when signatures
 come from different studies, cohorts, platforms, or perturbation
 screens.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">reference_signatures</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span>  reference_a <span class="op">=</span> <span class="va">ref_a</span>,</span>
-<span>  reference_b <span class="op">=</span> <span class="va">ref_b</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">query_signatures</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span>  query_a <span class="op">=</span> <span class="va">query_a</span>,</span>
-<span>  query_b <span class="op">=</span> <span class="va">query_b</span>,</span>
-<span>  query_c <span class="op">=</span> <span class="va">query_c</span></span>
-<span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">reference_signatures</span> <span class="op">&lt;-</span> <span class="va">compare_signatures_example</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">]</span></span>
+<span><span class="va">query_signatures</span> <span class="op">&lt;-</span> <span class="va">compare_signatures_example</span><span class="op">[</span><span class="fl">3</span><span class="op">:</span><span class="fl">4</span><span class="op">]</span></span>
 <span></span>
 <span><span class="va">cross_res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/compare_omics_signatures.html">compare_omics_signatures</a></span><span class="op">(</span></span>
 <span>  sig_list1 <span class="op">=</span> <span class="va">query_signatures</span>,</span>
 <span>  sig_list2 <span class="op">=</span> <span class="va">reference_signatures</span>,</span>
 <span>  method <span class="op">=</span> <span class="st">"overlap"</span>,</span>
-<span>  background <span class="op">=</span> <span class="va">measured_features</span>,</span>
 <span>  score_cutoff <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log2</a></span><span class="op">(</span><span class="fl">1.25</span><span class="op">)</span>,</span>
 <span>  adj_p_cutoff <span class="op">=</span> <span class="fl">0.05</span>,</span>
 <span>  min_features <span class="op">=</span> <span class="fl">25</span>,</span>

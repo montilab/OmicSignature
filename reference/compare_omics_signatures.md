@@ -131,3 +131,21 @@ each element contains \`jaccard\`, \`pvalue\`, and \`counts\` matrices.
 \`counts\` entries are formatted as \`"ov \| n1 \| n2"\`. For \`method =
 "ks"\` and \`method = "gsea"\` each element contains \`score\` and
 \`pvalue\` matrices.
+
+## Examples
+
+``` r
+data(compare_signatures_example)
+
+overlap_res <- compare_omics_signatures(
+  compare_signatures_example[1:2],
+  method = "overlap",
+  score_cutoff = log2(1.025),
+  adj_p_cutoff = 0.01,
+  min_features = 10
+)
+overlap_res$comparisons$level1_vs_level1$jaccard
+#>             e7386_hsc3 e7386_cal27
+#> e7386_hsc3   1.0000000   0.1271586
+#> e7386_cal27  0.1271586   1.0000000
+```
