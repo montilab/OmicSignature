@@ -58,3 +58,19 @@ Plot one or more ComplexHeatmap heatmaps from the object returned by
 `compare_omics_signatures()`. Similarity can be shown as Jaccard similarity
 or as p-value-based similarity on a `-log10(p-value)` scale.
 }
+\examples{
+data(compare_signatures_example)
+
+overlap_res <- compare_omics_signatures(
+  compare_signatures_example[1:2],
+  method = "overlap",
+  score_cutoff = log2(1.025),
+  adj_p_cutoff = 0.01,
+  min_features = 10
+)
+
+if (requireNamespace("ComplexHeatmap", quietly = TRUE) &&
+    requireNamespace("circlize", quietly = TRUE)) {
+  signature_similarity_heatmap(overlap_res, draw = FALSE)
+}
+}

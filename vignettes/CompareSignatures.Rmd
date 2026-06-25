@@ -31,11 +31,8 @@ level.
 ```{r}
 library(OmicSignature)
 
-signature_list <- list(
-  signature_a = sig_a,
-  signature_b = sig_b,
-  signature_c = sig_c
-)
+data(compare_signatures_example)
+signature_list <- compare_signatures_example
 
 overlap_res <- compare_omics_signatures(
   sig_list1 = signature_list,
@@ -65,22 +62,13 @@ This is useful when signatures come from different studies, cohorts, platforms,
 or perturbation screens.
 
 ```{r}
-reference_signatures <- list(
-  reference_a = ref_a,
-  reference_b = ref_b
-)
-
-query_signatures <- list(
-  query_a = query_a,
-  query_b = query_b,
-  query_c = query_c
-)
+reference_signatures <- compare_signatures_example[1:2]
+query_signatures <- compare_signatures_example[3:4]
 
 cross_res <- compare_omics_signatures(
   sig_list1 = query_signatures,
   sig_list2 = reference_signatures,
   method = "overlap",
-  background = measured_features,
   score_cutoff = log2(1.25),
   adj_p_cutoff = 0.05,
   min_features = 25,

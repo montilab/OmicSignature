@@ -88,3 +88,15 @@ entries are formatted as `"ov | n1 | n2"`. For `method = "ks"` and
 Compare signatures within one list, or between two lists, using set overlap,
 a two-sample Kolmogorov-Smirnov test, or fgsea.
 }
+\examples{
+data(compare_signatures_example)
+
+overlap_res <- compare_omics_signatures(
+  compare_signatures_example[1:2],
+  method = "overlap",
+  score_cutoff = log2(1.025),
+  adj_p_cutoff = 0.01,
+  min_features = 10
+)
+overlap_res$comparisons$level1_vs_level1$jaccard
+}
