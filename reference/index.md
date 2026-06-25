@@ -21,6 +21,8 @@
   : OmicSignature R6 object
 - [`OmicSignatureCollection`](https://montilab.github.io/OmicSignature/reference/OmicSignatureCollection.md)
   : OmicSignatureCollection R6 object
+- [`compare_omics_signatures()`](https://montilab.github.io/OmicSignature/reference/compare_omics_signatures.md)
+  : Compare OmicSignature objects
 - [`createMetadata()`](https://montilab.github.io/OmicSignature/reference/createMetadata.md)
   : template for creating a metadata list for an OmicSignature R6 object
 - [`diffAnalLm()`](https://montilab.github.io/OmicSignature/reference/diffAnalLm.md)
@@ -39,6 +41,8 @@
 - [`signatureVecToDF()`](https://montilab.github.io/OmicSignature/reference/signatureVecToDF.md)
   : change a signature vector into a dataframe to be saved into
   OmicSignature object
+- [`signature_similarity_heatmap()`](https://montilab.github.io/OmicSignature/reference/signature_similarity_heatmap.md)
+  : Plot signature similarity heatmaps
 - [`standardizeSigDF()`](https://montilab.github.io/OmicSignature/reference/standardizeSigDF.md)
   : Standardize signature data frame
 - [`writeJson()`](https://montilab.github.io/OmicSignature/reference/writeJson.md)

@@ -2,6 +2,8 @@
 
 ### All vignettes
 
+- [Comparing OmicSignature
+  Lists](https://montilab.github.io/OmicSignature/articles/CompareSignatures.md):
 - [Create
   OmicSignature](https://montilab.github.io/OmicSignature/articles/CreateOmS.md):
 - [Create

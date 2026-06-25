@@ -9,10 +9,10 @@ devtools::load_all(".")
 
 We use BRENDA tissue ontology to indicate the tissue or cell-line of a
 signature. BRENDA tissue ontology version: **10/2021**. The OBO file was
-downloaded at <https://www.brenda-enzymes.org/ontology.php>.  
+downloaded at <https://www.brenda-enzymes.org/ontology.php>.\
 
 To ensure accurate documentation of the technologies used in the
-experiment, we provided a predefined list of experimental platforms.  
+experiment, we provided a predefined list of experimental platforms.\
 
 If you are not sure which BRENDA tissue ontology or platform name to
 use, you can search for them.
@@ -20,10 +20,10 @@ use, you can search for them.
 ## Search for sample type and platform
 
 Multiple search terms are seperated by space ” “. The search is case
-in-sensitive.  
-Set `contain_all = TRUE` to show results include all search terms.  
+in-sensitive.\
+Set `contain_all = TRUE` to show results include all search terms.\
 Set `contain_all = FALSE` to show results include any of the search
-terms.  
+terms.\
 
 ``` r
 
@@ -82,7 +82,7 @@ OmicS_searchPlatform(c("transcript", "single-cell"), contain_all = TRUE)
     ## [2] "single-cell spatial transcriptomics"
 
 If `contain_all = FALSE`, results matching any of the key words will be
-returned.  
+returned.\
 
 ``` r
 

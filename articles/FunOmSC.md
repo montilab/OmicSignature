@@ -8,11 +8,11 @@ library(dplyr)
 
 ![](figs/OmSC_function_2510.png)
 
-First, create an `OmicSignatureCollection` object.  
+First, create an `OmicSignatureCollection` object.\
 This is the same code in [“Create
 OmicSignatureCollection”](https://montilab.github.io/OmicSignature/articles/CreateOmSC.html)
-section.  
-The following signatures are pseudo results for illustration purpose.  
+section.\
+The following signatures are pseudo results for illustration purpose.\
 
 ``` r
 
@@ -39,7 +39,7 @@ OmSC <- OmicSignatureCollection$new(
 ## Print a summary of the metadata in the `OmicSignatureCollection`
 
 `$metadataSummary()` will print out the metadata fields in all
-`OmicSignature` objects stored in the `OmicSignatureCollection`.  
+`OmicSignature` objects stored in the `OmicSignatureCollection`.\
 When parameter “only_shared” is set to be `TRUE`, only shared metadata
 fields among all `OmicSignature` objects will be included. Otherwise,
 all metadata fields will be included.
@@ -99,7 +99,7 @@ OmSC$extractSignature("abs(score) > 4.5 & p_value < 0.01")
 ```
 
 If `bind` is set to be `FALSE`, the output of each `OmicSignature`
-objects are provided as a list.  
+objects are provided as a list.\
 
 ``` r
 

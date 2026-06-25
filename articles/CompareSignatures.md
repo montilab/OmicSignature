@@ -1,0 +1,169 @@
+# Comparing OmicSignature Lists
+
+This vignette outlines the workflow for comparing `OmicSignature`
+objects and visualizing similarity among signatures. It is prepared for
+later publication with the package website and uses small illustrative
+snippets rather than bundled example signature files.
+
+## Compare one list of signatures
+
+Use
+[`compare_omics_signatures()`](https://montilab.github.io/OmicSignature/reference/compare_omics_signatures.md)
+with a named list of `OmicSignature` objects to compare every signature
+against every other signature in the list. For bi-directional
+signatures, the function compares the first factor level against the
+first factor level and the second factor level against the second factor
+level.
+
+``` r
+
+library(OmicSignature)
+
+signature_list <- list(
+  signature_a = sig_a,
+  signature_b = sig_b,
+  signature_c = sig_c
+)
+
+overlap_res <- compare_omics_signatures(
+  sig_list1 = signature_list,
+  method = "overlap",
+  score_cutoff = log2(1.25),
+  adj_p_cutoff = 0.05,
+  min_features = 25,
+  max_feature = 500
+)
+
+names(overlap_res$comparisons)
+overlap_res$comparisons$level1_vs_level1$jaccard
+overlap_res$comparisons$level1_vs_level1$counts
+```
+
+The overlap method returns three matrices for each compared factor
+level:
+
+- `jaccard`: Jaccard similarity between retained feature sets.
+- `pvalue`: Fisher exact test p-values for overlap enrichment.
+- `counts`: overlap size, first signature size, and second signature
+  size, formatted as `overlap | n1 | n2`.
+
+## Compare two lists of signatures
+
+Pass both `sig_list1` and `sig_list2` to compare signatures across
+collections. This is useful when signatures come from different studies,
+cohorts, platforms, or perturbation screens.
+
+``` r
+
+reference_signatures <- list(
+  reference_a = ref_a,
+  reference_b = ref_b
+)
+
+query_signatures <- list(
+  query_a = query_a,
+  query_b = query_b,
+  query_c = query_c
+)
+
+cross_res <- compare_omics_signatures(
+  sig_list1 = query_signatures,
+  sig_list2 = reference_signatures,
+  method = "overlap",
+  background = measured_features,
+  score_cutoff = log2(1.25),
+  adj_p_cutoff = 0.05,
+  min_features = 25,
+  max_feature = 500
+)
+
+cross_res$comparisons$level1_vs_level1$jaccard
+```
+
+When `background` is not supplied, the feature universe is inferred from
+all available signature and differential-expression tables in both
+inputs. Supplying a measured or assay-specific background is recommended
+when it is available.
+
+## Control label pairing
+
+By default, level ordering follows the factor levels in each signature’s
+`group_label` column. Use `label_pairing` and `label_pairing2` when
+signatures need explicit matching.
+
+``` r
+
+paired_res <- compare_omics_signatures(
+  sig_list1 = signature_list,
+  method = "overlap",
+  label_pairing = list(
+    signature_a = c("treated", "control"),
+    signature_b = c("up", "down"),
+    signature_c = c("resistant", "sensitive")
+  )
+)
+```
+
+## KS and GSEA-style comparisons
+
+The `ks` and `gsea` methods compare a retained feature set from one
+signature against ranked differential-expression scores from another
+signature. These methods require the compared `OmicSignature` objects to
+retain their `difexp` tables.
+
+``` r
+
+ks_res <- compare_omics_signatures(
+  sig_list1 = signature_list,
+  method = "ks",
+  adj_p_cutoff = 0.05,
+  min_features = 25,
+  max_feature = 500
+)
+
+ks_res$comparisons$level1_vs_level1$score
+ks_res$comparisons$level1_vs_level1$pvalue
+```
+
+GSEA requires the optional `fgsea` package.
+
+``` r
+
+gsea_res <- compare_omics_signatures(
+  sig_list1 = signature_list,
+  method = "gsea",
+  adj_p_cutoff = 0.05,
+  min_features = 25,
+  max_feature = 500,
+  minSize = 10,
+  maxSize = 500
+)
+```
+
+## Plot similarity heatmaps
+
+Use
+[`signature_similarity_heatmap()`](https://montilab.github.io/OmicSignature/reference/signature_similarity_heatmap.md)
+to visualize square self-comparison output from
+`compare_omics_signatures(method = "overlap")`. The heatmap function
+requires the optional `ComplexHeatmap` and `circlize` packages.
+
+``` r
+
+signature_similarity_heatmap(
+  overlap_res,
+  measure = "jaccard",
+  mode = "separate",
+  triangle = "upper"
+)
+
+signature_similarity_heatmap(
+  overlap_res,
+  measure = "pvalue",
+  mode = "combined",
+  triangle = "upper"
+)
+```
+
+For `measure = "pvalue"`, values are plotted as `-log10(pvalue)`. Larger
+values therefore indicate stronger overlap enrichment.

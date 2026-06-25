@@ -8,40 +8,40 @@ library(dplyr)
 
 ## 1. Cheatsheet
 
-An `OmicSignature` object contains three parts:  
+An `OmicSignature` object contains three parts:\
 
-- **metadata**, a list.  
-  Required fields:  
+- **metadata**, a list.\
+  Required fields:\
   “**signature_name**”, “**organism**”, “**direction_type**”,
-  “**assay_type**”, “**phenotype**”, “**author**”.  
-  Recommended optional fields, if applicable:  
+  “**assay_type**”, “**phenotype**”, “**author**”.\
+  Recommended optional fields, if applicable:\
   “platform”, “sample_type”, “description”, “covariates”,
-  “score_cutoff”, “adj_p_cutoff”.  
+  “score_cutoff”, “adj_p_cutoff”.\
   All of the above information should be provided as a string (spaces
   and punctuation are allowed) or one numeric value, not as a
-  multi-length vector.  
+  multi-length vector.\
 
-- **signature**, a data frame.  
-  Required columns:  
-  “**probe_id**” (unique identifier for each feature)  
-  “**feature_name**” (e.g. ENSEMBL ID, Uniprot ID)  
+- **signature**, a data frame.\
+  Required columns:\
+  “**probe_id**” (unique identifier for each feature)\
+  “**feature_name**” (e.g. ENSEMBL ID, Uniprot ID)\
   Required for bi-directional and categorical signatures:
-  “**group_label**”  
-  Recommended optional column, if applicable: “score”  
+  “**group_label**”\
+  Recommended optional column, if applicable: “score”\
 
 - **difexp** (optional), a data frame of differential expression
-  analysis results.  
-  Required columns:  
-  “**probe_id**” (unique identifier for each feature)  
-  “**feature_name**” (e.g. ENSEMBL ID, Uniprot ID)  
-  “**score**”  
+  analysis results.\
+  Required columns:\
+  “**probe_id**” (unique identifier for each feature)\
+  “**feature_name**” (e.g. ENSEMBL ID, Uniprot ID)\
+  “**score**”\
   Required for bi-directional and categorical signatures:
-  “**group_label**”  
+  “**group_label**”\
   At least one of the following: “**p_value**”, “**q_value**”, or
-  “**adj_p**”.  
-  Recommended optional column, if applicable: “gene_symbol”  
+  “**adj_p**”.\
+  Recommended optional column, if applicable: “gene_symbol”\
 
-Create the object:  
+Create the object:\
 
     OmS <- OmicSignature$new(
       metadata = metadata,
@@ -56,23 +56,23 @@ of Myc reduced expression by comparing liver profiles of 24-month old
 *Myc*$`^{+/+}`$*vs.* *Myc*$`^{+/-}`$ mice. This is a *bi-directional*
 signature example, since it is a comparison between two groups, and
 contains up and down regulated features (genes). For ease of exposition,
-only the top 1000 genes are here included.  
+only the top 1000 genes are here included.\
 
 ### 2.1. Metadata
 
-A list with the following required fields:  
+A list with the following required fields:\
 “**signature_name**”, “**organism**”, “**direction_type**”,
-“**assay_type**”, “**phenotype**”, “**author**”.  
-  
+“**assay_type**”, “**phenotype**”, “**author**”.\
+\
 To make collaboration easier, we recommend including your work email
-address along with your name in the author field.  
-  
-Not required, but highly recommended fields:  
+address along with your name in the author field.\
+\
+Not required, but highly recommended fields:\
 “**platform**”, “**sample_type**”, “**description**”, “**covariates**”,
-“**score_cutoff**”, “**adj_p_cutoff**”, “**logfc_cutoff**”.  
-  
+“**score_cutoff**”, “**adj_p_cutoff**”, “**logfc_cutoff**”.\
+\
 Option 1: Create `metadata` by hand. This is not recommended, because
-typos can occur.  
+typos can occur.\
 
     metadata <- list(
       "signature_name" = Myc_reduce_mice_liver_24m,
@@ -87,12 +87,12 @@ typos can occur.
 
 Option 2: Use
 [`createMetadata()`](https://montilab.github.io/OmicSignature/reference/createMetadata.md)
-(recommended).  
+(recommended).\
 This function helps remind you of the built-in attributes. The full list
 of current built-in attributes is shown
-[here](https://montilab.github.io/OmicSignature/reference/createMetadata.html).  
+[here](https://montilab.github.io/OmicSignature/reference/createMetadata.html).\
 You can also provide your own customized attributes using the “others”
-field.  
+field.\
 
 ``` r
 
@@ -138,7 +138,7 @@ gene knockout, or a clinical characteristic. Examples include *age*,
 Providing a detailed (free text) “description” is highly recommended.
 For instance, it may include information about how the treatment was
 administered and how each group was defined. The character limit of the
-description is 65,535 (16-bit storage), space included.  
+description is 65,535 (16-bit storage), space included.\
 
 #### 2.1.2 “organism
 
@@ -146,7 +146,7 @@ description is 65,535 (16-bit storage), space included.
 organisms, which you can search using
 [`OmicS_searchOrganism()`](https://montilab.github.io/OmicSignature/reference/OmicS_searchOrganism.md).
 Other entries are allowed, but please use standard naming conventions
-(e.g., “Homo sapiens”, “Mus musculus”) to ensure consistency.  
+(e.g., “Homo sapiens”, “Mus musculus”) to ensure consistency.\
 
 ``` r
 
@@ -163,15 +163,15 @@ platforms, if appropriate. You can search for predefined terms via the
 `OmicS_searchSampleType` and `OmicS_searchPlatform` functions. See
 [“Sample Type & Platform
 Info”](https://montilab.github.io/OmicSignature/articles/SampleType.html)
-for details.  
+for details.\
 
 #### 2.1.4 “direction_type”
 
-`direction_type` must be one of the following:  
+`direction_type` must be one of the following:\
 
 - “uni-directional”. Only a list of significant feature names is
   available. Examples including “genes mutated in a disease” and
-  “markers of a specific cell type”.  
+  “markers of a specific cell type”.\
 
 - “bi-directional”. Significant features are derived from comparison of
   two groups, or a single continuous trait. Thus, the resulting
@@ -179,44 +179,44 @@ for details.
   when comparing treatment *vs.* control groups, some features will be
   higher and some will be lower in the treatment group. When the
   phenotype is a continuous trait, such as age, some features will
-  increase with age, while others will decrease with age.  
+  increase with age, while others will decrease with age.\
 
 - “categorical”. Used with multi-valued categorical phenotypes (e.g.,
-  “A” *vs.* “B” *vs.* “C”), usually analyzed by ANOVA.  
+  “A” *vs.* “B” *vs.* “C”), usually analyzed by ANOVA.\
 
 #### 2.1.5 “assay_type”
 
-`assay_type` is one of the following:  
-- “transcriptomics” (e.g. RNA-seq, micro-array)  
-- “proteomics”  
-- “metabolomics”  
-- “methylomics”  
-- “genetic_variants” (e.g. GWAS results)  
-- “DNA_binding_sites” (e.g. ChIP-seq)  
-- “other”  
+`assay_type` is one of the following:\
+- “transcriptomics” (e.g. RNA-seq, micro-array)\
+- “proteomics”\
+- “metabolomics”\
+- “methylomics”\
+- “genetic_variants” (e.g. GWAS results)\
+- “DNA_binding_sites” (e.g. ChIP-seq)\
+- “other”\
 
 You can also use
 [`OmicS_searchAssayType()`](https://montilab.github.io/OmicSignature/reference/OmicS_searchAssayType.md)
-to see the list above.  
+to see the list above.\
 
 ### 2.2. Signature
 
 **signature** is a dataframe with the columns **“probe_id”** and
 **“feature_name”**. If the signature is bi-directional or categorical
 (as specified in `direction_type` within `metadata`), an additional
-column, **“group_label”**, is also required.  
-An optional column **“score”** is highly recommended when applicable.  
-  
+column, **“group_label”**, is also required.\
+An optional column **“score”** is highly recommended when applicable.\
+\
 “**probe_id**” is a unique identifier, usually a platform-specific
 identifider (e.g., probe IDs for Affymetrix microarrays, or aptamer IDs
 for SomaScan assays). If not provided, it will be automatically
-generated.  
+generated.\
 “**feature_name**” is a name that identifies each feature, examples
 include ENSEMBL IDs for transcripts, UniProt IDs for proteins, and
 Refmet IDs for metabolites. To better identify the features, it is
 recommended to add an additional annotation column(s), e.g.,
 “gene_symbol”. For metabolite features, it is recommended to include
-multiple annotation columns if available, e.g., HMDB ID and InChI key.  
+multiple annotation columns if available, e.g., HMDB ID and InChI key.\
 **“group_label”** is a factor column. This column indicates the
 experimental group in which a feature is more highly expressed or more
 significant. For example, if the analysis identifies genes
@@ -226,16 +226,16 @@ indicating their higher expression in the Treatment group. Features with
 negative scores should be labeled “Control”. Similarly, if the analysis
 concerns protein expression changes associated with BMI, protein
 features with positive scores should be labeled “higher BMI”, while
-those with negative scores should be labeled “lower BMI”.  
-  
-  
+those with negative scores should be labeled “lower BMI”.\
+\
+\
 **Option 1**: Extract signature from a differential analysis results
-table.  
+table.\
 In this example, we extract a bi-directional signature from a `difexp`
 object (see next section) using the `score_cutoff` and `adj_p_cutoff`
 specified in the metadata. A `difexp` object is a properly formatted
 data frame reporting the results of a differential analysis (e.g., by
-Limma).  
+Limma).\
 
     #> Warning in replaceDifexpCol(colnames(difexp)): Required column for
     #> OmicSignature object difexp: group_label, is not found in your input. This may
@@ -283,12 +283,12 @@ head(signature)
 #> 6 10353878 ENSMUSG00000067653  -7.867          WT
 ```
 
-**Option 2**: Manually create signature dataframe.  
-For uni-directional signature:  
+**Option 2**: Manually create signature dataframe.\
+For uni-directional signature:\
 
     signature <- data.frame("probe_id" = c(1, 2, 3), "feature_name" = c("gene1", "gene2", "gene3"))
 
-For bi-directional signature:  
+For bi-directional signature:\
 
     signature <- data.frame(
       "probe_id" = c(1, 2, 3),
@@ -297,7 +297,7 @@ For bi-directional signature:
       "group_label" = c("Treatment", "Control", "Treatment")
     )
 
-For multi-categorical signature:  
+For multi-categorical signature:\
 
     signature <- data.frame(
       "probe_id" = c(1, 2, 3, 4),
@@ -310,22 +310,22 @@ For multi-categorical signature:
 
 A differential expression dataframe is optional but **recommended** if
 available. It facilitates downstream signature extraction, and signature
-comparison by rank-based test.  
+comparison by rank-based test.\
 
-`difexp` is a dataframe with the following **required** columns:  
+`difexp` is a dataframe with the following **required** columns:\
 “**probe_id**”, “**feature_name**”, “**score**”, along with at least one
 of the following: “**p_value**”, “**q_value**”, or “**adj_p**”. Same as
 in the signature dataframe, **“group_label”** is also required when the
-signature is bi-directional or categorical.  
+signature is bi-directional or categorical.\
 Descriptions of probe_id, feature_name, and group_label were provided in
-the signature section above.  
+the signature section above.\
 “**p_value**”, “**q_value**”, or “**adj_p**” refers to the p- or q-value
-representing the significance of each feature.  
+representing the significance of each feature.\
 “**score**” is a numeric value that indicates the importance or
 significance of a feature. Depending on how the signature was derived,
 this can be the t-statistics, log-fold change, Z-score, or other summary
-statistics.  
-  
+statistics.\
+\
 Here we use an example from the differential expression analysis using
 the `limma` package.
 
@@ -367,9 +367,9 @@ Manually change the column names to match the requirement. The built-in
 function
 [`replaceDifexpCol()`](https://montilab.github.io/OmicSignature/reference/replaceDifexpCol.md)
 is designed to replace *some* of the frequently used alternative column
-names.  
+names.\
 If some required columns are not in the difexp, it will give you a
-warning:  
+warning:\
 
 ``` r
 
@@ -415,7 +415,7 @@ OmS <- OmicSignature$new(
 #>   [Success] OmicSignature object Myc_reduce_mice_liver_24m created.
 ```
 
-Set `print_message` = `TRUE` to see all the messages.  
+Set `print_message` = `TRUE` to see all the messages.\
 
 ``` r
 
@@ -464,7 +464,7 @@ print(OmS)
 #>     884 x 10
 ```
 
-Use new criteria to extract significant features:  
+Use new criteria to extract significant features:\
 (this does *not* change the `signature` saved in the object)
 
 ``` r
@@ -478,14 +478,14 @@ OmS$extractSignature("abs(score) > 10; adj_p < 0.01")
 ```
 
 Besides saving and reading OmicSignature object in `.rds` format, you
-can export the object as a text file in json format.  
+can export the object as a text file in json format.\
 
     saveRDS(OmS, "Myc_reduce_mice_liver_24m_OmS.rds")
     writeJson(OmS, "Myc_reduce_mice_liver_24m_OmS.json")
 
 See more in [“Functionalities of
 OmicSignature”](https://montilab.github.io/OmicSignature/articles/FunOmS.html)
-section.  
+section.\
 
 ## 3. Create an `OmicSignature` from `difexp` and `metadata`
 
@@ -495,7 +495,7 @@ Simply provide cutoffs (e.g. `adj_p_cutoff` and `score_cutoff`) in the
 columns, and use
 [`OmicSigFromDifexp()`](https://montilab.github.io/OmicSignature/reference/OmicSigFromDifexp.md)
 to automatically extract significant features and create the
-`OmicSignature` object.  
+`OmicSignature` object.\
 
 ``` r
 

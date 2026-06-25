@@ -56,7 +56,7 @@ OmS
 ## Extract new signatures from the `OmicSignature` object
 
 We can use new criterias to extract new signatures conveniently from the
-OmicSignature Object, **if it has difexp matrix included**.  
+OmicSignature Object, **if it has difexp matrix included**.\
 For example, extract all features with a t-score with absolute value
 higher than 5 and adj_p smaller than 0.01:
 

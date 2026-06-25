@@ -4,10 +4,10 @@
 
 ## OmicSignature object structure
 
-An `OmicSignature` object contains three parts:  
-- **metadata**, a list containing metadata fields;  
+An `OmicSignature` object contains three parts:\
+- **metadata**, a list containing metadata fields;\
 - **signature**, a dataframe with the names, and directions and scores
-if applicable, of the “significant” features;  
+if applicable, of the “significant” features;\
 - **difexp**, optional, a dataframe with the complete differential
 expression analysis result.
 
@@ -17,7 +17,7 @@ for how to create one.
 
 ## OmicSignatureCollection object structure
 
-An `OmicSignatureCollection` object contains two parts:  
+An `OmicSignatureCollection` object contains two parts:\
 - metadata, a list containing a collection’s metadata fields; -
 OmicSigList, a list of OmicSignature Objects
 

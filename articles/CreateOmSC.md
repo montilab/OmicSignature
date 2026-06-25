@@ -9,17 +9,17 @@ library(dplyr)
 ## Create an OmicSignatureCollection Object
 
 This object contains several `OmicSignature` objects to facilitate
-further analysis.  
+further analysis.\
 
-An `OmicSignatureCollection` object contains two parts:  
-- **metadata**  
-- **OmicSigList**, a list of OmicSignature Objects  
+An `OmicSignatureCollection` object contains two parts:\
+- **metadata**\
+- **OmicSigList**, a list of OmicSignature Objects\
 
 ### 1. Metadata for the Collection
 
-The required fields for **metadata** are:  
-“**collection_name**”, “**description**”.  
-Additional optional fields can be added.  
+The required fields for **metadata** are:\
+“**collection_name**”, “**description**”.\
+Additional optional fields can be added.\
 
 ``` r
 
@@ -33,8 +33,8 @@ ColMeta <- list(
 
 ### 2. Prepare `OmicSignature` objects
 
-Create or read OmicSignature objects.  
-The following signatures are pseudo results for illustration purpose.  
+Create or read OmicSignature objects.\
+The following signatures are pseudo results for illustration purpose.\
 
 ``` r
 
@@ -64,6 +64,6 @@ OmicCol
 
 During the creation of `OmicSignatureCollection`, all input
 `OmicSignature` objects will be re-created to make sure they pass all
-the check functions.  
+the check functions.\
 
 ## 

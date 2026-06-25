@@ -1,6 +1,6 @@
 # OmicSignature
 
-Contact: Vanessa Mengze Li  
+Contact: Vanessa Mengze Li\
 `vmli@bu.edu`
 
 ### Last update
