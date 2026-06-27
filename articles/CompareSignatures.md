@@ -17,7 +17,8 @@ level.
 
 ``` r
 
-library(OmicSignature)
+#library(OmicSignature)
+devtools::load_all()
 
 data(compare_signatures_example)
 signature_list <- compare_signatures_example
@@ -97,7 +98,9 @@ paired_res <- compare_omic_signatures(
 The `ks` and `gsea` methods compare a retained feature set from one
 signature against ranked differential-expression scores from another
 signature. These methods require the compared `OmicSignature` objects to
-retain their `difexp` tables.
+retain their `difexp` tables. For each requested `group_label`, genes
+are ranked from the largest `-log10(p_value)` in that label to the
+largest `-log10(p_value)` in the contrasting label.
 
 ``` r
 

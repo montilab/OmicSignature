@@ -67,6 +67,7 @@ a two-sample Kolmogorov-Smirnov test, or fgsea.</p>
 <span>  feature_col <span class="op">=</span> <span class="st">"feature_name"</span>,</span>
 <span>  score_col <span class="op">=</span> <span class="st">"score"</span>,</span>
 <span>  adj_p_col <span class="op">=</span> <span class="st">"adj_p"</span>,</span>
+<span>  p_value_col <span class="op">=</span> <span class="st">"p_value"</span>,</span>
 <span>  group_col <span class="op">=</span> <span class="st">"group_label"</span>,</span>
 <span>  adjust <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  p_adjust_method <span class="op">=</span> <span class="st">"BH"</span>,</span>
@@ -139,6 +140,11 @@ to use for each signature in `sig_list2`.</p></dd>
 <dd><p>Column containing adjusted p-values in difexp tables.</p></dd>
 
 
+<dt id="arg-p-value-col">p_value_col<a class="anchor" aria-label="anchor" href="#arg-p-value-col"></a></dt>
+<dd><p>Column containing p-values used to rank difexp tables for
+KS and GSEA comparisons.</p></dd>
+
+
 <dt id="arg-group-col">group_col<a class="anchor" aria-label="anchor" href="#arg-group-col"></a></dt>
 <dd><p>Column containing phenotype group labels.</p></dd>
 
@@ -152,7 +158,9 @@ to use for each signature in `sig_list2`.</p></dd>
 
 
 <dt id="arg-alternative">alternative<a class="anchor" aria-label="anchor" href="#arg-alternative"></a></dt>
-<dd><p>Alternative hypothesis for Fisher and KS tests.</p></dd>
+<dd><p>Alternative hypothesis for Fisher and KS tests. For KS,
+<code>"greater"</code> tests whether the feature set is enriched at the top of the
+signed ranking, and <code>"less"</code> tests enrichment at the bottom.</p></dd>
 
 
 <dt id="arg-gsea-score">gsea_score<a class="anchor" aria-label="anchor" href="#arg-gsea-score"></a></dt>
@@ -175,6 +183,16 @@ to use for each signature in `sig_list2`.</p></dd>
 <dd><p>Additional arguments passed to fgsea.</p></dd>
 
 </dl></div>
+    <div class="section level2">
+    <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
+    <p>For `method = "ks"` and `method = "gsea"`, each ranked vector is
+built from both phenotype labels. Features in the requested `group_col`
+label are ranked by positive `-log10(p_value)`, and features in the
+contrasting label are ranked by negative `-log10(p_value)`. This places
+the most significant selected-label features at the top of the ranking and
+the most significant contrast-label features at the bottom. KS compares the
+positions of each retained feature set within this ranked vector.</p>
+    </div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>A list with one element per label pairing. For `method = "overlap"`
