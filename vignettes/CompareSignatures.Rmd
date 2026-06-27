@@ -90,8 +90,10 @@ By default, level ordering follows the factor levels in each signature's
 need explicit matching.
 
 ```{r}
+data(compare_label_pairing_example)
+
 paired_res <- compare_omic_signatures(
-  sig_list1 = signature_list,
+  sig_list1 = compare_label_pairing_example,
   method = "overlap",
   label_pairing = list(
     signature_a = c("treated", "control"),
@@ -99,6 +101,9 @@ paired_res <- compare_omic_signatures(
     signature_c = c("resistant", "sensitive")
   )
 )
+
+paired_res$comparisons$level1_vs_level1$jaccard
+paired_res$comparisons$level2_vs_level2$jaccard
 ```
 
 ## KS and GSEA-style comparisons
