@@ -7,6 +7,7 @@ make_test_signature <- function(name, positive_features, negative_features, posi
     probe_id = paste0("probe_", seq_along(group_label)),
     feature_name = c(positive_features, negative_features),
     score = c(positive_scores, negative_scores),
+    p_value = 10^-abs(c(positive_scores, negative_scores)),
     adj_p = rep(0.01, length(group_label)),
     group_label = group_label,
     stringsAsFactors = FALSE

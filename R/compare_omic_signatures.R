@@ -26,15 +26,27 @@
 #' @param feature_col Column containing feature identifiers.
 #' @param score_col Column containing scores in signature and difexp tables.
 #' @param adj_p_col Column containing adjusted p-values in difexp tables.
+#' @param p_value_col Column containing p-values used to rank difexp tables for
+#'   KS and GSEA comparisons.
 #' @param group_col Column containing phenotype group labels.
 #' @param adjust Logical; adjust p-values within each returned comparison.
 #' @param p_adjust_method Multiple-testing correction method.
-#' @param alternative Alternative hypothesis for Fisher and KS tests.
+#' @param alternative Alternative hypothesis for Fisher and KS tests. For KS,
+#'   `"greater"` tests whether the feature set is enriched at the top of the
+#'   signed ranking, and `"less"` tests enrichment at the bottom.
 #' @param gsea_score Column from fgsea output to return as the score matrix.
 #' @param minSize Minimum pathway size passed to fgsea.
 #' @param maxSize Maximum pathway size passed to fgsea.
 #' @param nproc Number of fgsea workers.
 #' @param ... Additional arguments passed to fgsea.
+#'
+#' @details For `method = "ks"` and `method = "gsea"`, each ranked vector is
+#'   built from both phenotype labels. Features in the requested `group_col`
+#'   label are ranked by positive `-log10(p_value)`, and features in the
+#'   contrasting label are ranked by negative `-log10(p_value)`. This places
+#'   the most significant selected-label features at the top of the ranking and
+#'   the most significant contrast-label features at the bottom. KS compares the
+#'   positions of each retained feature set within this ranked vector.
 #'
 #' @return A list with one element per label pairing. For `method = "overlap"`
 #'   each element contains `jaccard`, `pvalue`, and `counts` matrices. `counts`
@@ -68,6 +80,7 @@ compare_omic_signatures <- function(
     feature_col = "feature_name",
     score_col = "score",
     adj_p_col = "adj_p",
+    p_value_col = "p_value",
     group_col = "group_label",
     adjust = FALSE,
     p_adjust_method = "BH",
@@ -109,7 +122,6 @@ compare_omic_signatures <- function(
     label_pos1 = seq_len(ncol(label_order1)),
     label_pos2 = seq_len(ncol(label_order2))
   )
-
   ## Build a feature universe for overlap tests when one is not supplied.
   if (method == "overlap" && is.null(background)) {
     background <- .cos_default_background(sig_list1, sig_list2, feature_col)
@@ -117,12 +129,10 @@ compare_omic_signatures <- function(
   if (!is.null(background)) {
     background <- unique(stats::na.omit(as.character(background)))
   }
-
   res <- stats::setNames(
     vector("list", nrow(label_pairs)),
     paste0("level", label_pairs$label_pos1, "_vs_level", label_pairs$label_pos2)
   )
-
   ## Run the selected comparison independently for each label pairing.
   for (k in seq_len(nrow(label_pairs))) {
     labels1 <- label_order1[, label_pairs$label_pos1[k]]
@@ -138,14 +148,14 @@ compare_omic_signatures <- function(
     } else if (method == "ks") {
       res[[k]] <- .cos_compare_ks(
         sig_list1, sig_list2, labels1, labels2,
-        feature_col, score_col, adj_p_col, group_col,
+        feature_col, score_col, adj_p_col, p_value_col, group_col,
         score_cutoff, adj_p_cutoff, min_features, max_feature,
         adjust, p_adjust_method, alternative
       )
     } else {
       res[[k]] <- .cos_compare_gsea(
         sig_list1, sig_list2, labels1, labels2,
-        feature_col, score_col, adj_p_col, group_col,
+        feature_col, score_col, adj_p_col, p_value_col, group_col,
         score_cutoff, adj_p_cutoff, min_features, max_feature,
         adjust, p_adjust_method, gsea_score, minSize, maxSize, nproc, ...
       )
@@ -214,7 +224,7 @@ compare_omic_signatures <- function(
 }
 
 .cos_compare_ks <- function(sig_list1, sig_list2, labels1, labels2,
-                            feature_col, score_col, adj_p_col, group_col,
+                            feature_col, score_col, adj_p_col, p_value_col, group_col,
                             score_cutoff, adj_p_cutoff, min_features, max_feature,
                             adjust, p_adjust_method, alternative) {
   score <- pvalue <- matrix(NA_real_, length(sig_list1), length(sig_list2),
@@ -227,7 +237,7 @@ compare_omic_signatures <- function(
       score_cutoff, adj_p_cutoff, min_features, max_feature
     )
     for (j in seq_along(sig_list2)) {
-      stats_j <- .cos_difexp_scores(sig_list2[[j]], labels2[[j]], feature_col, score_col, group_col)
+      stats_j <- .cos_difexp_scores(sig_list2[[j]], labels2[[j]], feature_col, score_col, p_value_col, group_col)
       tmp <- .cos_ks_test(geneset, stats_j, alternative)
       score[i, j] <- tmp["score"]
       pvalue[i, j] <- tmp["pvalue"]
@@ -239,7 +249,7 @@ compare_omic_signatures <- function(
 }
 
 .cos_compare_gsea <- function(sig_list1, sig_list2, labels1, labels2,
-                              feature_col, score_col, adj_p_col, group_col,
+                              feature_col, score_col, adj_p_col, p_value_col, group_col,
                               score_cutoff, adj_p_cutoff, min_features, max_feature,
                               adjust, p_adjust_method, gsea_score,
                               minSize, maxSize, nproc, ...) {
@@ -257,7 +267,7 @@ compare_omic_signatures <- function(
       score_cutoff, adj_p_cutoff, min_features, max_feature
     )
     for (j in seq_along(sig_list2)) {
-      stats_j <- .cos_difexp_scores(sig_list2[[j]], labels2[[j]], feature_col, score_col, group_col)
+      stats_j <- .cos_difexp_scores(sig_list2[[j]], labels2[[j]], feature_col, score_col, p_value_col, group_col)
       tmp <- .cos_fgsea(geneset, stats_j, gsea_score, minSize, maxSize, nproc, ...)
       score[i, j] <- tmp["score"]
       pvalue[i, j] <- tmp["pvalue"]
@@ -404,84 +414,106 @@ compare_omic_signatures <- function(
     return(unique(stats::na.omit(as.character(df[[feature_col]]))))
   }
 
-  df <- .cos_rows_for_label(sig$signature, label, feature_col, score_col, group_col)
+  df <- sig$signature %>%
+    dplyr::filter(as.character(.data[[group_col]]) == label)
   if (score_col %in% colnames(df)) {
-    df <- df[abs(df[[score_col]]) >= score_cutoff, , drop = FALSE]
-    df <- .cos_order_signature_rows(df, score_col, adj_p_col)
+    df <- df %>%
+      dplyr::filter(abs(.data[[score_col]]) >= score_cutoff) %>%
+      .cos_order_signature_rows(score_col, adj_p_col)
   }
-  df <- utils::head(df, max_feature)
-  .cos_features_from_rows(df, feature_col)
+  df %>%
+    dplyr::slice_head(n = max_feature) %>%
+    dplyr::pull(dplyr::all_of(feature_col)) %>%
+    as.character() %>%
+    stats::na.omit() %>%
+    unique()
 }
 
-.cos_difexp_scores <- function(sig, label, feature_col, score_col, group_col) {
-  ## Extract the ranked score vector needed by KS and GSEA comparisons.
+.cos_difexp_scores <- function(sig, label, feature_col, score_col, p_value_col, group_col) {
+  ## Rank from most significant selected-label features to contrast features.
   if (is.null(sig$difexp)) {
     stop("Signature '", .cos_signature_name(sig), "' does not contain a difexp table.")
   }
-  difexp <- .cos_rows_for_label(sig$difexp, label, feature_col, score_col, group_col)
-  .cos_named_scores(difexp, feature_col, score_col)
+  .cos_require_col(feature_col, sig$difexp)
+  .cos_require_col(score_col, sig$difexp)
+  .cos_require_col(p_value_col, sig$difexp)
+  .cos_require_col(group_col, sig$difexp)
+
+  levels <- .cos_group_label_levels(sig, group_col)
+  contrast_label <- setdiff(levels, label)
+  if (length(contrast_label) != 1) {
+    stop("Could not identify one contrasting label for '", label, "'.")
+  }
+
+  ranked_sig <- sig$difexp %>%
+    dplyr::select(dplyr::all_of(c(feature_col, score_col, p_value_col, group_col))) %>%
+    dplyr::filter(
+      !is.na(.data[[feature_col]]),
+      .data[[feature_col]] != "",
+      !is.na(.data[[score_col]]),
+      !is.na(.data[[p_value_col]]),
+      .data[[p_value_col]] >= 0,
+      as.character(.data[[group_col]]) %in% c(label, contrast_label)
+    ) %>%
+    dplyr::mutate(
+      .p_rank = -log10(pmax(.data[[p_value_col]], .Machine$double.xmin)),
+      .rank_score = ifelse(
+        as.character(.data[[group_col]]) == label,
+        .data$.p_rank,
+        -.data$.p_rank
+      ),
+      .abs_score = abs(.data[[score_col]])
+    ) %>%
+    dplyr::arrange(dplyr::desc(.data$.rank_score), dplyr::desc(.data$.p_rank), dplyr::desc(.data$.abs_score)) %>%
+    dplyr::distinct(.data[[feature_col]], .keep_all = TRUE) %>%
+    dplyr::select(dplyr::all_of(c(feature_col, ".rank_score"))) %>%
+    tibble::deframe()
 }
 
 .cos_constrained_signature_df <- function(df, label, feature_col, score_col, adj_p_col, group_col,
                                           score_cutoff, adj_p_cutoff, min_features, max_feature) {
   ## Apply score and p-value filters within one label-specific difexp table.
-  df <- .cos_rows_for_label(df, label, feature_col, score_col, group_col)
   .cos_require_col(feature_col, df)
   .cos_require_col(score_col, df)
   .cos_require_col(adj_p_col, df)
+  .cos_require_col(group_col, df)
 
-  df <- df[!is.na(df[[feature_col]]) & df[[feature_col]] != "", , drop = FALSE]
-  df <- .cos_order_signature_rows(df, score_col, adj_p_col)
-  df <- df[!duplicated(df[[feature_col]]), , drop = FALSE]
+  df <- df %>%
+    dplyr::filter(
+      as.character(.data[[group_col]]) == label,
+      !is.na(.data[[feature_col]]),
+      .data[[feature_col]] != ""
+    ) %>%
+    .cos_order_signature_rows(score_col, adj_p_col) %>%
+    dplyr::distinct(.data[[feature_col]], .keep_all = TRUE)
 
-  selected <- df[
-    abs(df[[score_col]]) >= score_cutoff &
-      !is.na(df[[adj_p_col]]) &
-      df[[adj_p_col]] <= adj_p_cutoff,
-    ,
-    drop = FALSE
-  ]
+  selected <- df %>%
+    dplyr::filter(
+      abs(.data[[score_col]]) >= score_cutoff,
+      !is.na(.data[[adj_p_col]]),
+      .data[[adj_p_col]] <= adj_p_cutoff
+    )
 
   ## Backfill with strongest features if strict cutoffs return too few rows.
   if (nrow(selected) < min_features) {
-    add <- df[!df[[feature_col]] %in% selected[[feature_col]], , drop = FALSE]
-    selected <- rbind(selected, utils::head(add, min_features - nrow(selected)))
+    add <- df %>%
+      dplyr::filter(!.data[[feature_col]] %in% selected[[feature_col]]) %>%
+      dplyr::slice_head(n = min_features - nrow(selected))
+    selected <- dplyr::bind_rows(selected, add)
   }
 
-  utils::head(selected, max_feature)
+  selected %>%
+    dplyr::slice_head(n = max_feature)
 }
 
 .cos_order_signature_rows <- function(df, score_col, adj_p_col) {
-  score_order <- if (score_col %in% colnames(df)) -abs(df[[score_col]]) else rep(0, nrow(df))
-  adj_order <- if (adj_p_col %in% colnames(df)) df[[adj_p_col]] else rep(1, nrow(df))
-  df[order(adj_order, score_order, na.last = TRUE), , drop = FALSE]
-}
-
-.cos_features_from_rows <- function(df, feature_col) {
-  if (!feature_col %in% colnames(df)) {
-    stop("Column '", feature_col, "' not found.")
-  }
-  unique(stats::na.omit(as.character(df[[feature_col]])))
-}
-
-.cos_rows_for_label <- function(df, label, feature_col, score_col, group_col) {
-  .cos_require_col(group_col, df)
-  df[as.character(df[[group_col]]) == label, , drop = FALSE]
-}
-
-.cos_named_scores <- function(df, feature_col, score_col) {
-  ## Build a named numeric vector, keeping one score per feature.
-  if (!all(c(feature_col, score_col) %in% colnames(df))) {
-    stop("Columns '", feature_col, "' and '", score_col, "' are required.")
-  }
-  scores <- df[[score_col]]
-  names(scores) <- as.character(df[[feature_col]])
-  keep <- !is.na(scores) & !is.na(names(scores)) & names(scores) != ""
-  scores <- scores[keep]
-  if (any(duplicated(names(scores)))) {
-    scores <- tapply(scores, names(scores), function(x) x[which.max(abs(x))])
-  }
-  sort(scores, decreasing = TRUE)
+  df %>%
+    dplyr::mutate(
+      .adj_order = if (adj_p_col %in% colnames(df)) .data[[adj_p_col]] else 1,
+      .score_order = if (score_col %in% colnames(df)) abs(.data[[score_col]]) else 0
+    ) %>%
+    dplyr::arrange(.data$.adj_order, dplyr::desc(.data$.score_order)) %>%
+    dplyr::select(-dplyr::all_of(c(".adj_order", ".score_order")))
 }
 
 .cos_default_background <- function(sig_list1, sig_list2, feature_col) {
@@ -523,19 +555,37 @@ compare_omic_signatures <- function(
 }
 
 .cos_ks_test <- function(geneset, stats_vec, alternative) {
-  ## Test whether geneset scores differ from all remaining feature scores.
+  ## Test where geneset members fall in the ranked stats vector.
   geneset <- intersect(unique(geneset), names(stats_vec))
-  outside <- setdiff(names(stats_vec), geneset)
-  if (length(geneset) < 1 || length(outside) < 1) {
+  positions <- stats::na.omit(match(geneset, names(stats_vec)))
+  n_stats <- length(stats_vec)
+  n_geneset <- length(positions)
+  if (n_geneset < 1 || n_stats < 2) {
     return(c(score = NA_real_, pvalue = NA_real_))
   }
+  ## Compute the signed running enrichment statistic used by hypeR.
+  positions <- sort(positions)
+  hit_step <- 1 / n_geneset
+  miss_step <- 1 / n_stats
+  steps <- sort(c(positions - 1, positions))
+  steps <- steps[c(TRUE, diff(steps) != 0)]
+  hits_seen <- rep(0, length(steps))
+  hits_seen[match(positions, steps)] <- seq_len(n_geneset)
+  empty_steps <- which(hits_seen == 0)[-1]
+  hits_seen[empty_steps] <- hits_seen[empty_steps - 1]
+  running_score <- hits_seen * hit_step - steps * miss_step
+  score <- running_score[which.max(abs(running_score))]
 
-  x <- stats_vec[geneset]
-  y <- stats_vec[outside]
-  tmp <- suppressWarnings(stats::ks.test(x, y, alternative = alternative))
-  sign_score <- sign(mean(x, na.rm = TRUE) - mean(y, na.rm = TRUE))
-  if (is.na(sign_score) || sign_score == 0) sign_score <- 1
-  c(score = unname(tmp$statistic) * sign_score, pvalue = tmp$p.value)
+  ## Map ranking semantics to ks.test tails: top-ranked hits have lower ranks.
+  ks_alternative <- switch(
+    alternative,
+    greater = "less",
+    less = "greater",
+    two.sided = "two.sided",
+    stop("'alternative' must be one of 'greater', 'less', or 'two.sided'.")
+  )
+  tmp <- suppressWarnings(stats::ks.test(seq_len(n_stats), positions, alternative = ks_alternative))
+  c(score = unname(score), pvalue = tmp$p.value)
 }
 
 .cos_fgsea <- function(geneset, stats_vec, gsea_score, minSize, maxSize, nproc, ...) {

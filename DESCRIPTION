@@ -20,7 +20,8 @@ Imports:
 	methods,
 	limma,
 	R6,
-	jsonlite
+	jsonlite,
+	tibble
 Suggests:
   cba,
   ComplexHeatmap,

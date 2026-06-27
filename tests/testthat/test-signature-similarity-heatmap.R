@@ -1,3 +1,14 @@
+.legend_titles <- function(legends) {
+  vapply(legends, function(legend) {
+    text_children <- vapply(
+      legend@grob$children,
+      function(child) inherits(child, "text"),
+      logical(1)
+    )
+    legend@grob$children[[which(text_children)[1]]]$label
+  }, character(1))
+}
+
 test_that("similarity extraction validates square named matrices", {
   comparison <- list(
     comparisons = list(
@@ -116,8 +127,106 @@ test_that("rank-based heatmaps support combined and separate modes only", {
   expect_s4_class(combined_ht, "Heatmap")
   expect_s4_class(separate_ht, "HeatmapList")
   expect_s4_class(averaged_ht, "Heatmap")
+  expect_equal(separate_ht@ht_list[[1]]@name, "lev1_vs_lev1")
+  expect_equal(separate_ht@ht_list[[2]]@name, "lev2_vs_lev2")
   expect_error(
     signature_similarity_heatmap(comparison, measure = "score", mode = "split", draw = FALSE),
     "not supported for rank-based"
   )
+})
+
+test_that("rank-based combined heatmap overlays full separate matrices", {
+  skip_if_not_installed("ComplexHeatmap")
+  skip_if_not_installed("circlize")
+
+  score_level1 <- matrix(
+    c(1, 4, 2, 3),
+    nrow = 2,
+    dimnames = list(c("a", "b"), c("a", "b"))
+  )
+  score_level2 <- matrix(
+    c(10, 40, 20, 30),
+    nrow = 2,
+    dimnames = list(c("a", "b"), c("a", "b"))
+  )
+  comparison <- list(
+    method = "ks",
+    comparisons = list(
+      level1_vs_level1 = list(score = score_level1, pvalue = score_level1 / 10),
+      level2_vs_level2 = list(score = score_level2, pvalue = score_level2 / 10)
+    )
+  )
+
+  seen <- character()
+  pos_col_fun <- function(x) {
+    seen <<- c(seen, paste0("level1:", x))
+    "#000000"
+  }
+  neg_col_fun <- function(x) {
+    seen <<- c(seen, paste0("level2:", x))
+    "#111111"
+  }
+  combined_ht <- signature_similarity_heatmap(
+    comparison,
+    measure = "score",
+    mode = "combined",
+    draw = FALSE,
+    pos_col_fun = pos_col_fun,
+    neg_col_fun = neg_col_fun
+  )
+  seen <- character()
+  grid::grid.newpage()
+  combined_ht@matrix_param$cell_fun(
+    1, 2,
+    grid::unit(0.5, "npc"), grid::unit(0.5, "npc"),
+    grid::unit(1, "npc"), grid::unit(1, "npc"),
+    NA
+  )
+
+  averaged_ht <- signature_similarity_heatmap(
+    comparison,
+    measure = "score",
+    mode = "combined",
+    combined_triangle_threshold = 0,
+    draw = FALSE
+  )
+
+  expect_equal(seen, c("level2:40", "level1:4"))
+  expect_equal(averaged_ht@matrix, (score_level1 + score_level2) / 2)
+})
+
+test_that("combined heatmap adds abbreviated legends for distinct color scales", {
+  skip_if_not_installed("ComplexHeatmap")
+  skip_if_not_installed("circlize")
+
+  score_level1 <- matrix(
+    c(1, 4, 2, 3),
+    nrow = 2,
+    dimnames = list(c("a", "b"), c("a", "b"))
+  )
+  score_level2 <- matrix(
+    c(10, 40, 20, 30),
+    nrow = 2,
+    dimnames = list(c("a", "b"), c("a", "b"))
+  )
+  comparison <- list(
+    method = "ks",
+    comparisons = list(
+      level1_vs_level1 = list(score = score_level1, pvalue = score_level1 / 10),
+      level2_vs_level2 = list(score = score_level2, pvalue = score_level2 / 10)
+    )
+  )
+
+  combined_ht <- signature_similarity_heatmap(
+    comparison,
+    measure = "score",
+    mode = "combined",
+    draw = FALSE,
+    pos_col_fun = circlize::colorRamp2(c(1, 4), c("white", "red")),
+    neg_col_fun = circlize::colorRamp2(c(10, 40), c("white", "blue"))
+  )
+  legends <- attr(combined_ht, "heatmap_legend_list")
+
+  expect_length(legends, 2)
+  expect_equal(.legend_titles(legends), c("lev2_vs_lev2", "lev1_vs_lev1"))
 })

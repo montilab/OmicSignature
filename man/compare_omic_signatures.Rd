@@ -18,6 +18,7 @@ compare_omic_signatures(
   feature_col = "feature_name",
   score_col = "score",
   adj_p_col = "adj_p",
+  p_value_col = "p_value",
   group_col = "group_label",
   adjust = FALSE,
   p_adjust_method = "BH",
@@ -60,13 +61,18 @@ to use for each signature in `sig_list2`.}
 
 \item{adj_p_col}{Column containing adjusted p-values in difexp tables.}
 
+\item{p_value_col}{Column containing p-values used to rank difexp tables for
+KS and GSEA comparisons.}
+
 \item{group_col}{Column containing phenotype group labels.}
 
 \item{adjust}{Logical; adjust p-values within each returned comparison.}
 
 \item{p_adjust_method}{Multiple-testing correction method.}
 
-\item{alternative}{Alternative hypothesis for Fisher and KS tests.}
+\item{alternative}{Alternative hypothesis for Fisher and KS tests. For KS,
+\code{"greater"} tests whether the feature set is enriched at the top of the
+signed ranking, and \code{"less"} tests enrichment at the bottom.}
 
 \item{gsea_score}{Column from fgsea output to return as the score matrix.}
 
@@ -77,6 +83,15 @@ to use for each signature in `sig_list2`.}
 \item{nproc}{Number of fgsea workers.}
 
 \item{...}{Additional arguments passed to fgsea.}
+}
+\details{
+For `method = "ks"` and `method = "gsea"`, each ranked vector is
+built from both phenotype labels. Features in the requested `group_col`
+label are ranked by positive `-log10(p_value)`, and features in the
+contrasting label are ranked by negative `-log10(p_value)`. This places
+the most significant selected-label features at the top of the ranking and
+the most significant contrast-label features at the bottom. KS compares the
+positions of each retained feature set within this ranked vector.
 }
 \value{
 A list with one element per label pairing. For `method = "overlap"`

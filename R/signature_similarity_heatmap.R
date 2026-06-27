@@ -11,7 +11,8 @@
 #' For rank-based KS and GSEA comparisons, `mode = "combined"` draws the upper
 #' triangle with split cells: the top-right triangle shows `level2_vs_level2`
 #' and the bottom-left triangle shows `level1_vs_level1`. `mode = "separate"`
-#' draws one full heatmap per level, and `mode = "split"` is invalid.
+#' draws one full heatmap per level, and `mode = "split"` is invalid. Legends
+#' for level-specific displays use abbreviated labels such as `"lev1_vs_lev1"`.
 #'
 #' @param comparison Output from `compare_omic_signatures()`.
 #' @param measure One of `"jaccard"`, `"score"`, or `"pvalue"`.
@@ -106,6 +107,7 @@ signature_similarity_heatmap <- function(
   ## Convert comparison output into one or two plottable similarity matrices.
   sim <- .ssh_similarity_from_comparison(comparison, measure)
   sim_names <- attr(sim, "comparison_names")
+  legend_names <- .ssh_abbreviate_comparison_names(sim_names)
   comparison_method <- attr(sim, "comparison_method")
   is_rank_based <- comparison_method %in% c("ks", "gsea")
   if (mode %in% c("combined", "split") && is.null(sim$negative)) {
@@ -170,7 +172,7 @@ signature_similarity_heatmap <- function(
   }
   is_visible_triangle_cell <- function(i, j) {
     ## Restrict custom triangle drawing to the requested matrix half.
-    if (is_rank_based) return(i <= j)
+    if (is_rank_based) return(TRUE)
     row_pos <- match(rownames(order_basis)[i], feature_order)
     col_pos <- match(colnames(order_basis)[j], feature_order)
     if (row_pos == col_pos) return(TRUE)
@@ -189,17 +191,18 @@ signature_similarity_heatmap <- function(
     annotation_args,
     heatmap_args
   )
+  custom_heatmap_legends <- list()
 
   if (mode == "separate") {
     ## Draw one heatmap per comparison level.
-    positive_args <- common_args
+    positive_args <- .ssh_set_legend_title(common_args, legend_names[1])
     positive_args$column_title <- sim_names[1]
     positive_ht <- do.call(
       ComplexHeatmap::Heatmap,
       c(
         list(
           matrix = mask_redundant_triangle(sim$positive),
-          name = sim_names[1],
+          name = legend_names[1],
           col = col_fun,
           na_col = "#FFFFFF00"
         ),
@@ -208,7 +211,7 @@ signature_similarity_heatmap <- function(
     )
     ht <- positive_ht
     if (!is.null(sim$negative)) {
-      negative_args <- common_args
+      negative_args <- .ssh_set_legend_title(common_args, legend_names[2])
       if (annotation_side == "column") negative_args$top_annotation <- NULL
       if (annotation_side == "row") negative_args$left_annotation <- NULL
       negative_args$column_title <- sim_names[2]
@@ -217,7 +220,7 @@ signature_similarity_heatmap <- function(
         c(
           list(
             matrix = mask_redundant_triangle(sim$negative),
-            name = sim_names[2],
+            name = legend_names[2],
             col = col_fun,
             na_col = "#FFFFFF00"
           ),
@@ -249,6 +252,9 @@ signature_similarity_heatmap <- function(
       ## Draw two colored triangles inside each visible heatmap cell.
       combined_mat <- sim$positive
       combined_mat[] <- NA_real_
+      custom_heatmap_legends <- .ssh_combined_legends(
+        sim, measure, legend_names, pos_col_fun, neg_col_fun
+      )
       ht <- do.call(
         ComplexHeatmap::Heatmap,
         c(
@@ -274,12 +280,12 @@ signature_similarity_heatmap <- function(
               grid::grid.polygon(
                 x = grid::unit.c(x - width / 2, x + width / 2, x + width / 2),
                 y = grid::unit.c(y + height / 2, y + height / 2, y - height / 2),
-                gp = grid::gpar(col = NA, fill = pos_col_fun(top_right_value))
+                gp = grid::gpar(col = NA, fill = neg_col_fun(top_right_value))
               )
               grid::grid.polygon(
                 x = grid::unit.c(x - width / 2, x - width / 2, x + width / 2),
                 y = grid::unit.c(y + height / 2, y - height / 2, y - height / 2),
-                gp = grid::gpar(col = NA, fill = neg_col_fun(bottom_left_value))
+                gp = grid::gpar(col = NA, fill = pos_col_fun(bottom_left_value))
               )
               grid::grid.rect(
                 x = x,
@@ -296,11 +302,6 @@ signature_similarity_heatmap <- function(
     } else {
       ## Fall back to the average similarity for large combined heatmaps.
       average_mat <- mask_redundant_triangle((sim$positive + sim$negative) / 2)
-      if (is_rank_based) {
-        row_pos <- seq_len(nrow(average_mat))
-        col_pos <- seq_len(ncol(average_mat))
-        average_mat[outer(row_pos, col_pos, `>`)] <- NA_real_
-      }
       ht <- do.call(
         ComplexHeatmap::Heatmap,
         c(
@@ -316,8 +317,15 @@ signature_similarity_heatmap <- function(
     }
   }
 
+  if (length(custom_heatmap_legends) > 0) {
+    attr(ht, "heatmap_legend_list") <- custom_heatmap_legends
+  }
   if (draw) {
-    return(invisible(ComplexHeatmap::draw(ht)))
+    draw_args <- list(object = ht)
+    if (length(custom_heatmap_legends) > 0) {
+      draw_args$heatmap_legend_list <- custom_heatmap_legends
+    }
+    return(invisible(do.call(ComplexHeatmap::draw, draw_args)))
   }
   ht
 }
@@ -410,4 +418,67 @@ signature_similarity_heatmap <- function(
     return(list(top_annotation = annotation))
   }
   list(left_annotation = annotation)
+}
+
+.ssh_abbreviate_comparison_names <- function(x) {
+  ## Shorten level names for compact heatmap legend titles.
+  gsub("level", "lev", x, fixed = TRUE)
+}
+
+.ssh_set_legend_title <- function(args, title) {
+  ## Respect user legend parameters while filling a default title.
+  legend_param <- args$heatmap_legend_param
+  if (is.null(legend_param)) legend_param <- list()
+  if (is.null(legend_param$title)) legend_param$title <- title
+  args$heatmap_legend_param <- legend_param
+  args
+}
+
+.ssh_measure_legend_title <- function(measure) {
+  ## Use a descriptive title when only one color scale is displayed.
+  if (measure == "pvalue") return("-log10(pvalue)")
+  measure
+}
+
+.ssh_legend_at <- function(values) {
+  ## Build stable numeric legend ticks from finite matrix values.
+  values <- values[is.finite(values)]
+  if (!length(values)) return(c(0, 1))
+  value_range <- range(values, na.rm = TRUE)
+  if (diff(value_range) == 0) return(value_range[1])
+  pretty(value_range, n = 5)
+}
+
+.ssh_color_legend <- function(values, col_fun, title) {
+  ## Create a ComplexHeatmap color legend for custom-drawn cells.
+  at <- .ssh_legend_at(values)
+  mapped_colors <- try(col_fun(at), silent = TRUE)
+  if (inherits(mapped_colors, "try-error") || length(mapped_colors) != length(at)) {
+    mapped_colors <- vapply(at, col_fun, character(1))
+    return(ComplexHeatmap::Legend(
+      labels = at,
+      legend_gp = grid::gpar(fill = mapped_colors),
+      title = title
+    ))
+  }
+  ComplexHeatmap::Legend(
+    at = at,
+    col_fun = col_fun,
+    title = title
+  )
+}
+
+.ssh_combined_legends <- function(sim, measure, legend_names, pos_col_fun, neg_col_fun) {
+  ## Add one legend for shared scales, or one per triangle-specific scale.
+  if (identical(pos_col_fun, neg_col_fun)) {
+    return(list(.ssh_color_legend(
+      unlist(sim, use.names = FALSE),
+      pos_col_fun,
+      .ssh_measure_legend_title(measure)
+    )))
+  }
+  list(
+    .ssh_color_legend(sim$negative, neg_col_fun, legend_names[2]),
+    .ssh_color_legend(sim$positive, pos_col_fun, legend_names[1])
+  )
 }

@@ -61,7 +61,8 @@ Rank-based comparisons can show score or `-log10(p-value)` matrices.
 For rank-based KS and GSEA comparisons, `mode = "combined"` draws the upper
 triangle with split cells: the top-right triangle shows `level2_vs_level2`
 and the bottom-left triangle shows `level1_vs_level1`. `mode = "separate"`
-draws one full heatmap per level, and `mode = "split"` is invalid.
+draws one full heatmap per level, and `mode = "split"` is invalid. Legends
+for level-specific displays use abbreviated labels such as `"lev1_vs_lev1"`.
 }
 \examples{
 data(compare_signatures_example)

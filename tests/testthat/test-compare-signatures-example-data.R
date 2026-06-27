@@ -18,3 +18,17 @@ test_that("compare_signatures_example supports overlap examples", {
   expect_equal(dim(res$comparisons$level1_vs_level1$jaccard), c(2L, 2L))
   expect_equal(unname(diag(res$comparisons$level1_vs_level1$jaccard)), c(1, 1))
 })
+
+test_that("compare_signatures_example has strong KS self-similarity", {
+  data(compare_signatures_example)
+
+  res <- compare_omic_signatures(
+    compare_signatures_example,
+    method = "ks",
+    adj_p_cutoff = 0.01
+  )
+
+  level1 <- res$comparisons$level1_vs_level1
+  expect_equal(unname(diag(level1$score)), unname(apply(level1$score, 1, max)))
+  expect_true(all(diag(level1$pvalue) < 1e-10))
+})

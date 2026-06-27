@@ -52,6 +52,24 @@ test_that("KS comparison returns score and p-value matrices", {
   expect_equal(dim(positive$score), c(2L, 2L))
   expect_equal(dim(positive$pvalue), c(2L, 2L))
   expect_true(all(is.finite(positive$pvalue[upper.tri(positive$pvalue)])))
+  expect_equal(unname(diag(positive$score)), c(0.5, 0.5))
+  expect_equal(unname(diag(positive$pvalue)), rep(0.2181818, 2), tolerance = 1e-6)
+})
+
+test_that("KS ranking uses selected label versus contrast label", {
+  sigs <- make_test_signature_list()
+
+  stats_vec <- OmicSignature:::.cos_difexp_scores(
+    sigs$sig_a,
+    label = "up",
+    feature_col = "feature_name",
+    score_col = "score",
+    p_value_col = "p_value",
+    group_col = "group_label"
+  )
+
+  expect_equal(names(stats_vec), c("A", "B", "C", "D", "Z", "Y", "X", "W"))
+  expect_equal(unname(stats_vec), c(4, 3, 2, 1, -1, -2, -3, -4))
 })
 
 test_that("comparison validates cutoffs and signature inputs", {
