@@ -19,6 +19,7 @@ level.
 
 #library(OmicSignature)
 devtools::load_all()
+#> ℹ Loading OmicSignature
 
 data(compare_signatures_example)
 signature_list <- compare_signatures_example
@@ -33,8 +34,24 @@ overlap_res <- compare_omic_signatures(
 )
 
 names(overlap_res$comparisons)
+#> [1] "level1_vs_level1" "level2_vs_level2"
 overlap_res$comparisons$level1_vs_level1$jaccard
+#>              e7386_hsc3 e7386_cal27 icg001_hsc3 icg001_cal27
+#> e7386_hsc3    1.0000000   0.2391574   0.2048193    0.2437811
+#> e7386_cal27   0.2391574   1.0000000   0.1415525    0.2804097
+#> icg001_hsc3   0.2048193   0.1415525   1.0000000    0.2330456
+#> icg001_cal27  0.2437811   0.2804097   0.2330456    1.0000000
 overlap_res$comparisons$level1_vs_level1$counts
+#>              e7386_hsc3        e7386_cal27       icg001_hsc3      
+#> e7386_hsc3   "500 | 500 | 500" "193 | 500 | 500" "170 | 500 | 500"
+#> e7386_cal27  "193 | 500 | 500" "500 | 500 | 500" "124 | 500 | 500"
+#> icg001_hsc3  "170 | 500 | 500" "124 | 500 | 500" "500 | 500 | 500"
+#> icg001_cal27 "196 | 500 | 500" "219 | 500 | 500" "189 | 500 | 500"
+#>              icg001_cal27     
+#> e7386_hsc3   "196 | 500 | 500"
+#> e7386_cal27  "219 | 500 | 500"
+#> icg001_hsc3  "189 | 500 | 500"
+#> icg001_cal27 "500 | 500 | 500"
 ```
 
 The overlap method returns three matrices for each compared factor
@@ -67,6 +84,9 @@ cross_res <- compare_omic_signatures(
 )
 
 cross_res$comparisons$level1_vs_level1$jaccard
+#>              e7386_hsc3 e7386_cal27
+#> icg001_hsc3   0.2048193   0.1415525
+#> icg001_cal27  0.2437811   0.2804097
 ```
 
 When `background` is not supplied, the feature universe is inferred from
@@ -95,7 +115,15 @@ paired_res <- compare_omic_signatures(
 )
 
 paired_res$comparisons$level1_vs_level1$jaccard
+#>             signature_a signature_b signature_c
+#> signature_a   1.0000000   0.6666667   0.3333333
+#> signature_b   0.6666667   1.0000000   0.3333333
+#> signature_c   0.3333333   0.3333333   1.0000000
 paired_res$comparisons$level2_vs_level2$jaccard
+#>             signature_a signature_b signature_c
+#> signature_a   1.0000000   0.6666667   0.3333333
+#> signature_b   0.6666667   1.0000000   0.3333333
+#> signature_c   0.3333333   0.3333333   1.0000000
 ```
 
 ## KS and GSEA-style comparisons
@@ -118,7 +146,17 @@ ks_res <- compare_omic_signatures(
 )
 
 ks_res$comparisons$level1_vs_level1$score
+#>              e7386_hsc3 e7386_cal27 icg001_hsc3 icg001_cal27
+#> e7386_hsc3    0.8592342   0.4160968   0.4107636    0.4287572
+#> e7386_cal27   0.4201126   0.8589527   0.3174991    0.4384881
+#> icg001_hsc3   0.4059002   0.3219889   0.8509243    0.4114431
+#> icg001_cal27  0.4019190   0.4744036   0.3374776    0.8509243
 ks_res$comparisons$level1_vs_level1$pvalue
+#>              e7386_hsc3 e7386_cal27 icg001_hsc3 icg001_cal27
+#> e7386_hsc3            0           0           0            0
+#> e7386_cal27           0           0           0            0
+#> icg001_hsc3           0           0           0            0
+#> icg001_cal27          0           0           0            0
 ```
 
 GSEA requires the optional `fgsea` package.
@@ -150,16 +188,30 @@ signature_similarity_heatmap(
   overlap_res,
   measure = "jaccard",
   mode = "separate",
-  triangle = "upper"
+  triangle = "upper",
+  column_names_gp = grid::gpar(fontsize = 9),
+  row_names_gp = grid::gpar(fontsize = 9),
+  column_names_rot = 45
 )
+```
+
+![](CompareSignatures_files/figure-html/unnamed-chunk-7-1.png)
+
+``` r
+
 
 signature_similarity_heatmap(
   overlap_res,
-  measure = "pvalue",
+  measure = "jaccard",
   mode = "combined",
-  triangle = "upper"
+  triangle = "upper",
+  column_names_gp = grid::gpar(fontsize = 9),
+  row_names_gp = grid::gpar(fontsize = 9),
+  column_names_rot = 45
 )
 ```
+
+![](CompareSignatures_files/figure-html/unnamed-chunk-7-2.png)
 
 For `measure = "pvalue"`, values are plotted as `-log10(pvalue)`. Larger
 values therefore indicate stronger overlap enrichment.
@@ -176,12 +228,26 @@ signature_similarity_heatmap(
   ks_res,
   measure = "score",
   mode = "combined",
-  triangle = "upper"
+  triangle = "upper",
+  column_names_gp = grid::gpar(fontsize = 9),
+  row_names_gp = grid::gpar(fontsize = 9),
+  column_names_rot = 45
 )
+```
+
+![](CompareSignatures_files/figure-html/unnamed-chunk-8-1.png)
+
+``` r
+
 
 signature_similarity_heatmap(
   ks_res,
-  measure = "pvalue",
-  mode = "separate"
+  measure = "score",
+  mode = "separate",
+  column_names_gp = grid::gpar(fontsize = 9),
+  row_names_gp = grid::gpar(fontsize = 9),
+  column_names_rot = 45
 )
 ```
+
+![](CompareSignatures_files/figure-html/unnamed-chunk-8-2.png)
