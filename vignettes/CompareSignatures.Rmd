@@ -11,7 +11,7 @@ vignette: >
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
-  eval = FALSE
+  eval = TRUE
 )
 ```
 
@@ -130,7 +130,7 @@ ks_res$comparisons$level1_vs_level1$pvalue
 
 GSEA requires the optional `fgsea` package.
 
-```{r}
+```{r eval=FALSE}
 gsea_res <- compare_omic_signatures(
   sig_list1 = signature_list,
   method = "gsea",
@@ -153,14 +153,20 @@ signature_similarity_heatmap(
   overlap_res,
   measure = "jaccard",
   mode = "separate",
-  triangle = "upper"
+  triangle = "upper",
+  column_names_gp = grid::gpar(fontsize = 9),
+  row_names_gp = grid::gpar(fontsize = 9),
+  column_names_rot = 45
 )
 
 signature_similarity_heatmap(
   overlap_res,
-  measure = "pvalue",
+  measure = "jaccard",
   mode = "combined",
-  triangle = "upper"
+  triangle = "upper",
+  column_names_gp = grid::gpar(fontsize = 9),
+  row_names_gp = grid::gpar(fontsize = 9),
+  column_names_rot = 45
 )
 ```
 
@@ -178,12 +184,18 @@ signature_similarity_heatmap(
   ks_res,
   measure = "score",
   mode = "combined",
-  triangle = "upper"
+  triangle = "upper",
+  column_names_gp = grid::gpar(fontsize = 9),
+  row_names_gp = grid::gpar(fontsize = 9),
+  column_names_rot = 45
 )
 
 signature_similarity_heatmap(
   ks_res,
-  measure = "pvalue",
-  mode = "separate"
+  measure = "score",
+  mode = "separate",
+  column_names_gp = grid::gpar(fontsize = 9),
+  row_names_gp = grid::gpar(fontsize = 9),
+  column_names_rot = 45
 )
 ```
