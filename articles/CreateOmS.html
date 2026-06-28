@@ -67,7 +67,7 @@
                         <h4 data-toc-skip class="author">Vanessa Mengze
 Li</h4>
             
-            <h4 data-toc-skip class="date">2026-06-27</h4>
+            <h4 data-toc-skip class="date">2026-06-28</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/montilab/OmicSignature/blob/compare_signatures/vignettes/CreateOmS.Rmd" class="external-link"><code>vignettes/CreateOmS.Rmd</code></a></small>
       <div class="d-none name"><code>CreateOmS.Rmd</code></div>
@@ -453,6 +453,12 @@ warning:<br></p>
 <span>  difexp <span class="op">=</span> <span class="va">difexp</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt;   [Success] OmicSignature object Myc_reduce_mice_liver_24m created.</span></span></code></pre></div>
+<p><code>OmicSignature</code> is an R6 object, so assignment is by
+reference. For example, <code>OmS2 &lt;- OmS</code> makes
+<code>OmS2</code> point to the same mutable object as <code>OmS</code>;
+it does not create an independent copy. Use
+<code>OmS2 &lt;- OmS$clone()</code> before modifying an object when you
+need to keep the original unchanged.</p>
 <p>Set <code>print_message</code> = <code>TRUE</code> to see all the
 messages.<br></p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">

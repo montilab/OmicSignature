@@ -415,6 +415,11 @@ OmS <- OmicSignature$new(
 #>   [Success] OmicSignature object Myc_reduce_mice_liver_24m created.
 ```
 
+`OmicSignature` is an R6 object, so assignment is by reference. For
+example, `OmS2 <- OmS` makes `OmS2` point to the same mutable object as
+`OmS`; it does not create an independent copy. Use `OmS2 <- OmS$clone()`
+before modifying an object when you need to keep the original unchanged.
+
 Set `print_message` = `TRUE` to see all the messages.\
 
 ``` r

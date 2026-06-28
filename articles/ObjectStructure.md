@@ -4,6 +4,14 @@
 
 ## OmicSignature object structure
 
+An `OmicSignature` is an R6 object. Unlike most base R objects, R6
+objects use reference semantics: assigning an `OmicSignature` to another
+variable does not create an independent copy. Both variables point to
+the same mutable object, so changes made through one variable are
+visible through the other. Use `OmS_copy <- OmS$clone()` when you need
+an independent object, and use `OmS$clone(deep = TRUE)` when nested R6
+objects also need to be copied.
+
 An `OmicSignature` object contains three parts:\
 - **metadata**, a list containing metadata fields;\
 - **signature**, a dataframe with the names, and directions and scores
@@ -16,6 +24,10 @@ See
 for how to create one.
 
 ## OmicSignatureCollection object structure
+
+An `OmicSignatureCollection` is also an R6 object and follows the same
+assignment-by-reference behavior. Use `$clone()` before modifying a
+collection when you want to keep the original object unchanged.
 
 An `OmicSignatureCollection` object contains two parts:\
 - metadata, a list containing a collection’s metadata fields; -
