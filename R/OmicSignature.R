@@ -1,7 +1,15 @@
 #### OmicSigObj ####
 
 #' @title OmicSignature R6 object
-#' @description a R6 object to store signatures generated from experiments. Including metadata, signature, and an optional differential expression analysis result dataframe.
+#' @description An R6 object to store signatures generated from experiments,
+#' including metadata, signature, and an optional differential expression
+#' analysis result dataframe.
+#'
+#' `OmicSignature` uses R6 reference semantics: assigning an object to a new
+#' variable does not make an independent copy. Both variables point to the same
+#' mutable object, so changes through one variable are visible through the
+#' other. Use `$clone()` when an independent copy is needed, and
+#' `$clone(deep = TRUE)` when nested R6 objects also need to be copied.
 #' updated 10/2025
 #' @importFrom R6 R6Class
 #' @importFrom dplyr filter select mutate relocate arrange distinct recode bind_rows across everything %>%
@@ -415,8 +423,14 @@ OmicSignature <-
 
 #### OmicSigCollection ####
 #' @title OmicSignatureCollection R6 object
-#' @description a R6 object to store a collection of OmicSignature objects.
-#' In cluding metadata, OmicSigList which is a list of OmicSignature object.
+#' @description An R6 object to store a collection of OmicSignature objects,
+#' including metadata and `OmicSigList`, a list of OmicSignature objects.
+#'
+#' `OmicSignatureCollection` uses R6 reference semantics: assigning a collection
+#' to a new variable does not make an independent copy. Both variables point to
+#' the same mutable object, so changes through one variable are visible through
+#' the other. Use `$clone()` when an independent copy is needed, and
+#' `$clone(deep = TRUE)` when nested R6 objects also need to be copied.
 #' @importFrom R6 R6Class
 #' @importFrom dplyr filter arrange mutate %>%
 #' @export
