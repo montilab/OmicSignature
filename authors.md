@@ -9,14 +9,14 @@
 ## Citation
 
 Source:
-[`DESCRIPTION`](https://github.com/montilab/OmicSignature/blob/compare_signatures/DESCRIPTION)
+[`DESCRIPTION`](https://github.com/montilab/OmicSignature/blob/codex/migrate-r6-to-s4/DESCRIPTION)
 
 Li V, Monti S (2026). *OmicSignature: An R package to store omics
-signatures as an R6 object*. R package version 1.3.0,
+signatures as S4 objects*. R package version 1.3.0,
 <https://github.com/montilab/OmicSignature>.
 
     @Manual{,
-      title = {OmicSignature: An R package to store omics signatures as an R6 object},
+      title = {OmicSignature: An R package to store omics signatures as S4 objects},
       author = {Vanessa Mengze Li and Stefano Monti},
       year = {2026},
       note = {R package version 1.3.0},

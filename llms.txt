@@ -17,8 +17,8 @@ Oct 17th 2025
 
 ### Description
 
-R6 object `OmicSignature` and `OmicSignatureCollection` to store
-high-throughput experiment yield signaturess.
+S4 objects `OmicSignature` and `OmicSignatureCollection` to store
+high-throughput experiment yield signatures.
 
 ### Vignette index
 
@@ -54,20 +54,34 @@ See `Articles` tab group.
   : OmicS_searchSampleType
 - [`OmicSigFromDifexp()`](https://montilab.github.io/OmicSignature/reference/OmicSigFromDifexp.md)
   : create an OmicSignature object from differential expression matrix
-- [`OmicSignature`](https://montilab.github.io/OmicSignature/reference/OmicSignature.md)
-  : OmicSignature R6 object
-- [`OmicSignatureCollection`](https://montilab.github.io/OmicSignature/reference/OmicSignatureCollection.md)
-  : OmicSignatureCollection R6 object
-- [`compare_label_pairing_example`](https://montilab.github.io/OmicSignature/reference/compare_label_pairing_example.md)
-  : Simulated signatures for label-pairing examples
-- [`compare_omic_signatures()`](https://montilab.github.io/OmicSignature/reference/compare_omic_signatures.md)
-  : Compare OmicSignature objects
-- [`compare_signatures_example`](https://montilab.github.io/OmicSignature/reference/compare_signatures_example.md)
-  : Example signatures for comparing OmicSignature lists
+- [`` `OmicSigList<-`() ``](https://montilab.github.io/OmicSignature/reference/OmicSigList-set.md)
+  : Replace collection signatures
+- [`OmicSigList()`](https://montilab.github.io/OmicSignature/reference/OmicSigList.md)
+  : Access collection signatures
+- [`show(`*`<OmicSignature>`*`)`](https://montilab.github.io/OmicSignature/reference/OmicSignature-class.md)
+  : OmicSignature S4 class
+- [`OmicSignature()`](https://montilab.github.io/OmicSignature/reference/OmicSignature.md)
+  : Create an OmicSignature object
+- [`show(`*`<OmicSignatureCollection>`*`)`](https://montilab.github.io/OmicSignature/reference/OmicSignatureCollection-class.md)
+  : OmicSignatureCollection S4 class
+- [`OmicSignatureCollection()`](https://montilab.github.io/OmicSignature/reference/OmicSignatureCollection.md)
+  : Create an OmicSignatureCollection object
 - [`createMetadata()`](https://montilab.github.io/OmicSignature/reference/createMetadata.md)
-  : template for creating a metadata list for an OmicSignature R6 object
+  : template for creating a metadata list for an OmicSignature S4 object
+- [`` `difexp<-`() ``](https://montilab.github.io/OmicSignature/reference/difexp-set.md)
+  : Replace differential expression data
+- [`difexp()`](https://montilab.github.io/OmicSignature/reference/difexp.md)
+  : Access differential expression data
 - [`diffAnalLm()`](https://montilab.github.io/OmicSignature/reference/diffAnalLm.md)
   : differential expression analysis using limma package
+- [`extractSignature()`](https://montilab.github.io/OmicSignature/reference/extractSignature.md)
+  : Extract a new signature
+- [`` `metadata<-`() ``](https://montilab.github.io/OmicSignature/reference/metadata-set.md)
+  : Replace object metadata
+- [`metadata()`](https://montilab.github.io/OmicSignature/reference/metadata.md)
+  : Access object metadata
+- [`metadataSummary()`](https://montilab.github.io/OmicSignature/reference/metadataSummary.md)
+  : Summarize collection metadata
 - [`predefined_assaytypes`](https://montilab.github.io/OmicSignature/reference/predefined_assaytypes.md)
   : predefined assay type list
 - [`predefined_organisms`](https://montilab.github.io/OmicSignature/reference/predefined_organisms.md)
@@ -77,13 +91,17 @@ See `Articles` tab group.
 - [`readJson()`](https://montilab.github.io/OmicSignature/reference/readJson.md)
   : read an OmicSignature object from json txt file created by
   writeJson()
+- [`removeDifexp()`](https://montilab.github.io/OmicSignature/reference/removeDifexp.md)
+  : Remove differential expression data
 - [`replaceDifexpCol()`](https://montilab.github.io/OmicSignature/reference/replaceDifexpCol.md)
   : Standardize the column names of difexp
+- [`` `signatureData<-`() ``](https://montilab.github.io/OmicSignature/reference/signatureData-set.md)
+  : Replace signature data
+- [`signatureData()`](https://montilab.github.io/OmicSignature/reference/signatureData.md)
+  : Access signature data
 - [`signatureVecToDF()`](https://montilab.github.io/OmicSignature/reference/signatureVecToDF.md)
   : change a signature vector into a dataframe to be saved into
   OmicSignature object
-- [`signature_similarity_heatmap()`](https://montilab.github.io/OmicSignature/reference/signature_similarity_heatmap.md)
-  : Plot signature similarity heatmaps
 - [`standardizeSigDF()`](https://montilab.github.io/OmicSignature/reference/standardizeSigDF.md)
   : Standardize signature data frame
 - [`writeJson()`](https://montilab.github.io/OmicSignature/reference/writeJson.md)
@@ -93,8 +111,6 @@ See `Articles` tab group.
 
 ### All vignettes
 
-- [Comparing OmicSignature
-  Lists](https://montilab.github.io/OmicSignature/articles/CompareSignatures.md):
 - [Create
   OmicSignature](https://montilab.github.io/OmicSignature/articles/CreateOmS.md):
 - [Create

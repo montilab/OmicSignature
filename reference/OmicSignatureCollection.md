@@ -1,127 +1,27 @@
-# OmicSignatureCollection R6 object
-
-An R6 object to store a collection of OmicSignature objects, including
-metadata and \`OmicSigList\`, a list of OmicSignature objects.
-
-\`OmicSignatureCollection\` uses R6 reference semantics: assigning a
-collection to a new variable does not make an independent copy. Both
-variables point to the same mutable object, so changes through one
-variable are visible through the other. Use \`\$clone()\` when an
-independent copy is needed, and \`\$clone(deep = TRUE)\` when nested R6
-objects also need to be copied.
-
-## Active bindings
-
-- `metadata`:
-
-  a list to describe the metadata
-
-- `OmicSigList`:
-
-  a list of OmicSignature object(s)
-
-## Methods
-
-### Public methods
-
-- [`OmicSignatureCollection$new()`](#method-OmicSignatureCollection-new)
-
-- [`OmicSignatureCollection$print()`](#method-OmicSignatureCollection-print)
-
-- [`OmicSignatureCollection$extractSignature()`](#method-OmicSignatureCollection-extractSignature)
-
-- [`OmicSignatureCollection$metadataSummary()`](#method-OmicSignatureCollection-metadataSummary)
-
-- [`OmicSignatureCollection$clone()`](#method-OmicSignatureCollection-clone)
-
-------------------------------------------------------------------------
-
-### Method `new()`
+# Create an OmicSignatureCollection object
 
 Create an OmicSignatureCollection object
 
-#### Usage
+## Usage
 
-    OmicSignatureCollection$new(metadata, OmicSigList, print_message = FALSE)
+``` r
+OmicSignatureCollection(metadata, OmicSigList, print_message = FALSE)
+```
 
-#### Arguments
+## Arguments
 
-- `metadata`:
+- metadata:
 
-  required, must be a list
+  Required collection metadata list.
 
-- `OmicSigList`:
+- OmicSigList:
 
-  required, a list of OmicSignature R6 objects
+  Required list of \`OmicSignature\` objects.
 
-- `print_message`:
+- print_message:
 
-  use TRUE if want to see all messages printed
+  Use \`TRUE\` to print validation messages.
 
-------------------------------------------------------------------------
+## Value
 
-### Method [`print()`](https://rdrr.io/r/base/print.html)
-
-Print an OmicSignatureCollection object
-
-#### Usage
-
-    OmicSignatureCollection$print()
-
-------------------------------------------------------------------------
-
-### Method `extractSignature()`
-
-#### Usage
-
-    OmicSignatureCollection$extractSignature(conditions, bind = TRUE)
-
-#### Arguments
-
-- `conditions`:
-
-  conditions for new signatures
-
-- `bind`:
-
-  use TRUE to return all results in a single dataframe. Otherwise, will
-  return a list contains the result of each OmicSignature individually
-
-#### Returns
-
-a dataframe or a list of new signatures
-
-------------------------------------------------------------------------
-
-### Method `metadataSummary()`
-
-#### Usage
-
-    OmicSignatureCollection$metadataSummary(only_shared = TRUE)
-
-#### Arguments
-
-- `only_shared`:
-
-  use TRUE to only print the shared metadata fields in the
-  OmicSignatures
-
-#### Returns
-
-a dataframe of the summary of the metadata
-
-------------------------------------------------------------------------
-
-### Method `clone()`
-
-The objects of this class are cloneable with this method.
-
-#### Usage
-
-    OmicSignatureCollection$clone(deep = FALSE)
-
-#### Arguments
-
-- `deep`:
-
-  Whether to make a deep clone.
+An \`OmicSignatureCollection\` S4 object.

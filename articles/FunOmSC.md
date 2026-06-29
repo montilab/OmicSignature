@@ -28,7 +28,7 @@ ColMeta <- list(
   "organism" = "Mus Musculus",
   "author" = "vmli"
 )
-OmSC <- OmicSignatureCollection$new(
+OmSC <- OmicSignatureCollection(
   OmicSigList = list(OmS1, OmS2, OmS3),
   metadata = ColMeta,
   print_message = FALSE
@@ -38,15 +38,15 @@ OmSC <- OmicSignatureCollection$new(
 
 ## Print a summary of the metadata in the `OmicSignatureCollection`
 
-`$metadataSummary()` will print out the metadata fields in all
-`OmicSignature` objects stored in the `OmicSignatureCollection`.\
-When parameter “only_shared” is set to be `TRUE`, only shared metadata
-fields among all `OmicSignature` objects will be included. Otherwise,
-all metadata fields will be included.
+[`metadataSummary()`](https://montilab.github.io/OmicSignature/reference/metadataSummary.md)
+will print out the metadata fields in all `OmicSignature` objects stored
+in the `OmicSignatureCollection`. When parameter “only_shared” is set to
+be `TRUE`, only shared metadata fields among all `OmicSignature` objects
+will be included. Otherwise, all metadata fields will be included.
 
 ``` r
 
-OmSC$metadataSummary(only_shared = TRUE)
+metadataSummary(OmSC, only_shared = TRUE)
 #>                Experiment in liver        Experiment in brain       
 #> assay_type     "transcriptomics"          "transcriptomics"         
 #> author         "vmli"                     "vmli"                    
@@ -81,7 +81,7 @@ features are ranked by absolute score, if applicable.
 
 ``` r
 
-OmSC$extractSignature("abs(score) > 4.5 & p_value < 0.01")
+extractSignature(OmSC, "abs(score) > 4.5 & p_value < 0.01")
 #>               sig_name probe_id feature_name score group_label
 #> 1  Experiment in brain       14       gene14 -4.99     control
 #> 2  Experiment in heart       28       gene28  4.99   treatment
@@ -103,7 +103,7 @@ objects are provided as a list.\
 
 ``` r
 
-OmSC$extractSignature("abs(score) > 4.5 & p_value < 0.01", bind = FALSE)
+extractSignature(OmSC, "abs(score) > 4.5 & p_value < 0.01", bind = FALSE)
 #> $`Experiment in liver`
 #>   probe_id feature_name score group_label
 #> 1       46       gene46 -4.71     control

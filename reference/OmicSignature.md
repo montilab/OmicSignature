@@ -1,116 +1,33 @@
-# OmicSignature R6 object
+# Create an OmicSignature object
 
-An R6 object to store signatures generated from experiments, including
-metadata, signature, and an optional differential expression analysis
-result dataframe.
+Create an OmicSignature object
 
-\`OmicSignature\` uses R6 reference semantics: assigning an object to a
-new variable does not make an independent copy. Both variables point to
-the same mutable object, so changes through one variable are visible
-through the other. Use \`\$clone()\` when an independent copy is needed,
-and \`\$clone(deep = TRUE)\` when nested R6 objects also need to be
-copied.
+## Usage
 
-## Active bindings
+``` r
+OmicSignature(metadata, signature, difexp = NULL, print_message = FALSE)
+```
 
-- `metadata`:
+## Arguments
 
-  a list to describe the metadata
+- metadata:
 
-- `signature`:
+  Required list. See \`createMetadata()\` for details.
 
-  a dataframe contains probe_id, feature_name, score (optional) and
-  group_label (optional)
+- signature:
 
-- `difexp`:
+  Required vector or data frame. Data frames must include \`probe_id\`,
+  \`feature_name\`, and, for non-uni-directional signatures,
+  \`group_label\`. \`score\` is optional.
 
-  a dataframe for differential expression result
+- difexp:
 
-- `removeDifexp`:
+  Optional differential expression result data frame.
 
-  a function to remove difexp from the object
+- print_message:
 
-## Methods
+  Use \`TRUE\` to print validation messages.
 
-### Public methods
+## Value
 
-- [`OmicSignature$new()`](#method-OmicSignature-new)
-
-- [`OmicSignature$print()`](#method-OmicSignature-print)
-
-- [`OmicSignature$extractSignature()`](#method-OmicSignature-extractSignature)
-
-- [`OmicSignature$clone()`](#method-OmicSignature-clone)
-
-------------------------------------------------------------------------
-
-### Method `new()`
-
-Create a new OmicSignature object
-
-#### Usage
-
-    OmicSignature$new(metadata, signature, difexp = NULL, print_message = FALSE)
-
-#### Arguments
-
-- `metadata`:
-
-  required. a list. See \`createMetadata\` for more information
-
-- `signature`:
-
-  required. a vector, or a dataframe including columns: "probe_id",
-  "feature_name" and "group_label", and an optional column "score"
-
-- `difexp`:
-
-  optional
-
-- `print_message`:
-
-  use TRUE if want to see all messages printed
-
-------------------------------------------------------------------------
-
-### Method [`print()`](https://rdrr.io/r/base/print.html)
-
-Print an OmicSignature object
-
-#### Usage
-
-    OmicSignature$print()
-
-------------------------------------------------------------------------
-
-### Method `extractSignature()`
-
-#### Usage
-
-    OmicSignature$extractSignature(conditions)
-
-#### Arguments
-
-- `conditions`:
-
-  conditions for new signatures
-
-#### Returns
-
-a dataframe of new signatures
-
-------------------------------------------------------------------------
-
-### Method `clone()`
-
-The objects of this class are cloneable with this method.
-
-#### Usage
-
-    OmicSignature$clone(deep = FALSE)
-
-#### Arguments
-
-- `deep`:
-
-  Whether to make a deep clone.
+An \`OmicSignature\` S4 object.
