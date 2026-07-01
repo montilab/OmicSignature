@@ -62,7 +62,7 @@ higher than 5 and adj_p smaller than 0.01:
 
 ``` r
 
-extractSignature(OmS, "abs(score) > 5; adj_p < 0.01")
+OmS$extractSignature("abs(score) > 5; adj_p < 0.01")
 #>   probe_id       feature_name   score group_label
 #> 1 10349648 ENSMUSG00000004552  14.762   treatment
 #> 2 10345762 ENSMUSG00000026072 -13.543     control

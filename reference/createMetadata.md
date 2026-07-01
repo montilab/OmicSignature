@@ -1,4 +1,4 @@
-# template for creating a metadata list for an OmicSignature S4 object
+# template for creating a metadata list for an OmicSignature R6 object
 
 updated 10/2025
 
@@ -143,4 +143,4 @@ createMetadata(
 
 ## Value
 
-a metadata list to create an OmicSignature S4 object.
+a metadata list to create an OmicSignature R6 object.

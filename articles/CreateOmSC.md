@@ -48,13 +48,12 @@ OmicObj3 <- readJson(file.path(system.file("extdata", package = "OmicSignature")
 
 ### 3. Create an `OmicSignatureCollection` object
 
-Use
-[`OmicSignatureCollection()`](https://montilab.github.io/OmicSignature/reference/OmicSignatureCollection.md)
-and provide metadata and a list of `OmicSignature` objects:
+Use `OmicSignatureCollection$new()` and provide metadata and a list of
+`OmicSignature` objects:
 
 ``` r
 
-OmicCol <- OmicSignatureCollection(
+OmicCol <- OmicSignatureCollection$new(
   OmicSigList = list(OmicObj1, OmicObj2, OmicObj3),
   metadata = ColMeta,
   print_message = FALSE

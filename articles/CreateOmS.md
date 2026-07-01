@@ -43,7 +43,7 @@ An `OmicSignature` object contains three parts:\
 
 Create the object:\
 
-    OmS <- OmicSignature(
+    OmS <- OmicSignature$new(
       metadata = metadata,
       signature = signature,
       difexp = difexp
@@ -407,7 +407,7 @@ head(difexp)
 
 ``` r
 
-OmS <- OmicSignature(
+OmS <- OmicSignature$new(
   metadata = metadata,
   signature = signature,
   difexp = difexp
@@ -415,11 +415,16 @@ OmS <- OmicSignature(
 #>   [Success] OmicSignature object Myc_reduce_mice_liver_24m created.
 ```
 
+`OmicSignature` is an R6 object, so assignment is by reference. For
+example, `OmS2 <- OmS` makes `OmS2` point to the same mutable object as
+`OmS`; it does not create an independent copy. Use `OmS2 <- OmS$clone()`
+before modifying an object when you need to keep the original unchanged.
+
 Set `print_message` = `TRUE` to see all the messages.\
 
 ``` r
 
-OmS <- OmicSignature(
+OmS <- OmicSignature$new(
   metadata = metadata,
   signature = signature,
   difexp = difexp,
@@ -469,7 +474,7 @@ Use new criteria to extract significant features:\
 
 ``` r
 
-extractSignature(OmS, "abs(score) > 10; adj_p < 0.01")
+OmS$extractSignature("abs(score) > 10; adj_p < 0.01")
 #>   probe_id       feature_name   score group_label
 #> 1 10349648 ENSMUSG00000004552  14.762  MYC Reduce
 #> 2 10345762 ENSMUSG00000026072 -13.543          WT

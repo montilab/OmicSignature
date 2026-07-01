@@ -67,9 +67,9 @@
                         <h4 data-toc-skip class="author">Vanessa Mengze
 Li</h4>
             
-            <h4 data-toc-skip class="date">2026-06-29</h4>
+            <h4 data-toc-skip class="date">2026-07-01</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/montilab/OmicSignature/blob/codex/migrate-r6-to-s4/vignettes/FunOmS.Rmd" class="external-link"><code>vignettes/FunOmS.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/montilab/OmicSignature/blob/compare_signatures/vignettes/FunOmS.Rmd" class="external-link"><code>vignettes/FunOmS.Rmd</code></a></small>
       <div class="d-none name"><code>FunOmS.Rmd</code></div>
     </div>
 
@@ -133,7 +133,7 @@ included</strong>.<br>
 For example, extract all features with a t-score with absolute value
 higher than 5 and adj_p smaller than 0.01:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/extractSignature.html">extractSignature</a></span><span class="op">(</span><span class="va">OmS</span>, <span class="st">"abs(score) &gt; 5; adj_p &lt; 0.01"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">OmS</span><span class="op">$</span><span class="fu">extractSignature</span><span class="op">(</span><span class="st">"abs(score) &gt; 5; adj_p &lt; 0.01"</span><span class="op">)</span></span>
 <span><span class="co">#&gt;   probe_id       feature_name   score group_label</span></span>
 <span><span class="co">#&gt; 1 10349648 ENSMUSG00000004552  14.762   treatment</span></span>
 <span><span class="co">#&gt; 2 10345762 ENSMUSG00000026072 -13.543     control</span></span>

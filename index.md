@@ -17,8 +17,8 @@ Oct 17th 2025
 
 ### Description
 
-S4 objects `OmicSignature` and `OmicSignatureCollection` to store
-high-throughput experiment yield signatures.
+R6 object `OmicSignature` and `OmicSignatureCollection` to store
+high-throughput experiment yield signaturess.
 
 ### Vignette index
 
