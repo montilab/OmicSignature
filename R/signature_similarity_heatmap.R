@@ -197,7 +197,7 @@ signature_similarity_heatmap <- function(
   if (mode == "separate") {
     ## Draw one heatmap per comparison level.
     positive_args <- .ssh_set_legend_title(common_args, legend_names[1])
-    positive_args$column_title <- sim_names[1]
+    positive_args$column_title <- legend_names[1]
     positive_ht <- do.call(
       ComplexHeatmap::Heatmap,
       c(
@@ -215,7 +215,7 @@ signature_similarity_heatmap <- function(
       negative_args <- .ssh_set_legend_title(common_args, legend_names[2])
       if (annotation_side == "column") negative_args$top_annotation <- NULL
       if (annotation_side == "row") negative_args$left_annotation <- NULL
-      negative_args$column_title <- sim_names[2]
+      negative_args$column_title <- legend_names[2]
       negative_ht <- do.call(
         ComplexHeatmap::Heatmap,
         c(

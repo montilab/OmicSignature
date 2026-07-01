@@ -185,6 +185,8 @@ test_that("rank-based heatmaps support combined and separate modes only", {
   expect_s4_class(averaged_ht, "Heatmap")
   expect_equal(separate_ht@ht_list[[1]]@name, "lev1_vs_lev1")
   expect_equal(separate_ht@ht_list[[2]]@name, "lev2_vs_lev2")
+  expect_equal(separate_ht@ht_list[[1]]@column_title, "lev1_vs_lev1")
+  expect_equal(separate_ht@ht_list[[2]]@column_title, "lev2_vs_lev2")
   expect_error(
     signature_similarity_heatmap(comparison, measure = "score", mode = "split", draw = FALSE),
     "not supported for rank-based"
