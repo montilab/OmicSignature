@@ -108,17 +108,20 @@ paired_res$comparisons$level2_vs_level2$jaccard
 
 ## KS and GSEA-style comparisons
 
-The `ks` and `gsea` methods compare a retained feature set from one signature
-against ranked differential-expression scores from another signature. These
-methods require the compared `OmicSignature` objects to retain their `difexp`
-tables. For each requested `group_label`, genes are ranked from the largest
-`-log10(p_value)` in that label to the largest `-log10(p_value)` in the
-contrasting label.
+The `ks_rank`, `ks_score`, and `gsea` methods compare a retained feature set
+from one signature against ranked differential-expression scores from another
+signature. These methods require the compared `OmicSignature` objects to retain
+their `difexp` tables. For each requested `group_label`, genes are ranked from
+the largest `-log10(p_value)` in that label to the largest `-log10(p_value)` in
+the contrasting label. `ks_rank` tests where the retained features fall in that
+ranking, while `ks_score` compares their numeric ranking scores against the
+remaining features. The legacy `method = "ks"` name is accepted as an alias for
+`method = "ks_rank"`.
 
 ```{r}
 ks_res <- compare_omic_signatures(
   sig_list1 = signature_list,
-  method = "ks",
+  method = "ks_rank",
   adj_p_cutoff = 0.05,
   min_features = 25,
   max_feature = 500
@@ -126,6 +129,28 @@ ks_res <- compare_omic_signatures(
 
 ks_res$comparisons$level1_vs_level1$score
 ks_res$comparisons$level1_vs_level1$pvalue
+```
+
+The simulated label-pairing data can also be compared with `ks_score`. In this
+toy example, the treated/up/resistant labels define the first level and the
+control/down/sensitive labels define the second level.
+
+```{r}
+toy_ks_score <- compare_omic_signatures(
+  sig_list1 = compare_label_pairing_example,
+  method = "ks_score",
+  label_pairing = list(
+    signature_a = c("treated", "control"),
+    signature_b = c("up", "down"),
+    signature_c = c("resistant", "sensitive")
+  ),
+  min_features = 5
+)
+
+round(toy_ks_score$comparisons$level1_vs_level1$score, 3)
+signif(toy_ks_score$comparisons$level1_vs_level1$pvalue, 3)
+round(toy_ks_score$comparisons$level2_vs_level2$score, 3)
+signif(toy_ks_score$comparisons$level2_vs_level2$pvalue, 3)
 ```
 
 GSEA requires the optional `fgsea` package.

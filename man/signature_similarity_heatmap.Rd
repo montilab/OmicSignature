@@ -57,10 +57,10 @@ A ComplexHeatmap Heatmap or HeatmapList object, invisibly if
 Plot one or more ComplexHeatmap heatmaps from the object returned by
 `compare_omic_signatures()`. Overlap comparisons can show Jaccard
 similarity or p-value-based similarity on a `-log10(p-value)` scale.
-Rank-based comparisons can show score or `-log10(p-value)` matrices.
-For rank-based KS and GSEA comparisons, `mode = "combined"` draws the upper
-triangle with split cells: the top-right triangle shows `level2_vs_level2`
-and the bottom-left triangle shows `level1_vs_level1`. `mode = "separate"`
+Asymmetric KS and GSEA comparisons can show score or `-log10(p-value)`
+matrices. For these comparisons, `mode = "combined"` draws split cells: the
+top-right triangle shows `level2_vs_level2` and the bottom-left triangle
+shows `level1_vs_level1`. `mode = "separate"`
 draws one full heatmap per level, and `mode = "split"` is invalid. Legends
 for level-specific displays use abbreviated labels such as `"lev1_vs_lev1"`.
 }
@@ -82,7 +82,7 @@ if (requireNamespace("ComplexHeatmap", quietly = TRUE) &&
 
 ks_res <- compare_omic_signatures(
   compare_signatures_example[1:2],
-  method = "ks",
+  method = "ks_rank",
   adj_p_cutoff = 0.01,
   min_features = 10
 )

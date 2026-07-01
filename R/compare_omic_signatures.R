@@ -7,7 +7,7 @@
 #' Compare OmicSignature objects
 #'
 #' Compare signatures within one list, or between two lists, using set overlap,
-#' a two-sample Kolmogorov-Smirnov test, or fgsea.
+#' rank-position KS, score-distribution KS, or fgsea.
 #'
 #' @param sig_list1 List of OmicSignature objects or an OmicSignatureCollection.
 #' @param sig_list2 Optional second list of OmicSignature objects or collection.
@@ -40,17 +40,22 @@
 #' @param nproc Number of fgsea workers.
 #' @param ... Additional arguments passed to fgsea.
 #'
-#' @details For `method = "ks"` and `method = "gsea"`, each ranked vector is
+#' @details `method = "ks"` is a backwards-compatible alias for
+#'   `method = "ks_rank"`. For `method = "ks_rank"`, `method = "ks_score"`,
+#'   and `method = "gsea"`, each ranked vector is
 #'   built from both phenotype labels. Features in the requested `group_col`
 #'   label are ranked by positive `-log10(p_value)`, and features in the
 #'   contrasting label are ranked by negative `-log10(p_value)`. This places
 #'   the most significant selected-label features at the top of the ranking and
-#'   the most significant contrast-label features at the bottom. KS compares the
-#'   positions of each retained feature set within this ranked vector.
+#'   the most significant contrast-label features at the bottom. `ks_rank`
+#'   compares the positions of each retained feature set within this ranked
+#'   vector. `ks_score` compares the numeric ranking scores for retained
+#'   features against the remaining features with a two-sample KS test.
 #'
 #' @return A list with one element per label pairing. For `method = "overlap"`
 #'   each element contains `jaccard`, `pvalue`, and `counts` matrices. `counts`
-#'   entries are formatted as `"ov | n1 | n2"`. For `method = "ks"` and
+#'   entries are formatted as `"ov | n1 | n2"`. For `method = "ks_rank"`,
+#'   `method = "ks_score"`, `method = "ks"`, and
 #'   `method = "gsea"` each element contains `score` and `pvalue` matrices.
 #'
 #' @examples
@@ -65,11 +70,25 @@
 #' )
 #' overlap_res$comparisons$level1_vs_level1$jaccard
 #'
+#' data(compare_label_pairing_example)
+#'
+#' toy_ks_score <- compare_omic_signatures(
+#'   compare_label_pairing_example,
+#'   method = "ks_score",
+#'   label_pairing = list(
+#'     signature_a = c("treated", "control"),
+#'     signature_b = c("up", "down"),
+#'     signature_c = c("resistant", "sensitive")
+#'   ),
+#'   min_features = 5
+#' )
+#' round(toy_ks_score$comparisons$level1_vs_level1$score, 3)
+#'
 #' @export
 compare_omic_signatures <- function(
     sig_list1,
     sig_list2 = NULL,
-    method = c("overlap", "ks", "gsea"),
+    method = c("overlap", "ks_rank", "ks_score", "ks", "gsea"),
     background = NULL,
     score_cutoff = 0,
     adj_p_cutoff = 0.05,
@@ -92,6 +111,7 @@ compare_omic_signatures <- function(
     ...) {
   ## Normalize user options before doing any object-specific work.
   method <- match.arg(method)
+  method <- .cos_normalize_method(method)
   p_adjust_method <- match.arg(p_adjust_method, stats::p.adjust.methods)
   .cos_check_cutoffs(score_cutoff, adj_p_cutoff, min_features, max_feature)
 
@@ -145,12 +165,12 @@ compare_omic_signatures <- function(
         score_cutoff, adj_p_cutoff, min_features, max_feature, compare_self,
         adjust, p_adjust_method, alternative
       )
-    } else if (method == "ks") {
+    } else if (method %in% c("ks_rank", "ks_score")) {
       res[[k]] <- .cos_compare_ks(
         sig_list1, sig_list2, labels1, labels2,
         feature_col, score_col, adj_p_col, p_value_col, group_col,
         score_cutoff, adj_p_cutoff, min_features, max_feature,
-        adjust, p_adjust_method, alternative
+        adjust, p_adjust_method, alternative, method
       )
     } else {
       res[[k]] <- .cos_compare_gsea(
@@ -226,7 +246,7 @@ compare_omic_signatures <- function(
 .cos_compare_ks <- function(sig_list1, sig_list2, labels1, labels2,
                             feature_col, score_col, adj_p_col, p_value_col, group_col,
                             score_cutoff, adj_p_cutoff, min_features, max_feature,
-                            adjust, p_adjust_method, alternative) {
+                            adjust, p_adjust_method, alternative, method) {
   score <- pvalue <- matrix(NA_real_, length(sig_list1), length(sig_list2),
                             dimnames = list(names(sig_list1), names(sig_list2)))
 
@@ -238,7 +258,7 @@ compare_omic_signatures <- function(
     )
     for (j in seq_along(sig_list2)) {
       stats_j <- .cos_difexp_scores(sig_list2[[j]], labels2[[j]], feature_col, score_col, p_value_col, group_col)
-      tmp <- .cos_ks_test(geneset, stats_j, alternative)
+      tmp <- .cos_ks_test(geneset, stats_j, alternative, method)
       score[i, j] <- tmp["score"]
       pvalue[i, j] <- tmp["pvalue"]
     }
@@ -246,6 +266,12 @@ compare_omic_signatures <- function(
   pvalue <- .cos_adjust_matrix(pvalue, adjust, p_adjust_method, compare_self = FALSE)
 
   list(score = score, pvalue = pvalue)
+}
+
+.cos_normalize_method <- function(method) {
+  ## Preserve legacy calls while reporting the explicit KS flavor downstream.
+  if (identical(method, "ks")) return("ks_rank")
+  method
 }
 
 .cos_compare_gsea <- function(sig_list1, sig_list2, labels1, labels2,
@@ -554,7 +580,15 @@ compare_omic_signatures <- function(
   stats::fisher.test(matrix(c(n11, n10, n01, n00), nrow = 2), alternative = alternative)$p.value
 }
 
-.cos_ks_test <- function(geneset, stats_vec, alternative) {
+.cos_ks_test <- function(geneset, stats_vec, alternative, method) {
+  ## Dispatch to the requested KS semantics.
+  if (identical(method, "ks_score")) {
+    return(.cos_ks_score_test(geneset, stats_vec, alternative))
+  }
+  .cos_ks_rank_test(geneset, stats_vec, alternative)
+}
+
+.cos_ks_rank_test <- function(geneset, stats_vec, alternative) {
   ## Test where geneset members fall in the ranked stats vector.
   geneset <- intersect(unique(geneset), names(stats_vec))
   positions <- stats::na.omit(match(geneset, names(stats_vec)))
@@ -586,6 +620,30 @@ compare_omic_signatures <- function(
   )
   tmp <- suppressWarnings(stats::ks.test(seq_len(n_stats), positions, alternative = ks_alternative))
   c(score = unname(score), pvalue = tmp$p.value)
+}
+
+.cos_ks_score_test <- function(geneset, stats_vec, alternative) {
+  ## Compare geneset score values against all non-geneset score values.
+  geneset <- intersect(unique(geneset), names(stats_vec))
+  outside <- setdiff(names(stats_vec), geneset)
+  if (length(geneset) < 1 || length(outside) < 1) {
+    return(c(score = NA_real_, pvalue = NA_real_))
+  }
+  geneset_scores <- stats_vec[geneset]
+  outside_scores <- stats_vec[outside]
+
+  ## Map top-ranking enrichment to the KS tail where geneset scores are larger.
+  ks_alternative <- switch(
+    alternative,
+    greater = "less",
+    less = "greater",
+    two.sided = "two.sided",
+    stop("'alternative' must be one of 'greater', 'less', or 'two.sided'.")
+  )
+  tmp <- suppressWarnings(stats::ks.test(geneset_scores, outside_scores, alternative = ks_alternative))
+  score_sign <- sign(mean(geneset_scores, na.rm = TRUE) - mean(outside_scores, na.rm = TRUE))
+  if (is.na(score_sign) || score_sign == 0) score_sign <- 1
+  c(score = unname(tmp$statistic) * score_sign, pvalue = tmp$p.value)
 }
 
 .cos_fgsea <- function(geneset, stats_vec, gsea_score, minSize, maxSize, nproc, ...) {

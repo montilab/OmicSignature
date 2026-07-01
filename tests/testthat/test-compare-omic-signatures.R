@@ -38,7 +38,7 @@ test_that("overlap comparison supports comparing two signature lists", {
   expect_true(length(res$background) >= 8)
 })
 
-test_that("KS comparison returns score and p-value matrices", {
+test_that("KS rank comparison returns score and p-value matrices", {
   sigs <- make_test_signature_list()
 
   res <- compare_omic_signatures(
@@ -48,12 +48,31 @@ test_that("KS comparison returns score and p-value matrices", {
     max_feature = 4
   )
 
+  expect_equal(res$method, "ks_rank")
   positive <- res$comparisons$level1_vs_level1
   expect_equal(dim(positive$score), c(2L, 2L))
   expect_equal(dim(positive$pvalue), c(2L, 2L))
   expect_true(all(is.finite(positive$pvalue[upper.tri(positive$pvalue)])))
   expect_equal(unname(diag(positive$score)), c(0.5, 0.5))
   expect_equal(unname(diag(positive$pvalue)), rep(0.2181818, 2), tolerance = 1e-6)
+})
+
+test_that("KS score comparison tests geneset score distributions", {
+  sigs <- make_test_signature_list()
+
+  res <- compare_omic_signatures(
+    sigs,
+    method = "ks_score",
+    min_features = 1,
+    max_feature = 4
+  )
+
+  positive <- res$comparisons$level1_vs_level1
+  expect_equal(res$method, "ks_score")
+  expect_equal(dim(positive$score), c(2L, 2L))
+  expect_equal(dim(positive$pvalue), c(2L, 2L))
+  expect_equal(unname(diag(positive$score)), c(1, 1))
+  expect_equal(unname(diag(positive$pvalue)), rep(0.01428571, 2), tolerance = 1e-6)
 })
 
 test_that("KS ranking uses selected label versus contrast label", {

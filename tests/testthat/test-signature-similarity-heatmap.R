@@ -9,7 +9,7 @@
   }, character(1))
 }
 
-test_that("similarity extraction validates square named matrices", {
+test_that("similarity extraction validates named matrices", {
   comparison <- list(
     comparisons = list(
       positive = list(
@@ -29,8 +29,29 @@ test_that("similarity extraction validates square named matrices", {
   comparison$comparisons$positive$jaccard <- matrix(1, nrow = 1, ncol = 2)
   expect_error(
     OmicSignature:::.ssh_similarity_from_comparison(comparison, "jaccard"),
-    "square matrix"
+    "row and column names"
   )
+})
+
+test_that("similarity extraction supports cross-list matrices", {
+  cross_mat <- matrix(
+    c(0.2, 0.6, 0.4, 0.8),
+    nrow = 2,
+    dimnames = list(c("query_a", "query_b"), c("ref_a", "ref_b"))
+  )
+  comparison <- list(
+    method = "overlap",
+    comparisons = list(
+      level1_vs_level1 = list(jaccard = cross_mat),
+      level2_vs_level2 = list(jaccard = cross_mat / 2)
+    )
+  )
+
+  sim <- OmicSignature:::.ssh_similarity_from_comparison(comparison, "jaccard")
+
+  expect_equal(rownames(sim$positive), c("query_a", "query_b"))
+  expect_equal(colnames(sim$positive), c("ref_a", "ref_b"))
+  expect_equal(sim$negative["query_b", "ref_b"], 0.4)
 })
 
 test_that("similarity extraction supports rank-based score matrices", {
@@ -80,6 +101,41 @@ test_that("heatmap function returns a ComplexHeatmap object when suggested packa
 
   ht <- signature_similarity_heatmap(comparison, draw = FALSE)
   expect_s4_class(ht, "Heatmap")
+})
+
+test_that("combined heatmap supports two-list overlap comparisons", {
+  skip_if_not_installed("ComplexHeatmap")
+  skip_if_not_installed("circlize")
+
+  cross_level1 <- matrix(
+    c(0.2, 0.6, 0.4, 0.8),
+    nrow = 2,
+    dimnames = list(c("query_a", "query_b"), c("ref_a", "ref_b"))
+  )
+  cross_level2 <- matrix(
+    c(0.3, 0.7, 0.5, 0.9),
+    nrow = 2,
+    dimnames = list(c("query_a", "query_b"), c("ref_a", "ref_b"))
+  )
+  comparison <- list(
+    method = "overlap",
+    comparisons = list(
+      level1_vs_level1 = list(jaccard = cross_level1),
+      level2_vs_level2 = list(jaccard = cross_level2)
+    )
+  )
+
+  combined_ht <- signature_similarity_heatmap(comparison, mode = "combined", draw = FALSE)
+  separate_ht <- signature_similarity_heatmap(comparison, mode = "separate", draw = FALSE)
+
+  expect_s4_class(combined_ht, "Heatmap")
+  expect_s4_class(separate_ht, "HeatmapList")
+  expect_equal(unname(sort(combined_ht@row_order)), seq_len(2))
+  expect_equal(unname(sort(combined_ht@column_order)), seq_len(2))
+  expect_error(
+    signature_similarity_heatmap(comparison, mode = "split", draw = FALSE),
+    "square self-comparison"
+  )
 })
 
 test_that("rank-based heatmaps support combined and separate modes only", {

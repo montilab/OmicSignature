@@ -7,7 +7,7 @@
 compare_omic_signatures(
   sig_list1,
   sig_list2 = NULL,
-  method = c("overlap", "ks", "gsea"),
+  method = c("overlap", "ks_rank", "ks_score", "ks", "gsea"),
   background = NULL,
   score_cutoff = 0,
   adj_p_cutoff = 0.05,
@@ -85,23 +85,28 @@ signed ranking, and \code{"less"} tests enrichment at the bottom.}
 \item{...}{Additional arguments passed to fgsea.}
 }
 \details{
-For `method = "ks"` and `method = "gsea"`, each ranked vector is
+`method = "ks"` is a backwards-compatible alias for
+`method = "ks_rank"`. For `method = "ks_rank"`, `method = "ks_score"`,
+and `method = "gsea"`, each ranked vector is
 built from both phenotype labels. Features in the requested `group_col`
 label are ranked by positive `-log10(p_value)`, and features in the
 contrasting label are ranked by negative `-log10(p_value)`. This places
 the most significant selected-label features at the top of the ranking and
-the most significant contrast-label features at the bottom. KS compares the
-positions of each retained feature set within this ranked vector.
+the most significant contrast-label features at the bottom. `ks_rank`
+compares the positions of each retained feature set within this ranked
+vector. `ks_score` compares the numeric ranking scores for retained
+features against the remaining features with a two-sample KS test.
 }
 \value{
 A list with one element per label pairing. For `method = "overlap"`
 each element contains `jaccard`, `pvalue`, and `counts` matrices. `counts`
-entries are formatted as `"ov | n1 | n2"`. For `method = "ks"` and
+entries are formatted as `"ov | n1 | n2"`. For `method = "ks_rank"`,
+`method = "ks_score"`, `method = "ks"`, and
 `method = "gsea"` each element contains `score` and `pvalue` matrices.
 }
 \description{
 Compare signatures within one list, or between two lists, using set overlap,
-a two-sample Kolmogorov-Smirnov test, or fgsea.
+rank-position KS, score-distribution KS, or fgsea.
 }
 \examples{
 data(compare_signatures_example)
@@ -114,4 +119,18 @@ overlap_res <- compare_omic_signatures(
   min_features = 10
 )
 overlap_res$comparisons$level1_vs_level1$jaccard
+
+data(compare_label_pairing_example)
+
+toy_ks_score <- compare_omic_signatures(
+  compare_label_pairing_example,
+  method = "ks_score",
+  label_pairing = list(
+    signature_a = c("treated", "control"),
+    signature_b = c("up", "down"),
+    signature_c = c("resistant", "sensitive")
+  ),
+  min_features = 5
+)
+round(toy_ks_score$comparisons$level1_vs_level1$score, 3)
 }

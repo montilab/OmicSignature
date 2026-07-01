@@ -7,10 +7,10 @@
 #' Plot one or more ComplexHeatmap heatmaps from the object returned by
 #' `compare_omic_signatures()`. Overlap comparisons can show Jaccard
 #' similarity or p-value-based similarity on a `-log10(p-value)` scale.
-#' Rank-based comparisons can show score or `-log10(p-value)` matrices.
-#' For rank-based KS and GSEA comparisons, `mode = "combined"` draws the upper
-#' triangle with split cells: the top-right triangle shows `level2_vs_level2`
-#' and the bottom-left triangle shows `level1_vs_level1`. `mode = "separate"`
+#' Asymmetric KS and GSEA comparisons can show score or `-log10(p-value)`
+#' matrices. For these comparisons, `mode = "combined"` draws split cells: the
+#' top-right triangle shows `level2_vs_level2` and the bottom-left triangle
+#' shows `level1_vs_level1`. `mode = "separate"`
 #' draws one full heatmap per level, and `mode = "split"` is invalid. Legends
 #' for level-specific displays use abbreviated labels such as `"lev1_vs_lev1"`.
 #'
@@ -51,7 +51,7 @@
 #'
 #' ks_res <- compare_omic_signatures(
 #'   compare_signatures_example[1:2],
-#'   method = "ks",
+#'   method = "ks_rank",
 #'   adj_p_cutoff = 0.01,
 #'   min_features = 10
 #' )
@@ -109,7 +109,7 @@ signature_similarity_heatmap <- function(
   sim_names <- attr(sim, "comparison_names")
   legend_names <- .ssh_abbreviate_comparison_names(sim_names)
   comparison_method <- attr(sim, "comparison_method")
-  is_rank_based <- comparison_method %in% c("ks", "gsea")
+  is_rank_based <- comparison_method %in% c("ks", "ks_rank", "ks_score", "gsea")
   if (mode %in% c("combined", "split") && is.null(sim$negative)) {
     stop(mode, " mode requires two similarity matrices.")
   }
@@ -151,16 +151,17 @@ signature_similarity_heatmap <- function(
     }
   }
 
-  ## Use one shared ordering so separate positive/negative maps align.
+  ## Use shared row/column ordering so separate positive/negative maps align.
   order_basis <- if (is.null(sim$negative)) sim$positive else (sim$positive + sim$negative) / 2
-  ord <- .ssh_similarity_order(order_basis, method = cluster_method)
-  feature_order <- rownames(order_basis)[ord]
+  row_order <- rownames(order_basis)[.ssh_similarity_order(order_basis, margin = "row", method = cluster_method)]
+  column_order <- colnames(order_basis)[.ssh_similarity_order(order_basis, margin = "column", method = cluster_method)]
+  is_self_similarity <- identical(rownames(order_basis), colnames(order_basis))
 
   mask_redundant_triangle <- function(mat) {
     ## Hide the redundant half of symmetric self-comparison matrices.
-    if (is_rank_based) return(mat)
-    row_pos <- match(rownames(mat), feature_order)
-    col_pos <- match(colnames(mat), feature_order)
+    if (is_rank_based || !is_self_similarity) return(mat)
+    row_pos <- match(rownames(mat), row_order)
+    col_pos <- match(colnames(mat), column_order)
     displayed_lower <- outer(row_pos, col_pos, `>`)
     displayed_upper <- outer(row_pos, col_pos, `<`)
     if (triangle == "upper") {
@@ -172,9 +173,9 @@ signature_similarity_heatmap <- function(
   }
   is_visible_triangle_cell <- function(i, j) {
     ## Restrict custom triangle drawing to the requested matrix half.
-    if (is_rank_based) return(TRUE)
-    row_pos <- match(rownames(order_basis)[i], feature_order)
-    col_pos <- match(colnames(order_basis)[j], feature_order)
+    if (is_rank_based || !is_self_similarity) return(TRUE)
+    row_pos <- match(rownames(order_basis)[i], row_order)
+    col_pos <- match(colnames(order_basis)[j], column_order)
     if (row_pos == col_pos) return(TRUE)
     if (triangle == "upper") return(row_pos < col_pos)
     row_pos > col_pos
@@ -185,8 +186,8 @@ signature_similarity_heatmap <- function(
     list(
       cluster_rows = FALSE,
       cluster_columns = FALSE,
-      row_order = feature_order,
-      column_order = feature_order
+      row_order = row_order,
+      column_order = column_order
     ),
     annotation_args,
     heatmap_args
@@ -230,6 +231,9 @@ signature_similarity_heatmap <- function(
       ht <- positive_ht + negative_ht
     }
   } else if (mode == "split") {
+    if (!is_self_similarity) {
+      stop("split mode requires square self-comparison matrices.")
+    }
     ## Combine two matrices by assigning each to one triangle.
     split_mat <- sim$positive
     split_mat[lower.tri(split_mat)] <- sim$negative[lower.tri(sim$negative)]
@@ -355,9 +359,7 @@ signature_similarity_heatmap <- function(
     if (is.null(x$pvalue)) stop("Comparison object does not contain pvalue matrices.")
     -log10(pmax(x$pvalue, .Machine$double.eps, na.rm = FALSE))
   })
-  matrices <- lapply(seq_along(matrices), function(i) {
-    .ssh_validate_similarity_matrix(matrices[[i]], paste0("comparison$comparisons[[", i, "]]"))
-  })
+  matrices <- .ssh_validate_similarity_matrices(matrices)
   names(matrices) <- names(comparison$comparisons)
   if (length(matrices) == 1) {
     out <- list(positive = matrices[[1]])
@@ -372,33 +374,45 @@ signature_similarity_heatmap <- function(
 }
 
 .ssh_validate_similarity_matrix <- function(x, arg_name) {
-  ## Ensure heatmap inputs are square matrices with matching names.
+  ## Ensure each heatmap input is a numeric matrix with dimnames.
   if (!is.matrix(x) || !is.numeric(x)) {
     stop(arg_name, " must be a numeric matrix.")
-  }
-  if (nrow(x) != ncol(x)) {
-    stop(arg_name, " must be a square matrix.")
   }
   if (is.null(rownames(x)) || is.null(colnames(x))) {
     stop(arg_name, " must have row and column names.")
   }
-  if (!identical(rownames(x), colnames(x))) {
-    stop(arg_name, " must have identical row and column names in the same order.")
-  }
   x
 }
 
-.ssh_similarity_order <- function(similarity, method = "ward.D") {
-  ## Cluster on normalized distance derived from similarity values.
-  similarity[is.na(similarity)] <- 0
-  if (nrow(similarity) < 2) return(seq_len(nrow(similarity)))
-  max_value <- max(similarity, na.rm = TRUE)
-  if (!is.finite(max_value) || max_value <= 0) {
-    similarity[] <- 0
-  } else {
-    similarity <- pmax(pmin(similarity / max_value, 1), 0)
+.ssh_validate_similarity_matrices <- function(matrices) {
+  ## Validate all level matrices and keep cross-list dimensions aligned.
+  matrices <- lapply(seq_along(matrices), function(i) {
+    .ssh_validate_similarity_matrix(matrices[[i]], paste0("comparison$comparisons[[", i, "]]"))
+  })
+  reference_dim <- dim(matrices[[1]])
+  reference_dimnames <- dimnames(matrices[[1]])
+  for (i in seq_along(matrices)[-1]) {
+    if (!identical(dim(matrices[[i]]), reference_dim) ||
+        !identical(dimnames(matrices[[i]]), reference_dimnames)) {
+      stop("All comparison matrices must have identical dimensions and dimnames.")
+    }
   }
-  d <- stats::as.dist(1 - similarity)
+  matrices
+}
+
+.ssh_similarity_order <- function(similarity, margin = c("row", "column"), method = "ward.D") {
+  ## Cluster rows or columns from their similarity profiles.
+  margin <- match.arg(margin)
+  profile <- if (margin == "row") similarity else t(similarity)
+  profile[is.na(profile)] <- 0
+  if (nrow(profile) < 2) return(seq_len(nrow(profile)))
+  value_range <- range(profile, na.rm = TRUE)
+  if (!all(is.finite(value_range)) || diff(value_range) == 0) {
+    profile[] <- 0
+  } else {
+    profile <- (profile - value_range[1]) / diff(value_range)
+  }
+  d <- stats::dist(profile)
   hc <- stats::hclust(d, method = method)
   if (requireNamespace("cba", quietly = TRUE) &&
       exists("hcopt", envir = asNamespace("cba"), inherits = FALSE)) {
