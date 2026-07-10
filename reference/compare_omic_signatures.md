@@ -37,11 +37,19 @@ compare_omic_signatures(
 
 - sig_list1:
 
-  List of OmicSignature objects or an OmicSignatureCollection.
+  List of OmicSignature objects or an OmicSignatureCollection. Names
+  must be unique within the list.
 
 - sig_list2:
 
-  Optional second list of OmicSignature objects or collection.
+  Optional second list of OmicSignature objects or collection. Names
+  must be unique within the list and must not overlap with `sig_list1`'s
+  names, so that a cross-list comparison can never be mistaken for a
+  self-comparison. For `method = "ks_rank"`, `method = "ks_score"`, and
+  `method = "gsea"`, `sig_list2` is the ranking side and each element
+  needs a difexp table; elements without one are excluded from
+  `sig_list2` (with a warning) but remain usable as `sig_list1`
+  genesets, which never require difexp.
 
 - method:
 
@@ -53,15 +61,25 @@ compare_omic_signatures(
 
 - score_cutoff:
 
-  Minimum absolute score to include in a signature.
+  Minimum absolute score to include in a signature. For signatures
+  without a difexp table, this can only be applied if the signature
+  table itself has a `score_col` column; otherwise a warning is issued
+  and the cutoff is skipped.
 
 - adj_p_cutoff:
 
-  Maximum adjusted p-value to include in a signature.
+  Maximum adjusted p-value to include in a signature. For signatures
+  without a difexp table, this can only be applied if the signature
+  table itself has an `adj_p_col` column; otherwise a warning is issued
+  and the cutoff is skipped.
 
 - min_features:
 
-  Minimum number of features retained per label-specific signature.
+  Minimum number of features retained per label-specific signature. Must
+  be at least 3. For `method = "overlap"`, any signature/label that
+  cannot reach `min_features` retained features (even after backfilling)
+  is dropped from the comparison with a warning, rather than being
+  scored against a near-empty or empty feature set.
 
 - max_feature:
 
@@ -152,7 +170,9 @@ A list with one element per label pairing. For \`method = "overlap"\`
 each element contains \`jaccard\`, \`pvalue\`, and \`counts\` matrices.
 \`counts\` entries are formatted as \`"ov \| n1 \| n2"\`. For \`method =
 "ks_rank"\`, \`method = "ks_score"\`, \`method = "ks"\`, and \`method =
-"gsea"\` each element contains \`score\` and \`pvalue\` matrices.
+"gsea"\` each element contains \`score\` and \`pvalue\` matrices;
+columns for \`sig_list2\` signatures without a difexp table are entirely
+\`NA\`, since those signatures cannot serve as the ranking side.
 
 ## Examples
 

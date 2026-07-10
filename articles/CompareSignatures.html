@@ -105,22 +105,22 @@ and the second factor level against the second factor level.</p>
 <span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">overlap_res</span><span class="op">$</span><span class="va">comparisons</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "level1_vs_level1" "level2_vs_level2"</span></span>
 <span><span class="va">overlap_res</span><span class="op">$</span><span class="va">comparisons</span><span class="op">$</span><span class="va">level1_vs_level1</span><span class="op">$</span><span class="va">jaccard</span></span>
-<span><span class="co">#&gt;              e7386_hsc3 e7386_cal27 icg001_hsc3 icg001_cal27</span></span>
-<span><span class="co">#&gt; e7386_hsc3    1.0000000   0.2391574   0.2048193    0.2437811</span></span>
-<span><span class="co">#&gt; e7386_cal27   0.2391574   1.0000000   0.1415525    0.2804097</span></span>
-<span><span class="co">#&gt; icg001_hsc3   0.2048193   0.1415525   1.0000000    0.2330456</span></span>
-<span><span class="co">#&gt; icg001_cal27  0.2437811   0.2804097   0.2330456    1.0000000</span></span>
+<span><span class="co">#&gt;               e7386_hsc3 e7386_cal27 icg001_hsc3 icg001_cal27</span></span>
+<span><span class="co">#&gt; e7386_hsc3   1.000000000  0.23915737  0.01626016  0.007360673</span></span>
+<span><span class="co">#&gt; e7386_cal27  0.239157373  1.00000000  0.02774923  0.002092050</span></span>
+<span><span class="co">#&gt; icg001_hsc3  0.016260163  0.02774923  1.00000000  0.198998748</span></span>
+<span><span class="co">#&gt; icg001_cal27 0.007360673  0.00209205  0.19899875  1.000000000</span></span>
 <span><span class="va">overlap_res</span><span class="op">$</span><span class="va">comparisons</span><span class="op">$</span><span class="va">level1_vs_level1</span><span class="op">$</span><span class="va">counts</span></span>
 <span><span class="co">#&gt;              e7386_hsc3        e7386_cal27       icg001_hsc3      </span></span>
-<span><span class="co">#&gt; e7386_hsc3   "500 | 500 | 500" "193 | 500 | 500" "170 | 500 | 500"</span></span>
-<span><span class="co">#&gt; e7386_cal27  "193 | 500 | 500" "500 | 500 | 500" "124 | 500 | 500"</span></span>
-<span><span class="co">#&gt; icg001_hsc3  "170 | 500 | 500" "124 | 500 | 500" "500 | 500 | 500"</span></span>
-<span><span class="co">#&gt; icg001_cal27 "196 | 500 | 500" "219 | 500 | 500" "189 | 500 | 500"</span></span>
+<span><span class="co">#&gt; e7386_hsc3   "500 | 500 | 500" "193 | 500 | 500" "16 | 500 | 500" </span></span>
+<span><span class="co">#&gt; e7386_cal27  "193 | 500 | 500" "500 | 500 | 500" "27 | 500 | 500" </span></span>
+<span><span class="co">#&gt; icg001_hsc3  "16 | 500 | 500"  "27 | 500 | 500"  "500 | 500 | 500"</span></span>
+<span><span class="co">#&gt; icg001_cal27 "7 | 500 | 458"   "2 | 500 | 458"   "159 | 500 | 458"</span></span>
 <span><span class="co">#&gt;              icg001_cal27     </span></span>
-<span><span class="co">#&gt; e7386_hsc3   "196 | 500 | 500"</span></span>
-<span><span class="co">#&gt; e7386_cal27  "219 | 500 | 500"</span></span>
-<span><span class="co">#&gt; icg001_hsc3  "189 | 500 | 500"</span></span>
-<span><span class="co">#&gt; icg001_cal27 "500 | 500 | 500"</span></span></code></pre></div>
+<span><span class="co">#&gt; e7386_hsc3   "7 | 500 | 458"  </span></span>
+<span><span class="co">#&gt; e7386_cal27  "2 | 500 | 458"  </span></span>
+<span><span class="co">#&gt; icg001_hsc3  "159 | 500 | 458"</span></span>
+<span><span class="co">#&gt; icg001_cal27 "458 | 458 | 458"</span></span></code></pre></div>
 <p>The overlap method returns three matrices for each compared factor
 level:</p>
 <ul>
@@ -157,9 +157,9 @@ screens.</p>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">cross_res</span><span class="op">$</span><span class="va">comparisons</span><span class="op">$</span><span class="va">level1_vs_level1</span><span class="op">$</span><span class="va">jaccard</span></span>
-<span><span class="co">#&gt;              e7386_hsc3 e7386_cal27</span></span>
-<span><span class="co">#&gt; icg001_hsc3   0.2048193   0.1415525</span></span>
-<span><span class="co">#&gt; icg001_cal27  0.2437811   0.2804097</span></span></code></pre></div>
+<span><span class="co">#&gt;               e7386_hsc3 e7386_cal27</span></span>
+<span><span class="co">#&gt; icg001_hsc3  0.016260163  0.02774923</span></span>
+<span><span class="co">#&gt; icg001_cal27 0.007360673  0.00209205</span></span></code></pre></div>
 <p>When <code>background</code> is not supplied, the feature universe is
 inferred from all available signature and differential-expression tables
 in both inputs. Supplying a measured or assay-specific background is
@@ -223,16 +223,16 @@ scores against the remaining features. The legacy
 <span></span>
 <span><span class="va">ks_res</span><span class="op">$</span><span class="va">comparisons</span><span class="op">$</span><span class="va">level1_vs_level1</span><span class="op">$</span><span class="va">score</span></span>
 <span><span class="co">#&gt;              e7386_hsc3 e7386_cal27 icg001_hsc3 icg001_cal27</span></span>
-<span><span class="co">#&gt; e7386_hsc3    0.8592342   0.4160968   0.4107636    0.4287572</span></span>
-<span><span class="co">#&gt; e7386_cal27   0.4201126   0.8589527   0.3174991    0.4384881</span></span>
-<span><span class="co">#&gt; icg001_hsc3   0.4059002   0.3219889   0.8509243    0.4114431</span></span>
-<span><span class="co">#&gt; icg001_cal27  0.4019190   0.4744036   0.3374776    0.8509243</span></span>
+<span><span class="co">#&gt; e7386_hsc3    0.8592342   0.4160968  -0.4110618   -0.4287572</span></span>
+<span><span class="co">#&gt; e7386_cal27   0.4201126   0.8589527  -0.3177972   -0.4384881</span></span>
+<span><span class="co">#&gt; icg001_hsc3  -0.3259009  -0.2914977   0.8509243    0.2925748</span></span>
+<span><span class="co">#&gt; icg001_cal27 -0.3816186  -0.5426392   0.3425747    0.8634466</span></span>
 <span><span class="va">ks_res</span><span class="op">$</span><span class="va">comparisons</span><span class="op">$</span><span class="va">level1_vs_level1</span><span class="op">$</span><span class="va">pvalue</span></span>
 <span><span class="co">#&gt;              e7386_hsc3 e7386_cal27 icg001_hsc3 icg001_cal27</span></span>
-<span><span class="co">#&gt; e7386_hsc3            0           0           0            0</span></span>
-<span><span class="co">#&gt; e7386_cal27           0           0           0            0</span></span>
-<span><span class="co">#&gt; icg001_hsc3           0           0           0            0</span></span>
-<span><span class="co">#&gt; icg001_cal27          0           0           0            0</span></span></code></pre></div>
+<span><span class="co">#&gt; e7386_hsc3            0   0.0000000   0.9997206    0.9982553</span></span>
+<span><span class="co">#&gt; e7386_cal27           0   0.0000000   0.9999303    0.9982588</span></span>
+<span><span class="co">#&gt; icg001_hsc3           1   0.9639617   0.0000000    0.0000000</span></span>
+<span><span class="co">#&gt; icg001_cal27          1   1.0000000   0.0000000    0.0000000</span></span></code></pre></div>
 <p>The simulated label-pairing data can also be compared with
 <code>ks_score</code>. In this toy example, the treated/up/resistant
 labels define the first level and the control/down/sensitive labels
@@ -355,7 +355,7 @@ draws one full heatmap for each label level.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer>

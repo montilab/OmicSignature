@@ -85,11 +85,19 @@ rank-position KS, score-distribution KS, or fgsea.</p>
 
 
 <dl><dt id="arg-sig-list-">sig_list1<a class="anchor" aria-label="anchor" href="#arg-sig-list-"></a></dt>
-<dd><p>List of OmicSignature objects or an OmicSignatureCollection.</p></dd>
+<dd><p>List of OmicSignature objects or an OmicSignatureCollection.
+Names must be unique within the list.</p></dd>
 
 
 <dt id="arg-sig-list-">sig_list2<a class="anchor" aria-label="anchor" href="#arg-sig-list-"></a></dt>
-<dd><p>Optional second list of OmicSignature objects or collection.</p></dd>
+<dd><p>Optional second list of OmicSignature objects or
+collection. Names must be unique within the list and must not overlap
+with <code>sig_list1</code>'s names, so that a cross-list comparison can never be
+mistaken for a self-comparison. For <code>method = "ks_rank"</code>,
+<code>method = "ks_score"</code>, and <code>method = "gsea"</code>, <code>sig_list2</code> is the ranking
+side and each element needs a difexp table; elements without one are
+excluded from <code>sig_list2</code> (with a warning) but remain usable as
+<code>sig_list1</code> genesets, which never require difexp.</p></dd>
 
 
 <dt id="arg-method">method<a class="anchor" aria-label="anchor" href="#arg-method"></a></dt>
@@ -101,16 +109,25 @@ rank-position KS, score-distribution KS, or fgsea.</p>
 
 
 <dt id="arg-score-cutoff">score_cutoff<a class="anchor" aria-label="anchor" href="#arg-score-cutoff"></a></dt>
-<dd><p>Minimum absolute score to include in a signature.</p></dd>
+<dd><p>Minimum absolute score to include in a signature. For
+signatures without a difexp table, this can only be applied if the
+signature table itself has a <code>score_col</code> column; otherwise a warning is
+issued and the cutoff is skipped.</p></dd>
 
 
 <dt id="arg-adj-p-cutoff">adj_p_cutoff<a class="anchor" aria-label="anchor" href="#arg-adj-p-cutoff"></a></dt>
-<dd><p>Maximum adjusted p-value to include in a signature.</p></dd>
+<dd><p>Maximum adjusted p-value to include in a signature. For
+signatures without a difexp table, this can only be applied if the
+signature table itself has an <code>adj_p_col</code> column; otherwise a warning is
+issued and the cutoff is skipped.</p></dd>
 
 
 <dt id="arg-min-features">min_features<a class="anchor" aria-label="anchor" href="#arg-min-features"></a></dt>
 <dd><p>Minimum number of features retained per label-specific
-signature.</p></dd>
+signature. Must be at least 3. For <code>method = "overlap"</code>, any
+signature/label that cannot reach <code>min_features</code> retained features (even
+after backfilling) is dropped from the comparison with a warning, rather
+than being scored against a near-empty or empty feature set.</p></dd>
 
 
 <dt id="arg-max-feature">max_feature<a class="anchor" aria-label="anchor" href="#arg-max-feature"></a></dt>
@@ -203,7 +220,9 @@ features against the remaining features with a two-sample KS test.</p>
 each element contains `jaccard`, `pvalue`, and `counts` matrices. `counts`
 entries are formatted as `"ov | n1 | n2"`. For `method = "ks_rank"`,
 `method = "ks_score"`, `method = "ks"`, and
-`method = "gsea"` each element contains `score` and `pvalue` matrices.</p>
+`method = "gsea"` each element contains `score` and `pvalue` matrices;
+columns for `sig_list2` signatures without a difexp table are entirely
+`NA`, since those signatures cannot serve as the ranking side.</p>
     </div>
 
     <div class="section level2">
@@ -250,7 +269,7 @@ entries are formatted as `"ov | n1 | n2"`. For `method = "ks_rank"`,
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer></div>

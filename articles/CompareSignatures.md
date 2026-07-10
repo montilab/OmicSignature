@@ -36,22 +36,22 @@ overlap_res <- compare_omic_signatures(
 names(overlap_res$comparisons)
 #> [1] "level1_vs_level1" "level2_vs_level2"
 overlap_res$comparisons$level1_vs_level1$jaccard
-#>              e7386_hsc3 e7386_cal27 icg001_hsc3 icg001_cal27
-#> e7386_hsc3    1.0000000   0.2391574   0.2048193    0.2437811
-#> e7386_cal27   0.2391574   1.0000000   0.1415525    0.2804097
-#> icg001_hsc3   0.2048193   0.1415525   1.0000000    0.2330456
-#> icg001_cal27  0.2437811   0.2804097   0.2330456    1.0000000
+#>               e7386_hsc3 e7386_cal27 icg001_hsc3 icg001_cal27
+#> e7386_hsc3   1.000000000  0.23915737  0.01626016  0.007360673
+#> e7386_cal27  0.239157373  1.00000000  0.02774923  0.002092050
+#> icg001_hsc3  0.016260163  0.02774923  1.00000000  0.198998748
+#> icg001_cal27 0.007360673  0.00209205  0.19899875  1.000000000
 overlap_res$comparisons$level1_vs_level1$counts
 #>              e7386_hsc3        e7386_cal27       icg001_hsc3      
-#> e7386_hsc3   "500 | 500 | 500" "193 | 500 | 500" "170 | 500 | 500"
-#> e7386_cal27  "193 | 500 | 500" "500 | 500 | 500" "124 | 500 | 500"
-#> icg001_hsc3  "170 | 500 | 500" "124 | 500 | 500" "500 | 500 | 500"
-#> icg001_cal27 "196 | 500 | 500" "219 | 500 | 500" "189 | 500 | 500"
+#> e7386_hsc3   "500 | 500 | 500" "193 | 500 | 500" "16 | 500 | 500" 
+#> e7386_cal27  "193 | 500 | 500" "500 | 500 | 500" "27 | 500 | 500" 
+#> icg001_hsc3  "16 | 500 | 500"  "27 | 500 | 500"  "500 | 500 | 500"
+#> icg001_cal27 "7 | 500 | 458"   "2 | 500 | 458"   "159 | 500 | 458"
 #>              icg001_cal27     
-#> e7386_hsc3   "196 | 500 | 500"
-#> e7386_cal27  "219 | 500 | 500"
-#> icg001_hsc3  "189 | 500 | 500"
-#> icg001_cal27 "500 | 500 | 500"
+#> e7386_hsc3   "7 | 500 | 458"  
+#> e7386_cal27  "2 | 500 | 458"  
+#> icg001_hsc3  "159 | 500 | 458"
+#> icg001_cal27 "458 | 458 | 458"
 ```
 
 The overlap method returns three matrices for each compared factor
@@ -84,9 +84,9 @@ cross_res <- compare_omic_signatures(
 )
 
 cross_res$comparisons$level1_vs_level1$jaccard
-#>              e7386_hsc3 e7386_cal27
-#> icg001_hsc3   0.2048193   0.1415525
-#> icg001_cal27  0.2437811   0.2804097
+#>               e7386_hsc3 e7386_cal27
+#> icg001_hsc3  0.016260163  0.02774923
+#> icg001_cal27 0.007360673  0.00209205
 ```
 
 When `background` is not supplied, the feature universe is inferred from
@@ -151,16 +151,16 @@ ks_res <- compare_omic_signatures(
 
 ks_res$comparisons$level1_vs_level1$score
 #>              e7386_hsc3 e7386_cal27 icg001_hsc3 icg001_cal27
-#> e7386_hsc3    0.8592342   0.4160968   0.4107636    0.4287572
-#> e7386_cal27   0.4201126   0.8589527   0.3174991    0.4384881
-#> icg001_hsc3   0.4059002   0.3219889   0.8509243    0.4114431
-#> icg001_cal27  0.4019190   0.4744036   0.3374776    0.8509243
+#> e7386_hsc3    0.8592342   0.4160968  -0.4110618   -0.4287572
+#> e7386_cal27   0.4201126   0.8589527  -0.3177972   -0.4384881
+#> icg001_hsc3  -0.3259009  -0.2914977   0.8509243    0.2925748
+#> icg001_cal27 -0.3816186  -0.5426392   0.3425747    0.8634466
 ks_res$comparisons$level1_vs_level1$pvalue
 #>              e7386_hsc3 e7386_cal27 icg001_hsc3 icg001_cal27
-#> e7386_hsc3            0           0           0            0
-#> e7386_cal27           0           0           0            0
-#> icg001_hsc3           0           0           0            0
-#> icg001_cal27          0           0           0            0
+#> e7386_hsc3            0   0.0000000   0.9997206    0.9982553
+#> e7386_cal27           0   0.0000000   0.9999303    0.9982588
+#> icg001_hsc3           1   0.9639617   0.0000000    0.0000000
+#> icg001_cal27          1   1.0000000   0.0000000    0.0000000
 ```
 
 The simulated label-pairing data can also be compared with `ks_score`.
