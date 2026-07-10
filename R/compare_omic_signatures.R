@@ -10,13 +10,30 @@
 #' rank-position KS, score-distribution KS, or fgsea.
 #'
 #' @param sig_list1 List of OmicSignature objects or an OmicSignatureCollection.
-#' @param sig_list2 Optional second list of OmicSignature objects or collection.
+#'   Names must be unique within the list.
+#' @param sig_list2 Optional second list of OmicSignature objects or
+#'   collection. Names must be unique within the list and must not overlap
+#'   with `sig_list1`'s names, so that a cross-list comparison can never be
+#'   mistaken for a self-comparison. For `method = "ks_rank"`,
+#'   `method = "ks_score"`, and `method = "gsea"`, `sig_list2` is the ranking
+#'   side and each element needs a difexp table; elements without one are
+#'   excluded from `sig_list2` (with a warning) but remain usable as
+#'   `sig_list1` genesets, which never require difexp.
 #' @param method Comparison method.
 #' @param background Optional background feature vector for overlap tests.
-#' @param score_cutoff Minimum absolute score to include in a signature.
-#' @param adj_p_cutoff Maximum adjusted p-value to include in a signature.
+#' @param score_cutoff Minimum absolute score to include in a signature. For
+#'   signatures without a difexp table, this can only be applied if the
+#'   signature table itself has a `score_col` column; otherwise a warning is
+#'   issued and the cutoff is skipped.
+#' @param adj_p_cutoff Maximum adjusted p-value to include in a signature. For
+#'   signatures without a difexp table, this can only be applied if the
+#'   signature table itself has an `adj_p_col` column; otherwise a warning is
+#'   issued and the cutoff is skipped.
 #' @param min_features Minimum number of features retained per label-specific
-#'   signature.
+#'   signature. Must be at least 3. For `method = "overlap"`, any
+#'   signature/label that cannot reach `min_features` retained features (even
+#'   after backfilling) is dropped from the comparison with a warning, rather
+#'   than being scored against a near-empty or empty feature set.
 #' @param max_feature Maximum number of features retained per label-specific
 #'   signature.
 #' @param label_pairing Optional named list giving the two group-label levels
@@ -56,7 +73,9 @@
 #'   each element contains `jaccard`, `pvalue`, and `counts` matrices. `counts`
 #'   entries are formatted as `"ov | n1 | n2"`. For `method = "ks_rank"`,
 #'   `method = "ks_score"`, `method = "ks"`, and
-#'   `method = "gsea"` each element contains `score` and `pvalue` matrices.
+#'   `method = "gsea"` each element contains `score` and `pvalue` matrices;
+#'   columns for `sig_list2` signatures without a difexp table are entirely
+#'   `NA`, since those signatures cannot serve as the ranking side.
 #'
 #' @examples
 #' data(compare_signatures_example)
@@ -128,6 +147,24 @@ compare_omic_signatures <- function(
   sig_list2 <- .cos_check_signature_list(sig_list2, "sig_list2")
   .cos_stop_if_categorical(sig_list1, "sig_list1")
   .cos_stop_if_categorical(sig_list2, "sig_list2")
+
+  ## Signature names must unambiguously identify one signature. Self-comparisons
+  ## reuse sig_list1 as sig_list2, so cross-list checks only apply when the
+  ## caller supplied a distinct sig_list2 - downstream code (and the heatmap
+  ## helper) tells self- from cross-comparisons apart by matching row/column
+  ## names, which silently mismatches results if names collide across lists.
+  .cos_check_unique_names(sig_list1, "sig_list1")
+  if (!compare_self) {
+    .cos_check_unique_names(sig_list2, "sig_list2")
+    .cos_check_disjoint_names(sig_list1, sig_list2)
+  }
+
+  ## KS/GSEA rank sig_list1's feature sets against sig_list2's difexp-derived
+  ## ranking; sig_list2 needs difexp regardless of self- vs cross-comparison,
+  ## while sig_list1 never does (.cos_signature_features supports both).
+  if (method %in% c("ks_rank", "ks_score", "gsea")) {
+    .cos_check_ranking_capable(sig_list2, method)
+  }
 
   ## Resolve the per-signature factor levels that should be compared.
   if (compare_self && is.null(label_pairing2)) {
@@ -215,6 +252,17 @@ compare_omic_signatures <- function(
   })
   names(set_list2) <- names(sig_list2)
 
+  ## Drop signatures that can't reach min_features even after backfill, so the
+  ## self-comparison diagonal below is never hardcoded over a degenerate
+  ## (near-)empty feature set.
+  dropped <- .cos_drop_small_sets(set_list1, set_list2, min_features, compare_self)
+  set_list1 <- dropped$set_list1
+  set_list2 <- dropped$set_list2
+  if (length(set_list1) == 0 || length(set_list2) == 0) {
+    stop("No signatures retained at least min_features = ", min_features,
+         " features for method = 'overlap'.")
+  }
+
   jaccard <- pvalue <- matrix(NA_real_, length(set_list1), length(set_list2),
                               dimnames = list(names(set_list1), names(set_list2)))
   counts <- matrix(NA_character_, length(set_list1), length(set_list2),
@@ -243,12 +291,55 @@ compare_omic_signatures <- function(
   list(jaccard = jaccard, pvalue = pvalue, counts = counts)
 }
 
+.cos_drop_small_sets <- function(set_list1, set_list2, min_features, compare_self) {
+  ## Exclude signatures whose retained feature set is too small for a
+  ## meaningful overlap test, instead of letting them silently through with a
+  ## near-empty or empty set.
+  sizes1 <- vapply(set_list1, length, integer(1))
+  sizes2 <- vapply(set_list2, length, integer(1))
+  small1 <- sizes1 < min_features
+  small2 <- sizes2 < min_features
+
+  if (compare_self) {
+    ## sig_list1 and sig_list2 are the same signatures; report once.
+    small <- small1 | small2
+    if (any(small)) {
+      warning(
+        "Excluding signature(s) with fewer than min_features = ", min_features,
+        " retained features: ", paste(names(set_list1)[small], collapse = ", ")
+      )
+    }
+    return(list(set_list1 = set_list1[!small], set_list2 = set_list2[!small]))
+  }
+
+  if (any(small1)) {
+    warning(
+      "sig_list1: excluding signature(s) with fewer than min_features = ", min_features,
+      " retained features: ", paste(names(set_list1)[small1], collapse = ", ")
+    )
+  }
+  if (any(small2)) {
+    warning(
+      "sig_list2: excluding signature(s) with fewer than min_features = ", min_features,
+      " retained features: ", paste(names(set_list2)[small2], collapse = ", ")
+    )
+  }
+  list(set_list1 = set_list1[!small1], set_list2 = set_list2[!small2])
+}
+
 .cos_compare_ks <- function(sig_list1, sig_list2, labels1, labels2,
                             feature_col, score_col, adj_p_col, p_value_col, group_col,
                             score_cutoff, adj_p_cutoff, min_features, max_feature,
                             adjust, p_adjust_method, alternative, method) {
   score <- pvalue <- matrix(NA_real_, length(sig_list1), length(sig_list2),
                             dimnames = list(names(sig_list1), names(sig_list2)))
+
+  ## Precompute each ranking vector once (it only depends on j); sig_list2
+  ## elements without a difexp table can't rank at all and stay NA below.
+  ranking <- lapply(seq_along(sig_list2), function(j) {
+    if (is.null(sig_list2[[j]]$difexp)) return(NULL)
+    .cos_difexp_scores(sig_list2[[j]], labels2[[j]], feature_col, score_col, p_value_col, group_col)
+  })
 
   ## Compare each retained feature set against each ranked difexp vector.
   for (i in seq_along(sig_list1)) {
@@ -257,8 +348,8 @@ compare_omic_signatures <- function(
       score_cutoff, adj_p_cutoff, min_features, max_feature
     )
     for (j in seq_along(sig_list2)) {
-      stats_j <- .cos_difexp_scores(sig_list2[[j]], labels2[[j]], feature_col, score_col, p_value_col, group_col)
-      tmp <- .cos_ks_test(geneset, stats_j, alternative, method)
+      if (is.null(ranking[[j]])) next
+      tmp <- .cos_ks_test(geneset, ranking[[j]], alternative, method)
       score[i, j] <- tmp["score"]
       pvalue[i, j] <- tmp["pvalue"]
     }
@@ -286,6 +377,13 @@ compare_omic_signatures <- function(
   score <- pvalue <- matrix(NA_real_, length(sig_list1), length(sig_list2),
                             dimnames = list(names(sig_list1), names(sig_list2)))
 
+  ## Precompute each ranking vector once (it only depends on j); sig_list2
+  ## elements without a difexp table can't rank at all and stay NA below.
+  ranking <- lapply(seq_along(sig_list2), function(j) {
+    if (is.null(sig_list2[[j]]$difexp)) return(NULL)
+    .cos_difexp_scores(sig_list2[[j]], labels2[[j]], feature_col, score_col, p_value_col, group_col)
+  })
+
   ## Run one fgsea test for every feature-set and ranked-vector pair.
   for (i in seq_along(sig_list1)) {
     geneset <- .cos_signature_features(
@@ -293,8 +391,8 @@ compare_omic_signatures <- function(
       score_cutoff, adj_p_cutoff, min_features, max_feature
     )
     for (j in seq_along(sig_list2)) {
-      stats_j <- .cos_difexp_scores(sig_list2[[j]], labels2[[j]], feature_col, score_col, p_value_col, group_col)
-      tmp <- .cos_fgsea(geneset, stats_j, gsea_score, minSize, maxSize, nproc, ...)
+      if (is.null(ranking[[j]])) next
+      tmp <- .cos_fgsea(geneset, ranking[[j]], gsea_score, minSize, maxSize, nproc, ...)
       score[i, j] <- tmp["score"]
       pvalue[i, j] <- tmp["pvalue"]
     }
@@ -329,6 +427,55 @@ compare_omic_signatures <- function(
   sig_list
 }
 
+.cos_check_unique_names <- function(sig_list, arg_name) {
+  ## Duplicate names make matrix row/column lookups by name ambiguous.
+  dup <- unique(names(sig_list)[duplicated(names(sig_list))])
+  if (length(dup) > 0) {
+    stop(arg_name, " contains duplicate signature names: ", paste(dup, collapse = ", "))
+  }
+  invisible(TRUE)
+}
+
+.cos_check_disjoint_names <- function(sig_list1, sig_list2) {
+  ## A shared name across two distinct lists is indistinguishable, downstream,
+  ## from a self-comparison; require disjoint names so callers can never hit
+  ## that ambiguity instead of silently producing a mismatched result.
+  shared <- intersect(names(sig_list1), names(sig_list2))
+  if (length(shared) > 0) {
+    stop(
+      "sig_list1 and sig_list2 must not share signature names when both are ",
+      "supplied: ", paste(shared, collapse = ", ")
+    )
+  }
+  invisible(TRUE)
+}
+
+.cos_ranking_capable <- function(sig_list2) {
+  ## Only difexp carries the p-values .cos_difexp_scores() needs to build a
+  ## ranked vector; a signature-only object can never serve as the ranking
+  ## side of a KS/GSEA comparison.
+  vapply(sig_list2, function(sig) !is.null(sig$difexp), logical(1))
+}
+
+.cos_check_ranking_capable <- function(sig_list2, method) {
+  can_rank <- .cos_ranking_capable(sig_list2)
+  if (!any(can_rank)) {
+    stop(
+      "No signatures in sig_list2 have a difexp table, required as the ",
+      "ranking side for method = '", method, "'."
+    )
+  }
+  if (any(!can_rank)) {
+    warning(
+      "Excluding signature(s) from the ranking side (sig_list2) for method = '",
+      method, "' because they have no difexp table: ",
+      paste(names(sig_list2)[!can_rank], collapse = ", "),
+      ". They remain available as the geneset side (sig_list1)."
+    )
+  }
+  invisible(can_rank)
+}
+
 .cos_check_cutoffs <- function(score_cutoff, adj_p_cutoff, min_features, max_feature) {
   ## Validate feature filtering thresholds before expensive comparisons begin.
   if (!is.numeric(score_cutoff) || length(score_cutoff) != 1 || is.na(score_cutoff) || score_cutoff < 0) {
@@ -338,8 +485,8 @@ compare_omic_signatures <- function(
       adj_p_cutoff < 0 || adj_p_cutoff > 1) {
     stop("adj_p_cutoff must be a single numeric value in [0, 1].")
   }
-  if (!is.numeric(min_features) || length(min_features) != 1 || is.na(min_features) || min_features < 0) {
-    stop("min_features must be a single non-negative numeric value.")
+  if (!is.numeric(min_features) || length(min_features) != 1 || is.na(min_features) || min_features < 3) {
+    stop("min_features must be a single numeric value >= 3.")
   }
   if (!is.numeric(max_feature) || length(max_feature) != 1 || is.na(max_feature) || max_feature < 1) {
     stop("max_feature must be a single positive numeric value.")
@@ -408,23 +555,32 @@ compare_omic_signatures <- function(
 }
 
 .cos_group_label_levels <- function(sig, group_col) {
-  ## Read the two bi-directional levels from the signature table.
+  ## Determine the two bi-directional levels to compare. Prefer difexp's
+  ## levels when difexp is present: it's the table KS/GSEA ranking and
+  ## difexp-backed overlap filtering actually read from, and
+  ## standardizeSigDF() can drop factor levels from `signature` that are
+  ## absent after signature-level filtering (e.g. an all-"up" signature table
+  ## backed by a legitimately bi-directional difexp table).
   sigdf <- sig$signature
   .cos_require_col(group_col, sigdf)
   if (!is.factor(sigdf[[group_col]])) {
     stop("Column '", group_col, "' must be a factor in signature '", .cos_signature_name(sig), "'.")
   }
-  levels <- levels(sigdf[[group_col]])
-  if (length(levels) != 2) {
-    stop("Column '", group_col, "' must have exactly 2 factor levels in signature '",
-         .cos_signature_name(sig), "'.")
-  }
+
   if (!is.null(sig$difexp)) {
     .cos_require_col(group_col, sig$difexp)
     if (!is.factor(sig$difexp[[group_col]])) {
       stop("Column '", group_col, "' must be a factor in difexp for signature '",
            .cos_signature_name(sig), "'.")
     }
+    levels <- levels(sig$difexp[[group_col]])
+  } else {
+    levels <- levels(sigdf[[group_col]])
+  }
+
+  if (length(levels) != 2) {
+    stop("Column '", group_col, "' must have exactly 2 factor levels in signature '",
+         .cos_signature_name(sig), "'.")
   }
   levels
 }
@@ -440,14 +596,48 @@ compare_omic_signatures <- function(
     return(unique(stats::na.omit(as.character(df[[feature_col]]))))
   }
 
-  df <- sig$signature %>%
-    dplyr::filter(as.character(.data[[group_col]]) == label)
-  if (score_col %in% colnames(df)) {
-    df <- df %>%
-      dplyr::filter(abs(.data[[score_col]]) >= score_cutoff) %>%
-      .cos_order_signature_rows(score_col, adj_p_col)
+  full_df <- sig$signature %>%
+    dplyr::filter(as.character(.data[[group_col]]) == label) %>%
+    .cos_order_signature_rows(score_col, adj_p_col) %>%
+    dplyr::distinct(.data[[feature_col]], .keep_all = TRUE)
+
+  ## Without a difexp table, score_cutoff/adj_p_cutoff can only be honored if
+  ## the signature table itself carries the relevant column; warn rather than
+  ## silently skipping the filter the caller asked for.
+  has_score <- score_col %in% colnames(full_df)
+  has_adj_p <- adj_p_col %in% colnames(full_df)
+  unmet <- character()
+
+  selected <- full_df
+  if (has_score) {
+    selected <- selected %>% dplyr::filter(abs(.data[[score_col]]) >= score_cutoff)
+  } else if (score_cutoff > 0) {
+    unmet <- c(unmet, paste0("score_cutoff (no '", score_col, "' column)"))
   }
-  df %>%
+
+  if (has_adj_p) {
+    selected <- selected %>% dplyr::filter(!is.na(.data[[adj_p_col]]), .data[[adj_p_col]] <= adj_p_cutoff)
+  } else if (adj_p_cutoff < 1) {
+    unmet <- c(unmet, paste0("adj_p_cutoff (no '", adj_p_col, "' column)"))
+  }
+
+  if (length(unmet) > 0) {
+    warning(
+      "Signature '", .cos_signature_name(sig), "' has no difexp table; ",
+      paste(unmet, collapse = " and "), " could not be applied to its signature table."
+    )
+  }
+
+  ## Backfill with the strongest remaining features if the cutoffs (or their
+  ## absence) left too few rows, mirroring .cos_constrained_signature_df().
+  if (nrow(selected) < min_features) {
+    add <- full_df %>%
+      dplyr::filter(!.data[[feature_col]] %in% selected[[feature_col]]) %>%
+      dplyr::slice_head(n = min_features - nrow(selected))
+    selected <- dplyr::bind_rows(selected, add)
+  }
+
+  selected %>%
     dplyr::slice_head(n = max_feature) %>%
     dplyr::pull(dplyr::all_of(feature_col)) %>%
     as.character() %>%
@@ -482,7 +672,7 @@ compare_omic_signatures <- function(
       as.character(.data[[group_col]]) %in% c(label, contrast_label)
     ) %>%
     dplyr::mutate(
-      .p_rank = -log10(pmax(.data[[p_value_col]], .Machine$double.xmin)),
+      .p_rank = -log10(pmax(.data[[p_value_col]], .Machine$double.eps)),
       .rank_score = ifelse(
         as.character(.data[[group_col]]) == label,
         .data$.p_rank,

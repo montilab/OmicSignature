@@ -31,20 +31,37 @@ compare_omic_signatures(
 )
 }
 \arguments{
-\item{sig_list1}{List of OmicSignature objects or an OmicSignatureCollection.}
+\item{sig_list1}{List of OmicSignature objects or an OmicSignatureCollection.
+Names must be unique within the list.}
 
-\item{sig_list2}{Optional second list of OmicSignature objects or collection.}
+\item{sig_list2}{Optional second list of OmicSignature objects or
+collection. Names must be unique within the list and must not overlap
+with \code{sig_list1}'s names, so that a cross-list comparison can never be
+mistaken for a self-comparison. For \code{method = "ks_rank"},
+\code{method = "ks_score"}, and \code{method = "gsea"}, \code{sig_list2} is the ranking
+side and each element needs a difexp table; elements without one are
+excluded from \code{sig_list2} (with a warning) but remain usable as
+\code{sig_list1} genesets, which never require difexp.}
 
 \item{method}{Comparison method.}
 
 \item{background}{Optional background feature vector for overlap tests.}
 
-\item{score_cutoff}{Minimum absolute score to include in a signature.}
+\item{score_cutoff}{Minimum absolute score to include in a signature. For
+signatures without a difexp table, this can only be applied if the
+signature table itself has a \code{score_col} column; otherwise a warning is
+issued and the cutoff is skipped.}
 
-\item{adj_p_cutoff}{Maximum adjusted p-value to include in a signature.}
+\item{adj_p_cutoff}{Maximum adjusted p-value to include in a signature. For
+signatures without a difexp table, this can only be applied if the
+signature table itself has an \code{adj_p_col} column; otherwise a warning is
+issued and the cutoff is skipped.}
 
 \item{min_features}{Minimum number of features retained per label-specific
-signature.}
+signature. Must be at least 3. For \code{method = "overlap"}, any
+signature/label that cannot reach \code{min_features} retained features (even
+after backfilling) is dropped from the comparison with a warning, rather
+than being scored against a near-empty or empty feature set.}
 
 \item{max_feature}{Maximum number of features retained per label-specific
 signature.}
@@ -102,7 +119,9 @@ A list with one element per label pairing. For `method = "overlap"`
 each element contains `jaccard`, `pvalue`, and `counts` matrices. `counts`
 entries are formatted as `"ov | n1 | n2"`. For `method = "ks_rank"`,
 `method = "ks_score"`, `method = "ks"`, and
-`method = "gsea"` each element contains `score` and `pvalue` matrices.
+`method = "gsea"` each element contains `score` and `pvalue` matrices;
+columns for `sig_list2` signatures without a difexp table are entirely
+`NA`, since those signatures cannot serve as the ranking side.
 }
 \description{
 Compare signatures within one list, or between two lists, using set overlap,
