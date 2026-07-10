@@ -27,6 +27,12 @@
 #' @param neg_col_fun Color function for second-level triangles in combined mode.
 #' @param combined_triangle_threshold Maximum matrix size for split triangles
 #'   inside each cell in combined mode.
+#' @param na_style How to render cells that could not be computed (currently
+#'   only possible for rank-based comparisons, when a `sig_list2` signature has
+#'   no difexp table and so cannot serve as the ranking side): `"grey"` fills
+#'   the cell with a solid grey, `"hatch"` fills it with a diagonal hatch
+#'   pattern. This does not affect the redundant (hidden) half of a symmetric
+#'   self-comparison matrix, which always stays fully transparent.
 #' @param draw Logical; draw the heatmap before returning it.
 #' @param ... Additional arguments passed to ComplexHeatmap::Heatmap().
 #'
@@ -79,6 +85,7 @@ signature_similarity_heatmap <- function(
     pos_col_fun = NULL,
     neg_col_fun = NULL,
     combined_triangle_threshold = 50,
+    na_style = c("grey", "hatch"),
     draw = TRUE,
     ...)
 {
@@ -87,6 +94,7 @@ signature_similarity_heatmap <- function(
   mode <- match.arg(mode)
   annotation_side <- match.arg(annotation_side)
   triangle <- match.arg(triangle)
+  na_style <- match.arg(na_style)
 
   if (!requireNamespace("ComplexHeatmap", quietly = TRUE)) {
     stop("Package 'ComplexHeatmap' is required.")
@@ -196,22 +204,20 @@ signature_similarity_heatmap <- function(
 
   if (mode == "separate") {
     ## Draw one heatmap per comparison level.
+    positive_mat <- mask_redundant_triangle(sim$positive)
     positive_args <- .ssh_set_legend_title(common_args, legend_names[1])
     positive_args$column_title <- legend_names[1]
     positive_ht <- do.call(
       ComplexHeatmap::Heatmap,
       c(
-        list(
-          matrix = mask_redundant_triangle(sim$positive),
-          name = legend_names[1],
-          col = col_fun,
-          na_col = "#FFFFFF00"
-        ),
+        list(matrix = positive_mat, name = legend_names[1], col = col_fun),
+        .ssh_na_heatmap_args(positive_mat, is_rank_based, na_style),
         positive_args
       )
     )
     ht <- positive_ht
     if (!is.null(sim$negative)) {
+      negative_mat <- mask_redundant_triangle(sim$negative)
       negative_args <- .ssh_set_legend_title(common_args, legend_names[2])
       if (annotation_side == "column") negative_args$top_annotation <- NULL
       if (annotation_side == "row") negative_args$left_annotation <- NULL
@@ -219,12 +225,8 @@ signature_similarity_heatmap <- function(
       negative_ht <- do.call(
         ComplexHeatmap::Heatmap,
         c(
-          list(
-            matrix = mask_redundant_triangle(sim$negative),
-            name = legend_names[2],
-            col = col_fun,
-            na_col = "#FFFFFF00"
-          ),
+          list(matrix = negative_mat, name = legend_names[2], col = col_fun),
+          .ssh_na_heatmap_args(negative_mat, is_rank_based, na_style),
           negative_args
         )
       )
@@ -281,16 +283,14 @@ signature_similarity_heatmap <- function(
               } else {
                 sim$negative[i, j]
               }
-              grid::grid.polygon(
-                x = grid::unit.c(x - width / 2, x + width / 2, x + width / 2),
-                y = grid::unit.c(y + height / 2, y + height / 2, y - height / 2),
-                gp = grid::gpar(col = NA, fill = neg_col_fun(top_right_value))
-              )
-              grid::grid.polygon(
-                x = grid::unit.c(x - width / 2, x - width / 2, x + width / 2),
-                y = grid::unit.c(y + height / 2, y - height / 2, y - height / 2),
-                gp = grid::gpar(col = NA, fill = pos_col_fun(bottom_left_value))
-              )
+              top_right_x <- grid::unit.c(x - width / 2, x + width / 2, x + width / 2)
+              top_right_y <- grid::unit.c(y + height / 2, y + height / 2, y - height / 2)
+              bottom_left_x <- grid::unit.c(x - width / 2, x - width / 2, x + width / 2)
+              bottom_left_y <- grid::unit.c(y + height / 2, y - height / 2, y - height / 2)
+
+              .ssh_fill_triangle(top_right_x, top_right_y, top_right_value, neg_col_fun, x, y, width, height, na_style)
+              .ssh_fill_triangle(bottom_left_x, bottom_left_y, bottom_left_value, pos_col_fun, x, y, width, height, na_style)
+
               grid::grid.rect(
                 x = x,
                 y = y,
@@ -309,12 +309,8 @@ signature_similarity_heatmap <- function(
       ht <- do.call(
         ComplexHeatmap::Heatmap,
         c(
-          list(
-            matrix = average_mat,
-            name = measure,
-            col = col_fun,
-            na_col = "#FFFFFF00"
-          ),
+          list(matrix = average_mat, name = measure, col = col_fun),
+          .ssh_na_heatmap_args(average_mat, is_rank_based, na_style),
           common_args
         )
       )
@@ -332,6 +328,78 @@ signature_similarity_heatmap <- function(
     return(invisible(do.call(ComplexHeatmap::draw, draw_args)))
   }
   ht
+}
+
+.ssh_na_fill_color <- function(na_style) {
+  ## Base fill for a cell that could not be computed. "hatch" uses a light
+  ## base so the darker hatch lines drawn on top of it stay legible.
+  if (identical(na_style, "hatch")) return("grey96")
+  "grey75"
+}
+
+.ssh_draw_hatch <- function(shape_x, shape_y, x, y, width, height,
+                             col = "grey45", lwd = 0.6, n_lines = 15, spacing = 0.16) {
+  ## Draw a diagonal hatch pattern clipped to an arbitrary polygon
+  ## (shape_x/shape_y), using the same coordinate system as the surrounding
+  ## cell (x, y, width, height) that ComplexHeatmap's cell_fun already
+  ## provides. Lines run parallel to the cell's own diagonal, each offset by
+  ## `spacing` cell-widths/heights from the last, spanning well beyond the
+  ## cell bounds so the clip always yields full coverage regardless of the
+  ## polygon's exact shape (rectangle or triangle).
+  grid::pushViewport(grid::viewport(clip = grid::polygonGrob(shape_x, shape_y)))
+  fracs <- spacing * (seq_len(n_lines) - (n_lines + 1) / 2)
+  grid::grid.segments(
+    x0 = x - width / 2 + width * fracs,
+    y0 = y - height / 2 - height * fracs,
+    x1 = x + width / 2 + width * fracs,
+    y1 = y + height / 2 - height * fracs,
+    gp = grid::gpar(col = col, lwd = lwd)
+  )
+  grid::popViewport()
+}
+
+.ssh_cell_rect_shape <- function(x, y, width, height) {
+  list(
+    x = grid::unit.c(x - width / 2, x + width / 2, x + width / 2, x - width / 2),
+    y = grid::unit.c(y - height / 2, y - height / 2, y + height / 2, y + height / 2)
+  )
+}
+
+.ssh_na_rect_cell_fun <- function(mat, na_style) {
+  ## Overlay a hatch pattern on NA cells of an otherwise normally-colored
+  ## rectangular heatmap; na_col alone already supplies the base fill.
+  if (!identical(na_style, "hatch")) return(NULL)
+  function(j, i, x, y, width, height, fill) {
+    if (!is.na(mat[i, j])) return(NULL)
+    shape <- .ssh_cell_rect_shape(x, y, width, height)
+    .ssh_draw_hatch(shape$x, shape$y, x, y, width, height)
+  }
+}
+
+.ssh_na_heatmap_args <- function(mat, is_rank_based, na_style) {
+  ## Cells masked as the redundant half of a symmetric matrix must stay fully
+  ## transparent (they are not missing data, just hidden duplicates); only
+  ## rank-based comparisons can have genuinely uncomputable NA cells.
+  if (!is_rank_based) {
+    return(list(na_col = "#FFFFFF00"))
+  }
+  args <- list(na_col = .ssh_na_fill_color(na_style))
+  cell_fun <- .ssh_na_rect_cell_fun(mat, na_style)
+  if (!is.null(cell_fun)) args$cell_fun <- cell_fun
+  args
+}
+
+.ssh_fill_triangle <- function(tri_x, tri_y, value, col_fun, x, y, width, height, na_style) {
+  ## Fill one triangular half-cell, rendering NA distinctly from a computed
+  ## value that happens to sit at the edge of the color scale.
+  if (is.na(value)) {
+    grid::grid.polygon(x = tri_x, y = tri_y, gp = grid::gpar(col = NA, fill = .ssh_na_fill_color(na_style)))
+    if (identical(na_style, "hatch")) {
+      .ssh_draw_hatch(tri_x, tri_y, x, y, width, height)
+    }
+    return(invisible(NULL))
+  }
+  grid::grid.polygon(x = tri_x, y = tri_y, gp = grid::gpar(col = NA, fill = col_fun(value)))
 }
 
 .ssh_similarity_from_comparison <- function(comparison, measure) {

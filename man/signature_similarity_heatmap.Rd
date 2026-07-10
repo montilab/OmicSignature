@@ -16,6 +16,7 @@ signature_similarity_heatmap(
   pos_col_fun = NULL,
   neg_col_fun = NULL,
   combined_triangle_threshold = 50,
+  na_style = c("grey", "hatch"),
   draw = TRUE,
   ...
 )
@@ -44,6 +45,13 @@ signature_similarity_heatmap(
 
 \item{combined_triangle_threshold}{Maximum matrix size for split triangles
 inside each cell in combined mode.}
+
+\item{na_style}{How to render cells that could not be computed (currently
+only possible for rank-based comparisons, when a `sig_list2` signature has
+no difexp table and so cannot serve as the ranking side): `"grey"` fills
+the cell with a solid grey, `"hatch"` fills it with a diagonal hatch
+pattern. This does not affect the redundant (hidden) half of a symmetric
+self-comparison matrix, which always stays fully transparent.}
 
 \item{draw}{Logical; draw the heatmap before returning it.}
 
