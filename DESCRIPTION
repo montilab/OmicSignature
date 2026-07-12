@@ -20,11 +20,18 @@ Imports:
 	methods,
 	limma,
 	R6,
-	jsonlite
+	jsonlite,
+	tibble
 Suggests:
+  cba,
+  ComplexHeatmap,
+  circlize,
+  fgsea,
 	rmarkdown,
   knitr,
 	pkgdown,
-	devtools
+	devtools,
+	testthat (>= 3.0.0)
 VignetteBuilder: knitr
+Config/testthat/edition: 3
 BugReports: https://github.com/montilab/OmicSignature/issues
