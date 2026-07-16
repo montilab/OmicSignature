@@ -15,6 +15,8 @@ navbar:
       menu:
       - text: "Structure of OmicSignature & OmicSignatureCollection"
         href: articles/ObjectStructure.html
+      - text: "Compare Signatures"
+        href: articles/CompareSignatures.html
       - text: "---- OmicSignature ----"
       - text: "Create an OmicSignature"
         href: articles/CreateOmS.html
