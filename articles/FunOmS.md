@@ -2,7 +2,7 @@
 
 ``` r
 
-devtools::load_all(".")
+library(OmicSignature)
 ```
 
 ![](figs/OmS_function_2510.png)
