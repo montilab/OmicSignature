@@ -29,8 +29,7 @@ the first factor level and the second factor level against the second factor
 level.
 
 ```{r}
-#library(OmicSignature)
-devtools::load_all()
+library(OmicSignature)
 
 data(compare_signatures_example)
 signature_list <- compare_signatures_example
