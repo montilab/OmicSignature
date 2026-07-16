@@ -17,9 +17,7 @@ level.
 
 ``` r
 
-#library(OmicSignature)
-devtools::load_all()
-#> ℹ Loading OmicSignature
+library(OmicSignature)
 
 data(compare_signatures_example)
 signature_list <- compare_signatures_example

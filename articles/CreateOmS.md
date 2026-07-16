@@ -2,7 +2,7 @@
 
 ``` r
 
-devtools::load_all(".")
+library(OmicSignature)
 library(dplyr)
 ```
 

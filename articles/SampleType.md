@@ -2,10 +2,8 @@
 
 ``` r
 
-devtools::load_all(".")
+library(OmicSignature)
 ```
-
-    ## ℹ Loading OmicSignature
 
 We use BRENDA tissue ontology to indicate the tissue or cell-line of a
 signature. BRENDA tissue ontology version: **10/2021**. The OBO file was
