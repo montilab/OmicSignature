@@ -68,9 +68,11 @@ similarity or p-value-based similarity on a `-log10(p-value)` scale.
 Asymmetric KS and GSEA comparisons can show score or `-log10(p-value)`
 matrices. For these comparisons, `mode = "combined"` draws split cells: the
 top-right triangle shows `level2_vs_level2` and the bottom-left triangle
-shows `level1_vs_level1`. `mode = "separate"`
-draws one full heatmap per level, and `mode = "split"` is invalid. Legends
-for level-specific displays use abbreviated labels such as `"lev1_vs_lev1"`.
+shows `level1_vs_level1`. `mode = "separate"` draws one full heatmap per
+level, each panel titled with an abbreviated label such as
+`"lev1_vs_lev1"`; since both panels use the same color scale, they share a
+single combined legend rather than showing two identical ones.
+`mode = "split"` is invalid for rank-based comparisons.
 }
 \examples{
 data(compare_signatures_example)

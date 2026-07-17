@@ -10,9 +10,11 @@
 #' Asymmetric KS and GSEA comparisons can show score or `-log10(p-value)`
 #' matrices. For these comparisons, `mode = "combined"` draws split cells: the
 #' top-right triangle shows `level2_vs_level2` and the bottom-left triangle
-#' shows `level1_vs_level1`. `mode = "separate"`
-#' draws one full heatmap per level, and `mode = "split"` is invalid. Legends
-#' for level-specific displays use abbreviated labels such as `"lev1_vs_lev1"`.
+#' shows `level1_vs_level1`. `mode = "separate"` draws one full heatmap per
+#' level, each panel titled with an abbreviated label such as
+#' `"lev1_vs_lev1"`; since both panels use the same color scale, they share a
+#' single combined legend rather than showing two identical ones.
+#' `mode = "split"` is invalid for rank-based comparisons.
 #'
 #' @param comparison Output from `compare_omic_signatures()`.
 #' @param measure One of `"jaccard"`, `"score"`, or `"pvalue"`.
@@ -203,10 +205,19 @@ signature_similarity_heatmap <- function(
   custom_heatmap_legends <- list()
 
   if (mode == "separate") {
-    ## Draw one heatmap per comparison level.
+    ## Draw one heatmap per comparison level. Both use the same color scale
+    ## (col_fun), so when there are two levels, share a single legend instead
+    ## of showing an identical one twice.
+    single_legend <- !is.null(sim$negative)
+
     positive_mat <- mask_redundant_triangle(sim$positive)
-    positive_args <- .ssh_set_legend_title(common_args, legend_names[1])
+    positive_args <- common_args
     positive_args$column_title <- legend_names[1]
+    if (single_legend) {
+      positive_args$show_heatmap_legend <- FALSE
+    } else {
+      positive_args <- .ssh_set_legend_title(positive_args, legend_names[1])
+    }
     positive_ht <- do.call(
       ComplexHeatmap::Heatmap,
       c(
@@ -216,12 +227,13 @@ signature_similarity_heatmap <- function(
       )
     )
     ht <- positive_ht
-    if (!is.null(sim$negative)) {
+    if (single_legend) {
       negative_mat <- mask_redundant_triangle(sim$negative)
-      negative_args <- .ssh_set_legend_title(common_args, legend_names[2])
+      negative_args <- common_args
       if (annotation_side == "column") negative_args$top_annotation <- NULL
       if (annotation_side == "row") negative_args$left_annotation <- NULL
       negative_args$column_title <- legend_names[2]
+      negative_args$show_heatmap_legend <- FALSE
       negative_ht <- do.call(
         ComplexHeatmap::Heatmap,
         c(
@@ -231,6 +243,9 @@ signature_similarity_heatmap <- function(
         )
       )
       ht <- positive_ht + negative_ht
+      custom_heatmap_legends <- list(.ssh_color_legend(
+        unlist(sim, use.names = FALSE), col_fun, .ssh_measure_legend_title(measure)
+      ))
     }
   } else if (mode == "split") {
     if (!is_self_similarity) {
@@ -534,8 +549,12 @@ signature_similarity_heatmap <- function(
 .ssh_color_legend <- function(values, col_fun, title) {
   ## Create a ComplexHeatmap color legend for custom-drawn cells.
   at <- .ssh_legend_at(values)
-  mapped_colors <- try(col_fun(at), silent = TRUE)
-  if (inherits(mapped_colors, "try-error") || length(mapped_colors) != length(at)) {
+  ## A continuous legend needs at least two distinct break points; when every
+  ## displayed value ties, ComplexHeatmap::Legend(at = <single value>, ...)
+  ## errors internally. Fall back to a single-swatch discrete legend instead.
+  needs_discrete_legend <- length(at) < 2
+  mapped_colors <- if (needs_discrete_legend) NULL else try(col_fun(at), silent = TRUE)
+  if (needs_discrete_legend || inherits(mapped_colors, "try-error") || length(mapped_colors) != length(at)) {
     mapped_colors <- vapply(at, col_fun, character(1))
     return(ComplexHeatmap::Legend(
       labels = at,
