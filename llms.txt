@@ -13,7 +13,7 @@ Oct 17th 2025
 
 ### Installation
 
-`devtools::install_github(repo = "montilab/OmicSignature")`
+`remotes::install_github(repo = "montilab/OmicSignature")`
 
 ### Description
 
