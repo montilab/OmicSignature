@@ -5,17 +5,21 @@ similarity or p-value-based similarity on a `-log10(p-value)` scale.
 Asymmetric KS and GSEA comparisons can show score or `-log10(p-value)`
 matrices. For these comparisons, `mode = "combined"` draws split cells: the
 top-right triangle shows `level2_vs_level2` and the bottom-left triangle
-shows `level1_vs_level1`. `mode = "separate"`
-draws one full heatmap per level, and `mode = "split"` is invalid. Legends
-for level-specific displays use abbreviated labels such as `"lev1_vs_lev1"`.'><meta property="og:description" content='Plot one or more ComplexHeatmap heatmaps from the object returned by
+shows `level1_vs_level1`. `mode = "separate"` draws one full heatmap per
+level, each panel titled with an abbreviated label such as
+`"lev1_vs_lev1"`; since both panels use the same color scale, they share a
+single combined legend rather than showing two identical ones.
+`mode = "split"` is invalid for rank-based comparisons.'><meta property="og:description" content='Plot one or more ComplexHeatmap heatmaps from the object returned by
 `compare_omic_signatures()`. Overlap comparisons can show Jaccard
 similarity or p-value-based similarity on a `-log10(p-value)` scale.
 Asymmetric KS and GSEA comparisons can show score or `-log10(p-value)`
 matrices. For these comparisons, `mode = "combined"` draws split cells: the
 top-right triangle shows `level2_vs_level2` and the bottom-left triangle
-shows `level1_vs_level1`. `mode = "separate"`
-draws one full heatmap per level, and `mode = "split"` is invalid. Legends
-for level-specific displays use abbreviated labels such as `"lev1_vs_lev1"`.'></head><body>
+shows `level1_vs_level1`. `mode = "separate"` draws one full heatmap per
+level, each panel titled with an abbreviated label such as
+`"lev1_vs_lev1"`; since both panels use the same color scale, they share a
+single combined legend rather than showing two identical ones.
+`mode = "split"` is invalid for rank-based comparisons.'></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
@@ -63,7 +67,7 @@ for level-specific displays use abbreviated labels such as `"lev1_vs_lev1"`.'></
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Plot signature similarity heatmaps</h1>
-      <small class="dont-index">Source: <a href="https://github.com/montilab/OmicSignature/blob/main/R/signature_similarity_heatmap.R" class="external-link"><code>R/signature_similarity_heatmap.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/montilab/OmicSignature/blob/feature/heatmap-shared-legend/R/signature_similarity_heatmap.R" class="external-link"><code>R/signature_similarity_heatmap.R</code></a></small>
       <div class="d-none name"><code>signature_similarity_heatmap.Rd</code></div>
     </div>
 
@@ -74,9 +78,11 @@ similarity or p-value-based similarity on a `-log10(p-value)` scale.
 Asymmetric KS and GSEA comparisons can show score or `-log10(p-value)`
 matrices. For these comparisons, `mode = "combined"` draws split cells: the
 top-right triangle shows `level2_vs_level2` and the bottom-left triangle
-shows `level1_vs_level1`. `mode = "separate"`
-draws one full heatmap per level, and `mode = "split"` is invalid. Legends
-for level-specific displays use abbreviated labels such as `"lev1_vs_lev1"`.</p>
+shows `level1_vs_level1`. `mode = "separate"` draws one full heatmap per
+level, each panel titled with an abbreviated label such as
+`"lev1_vs_lev1"`; since both panels use the same color scale, they share a
+single combined legend rather than showing two identical ones.
+`mode = "split"` is invalid for rank-based comparisons.</p>
     </div>
 
     <div class="section level2">
