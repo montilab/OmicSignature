@@ -289,6 +289,82 @@ test_that("combined heatmap adds abbreviated legends for distinct color scales",
   expect_equal(.legend_titles(legends), c("lev2_vs_lev2", "lev1_vs_lev1"))
 })
 
+test_that("separate mode shares a single legend for overlap comparisons", {
+  skip_if_not_installed("ComplexHeatmap")
+  skip_if_not_installed("circlize")
+
+  jaccard_mat <- matrix(
+    c(1, 0.5, 0.5, 1),
+    nrow = 2,
+    dimnames = list(c("a", "b"), c("a", "b"))
+  )
+  comparison <- list(
+    method = "overlap",
+    comparisons = list(
+      level1_vs_level1 = list(jaccard = jaccard_mat),
+      level2_vs_level2 = list(jaccard = jaccard_mat / 2)
+    )
+  )
+
+  separate_ht <- signature_similarity_heatmap(comparison, measure = "jaccard", mode = "separate", draw = FALSE)
+  legends <- attr(separate_ht, "heatmap_legend_list")
+
+  expect_length(legends, 1)
+  expect_equal(.legend_titles(legends), "jaccard")
+  expect_false(separate_ht@ht_list[[1]]@heatmap_param$show_heatmap_legend)
+  expect_false(separate_ht@ht_list[[2]]@heatmap_param$show_heatmap_legend)
+  ## Column titles still distinguish the two panels.
+  expect_equal(separate_ht@ht_list[[1]]@column_title, "lev1_vs_lev1")
+  expect_equal(separate_ht@ht_list[[2]]@column_title, "lev2_vs_lev2")
+})
+
+test_that("separate mode shares a single legend for rank-based comparisons", {
+  skip_if_not_installed("ComplexHeatmap")
+  skip_if_not_installed("circlize")
+
+  score_level1 <- matrix(
+    c(1, 4, 2, 3),
+    nrow = 2,
+    dimnames = list(c("a", "b"), c("a", "b"))
+  )
+  score_level2 <- matrix(
+    c(-1, -4, -2, -3),
+    nrow = 2,
+    dimnames = list(c("a", "b"), c("a", "b"))
+  )
+  comparison <- list(
+    method = "ks",
+    comparisons = list(
+      level1_vs_level1 = list(score = score_level1, pvalue = abs(score_level1) / 10),
+      level2_vs_level2 = list(score = score_level2, pvalue = abs(score_level2) / 10)
+    )
+  )
+
+  separate_ht <- signature_similarity_heatmap(comparison, measure = "score", mode = "separate", draw = FALSE)
+  legends <- attr(separate_ht, "heatmap_legend_list")
+
+  expect_length(legends, 1)
+  expect_equal(.legend_titles(legends), "score")
+  expect_false(separate_ht@ht_list[[1]]@heatmap_param$show_heatmap_legend)
+  expect_false(separate_ht@ht_list[[2]]@heatmap_param$show_heatmap_legend)
+})
+
+test_that("color legend falls back to a discrete swatch when every value ties", {
+  skip_if_not_installed("ComplexHeatmap")
+  skip_if_not_installed("circlize")
+
+  col_fun <- circlize::colorRamp2(c(0, 1), c("white", "#b2182b"))
+
+  ## Regression test: ComplexHeatmap::Legend(at = <single value>, col_fun = ...)
+  ## errors internally, since a continuous legend needs >= 2 distinct breaks.
+  expect_no_error(
+    legend <- OmicSignature:::.ssh_color_legend(c(5, 5, 5), col_fun, "test")
+  )
+  ## The discrete-swatch fallback (labels + legend_gp) returns ComplexHeatmap's
+  ## "Legends" class, distinct from the continuous at/col_fun "Legend" class.
+  expect_s4_class(legend, "Legends")
+})
+
 test_that("combined triangle cell_fun renders NA halves without calling their color function", {
   skip_if_not_installed("ComplexHeatmap")
   skip_if_not_installed("circlize")
