@@ -2,8 +2,12 @@
 
 ### All vignettes
 
+- [Comparing Mixed Uni- and Bi-directional
+  Signatures](https://montilab.github.io/OmicSignature/articles/CompareMixedDirection.md):
 - [Comparing OmicSignature
   Lists](https://montilab.github.io/OmicSignature/articles/CompareSignatures.md):
+- [Comparing Uni-directional
+  Signatures](https://montilab.github.io/OmicSignature/articles/CompareUnidirectional.md):
 - [Create
   OmicSignature](https://montilab.github.io/OmicSignature/articles/CreateOmS.md):
 - [Create

@@ -23,10 +23,15 @@
   : OmicSignatureCollection R6 object
 - [`compare_label_pairing_example`](https://montilab.github.io/OmicSignature/reference/compare_label_pairing_example.md)
   : Simulated signatures for label-pairing examples
+- [`compare_mixed_direction_example`](https://montilab.github.io/OmicSignature/reference/compare_mixed_direction_example.md)
+  : Simulated signatures mixing bi-directional and uni-directional
+  signatures
 - [`compare_omic_signatures()`](https://montilab.github.io/OmicSignature/reference/compare_omic_signatures.md)
   : Compare OmicSignature objects
 - [`compare_signatures_example`](https://montilab.github.io/OmicSignature/reference/compare_signatures_example.md)
   : Example signatures for comparing OmicSignature lists
+- [`compare_unidirectional_example`](https://montilab.github.io/OmicSignature/reference/compare_unidirectional_example.md)
+  : Simulated signatures with only uni-directional signatures
 - [`createMetadata()`](https://montilab.github.io/OmicSignature/reference/createMetadata.md)
   : template for creating a metadata list for an OmicSignature R6 object
 - [`diffAnalLm()`](https://montilab.github.io/OmicSignature/reference/diffAnalLm.md)

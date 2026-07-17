@@ -21,14 +21,20 @@ rank-position KS, score-distribution KS, or fgsea."></head><body>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/ObjectStructure.html">Structure of OmicSignature &amp; OmicSignatureCollection</a></li>
-    <li><a class="dropdown-item" href="../articles/CompareSignatures.html">Compare Signatures</a></li>
-    <li><h6 class="dropdown-header" data-toc-skip>---- OmicSignature ----</h6></li>
+    <li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>OmicSignature</h6></li>
     <li><a class="dropdown-item" href="../articles/CreateOmS.html">Create an OmicSignature</a></li>
     <li><a class="dropdown-item" href="../articles/FunOmS.html">Functionalities, imports and exports</a></li>
     <li><a class="dropdown-item" href="../articles/SampleType.html">Sample Type &amp; Platform Info</a></li>
-    <li><h6 class="dropdown-header" data-toc-skip>---- OmicSignatureCollection ----</h6></li>
+    <li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>OmicSignatureCollection</h6></li>
     <li><a class="dropdown-item" href="../articles/CreateOmSC.html">Create an OmicSignatureCollection</a></li>
     <li><a class="dropdown-item" href="../articles/FunOmSC.html">Functionalities of OmicSignatureCollection</a></li>
+    <li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Compare Signatures</h6></li>
+    <li><a class="dropdown-item" href="../articles/CompareSignatures.html">Comparing OmicSignature Lists</a></li>
+    <li><a class="dropdown-item" href="../articles/CompareMixedDirection.html">Comparing Mixed Uni- and Bi-directional Signatures</a></li>
+    <li><a class="dropdown-item" href="../articles/CompareUnidirectional.html">Comparing Uni-directional Signatures</a></li>
   </ul></li>
 <li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
@@ -43,7 +49,7 @@ rank-position KS, score-distribution KS, or fgsea."></head><body>
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Compare OmicSignature objects</h1>
-      <small class="dont-index">Source: <a href="https://github.com/montilab/OmicSignature/blob/main/R/compare_omic_signatures.R" class="external-link"><code>R/compare_omic_signatures.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/montilab/OmicSignature/blob/feature/unary-signature-comparison/R/compare_omic_signatures.R" class="external-link"><code>R/compare_omic_signatures.R</code></a></small>
       <div class="d-none name"><code>compare_omic_signatures.Rd</code></div>
     </div>
 
@@ -96,9 +102,12 @@ collection. Names must be unique within the list and must not overlap
 with <code>sig_list1</code>'s names, so that a cross-list comparison can never be
 mistaken for a self-comparison. For <code>method = "ks_rank"</code>,
 <code>method = "ks_score"</code>, and <code>method = "gsea"</code>, <code>sig_list2</code> is the ranking
-side and each element needs a difexp table; elements without one are
-excluded from <code>sig_list2</code> (with a warning) but remain usable as
-<code>sig_list1</code> genesets, which never require difexp.</p></dd>
+side and each element needs to be bi-directional with a difexp table;
+elements that aren't (including uni-directional signatures, which have
+no group_label contrast to rank from) are excluded from <code>sig_list2</code>
+(with a warning) but remain usable as <code>sig_list1</code> genesets, which never
+require difexp or a group_label contrast. If no element of <code>sig_list2</code>
+can rank, this errors instead.</p></dd>
 
 
 <dt id="arg-method">method<a class="anchor" aria-label="anchor" href="#arg-method"></a></dt>
@@ -221,16 +230,35 @@ the most significant contrast-label features at the bottom. `ks_rank`
 compares the positions of each retained feature set within this ranked
 vector. `ks_score` compares the numeric ranking scores for retained
 features against the remaining features with a two-sample KS test.</p>
+<p>Uni-directional signatures (no `group_label` contrast) are compared as a
+single, whole feature set rather than split by level. If every signature
+in both `sig_list1` and `sig_list2` is uni-directional, `method =
+"overlap"` returns one flat comparison instead of the
+`level1_vs_level1`/`level2_vs_level2` structure (see the Value section
+below). If the signatures being compared are a mix of uni- and
+bi-directional, each uni-directional signature's single feature set is
+compared against both levels of every bi-directional signature. For
+`method = "ks_rank"`, `method = "ks_score"`, and `method = "gsea"`, a
+uni-directional signature can only ever be a geneset (`sig_list1`),
+never a ranking (`sig_list2`), since ranking requires a two-group
+contrast; if `sig_list2` contains no bi-directional signature with a
+difexp table (e.g. it is entirely uni-directional), the comparison is
+not possible and this errors.</p>
     </div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>A list with one element per label pairing. For `method = "overlap"`
-each element contains `jaccard`, `pvalue`, and `counts` matrices. `counts`
+    <p>A list with one element per label pairing, except when every
+signature in both `sig_list1` and `sig_list2` is uni-directional and
+`method = "overlap"`, in which case `comparisons` directly contains
+`jaccard`, `pvalue`, and `counts` (no `level1_vs_level1` nesting, and
+`label_order` is `NULL`). Otherwise, for `method = "overlap"` each
+element contains `jaccard`, `pvalue`, and `counts` matrices. `counts`
 entries are formatted as `"ov | n1 | n2"`. For `method = "ks_rank"`,
 `method = "ks_score"`, `method = "ks"`, and
 `method = "gsea"` each element contains `score` and `pvalue` matrices;
-columns for `sig_list2` signatures without a difexp table are entirely
-`NA`, since those signatures cannot serve as the ranking side.</p>
+columns for `sig_list2` signatures without a difexp table, or that are
+uni-directional, are entirely `NA`, since those signatures cannot serve
+as the ranking side.</p>
     </div>
 
     <div class="section level2">

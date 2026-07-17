@@ -1,7 +1,9 @@
 <urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
 <url><loc>https://montilab.github.io/OmicSignature/404.html</loc></url>
 <url><loc>https://montilab.github.io/OmicSignature/LICENSE-text.html</loc></url>
+<url><loc>https://montilab.github.io/OmicSignature/articles/CompareMixedDirection.html</loc></url>
 <url><loc>https://montilab.github.io/OmicSignature/articles/CompareSignatures.html</loc></url>
+<url><loc>https://montilab.github.io/OmicSignature/articles/CompareUnidirectional.html</loc></url>
 <url><loc>https://montilab.github.io/OmicSignature/articles/CreateOmS.html</loc></url>
 <url><loc>https://montilab.github.io/OmicSignature/articles/CreateOmSC.html</loc></url>
 <url><loc>https://montilab.github.io/OmicSignature/articles/FunOmS.html</loc></url>
@@ -21,8 +23,10 @@
 <url><loc>https://montilab.github.io/OmicSignature/reference/OmicSignature.html</loc></url>
 <url><loc>https://montilab.github.io/OmicSignature/reference/OmicSignatureCollection.html</loc></url>
 <url><loc>https://montilab.github.io/OmicSignature/reference/compare_label_pairing_example.html</loc></url>
+<url><loc>https://montilab.github.io/OmicSignature/reference/compare_mixed_direction_example.html</loc></url>
 <url><loc>https://montilab.github.io/OmicSignature/reference/compare_omic_signatures.html</loc></url>
 <url><loc>https://montilab.github.io/OmicSignature/reference/compare_signatures_example.html</loc></url>
+<url><loc>https://montilab.github.io/OmicSignature/reference/compare_unidirectional_example.html</loc></url>
 <url><loc>https://montilab.github.io/OmicSignature/reference/createMetadata.html</loc></url>
 <url><loc>https://montilab.github.io/OmicSignature/reference/diffAnalLm.html</loc></url>
 <url><loc>https://montilab.github.io/OmicSignature/reference/index.html</loc></url>
