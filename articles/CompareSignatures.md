@@ -49,16 +49,12 @@ overlap_res$comparisons$level1_vs_level1$jaccard
 #> icg001_hsc3   0.4600457   0.2141944   1.0000000    0.2384770
 #> icg001_cal27  0.2535613   0.2862150   0.2384770    1.0000000
 overlap_res$comparisons$level1_vs_level1$counts
-#>              e7386_hsc3           e7386_cal27        icg001_hsc3         
-#> e7386_hsc3   "1232 | 1232 | 1232" "419 | 1232 | 573" "806 | 1232 | 1326" 
-#> e7386_cal27  "419 | 1232 | 573"   "573 | 573 | 573"  "335 | 573 | 1326"  
-#> icg001_hsc3  "806 | 1232 | 1326"  "335 | 573 | 1326" "1326 | 1326 | 1326"
-#> icg001_cal27 "356 | 1232 | 528"   "245 | 573 | 528"  "357 | 1326 | 528"  
-#>              icg001_cal27      
-#> e7386_hsc3   "356 | 1232 | 528"
-#> e7386_cal27  "245 | 573 | 528" 
-#> icg001_hsc3  "357 | 1326 | 528"
-#> icg001_cal27 "528 | 528 | 528"
+#>              e7386_hsc3 e7386_cal27 icg001_hsc3 icg001_cal27 size
+#> e7386_hsc3         1232         419         806          356 1232
+#> e7386_cal27         419         573         335          245  573
+#> icg001_hsc3         806         335        1326          357 1326
+#> icg001_cal27        356         245         357          528  528
+#> size               1232         573        1326          528   NA
 ```
 
 The overlap method returns three matrices for each compared factor
@@ -66,8 +62,12 @@ level:
 
 - `jaccard`: Jaccard similarity between retained feature sets.
 - `pvalue`: Fisher exact test p-values for overlap enrichment.
-- `counts`: overlap size, first signature size, and second signature
-  size, formatted as `overlap | n1 | n2`.
+- `counts`: an integer matrix with an extra final `size` row and column
+  beyond `jaccard`/`pvalue`’s dimensions. Entry `[i, j]` is the overlap
+  size between signature `i` and signature `j`; the extra `size` column
+  reports each row signature’s own retained feature-set size, the extra
+  `size` row reports each column signature’s, and the corner entry is
+  `NA`.
 
 ## Compare two lists of signatures
 

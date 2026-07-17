@@ -73,7 +73,7 @@
       <h1>Comparing OmicSignature Lists</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/montilab/OmicSignature/blob/main/vignettes/CompareSignatures.Rmd" class="external-link"><code>vignettes/CompareSignatures.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/montilab/OmicSignature/blob/feature/counts-matrix-with-sizes/vignettes/CompareSignatures.Rmd" class="external-link"><code>vignettes/CompareSignatures.Rmd</code></a></small>
       <div class="d-none name"><code>CompareSignatures.Rmd</code></div>
     </div>
 
@@ -125,16 +125,12 @@ and the second factor level against the second factor level.</p>
 <span><span class="co">#&gt; icg001_hsc3   0.4600457   0.2141944   1.0000000    0.2384770</span></span>
 <span><span class="co">#&gt; icg001_cal27  0.2535613   0.2862150   0.2384770    1.0000000</span></span>
 <span><span class="va">overlap_res</span><span class="op">$</span><span class="va">comparisons</span><span class="op">$</span><span class="va">level1_vs_level1</span><span class="op">$</span><span class="va">counts</span></span>
-<span><span class="co">#&gt;              e7386_hsc3           e7386_cal27        icg001_hsc3         </span></span>
-<span><span class="co">#&gt; e7386_hsc3   "1232 | 1232 | 1232" "419 | 1232 | 573" "806 | 1232 | 1326" </span></span>
-<span><span class="co">#&gt; e7386_cal27  "419 | 1232 | 573"   "573 | 573 | 573"  "335 | 573 | 1326"  </span></span>
-<span><span class="co">#&gt; icg001_hsc3  "806 | 1232 | 1326"  "335 | 573 | 1326" "1326 | 1326 | 1326"</span></span>
-<span><span class="co">#&gt; icg001_cal27 "356 | 1232 | 528"   "245 | 573 | 528"  "357 | 1326 | 528"  </span></span>
-<span><span class="co">#&gt;              icg001_cal27      </span></span>
-<span><span class="co">#&gt; e7386_hsc3   "356 | 1232 | 528"</span></span>
-<span><span class="co">#&gt; e7386_cal27  "245 | 573 | 528" </span></span>
-<span><span class="co">#&gt; icg001_hsc3  "357 | 1326 | 528"</span></span>
-<span><span class="co">#&gt; icg001_cal27 "528 | 528 | 528"</span></span></code></pre></div>
+<span><span class="co">#&gt;              e7386_hsc3 e7386_cal27 icg001_hsc3 icg001_cal27 size</span></span>
+<span><span class="co">#&gt; e7386_hsc3         1232         419         806          356 1232</span></span>
+<span><span class="co">#&gt; e7386_cal27         419         573         335          245  573</span></span>
+<span><span class="co">#&gt; icg001_hsc3         806         335        1326          357 1326</span></span>
+<span><span class="co">#&gt; icg001_cal27        356         245         357          528  528</span></span>
+<span><span class="co">#&gt; size               1232         573        1326          528   NA</span></span></code></pre></div>
 <p>The overlap method returns three matrices for each compared factor
 level:</p>
 <ul>
@@ -145,8 +141,14 @@ sets.</li>
 <code>pvalue</code>: Fisher exact test p-values for overlap
 enrichment.</li>
 <li>
-<code>counts</code>: overlap size, first signature size, and second
-signature size, formatted as <code>overlap | n1 | n2</code>.</li>
+<code>counts</code>: an integer matrix with an extra final
+<code>size</code> row and column beyond
+<code>jaccard</code>/<code>pvalue</code>’s dimensions. Entry
+<code>[i, j]</code> is the overlap size between signature <code>i</code>
+and signature <code>j</code>; the extra <code>size</code> column reports
+each row signature’s own retained feature-set size, the extra
+<code>size</code> row reports each column signature’s, and the corner
+entry is <code>NA</code>.</li>
 </ul>
 </div>
 <div class="section level2">

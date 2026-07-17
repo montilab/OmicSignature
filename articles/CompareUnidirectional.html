@@ -73,7 +73,7 @@
       <h1>Comparing Uni-directional Signatures</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/montilab/OmicSignature/blob/main/vignettes/CompareUnidirectional.Rmd" class="external-link"><code>vignettes/CompareUnidirectional.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/montilab/OmicSignature/blob/feature/counts-matrix-with-sizes/vignettes/CompareUnidirectional.Rmd" class="external-link"><code>vignettes/CompareUnidirectional.Rmd</code></a></small>
       <div class="d-none name"><code>CompareUnidirectional.Rmd</code></div>
     </div>
 
@@ -134,10 +134,11 @@ instead: <code>comparisons</code> directly holds <code>jaccard</code>,
 <span><span class="co">#&gt; uni_y 0.3333333 1.0000000     0</span></span>
 <span><span class="co">#&gt; uni_z 0.0000000 0.0000000     1</span></span>
 <span><span class="va">uni_res</span><span class="op">$</span><span class="va">comparisons</span><span class="op">$</span><span class="va">counts</span></span>
-<span><span class="co">#&gt;       uni_x          uni_y          uni_z         </span></span>
-<span><span class="co">#&gt; uni_x "10 | 10 | 10" "5 | 10 | 10"  "0 | 10 | 10" </span></span>
-<span><span class="co">#&gt; uni_y "5 | 10 | 10"  "10 | 10 | 10" "0 | 10 | 10" </span></span>
-<span><span class="co">#&gt; uni_z "0 | 10 | 10"  "0 | 10 | 10"  "10 | 10 | 10"</span></span></code></pre></div>
+<span><span class="co">#&gt;       uni_x uni_y uni_z size</span></span>
+<span><span class="co">#&gt; uni_x    10     5     0   10</span></span>
+<span><span class="co">#&gt; uni_y     5    10     0   10</span></span>
+<span><span class="co">#&gt; uni_z     0     0    10   10</span></span>
+<span><span class="co">#&gt; size     10    10    10   NA</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="ks-and-gsea-are-not-possible-without-a-ranking">KS and GSEA are not possible without a ranking<a class="anchor" aria-label="anchor" href="#ks-and-gsea-are-not-possible-without-a-ranking"></a>
