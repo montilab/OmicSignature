@@ -1,0 +1,72 @@
+---
+title: "Comparing Uni-directional Signatures"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Comparing Uni-directional Signatures}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  eval = TRUE
+)
+```
+
+This vignette demonstrates `compare_omic_signatures()` when every signature
+being compared is uni-directional: a single feature set, with no `group_label`
+contrast at all. See `vignette("CompareSignatures")` for the general
+bi-directional workflow, and `vignette("CompareMixedDirection")` for a list
+that mixes uni- and bi-directional signatures.
+
+## The example data
+
+`compare_unidirectional_example` contains three simulated uni-directional
+signatures sharing a 100-gene universe. `uni_x` and `uni_y` share 5 of their
+10 features each; `uni_z` shares nothing with either.
+
+```{r}
+library(OmicSignature)
+
+data(compare_unidirectional_example)
+
+## direction_type per signature
+sapply(compare_unidirectional_example, \(x) x$metadata$direction_type)
+```
+
+## Overlap: a flat comparison, with no level structure
+
+Bi-directional signatures are compared level by level (`level1_vs_level1`,
+`level2_vs_level2`, ...), since `group_label` gives each one two feature sets
+to pair up. Uni-directional signatures have no such pairing to make, so when
+*every* signature in both `sig_list1` and `sig_list2` is uni-directional,
+`compare_omic_signatures()` returns one flat comparison instead: `comparisons`
+directly holds `jaccard`, `pvalue`, and `counts`, and `label_order` is `NULL`.
+
+```{r}
+uni_res <- compare_omic_signatures(
+  sig_list1 = compare_unidirectional_example,
+  method = "overlap",
+  min_features = 3
+)
+
+names(uni_res$comparisons)
+uni_res$label_order
+
+uni_res$comparisons$jaccard
+uni_res$comparisons$counts
+```
+
+## KS and GSEA are not possible without a ranking
+
+`ks_rank`, `ks_score`, and `gsea` need a two-group contrast to build a ranked
+vector to test against, which no uni-directional signature can provide. If
+none of `sig_list2` is bi-directional with a `difexp` table,
+`compare_omic_signatures()` cannot construct a ranking side at all, and
+errors accordingly:
+
+```{r, error = TRUE}
+compare_omic_signatures(compare_unidirectional_example, method = "ks_rank")
+```

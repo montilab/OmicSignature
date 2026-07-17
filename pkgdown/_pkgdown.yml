@@ -15,20 +15,28 @@ navbar:
       menu:
       - text: "Structure of OmicSignature & OmicSignatureCollection"
         href: articles/ObjectStructure.html
-      - text: "Compare Signatures"
-        href: articles/CompareSignatures.html
-      - text: "---- OmicSignature ----"
+      - text: -------
+      - text: "OmicSignature"
       - text: "Create an OmicSignature"
         href: articles/CreateOmS.html
       - text: "Functionalities, imports and exports"
         href: articles/FunOmS.html
       - text: "Sample Type & Platform Info"
         href: articles/SampleType.html
-      - text: "---- OmicSignatureCollection ----"
+      - text: -------
+      - text: "OmicSignatureCollection"
       - text: "Create an OmicSignatureCollection"
         href: articles/CreateOmSC.html
       - text: "Functionalities of OmicSignatureCollection"
         href: articles/FunOmSC.html
+      - text: -------
+      - text: "Compare Signatures"
+      - text: "Comparing OmicSignature Lists"
+        href: articles/CompareSignatures.html
+      - text: "Comparing Mixed Uni- and Bi-directional Signatures"
+        href: articles/CompareMixedDirection.html
+      - text: "Comparing Uni-directional Signatures"
+        href: articles/CompareUnidirectional.html
     - text: "Reference"
       href: reference/index.html
   right:
