@@ -59,11 +59,25 @@ feature_union <- compare_signatures_example |>
   unlist(use.names = FALSE) |>
   unique()
 
+## e7386_* and icg001_* signatures store group_label in different, and
+## sometimes reversed, factor-level orders (DMSO/E7386 vs ICG001/DMSO). Left
+## as-is, that made positional level-pairing in compare_omic_signatures()
+## silently compare mismatched conditions (e.g. DMSO against ICG001) unless
+## callers passed explicit label_pairing. Relevel every signature/difexp
+## table so DMSO (control) is always level 1 and the drug is always level 2.
 compare_signatures_example <- lapply(compare_signatures_example, \(sig) {
-  sig_filtered <- sig$clone()
-  sig_filtered$difexp <- sig_filtered$difexp |>
-    dplyr::filter(feature_name %in% feature_union)
-  sig_filtered
+  treated_label <- setdiff(levels(sig$difexp$group_label), "DMSO")
+  stopifnot(length(treated_label) == 1)
+  canonical_levels <- c("DMSO", treated_label)
+
+  difexp <- sig$difexp |>
+    dplyr::filter(feature_name %in% feature_union) |>
+    dplyr::mutate(group_label = factor(as.character(group_label), levels = canonical_levels))
+
+  signature <- sig$signature |>
+    dplyr::mutate(group_label = factor(as.character(group_label), levels = canonical_levels))
+
+  OmicSignature$new(metadata = sig$metadata, signature = signature, difexp = difexp)
 })
 
 save(

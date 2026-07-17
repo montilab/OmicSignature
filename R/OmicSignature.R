@@ -157,7 +157,7 @@ OmicSignature <-
         if (missing(value)) {
           private$.metadata
         } else {
-          private$.metadata <- private$checkMetadata(value, print_message)
+          private$.metadata <- private$checkMetadata(value, v = print_message)
         }
       },
       #' @field signature a dataframe contains probe_id, feature_name, score (optional) and group_label (optional)
@@ -165,7 +165,9 @@ OmicSignature <-
         if (missing(value)) {
           private$.signature
         } else {
-          private$.signature <- private$checkSignature(value, print_message)
+          private$.signature <- private$checkSignature(
+            value, signatureType = private$.metadata$direction_type, v = print_message
+          )
         }
       },
       #' @field difexp a dataframe for differential expression result
@@ -173,7 +175,9 @@ OmicSignature <-
         if (missing(value)) {
           private$.difexp
         } else {
-          private$.difexp <- private$checkDifexp(value, print_message)
+          private$.difexp <- private$checkDifexp(
+            value, signatureType = private$.metadata$direction_type, v = print_message
+          )
         }
       },
       #' @field removeDifexp a function to remove difexp from the object
@@ -308,7 +312,7 @@ OmicSignature <-
 
         # check covariates
         if (!is.null(metadata$covariates)) {
-          if (!is.na(metadata$covariates)) {
+          if (!all(is.na(metadata$covariates))) {
             stopifnot(is.character(metadata$covariates))
             metadata$covariates <- paste(metadata$covariates, collapse = ", ")
           }
@@ -316,7 +320,7 @@ OmicSignature <-
 
         # check keywords
         if (!is.null(metadata$keywords)) {
-          if (!is.na(metadata$keywords)) {
+          if (!all(is.na(metadata$keywords))) {
             stopifnot(is.character(metadata$keywords))
             metadata$keywords <- paste(metadata$keywords, collapse = ", ")
           }

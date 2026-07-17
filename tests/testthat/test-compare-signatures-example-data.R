@@ -22,10 +22,16 @@ test_that("compare_signatures_example supports overlap examples", {
 test_that("compare_signatures_example has strong KS self-similarity", {
   data(compare_signatures_example)
 
-  res <- compare_omic_signatures(
-    compare_signatures_example,
-    method = "ks",
-    adj_p_cutoff = 0.01
+  ## e7386_* and icg001_* signatures store their group_label levels in
+  ## different orders, which triggers the label-order consistency warning;
+  ## irrelevant here since only self-comparisons (the diagonal) are checked.
+  withCallingHandlers(
+    res <- compare_omic_signatures(
+      compare_signatures_example,
+      method = "ks",
+      adj_p_cutoff = 0.01
+    ),
+    cos_label_order_mismatch = function(w) invokeRestart("muffleWarning")
   )
 
   level1 <- res$comparisons$level1_vs_level1

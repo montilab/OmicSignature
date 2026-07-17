@@ -73,9 +73,13 @@ label_features <- list(
     treated = paste0("gene_", sprintf("%03d", 1:10)),
     control = paste0("gene_", sprintf("%03d", 31:40))
   ),
+  ## Stored with "down" as level1 and "up" as level2, unlike signature_a
+  ## (treated, control) and signature_c (resistant, sensitive), so the
+  ## example genuinely needs label_pairing rather than happening to work
+  ## via positional level1-vs-level1/level2-vs-level2 pairing.
   signature_b = list(
-    up = c(paste0("gene_", sprintf("%03d", 1:8)), "gene_021", "gene_022"),
-    down = c(paste0("gene_", sprintf("%03d", 31:38)), "gene_051", "gene_052")
+    down = c(paste0("gene_", sprintf("%03d", 31:38)), "gene_051", "gene_052"),
+    up = c(paste0("gene_", sprintf("%03d", 1:8)), "gene_021", "gene_022")
   ),
   signature_c = list(
     resistant = c(paste0("gene_", sprintf("%03d", 1:5)), paste0("gene_", sprintf("%03d", 61:65))),
