@@ -343,9 +343,12 @@ overlap enrichment.</p>
 <p>Rank-based KS and GSEA outputs can be visualized with
 <code>measure = "score"</code> or <code>measure = "pvalue"</code>.
 Because these matrices are directional rather than symmetric,
-<code>mode = "combined"</code> draws only the upper triangle and splits
-each cell between the two label levels. <code>mode = "separate"</code>
-draws one full heatmap for each label level.</p>
+<code>mode = "combined"</code> draws the full square matrix (not just
+one triangle), splitting each cell into two triangles that superimpose
+the two <code>mode = "separate"</code> matrices: the bottom-left
+triangle shows <code>level1_vs_level1</code> and the top-right triangle
+shows <code>level2_vs_level2</code>. <code>mode = "separate"</code>
+draws those same two matrices as separate, full heatmaps instead.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/signature_similarity_heatmap.html">signature_similarity_heatmap</a></span><span class="op">(</span></span>
 <span>  <span class="va">ks_res</span>,</span>
