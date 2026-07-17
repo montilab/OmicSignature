@@ -40,10 +40,13 @@ overlap_res <- compare_omic_signatures(
   score_cutoff = log2(1.25),
   adj_p_cutoff = 0.05,
   min_features = 25,
-  max_feature = 500
+  max_feature = 2000
 )
-
+## show the label order
+overlap_res$label_order
+## list the comparisons being performed
 names(overlap_res$comparisons)
+## show the comparison results for level 1 (jaccard and counts)
 overlap_res$comparisons$level1_vs_level1$jaccard
 overlap_res$comparisons$level1_vs_level1$counts
 ```
@@ -91,6 +94,12 @@ need explicit matching.
 ```{r}
 data(compare_label_pairing_example)
 
+## let's see the order of the signatures' group_label's
+compare_label_pairing_example |>
+  sapply(\(x) levels(x$difexp$group_label)) |> t() |>
+  as.data.frame() |> setNames(c("level1", "level2"))
+
+## compare signatures and provide the desired label pairing
 paired_res <- compare_omic_signatures(
   sig_list1 = compare_label_pairing_example,
   method = "overlap",
@@ -100,7 +109,6 @@ paired_res <- compare_omic_signatures(
     signature_c = c("resistant", "sensitive")
   )
 )
-
 paired_res$comparisons$level1_vs_level1$jaccard
 paired_res$comparisons$level2_vs_level2$jaccard
 ```

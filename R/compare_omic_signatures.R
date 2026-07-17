@@ -37,9 +37,16 @@
 #' @param max_feature Maximum number of features retained per label-specific
 #'   signature.
 #' @param label_pairing Optional named list giving the two group-label levels
-#'   to use for each signature in `sig_list1`.
+#'   to use for each signature in `sig_list1`. Signatures not named in
+#'   `label_pairing` fall back to their own `group_label` factor-level order;
+#'   if two or more of those signatures disagree on that order (e.g. one
+#'   signature's factor levels are `c("control", "treated")` and another's are
+#'   `c("treated", "control")`), a warning is issued, since `level1_vs_level1`/
+#'   `level2_vs_level2` pairing is purely positional and may then compare
+#'   mismatched conditions across signatures.
 #' @param label_pairing2 Optional named list giving the two group-label levels
-#'   to use for each signature in `sig_list2`.
+#'   to use for each signature in `sig_list2`. Same fallback and warning
+#'   behavior as `label_pairing`.
 #' @param feature_col Column containing feature identifiers.
 #' @param score_col Column containing scores in signature and difexp tables.
 #' @param adj_p_col Column containing adjusted p-values in difexp tables.
@@ -171,7 +178,12 @@ compare_omic_signatures <- function(
     label_pairing2 <- label_pairing
   }
   label_order1 <- .cos_signature_label_order(sig_list1, group_col, label_pairing, "label_pairing")
-  label_order2 <- .cos_signature_label_order(sig_list2, group_col, label_pairing2, "label_pairing2")
+  label_order2 <- .cos_signature_label_order(
+    sig_list2, group_col, label_pairing2, "label_pairing2",
+    ## Self-comparisons re-run this over the same sig_list1/label_pairing;
+    ## label_order1 already warned about any mismatch, so don't do it twice.
+    warn_on_mismatch = !(compare_self && identical(label_pairing, label_pairing2))
+  )
   if (ncol(label_order1) != ncol(label_order2)) {
     stop("sig_list1 and sig_list2 label pairings must have the same length.")
   }
@@ -519,7 +531,8 @@ compare_omic_signatures <- function(
   as.character(nm)[1]
 }
 
-.cos_signature_label_order <- function(sig_list, group_col, label_pairing, arg_name) {
+.cos_signature_label_order <- function(sig_list, group_col, label_pairing, arg_name,
+                                        warn_on_mismatch = TRUE) {
   ## Use user-specified label pairings where supplied, otherwise factor levels.
   if (!is.null(label_pairing)) {
     if (!is.list(label_pairing) || is.null(names(label_pairing)) || any(names(label_pairing) == "")) {
@@ -530,6 +543,8 @@ compare_omic_signatures <- function(
       stop(arg_name, " contains names not found in the signature list: ", paste(unknown, collapse = ", "))
     }
   }
+
+  auto_paired <- stats::setNames(logical(length(sig_list)), names(sig_list))
 
   label_order <- lapply(names(sig_list), function(sig_name) {
     sig <- sig_list[[sig_name]]
@@ -544,6 +559,8 @@ compare_omic_signatures <- function(
         stop(arg_name, "[['", sig_name, "']] contains labels not found in ", sig_name, ": ",
              paste(setdiff(levels, available), collapse = ", "))
       }
+    } else {
+      auto_paired[[sig_name]] <<- TRUE
     }
     levels
   })
@@ -551,6 +568,43 @@ compare_omic_signatures <- function(
   label_order <- do.call(rbind, label_order)
   rownames(label_order) <- names(sig_list)
   colnames(label_order) <- paste0("level", seq_len(ncol(label_order)))
+
+  ## Signatures whose order wasn't pinned by the caller are paired purely by
+  ## factor-level position. Different signatures using different label
+  ## vocabularies (e.g. different drug names) in the same position is
+  ## expected and fine; the real hazard is a label that switches position
+  ## across signatures (e.g. "DMSO" is level1 for one signature but level2
+  ## for another), since that silently compares mismatched conditions.
+  if (warn_on_mismatch && sum(auto_paired) > 1) {
+    auto_order <- label_order[auto_paired, , drop = FALSE]
+    label_positions <- list()
+    for (pos in seq_len(ncol(auto_order))) {
+      for (lbl in unique(auto_order[, pos])) {
+        label_positions[[lbl]] <- union(label_positions[[lbl]], pos)
+      }
+    }
+    conflicting_labels <- names(label_positions)[lengths(label_positions) > 1]
+    if (length(conflicting_labels) > 0) {
+      conflicting_rows <- rownames(auto_order)[
+        apply(auto_order, 1, function(r) any(r %in% conflicting_labels))
+      ]
+      msg <- paste0(
+        arg_name, ": label(s) ", paste(sprintf("'%s'", conflicting_labels), collapse = ", "),
+        " appear at different '", group_col, "' level positions across signatures, so ",
+        "level-position pairing (level1 vs level1, level2 vs level2, ...) may not align ",
+        "matching conditions across signatures:\n",
+        paste(sprintf("  %s: %s", conflicting_rows,
+                       apply(auto_order[conflicting_rows, , drop = FALSE], 1, paste, collapse = " vs ")),
+              collapse = "\n"),
+        "\nSupply ", arg_name, " to pin explicit level pairings if these should be compared."
+      )
+      warning(structure(
+        class = c("cos_label_order_mismatch", "warning", "condition"),
+        list(message = msg, call = NULL)
+      ))
+    }
+  }
+
   label_order
 }
 

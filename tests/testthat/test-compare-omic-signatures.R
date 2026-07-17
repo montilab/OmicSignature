@@ -293,6 +293,56 @@ test_that("comparison rejects duplicate or overlapping signature names", {
   )
 })
 
+test_that("compare_omic_signatures warns when signatures disagree on group_label level order", {
+  sig_a <- make_test_signature(
+    "sig_a",
+    positive_features = c("A", "B", "C", "D"), negative_features = c("W", "X", "Y", "Z"),
+    positive_scores = c(4, 3, 2, 1), negative_scores = c(-4, -3, -2, -1)
+  )
+
+  ## Same shape as make_test_signature(), but with group_label levels stored
+  ## in reversed order ("down", "up" instead of "up", "down") so it disagrees
+  ## with sig_a.
+  group_label <- factor(c(rep("up", 4), rep("down", 4)), levels = c("down", "up"))
+  difexp_b <- data.frame(
+    probe_id = paste0("probe_", seq_along(group_label)),
+    feature_name = c("B", "C", "E", "F", "X", "Y", "M", "N"),
+    score = c(3.5, 2.5, 1.5, 0.5, -3.5, -2.5, -1.5, -0.5),
+    p_value = 10^-abs(c(3.5, 2.5, 1.5, 0.5, -3.5, -2.5, -1.5, -0.5)),
+    adj_p = rep(0.01, 8),
+    group_label = group_label,
+    stringsAsFactors = FALSE
+  )
+  metadata_b <- list(
+    signature_name = "sig_b", phenotype = "test",
+    organism = predefined_organisms[1], direction_type = "bi-directional",
+    assay_type = predefined_assaytypes[1]
+  )
+  capture.output(
+    sig_b <- OmicSignature$new(
+      metadata = metadata_b,
+      signature = difexp_b[, c("probe_id", "feature_name", "score", "group_label")],
+      difexp = difexp_b
+    )
+  )
+  sigs <- list(sig_a = sig_a, sig_b = sig_b)
+
+  expect_warning(
+    compare_omic_signatures(sigs, method = "overlap", min_features = 3, max_feature = 4),
+    class = "cos_label_order_mismatch"
+  )
+
+  ## Pinning an explicit pairing for sig_b leaves only one auto-paired
+  ## signature, so there's nothing left to disagree with.
+  expect_warning(
+    compare_omic_signatures(
+      sigs, method = "overlap", min_features = 3, max_feature = 4,
+      label_pairing = list(sig_b = c("up", "down"))
+    ),
+    regexp = NA
+  )
+})
+
 test_that("KS/GSEA can't rank a signature without difexp, but it can still be a geneset", {
   sig_full <- make_test_signature(
     "sig_full",
@@ -321,13 +371,19 @@ test_that("KS/GSEA can't rank a signature without difexp, but it can still be a 
 
   ## adj_p is well within the default cutoff, so this only warns about
   ## sig_thin being excluded from the ranking side, not about a missing
-  ## adj_p column (a separate, unrelated warning path).
-  expect_warning(
-    res <- compare_omic_signatures(
-      list(sig_full = sig_full, sig_thin = sig_thin),
-      method = "ks_rank", min_features = 3, max_feature = 4
+  ## adj_p column (a separate, unrelated warning path). sig_thin (no difexp,
+  ## so its signature-derived level order applies) and sig_full (difexp
+  ## present) also happen to disagree on group_label level order, which
+  ## triggers the unrelated label-order-mismatch warning; muffle just that.
+  withCallingHandlers(
+    expect_warning(
+      res <- compare_omic_signatures(
+        list(sig_full = sig_full, sig_thin = sig_thin),
+        method = "ks_rank", min_features = 3, max_feature = 4
+      ),
+      "sig_thin"
     ),
-    "sig_thin"
+    cos_label_order_mismatch = function(w) invokeRestart("muffleWarning")
   )
   score <- res$comparisons$level1_vs_level1$score
 
