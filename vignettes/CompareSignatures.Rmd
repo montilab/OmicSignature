@@ -55,8 +55,11 @@ The overlap method returns three matrices for each compared factor level:
 
 * `jaccard`: Jaccard similarity between retained feature sets.
 * `pvalue`: Fisher exact test p-values for overlap enrichment.
-* `counts`: overlap size, first signature size, and second signature size,
-  formatted as `overlap | n1 | n2`.
+* `counts`: an integer matrix with an extra final `size` row and column
+  beyond `jaccard`/`pvalue`'s dimensions. Entry `[i, j]` is the overlap size
+  between signature `i` and signature `j`; the extra `size` column reports
+  each row signature's own retained feature-set size, the extra `size` row
+  reports each column signature's, and the corner entry is `NA`.
 
 ## Compare two lists of signatures
 

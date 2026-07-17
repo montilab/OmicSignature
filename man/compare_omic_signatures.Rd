@@ -145,8 +145,13 @@ signature in both `sig_list1` and `sig_list2` is uni-directional and
 `method = "overlap"`, in which case `comparisons` directly contains
 `jaccard`, `pvalue`, and `counts` (no `level1_vs_level1` nesting, and
 `label_order` is `NULL`). Otherwise, for `method = "overlap"` each
-element contains `jaccard`, `pvalue`, and `counts` matrices. `counts`
-entries are formatted as `"ov | n1 | n2"`. For `method = "ks_rank"`,
+element contains `jaccard`, `pvalue`, and `counts` matrices. `counts` is
+an integer matrix with one extra final `"size"` row and column beyond
+`jaccard`/`pvalue`'s dimensions: entry `[i, j]` is the overlap size
+between signature `i` and signature `j`, the extra `"size"` column
+reports each row signature's own retained feature-set size, the extra
+`"size"` row reports each column signature's, and the corner entry is
+`NA`. For `method = "ks_rank"`,
 `method = "ks_score"`, `method = "ks"`, and
 `method = "gsea"` each element contains `score` and `pvalue` matrices;
 columns for `sig_list2` signatures without a difexp table, or that are
