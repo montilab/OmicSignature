@@ -394,6 +394,90 @@ test_that("KS/GSEA can't rank a signature without difexp, but it can still be a 
 
   expect_error(
     compare_omic_signatures(list(sig_thin = sig_thin), method = "gsea"),
-    "No signatures in sig_list2 have a difexp table"
+    "No signatures in sig_list2 are bi-directional with a difexp table"
+  )
+})
+
+test_that("overlap comparison of all uni-directional signatures drops the level structure", {
+  uni_a <- make_uni_test_signature("uni_a", features = c("A", "B", "C", "D", "E"), scores = c(5, 4, 3, 2, 1))
+  uni_b <- make_uni_test_signature("uni_b", features = c("C", "D", "E", "F", "G"), scores = c(5, 4, 3, 2, 1))
+
+  res <- compare_omic_signatures(
+    list(uni_a = uni_a, uni_b = uni_b),
+    method = "overlap", min_features = 3, max_feature = 10
+  )
+
+  expect_named(res$comparisons, c("jaccard", "pvalue", "counts"))
+  expect_null(res$label_order)
+  expect_equal(res$comparisons$jaccard["uni_a", "uni_b"], 3 / 7)
+  expect_equal(res$comparisons$counts["uni_a", "uni_b"], "3 | 5 | 5")
+})
+
+test_that("overlap comparison compares a uni-directional signature against both levels of a bi-directional one", {
+  uni_a <- make_uni_test_signature("uni_a", features = c("A", "B", "C", "D"), scores = c(4, 3, 2, 1))
+  bi_a <- make_test_signature(
+    "bi_a",
+    positive_features = c("A", "B", "C", "D"), negative_features = c("W", "X", "Y", "Z"),
+    positive_scores = c(4, 3, 2, 1), negative_scores = c(-4, -3, -2, -1)
+  )
+
+  res <- compare_omic_signatures(
+    list(uni_a = uni_a, bi_a = bi_a),
+    method = "overlap", min_features = 3, max_feature = 10
+  )
+
+  expect_named(res$comparisons, c("level1_vs_level1", "level2_vs_level2"))
+  ## uni_a's whole feature set matches bi_a's "up" (level1) exactly, and
+  ## shares nothing with bi_a's "down" (level2).
+  expect_equal(res$comparisons$level1_vs_level1$jaccard["uni_a", "bi_a"], 1)
+  expect_equal(res$comparisons$level2_vs_level2$jaccard["uni_a", "bi_a"], 0)
+})
+
+test_that("ks_rank only compares a uni-directional signature as a geneset, never as a ranking", {
+  uni_a <- make_uni_test_signature("uni_a", features = c("A", "B", "C", "D"), scores = c(4, 3, 2, 1))
+  bi_a <- make_test_signature(
+    "bi_a",
+    positive_features = c("A", "B", "C", "D"), negative_features = c("W", "X", "Y", "Z"),
+    positive_scores = c(4, 3, 2, 1), negative_scores = c(-4, -3, -2, -1)
+  )
+
+  expect_warning(
+    res <- compare_omic_signatures(
+      list(uni_a = uni_a, bi_a = bi_a), method = "ks_rank", min_features = 3, max_feature = 10
+    ),
+    "uni_a"
+  )
+
+  score <- res$comparisons$level1_vs_level1$score
+  ## uni_a as ranking (column) is impossible: no group_label contrast.
+  expect_true(all(is.na(score[, "uni_a"])))
+  ## uni_a as geneset (row) against bi_a's ranking works.
+  expect_true(is.finite(score["uni_a", "bi_a"]))
+})
+
+test_that("ks_rank errors when sig_list2 is entirely uni-directional, even with difexp tables", {
+  uni_a <- make_uni_test_signature("uni_a", features = c("A", "B", "C", "D"), scores = c(4, 3, 2, 1))
+  uni_b <- make_uni_test_signature("uni_b", features = c("A", "B", "E", "F"), scores = c(4, 3, 2, 1))
+
+  expect_error(
+    compare_omic_signatures(list(uni_a = uni_a, uni_b = uni_b), method = "ks_rank"),
+    "No signatures in sig_list2 are bi-directional with a difexp table"
+  )
+})
+
+test_that("label_pairing given for a uni-directional signature errors clearly", {
+  uni_a <- make_uni_test_signature("uni_a", features = c("A", "B", "C", "D"), scores = c(4, 3, 2, 1))
+  bi_a <- make_test_signature(
+    "bi_a",
+    positive_features = c("A", "B", "C", "D"), negative_features = c("W", "X", "Y", "Z"),
+    positive_scores = c(4, 3, 2, 1), negative_scores = c(-4, -3, -2, -1)
+  )
+
+  expect_error(
+    compare_omic_signatures(
+      list(uni_a = uni_a, bi_a = bi_a), method = "overlap",
+      label_pairing = list(uni_a = c("A", "B"))
+    ),
+    "uni-directional"
   )
 })

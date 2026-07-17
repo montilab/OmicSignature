@@ -16,9 +16,12 @@
 #'   with `sig_list1`'s names, so that a cross-list comparison can never be
 #'   mistaken for a self-comparison. For `method = "ks_rank"`,
 #'   `method = "ks_score"`, and `method = "gsea"`, `sig_list2` is the ranking
-#'   side and each element needs a difexp table; elements without one are
-#'   excluded from `sig_list2` (with a warning) but remain usable as
-#'   `sig_list1` genesets, which never require difexp.
+#'   side and each element needs to be bi-directional with a difexp table;
+#'   elements that aren't (including uni-directional signatures, which have
+#'   no group_label contrast to rank from) are excluded from `sig_list2`
+#'   (with a warning) but remain usable as `sig_list1` genesets, which never
+#'   require difexp or a group_label contrast. If no element of `sig_list2`
+#'   can rank, this errors instead.
 #' @param method Comparison method.
 #' @param background Optional background feature vector for overlap tests.
 #' @param score_cutoff Minimum absolute score to include in a signature. For
@@ -76,13 +79,33 @@
 #'   vector. `ks_score` compares the numeric ranking scores for retained
 #'   features against the remaining features with a two-sample KS test.
 #'
-#' @return A list with one element per label pairing. For `method = "overlap"`
-#'   each element contains `jaccard`, `pvalue`, and `counts` matrices. `counts`
+#'   Uni-directional signatures (no `group_label` contrast) are compared as a
+#'   single, whole feature set rather than split by level. If every signature
+#'   in both `sig_list1` and `sig_list2` is uni-directional, `method =
+#'   "overlap"` returns one flat comparison instead of the
+#'   `level1_vs_level1`/`level2_vs_level2` structure (see the Value section
+#'   below). If the signatures being compared are a mix of uni- and
+#'   bi-directional, each uni-directional signature's single feature set is
+#'   compared against both levels of every bi-directional signature. For
+#'   `method = "ks_rank"`, `method = "ks_score"`, and `method = "gsea"`, a
+#'   uni-directional signature can only ever be a geneset (`sig_list1`),
+#'   never a ranking (`sig_list2`), since ranking requires a two-group
+#'   contrast; if `sig_list2` contains no bi-directional signature with a
+#'   difexp table (e.g. it is entirely uni-directional), the comparison is
+#'   not possible and this errors.
+#'
+#' @return A list with one element per label pairing, except when every
+#'   signature in both `sig_list1` and `sig_list2` is uni-directional and
+#'   `method = "overlap"`, in which case `comparisons` directly contains
+#'   `jaccard`, `pvalue`, and `counts` (no `level1_vs_level1` nesting, and
+#'   `label_order` is `NULL`). Otherwise, for `method = "overlap"` each
+#'   element contains `jaccard`, `pvalue`, and `counts` matrices. `counts`
 #'   entries are formatted as `"ov | n1 | n2"`. For `method = "ks_rank"`,
 #'   `method = "ks_score"`, `method = "ks"`, and
 #'   `method = "gsea"` each element contains `score` and `pvalue` matrices;
-#'   columns for `sig_list2` signatures without a difexp table are entirely
-#'   `NA`, since those signatures cannot serve as the ranking side.
+#'   columns for `sig_list2` signatures without a difexp table, or that are
+#'   uni-directional, are entirely `NA`, since those signatures cannot serve
+#'   as the ranking side.
 #'
 #' @examples
 #' data(compare_signatures_example)
@@ -164,6 +187,29 @@ compare_omic_signatures <- function(
   if (!compare_self) {
     .cos_check_unique_names(sig_list2, "sig_list2")
     .cos_check_disjoint_names(sig_list1, sig_list2)
+  }
+
+  ## If every signature in both lists is uni-directional, there's no
+  ## group_label contrast anywhere to pair on: run one flat overlap
+  ## comparison instead of the level1_vs_level1/level2_vs_level2 structure
+  ## that only makes sense when at least one signature has group_label
+  ## levels to position bi-directional signatures against.
+  all_uni <- all(vapply(sig_list1, .cos_is_uni, logical(1))) &&
+    all(vapply(sig_list2, .cos_is_uni, logical(1)))
+  if (method == "overlap" && all_uni) {
+    if (is.null(background)) {
+      background <- .cos_default_background(sig_list1, sig_list2, feature_col)
+    }
+    background <- unique(stats::na.omit(as.character(background)))
+    labels1 <- stats::setNames(rep(NA_character_, length(sig_list1)), names(sig_list1))
+    labels2 <- stats::setNames(rep(NA_character_, length(sig_list2)), names(sig_list2))
+    comparisons <- .cos_compare_overlap(
+      sig_list1, sig_list2, labels1, labels2, background,
+      feature_col, score_col, adj_p_col, group_col,
+      score_cutoff, adj_p_cutoff, min_features, max_feature, compare_self,
+      adjust, p_adjust_method, alternative
+    )
+    return(list(method = method, comparisons = comparisons, label_order = NULL, background = background))
   }
 
   ## KS/GSEA rank sig_list1's feature sets against sig_list2's difexp-derived
@@ -347,9 +393,10 @@ compare_omic_signatures <- function(
                             dimnames = list(names(sig_list1), names(sig_list2)))
 
   ## Precompute each ranking vector once (it only depends on j); sig_list2
-  ## elements without a difexp table can't rank at all and stay NA below.
+  ## elements without a difexp table, or that are uni-directional (no
+  ## group_label contrast to rank from), can't rank at all and stay NA below.
   ranking <- lapply(seq_along(sig_list2), function(j) {
-    if (is.null(sig_list2[[j]]$difexp)) return(NULL)
+    if (is.null(sig_list2[[j]]$difexp) || .cos_is_uni(sig_list2[[j]])) return(NULL)
     .cos_difexp_scores(sig_list2[[j]], labels2[[j]], feature_col, score_col, p_value_col, group_col)
   })
 
@@ -390,9 +437,10 @@ compare_omic_signatures <- function(
                             dimnames = list(names(sig_list1), names(sig_list2)))
 
   ## Precompute each ranking vector once (it only depends on j); sig_list2
-  ## elements without a difexp table can't rank at all and stay NA below.
+  ## elements without a difexp table, or that are uni-directional (no
+  ## group_label contrast to rank from), can't rank at all and stay NA below.
   ranking <- lapply(seq_along(sig_list2), function(j) {
-    if (is.null(sig_list2[[j]]$difexp)) return(NULL)
+    if (is.null(sig_list2[[j]]$difexp) || .cos_is_uni(sig_list2[[j]])) return(NULL)
     .cos_difexp_scores(sig_list2[[j]], labels2[[j]], feature_col, score_col, p_value_col, group_col)
   })
 
@@ -463,24 +511,25 @@ compare_omic_signatures <- function(
 }
 
 .cos_ranking_capable <- function(sig_list2) {
-  ## Only difexp carries the p-values .cos_difexp_scores() needs to build a
-  ## ranked vector; a signature-only object can never serve as the ranking
-  ## side of a KS/GSEA comparison.
-  vapply(sig_list2, function(sig) !is.null(sig$difexp), logical(1))
+  ## Only a bi-directional signature with a difexp table can build a ranked
+  ## vector (.cos_difexp_scores() ranks one group_label level against the
+  ## other): a signature-only object can never rank, and neither can a
+  ## uni-directional one, which has no group_label contrast to rank from.
+  vapply(sig_list2, function(sig) !is.null(sig$difexp) && !.cos_is_uni(sig), logical(1))
 }
 
 .cos_check_ranking_capable <- function(sig_list2, method) {
   can_rank <- .cos_ranking_capable(sig_list2)
   if (!any(can_rank)) {
     stop(
-      "No signatures in sig_list2 have a difexp table, required as the ",
-      "ranking side for method = '", method, "'."
+      "No signatures in sig_list2 are bi-directional with a difexp table, ",
+      "required as the ranking side for method = '", method, "'."
     )
   }
   if (any(!can_rank)) {
     warning(
       "Excluding signature(s) from the ranking side (sig_list2) for method = '",
-      method, "' because they have no difexp table: ",
+      method, "' because they are uni-directional or have no difexp table: ",
       paste(names(sig_list2)[!can_rank], collapse = ", "),
       ". They remain available as the geneset side (sig_list1)."
     )
@@ -523,6 +572,13 @@ compare_omic_signatures <- function(
   invisible(TRUE)
 }
 
+.cos_is_uni <- function(sig) {
+  ## Uni-directional signatures have no group_label contrast: no "level" to
+  ## pair on, so they're compared as a single, whole feature set instead of
+  ## being split by group_label like bi-directional signatures.
+  identical(sig$metadata$direction_type, "uni-directional")
+}
+
 .cos_signature_name <- function(sig) {
   nm <- sig$metadata$signature_name
   if (is.null(nm) || is.na(nm) || nm == "") {
@@ -548,6 +604,19 @@ compare_omic_signatures <- function(
 
   label_order <- lapply(names(sig_list), function(sig_name) {
     sig <- sig_list[[sig_name]]
+
+    if (.cos_is_uni(sig)) {
+      ## No group_label contrast to pair on; a fixed-length NA placeholder
+      ## keeps label_order rectangular alongside bi-directional signatures'
+      ## real 2-level rows, without participating in level-position pairing
+      ## or the mismatch check below.
+      if (!is.null(label_pairing) && sig_name %in% names(label_pairing)) {
+        stop(arg_name, "[['", sig_name, "']] was supplied, but '", sig_name,
+             "' is uni-directional and has no group_label levels to pair.")
+      }
+      return(c(NA_character_, NA_character_))
+    }
+
     levels <- .cos_group_label_levels(sig, group_col)
     if (!is.null(label_pairing) && sig_name %in% names(label_pairing)) {
       levels <- as.character(label_pairing[[sig_name]])
@@ -641,6 +710,11 @@ compare_omic_signatures <- function(
 
 .cos_signature_features <- function(sig, label, feature_col, score_col, adj_p_col, group_col,
                                     score_cutoff, adj_p_cutoff, min_features, max_feature) {
+  ## Uni-directional signatures have no group_label contrast: use the whole
+  ## signature/difexp table as a single feature set instead of filtering to
+  ## one group_label value.
+  label <- if (.cos_is_uni(sig)) NULL else label
+
   ## Prefer difexp so caller cutoffs can override stored signature cutoffs.
   if (!is.null(sig$difexp)) {
     df <- .cos_constrained_signature_df(
@@ -650,8 +724,11 @@ compare_omic_signatures <- function(
     return(unique(stats::na.omit(as.character(df[[feature_col]]))))
   }
 
-  full_df <- sig$signature %>%
-    dplyr::filter(as.character(.data[[group_col]]) == label) %>%
+  full_df <- sig$signature
+  if (!is.null(label)) {
+    full_df <- full_df %>% dplyr::filter(as.character(.data[[group_col]]) == label)
+  }
+  full_df <- full_df %>%
     .cos_order_signature_rows(score_col, adj_p_col) %>%
     dplyr::distinct(.data[[feature_col]], .keep_all = TRUE)
 
@@ -743,14 +820,19 @@ compare_omic_signatures <- function(
 .cos_constrained_signature_df <- function(df, label, feature_col, score_col, adj_p_col, group_col,
                                           score_cutoff, adj_p_cutoff, min_features, max_feature) {
   ## Apply score and p-value filters within one label-specific difexp table.
+  ## label = NULL means "no group_label contrast" (a uni-directional
+  ## signature): use every row instead of filtering to one group_label value.
   .cos_require_col(feature_col, df)
   .cos_require_col(score_col, df)
   .cos_require_col(adj_p_col, df)
-  .cos_require_col(group_col, df)
+
+  if (!is.null(label)) {
+    .cos_require_col(group_col, df)
+    df <- df %>% dplyr::filter(as.character(.data[[group_col]]) == label)
+  }
 
   df <- df %>%
     dplyr::filter(
-      as.character(.data[[group_col]]) == label,
       !is.na(.data[[feature_col]]),
       .data[[feature_col]] != ""
     ) %>%

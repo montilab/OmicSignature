@@ -30,6 +30,42 @@ make_test_signature <- function(name, positive_features, negative_features, posi
   sig
 }
 
+make_uni_test_signature <- function(name, features, scores, with_difexp = TRUE) {
+  base <- data.frame(
+    probe_id = paste0("probe_", seq_along(features)),
+    feature_name = features,
+    score = scores,
+    p_value = 10^-abs(scores),
+    adj_p = rep(0.01, length(features)),
+    stringsAsFactors = FALSE
+  )
+  metadata <- list(
+    signature_name = name,
+    phenotype = "test",
+    organism = predefined_organisms[1],
+    direction_type = "uni-directional",
+    assay_type = predefined_assaytypes[1]
+  )
+  difexp <- NULL
+  if (with_difexp) {
+    ## checkDifexp() currently requires a group_label column to exist
+    ## regardless of direction_type (unlike checkSignature(), which only
+    ## requires it for non-uni-directional signatures); its contents aren't
+    ## validated for uni-directional signatures, so a constant placeholder
+    ## column is enough to satisfy that requirement.
+    difexp <- base
+    difexp$group_label <- factor("uni", levels = "uni")
+  }
+  capture.output(
+    sig <- OmicSignature$new(
+      metadata = metadata,
+      signature = base[, c("probe_id", "feature_name", "score")],
+      difexp = difexp
+    )
+  )
+  sig
+}
+
 make_test_signature_list <- function() {
   list(
     sig_a = make_test_signature(

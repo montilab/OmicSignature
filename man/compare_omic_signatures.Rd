@@ -39,9 +39,12 @@ collection. Names must be unique within the list and must not overlap
 with \code{sig_list1}'s names, so that a cross-list comparison can never be
 mistaken for a self-comparison. For \code{method = "ks_rank"},
 \code{method = "ks_score"}, and \code{method = "gsea"}, \code{sig_list2} is the ranking
-side and each element needs a difexp table; elements without one are
-excluded from \code{sig_list2} (with a warning) but remain usable as
-\code{sig_list1} genesets, which never require difexp.}
+side and each element needs to be bi-directional with a difexp table;
+elements that aren't (including uni-directional signatures, which have
+no group_label contrast to rank from) are excluded from \code{sig_list2}
+(with a warning) but remain usable as \code{sig_list1} genesets, which never
+require difexp or a group_label contrast. If no element of \code{sig_list2}
+can rank, this errors instead.}
 
 \item{method}{Comparison method.}
 
@@ -120,15 +123,35 @@ the most significant contrast-label features at the bottom. `ks_rank`
 compares the positions of each retained feature set within this ranked
 vector. `ks_score` compares the numeric ranking scores for retained
 features against the remaining features with a two-sample KS test.
+
+Uni-directional signatures (no `group_label` contrast) are compared as a
+single, whole feature set rather than split by level. If every signature
+in both `sig_list1` and `sig_list2` is uni-directional, `method =
+"overlap"` returns one flat comparison instead of the
+`level1_vs_level1`/`level2_vs_level2` structure (see the Value section
+below). If the signatures being compared are a mix of uni- and
+bi-directional, each uni-directional signature's single feature set is
+compared against both levels of every bi-directional signature. For
+`method = "ks_rank"`, `method = "ks_score"`, and `method = "gsea"`, a
+uni-directional signature can only ever be a geneset (`sig_list1`),
+never a ranking (`sig_list2`), since ranking requires a two-group
+contrast; if `sig_list2` contains no bi-directional signature with a
+difexp table (e.g. it is entirely uni-directional), the comparison is
+not possible and this errors.
 }
 \value{
-A list with one element per label pairing. For `method = "overlap"`
-each element contains `jaccard`, `pvalue`, and `counts` matrices. `counts`
+A list with one element per label pairing, except when every
+signature in both `sig_list1` and `sig_list2` is uni-directional and
+`method = "overlap"`, in which case `comparisons` directly contains
+`jaccard`, `pvalue`, and `counts` (no `level1_vs_level1` nesting, and
+`label_order` is `NULL`). Otherwise, for `method = "overlap"` each
+element contains `jaccard`, `pvalue`, and `counts` matrices. `counts`
 entries are formatted as `"ov | n1 | n2"`. For `method = "ks_rank"`,
 `method = "ks_score"`, `method = "ks"`, and
 `method = "gsea"` each element contains `score` and `pvalue` matrices;
-columns for `sig_list2` signatures without a difexp table are entirely
-`NA`, since those signatures cannot serve as the ranking side.
+columns for `sig_list2` signatures without a difexp table, or that are
+uni-directional, are entirely `NA`, since those signatures cannot serve
+as the ranking side.
 }
 \description{
 Compare signatures within one list, or between two lists, using set overlap,
