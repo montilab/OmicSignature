@@ -1,0 +1,19 @@
+// Shrink heading sizes for a more compact, professional look. Bootstrap's
+// default h1 (~2.5rem) reads as oversized for API/vignette documentation;
+// these sizes keep headings clearly distinguishable in hierarchy without
+// dominating the page.
+h1 {
+  font-size: 1.85rem;
+}
+
+h2 {
+  font-size: 1.45rem;
+}
+
+h3 {
+  font-size: 1.2rem;
+}
+
+h4 {
+  font-size: 1.05rem;
+}
