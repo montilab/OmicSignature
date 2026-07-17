@@ -67,7 +67,7 @@
       <h1>Comparing OmicSignature Lists</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/montilab/OmicSignature/blob/main/vignettes/CompareSignatures.Rmd" class="external-link"><code>vignettes/CompareSignatures.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/montilab/OmicSignature/blob/fix/label-order-mismatch/vignettes/CompareSignatures.Rmd" class="external-link"><code>vignettes/CompareSignatures.Rmd</code></a></small>
       <div class="d-none name"><code>CompareSignatures.Rmd</code></div>
     </div>
 
@@ -98,28 +98,37 @@ and the second factor level against the second factor level.</p>
 <span>  score_cutoff <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log2</a></span><span class="op">(</span><span class="fl">1.25</span><span class="op">)</span>,</span>
 <span>  adj_p_cutoff <span class="op">=</span> <span class="fl">0.05</span>,</span>
 <span>  min_features <span class="op">=</span> <span class="fl">25</span>,</span>
-<span>  max_feature <span class="op">=</span> <span class="fl">500</span></span>
+<span>  max_feature <span class="op">=</span> <span class="fl">2000</span></span>
 <span><span class="op">)</span></span>
-<span></span>
+<span><span class="co">## show the label order</span></span>
+<span><span class="va">overlap_res</span><span class="op">$</span><span class="va">label_order</span></span>
+<span><span class="co">#&gt; $sig_list1</span></span>
+<span><span class="co">#&gt;              level1 level2  </span></span>
+<span><span class="co">#&gt; e7386_hsc3   "DMSO" "E7386" </span></span>
+<span><span class="co">#&gt; e7386_cal27  "DMSO" "E7386" </span></span>
+<span><span class="co">#&gt; icg001_hsc3  "DMSO" "ICG001"</span></span>
+<span><span class="co">#&gt; icg001_cal27 "DMSO" "ICG001"</span></span>
+<span><span class="co">## list the comparisons being performed</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">overlap_res</span><span class="op">$</span><span class="va">comparisons</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "level1_vs_level1" "level2_vs_level2"</span></span>
+<span><span class="co">## show the comparison results for level 1 (jaccard and counts)</span></span>
 <span><span class="va">overlap_res</span><span class="op">$</span><span class="va">comparisons</span><span class="op">$</span><span class="va">level1_vs_level1</span><span class="op">$</span><span class="va">jaccard</span></span>
-<span><span class="co">#&gt;               e7386_hsc3 e7386_cal27 icg001_hsc3 icg001_cal27</span></span>
-<span><span class="co">#&gt; e7386_hsc3   1.000000000  0.23915737  0.01626016  0.007360673</span></span>
-<span><span class="co">#&gt; e7386_cal27  0.239157373  1.00000000  0.02774923  0.002092050</span></span>
-<span><span class="co">#&gt; icg001_hsc3  0.016260163  0.02774923  1.00000000  0.198998748</span></span>
-<span><span class="co">#&gt; icg001_cal27 0.007360673  0.00209205  0.19899875  1.000000000</span></span>
+<span><span class="co">#&gt;              e7386_hsc3 e7386_cal27 icg001_hsc3 icg001_cal27</span></span>
+<span><span class="co">#&gt; e7386_hsc3    1.0000000   0.3023088   0.4600457    0.2535613</span></span>
+<span><span class="co">#&gt; e7386_cal27   0.3023088   1.0000000   0.2141944    0.2862150</span></span>
+<span><span class="co">#&gt; icg001_hsc3   0.4600457   0.2141944   1.0000000    0.2384770</span></span>
+<span><span class="co">#&gt; icg001_cal27  0.2535613   0.2862150   0.2384770    1.0000000</span></span>
 <span><span class="va">overlap_res</span><span class="op">$</span><span class="va">comparisons</span><span class="op">$</span><span class="va">level1_vs_level1</span><span class="op">$</span><span class="va">counts</span></span>
-<span><span class="co">#&gt;              e7386_hsc3        e7386_cal27       icg001_hsc3      </span></span>
-<span><span class="co">#&gt; e7386_hsc3   "500 | 500 | 500" "193 | 500 | 500" "16 | 500 | 500" </span></span>
-<span><span class="co">#&gt; e7386_cal27  "193 | 500 | 500" "500 | 500 | 500" "27 | 500 | 500" </span></span>
-<span><span class="co">#&gt; icg001_hsc3  "16 | 500 | 500"  "27 | 500 | 500"  "500 | 500 | 500"</span></span>
-<span><span class="co">#&gt; icg001_cal27 "7 | 500 | 458"   "2 | 500 | 458"   "159 | 500 | 458"</span></span>
-<span><span class="co">#&gt;              icg001_cal27     </span></span>
-<span><span class="co">#&gt; e7386_hsc3   "7 | 500 | 458"  </span></span>
-<span><span class="co">#&gt; e7386_cal27  "2 | 500 | 458"  </span></span>
-<span><span class="co">#&gt; icg001_hsc3  "159 | 500 | 458"</span></span>
-<span><span class="co">#&gt; icg001_cal27 "458 | 458 | 458"</span></span></code></pre></div>
+<span><span class="co">#&gt;              e7386_hsc3           e7386_cal27        icg001_hsc3         </span></span>
+<span><span class="co">#&gt; e7386_hsc3   "1232 | 1232 | 1232" "419 | 1232 | 573" "806 | 1232 | 1326" </span></span>
+<span><span class="co">#&gt; e7386_cal27  "419 | 1232 | 573"   "573 | 573 | 573"  "335 | 573 | 1326"  </span></span>
+<span><span class="co">#&gt; icg001_hsc3  "806 | 1232 | 1326"  "335 | 573 | 1326" "1326 | 1326 | 1326"</span></span>
+<span><span class="co">#&gt; icg001_cal27 "356 | 1232 | 528"   "245 | 573 | 528"  "357 | 1326 | 528"  </span></span>
+<span><span class="co">#&gt;              icg001_cal27      </span></span>
+<span><span class="co">#&gt; e7386_hsc3   "356 | 1232 | 528"</span></span>
+<span><span class="co">#&gt; e7386_cal27  "245 | 573 | 528" </span></span>
+<span><span class="co">#&gt; icg001_hsc3  "357 | 1326 | 528"</span></span>
+<span><span class="co">#&gt; icg001_cal27 "528 | 528 | 528"</span></span></code></pre></div>
 <p>The overlap method returns three matrices for each compared factor
 level:</p>
 <ul>
@@ -156,9 +165,9 @@ screens.</p>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">cross_res</span><span class="op">$</span><span class="va">comparisons</span><span class="op">$</span><span class="va">level1_vs_level1</span><span class="op">$</span><span class="va">jaccard</span></span>
-<span><span class="co">#&gt;               e7386_hsc3 e7386_cal27</span></span>
-<span><span class="co">#&gt; icg001_hsc3  0.016260163  0.02774923</span></span>
-<span><span class="co">#&gt; icg001_cal27 0.007360673  0.00209205</span></span></code></pre></div>
+<span><span class="co">#&gt;              e7386_hsc3 e7386_cal27</span></span>
+<span><span class="co">#&gt; icg001_hsc3   0.2048193   0.1415525</span></span>
+<span><span class="co">#&gt; icg001_cal27  0.2437811   0.2804097</span></span></code></pre></div>
 <p>When <code>background</code> is not supplied, the feature universe is
 inferred from all available signature and differential-expression tables
 in both inputs. Supplying a measured or assay-specific background is
@@ -174,6 +183,16 @@ signatures need explicit matching.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">compare_label_pairing_example</span><span class="op">)</span></span>
 <span></span>
+<span><span class="co">## let's see the order of the signatures' group_label's</span></span>
+<span><span class="va">compare_label_pairing_example</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">sapply</a></span><span class="op">(</span>\<span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/levels.html" class="external-link">levels</a></span><span class="op">(</span><span class="va">x</span><span class="op">$</span><span class="va">difexp</span><span class="op">$</span><span class="va">group_label</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/stats/setNames.html" class="external-link">setNames</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"level1"</span>, <span class="st">"level2"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt;                level1    level2</span></span>
+<span><span class="co">#&gt; signature_a   treated   control</span></span>
+<span><span class="co">#&gt; signature_b      down        up</span></span>
+<span><span class="co">#&gt; signature_c resistant sensitive</span></span>
+<span></span>
+<span><span class="co">## compare signatures and provide the desired label pairing</span></span>
 <span><span class="va">paired_res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/compare_omic_signatures.html">compare_omic_signatures</a></span><span class="op">(</span></span>
 <span>  sig_list1 <span class="op">=</span> <span class="va">compare_label_pairing_example</span>,</span>
 <span>  method <span class="op">=</span> <span class="st">"overlap"</span>,</span>
@@ -183,7 +202,6 @@ signatures need explicit matching.</p>
 <span>    signature_c <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"resistant"</span>, <span class="st">"sensitive"</span><span class="op">)</span></span>
 <span>  <span class="op">)</span></span>
 <span><span class="op">)</span></span>
-<span></span>
 <span><span class="va">paired_res</span><span class="op">$</span><span class="va">comparisons</span><span class="op">$</span><span class="va">level1_vs_level1</span><span class="op">$</span><span class="va">jaccard</span></span>
 <span><span class="co">#&gt;             signature_a signature_b signature_c</span></span>
 <span><span class="co">#&gt; signature_a   1.0000000   0.6666667   0.3333333</span></span>
@@ -222,16 +240,16 @@ scores against the remaining features. The legacy
 <span></span>
 <span><span class="va">ks_res</span><span class="op">$</span><span class="va">comparisons</span><span class="op">$</span><span class="va">level1_vs_level1</span><span class="op">$</span><span class="va">score</span></span>
 <span><span class="co">#&gt;              e7386_hsc3 e7386_cal27 icg001_hsc3 icg001_cal27</span></span>
-<span><span class="co">#&gt; e7386_hsc3    0.8592342   0.4160968  -0.4110618   -0.4287572</span></span>
-<span><span class="co">#&gt; e7386_cal27   0.4201126   0.8589527  -0.3177972   -0.4384881</span></span>
-<span><span class="co">#&gt; icg001_hsc3  -0.3259009  -0.2914977   0.8509243    0.2925748</span></span>
-<span><span class="co">#&gt; icg001_cal27 -0.3816186  -0.5426392   0.3425747    0.8634466</span></span>
+<span><span class="co">#&gt; e7386_hsc3    0.8592342   0.4160968   0.4107636    0.4287572</span></span>
+<span><span class="co">#&gt; e7386_cal27   0.4201126   0.8589527   0.3174991    0.4384881</span></span>
+<span><span class="co">#&gt; icg001_hsc3   0.4059002   0.3219889   0.8509243    0.4114431</span></span>
+<span><span class="co">#&gt; icg001_cal27  0.4019190   0.4744036   0.3374776    0.8509243</span></span>
 <span><span class="va">ks_res</span><span class="op">$</span><span class="va">comparisons</span><span class="op">$</span><span class="va">level1_vs_level1</span><span class="op">$</span><span class="va">pvalue</span></span>
 <span><span class="co">#&gt;              e7386_hsc3 e7386_cal27 icg001_hsc3 icg001_cal27</span></span>
-<span><span class="co">#&gt; e7386_hsc3            0   0.0000000   0.9997206    0.9982553</span></span>
-<span><span class="co">#&gt; e7386_cal27           0   0.0000000   0.9999303    0.9982588</span></span>
-<span><span class="co">#&gt; icg001_hsc3           1   0.9639617   0.0000000    0.0000000</span></span>
-<span><span class="co">#&gt; icg001_cal27          1   1.0000000   0.0000000    0.0000000</span></span></code></pre></div>
+<span><span class="co">#&gt; e7386_hsc3            0           0           0            0</span></span>
+<span><span class="co">#&gt; e7386_cal27           0           0           0            0</span></span>
+<span><span class="co">#&gt; icg001_hsc3           0           0           0            0</span></span>
+<span><span class="co">#&gt; icg001_cal27          0           0           0            0</span></span></code></pre></div>
 <p>The simulated label-pairing data can also be compared with
 <code>ks_score</code>. In this toy example, the treated/up/resistant
 labels define the first level and the control/down/sensitive labels
@@ -257,7 +275,7 @@ define the second level.</p>
 <span><span class="co">#&gt;             signature_a signature_b signature_c</span></span>
 <span><span class="co">#&gt; signature_a    5.78e-14    2.83e-10    6.24e-04</span></span>
 <span><span class="co">#&gt; signature_b    2.83e-10    5.78e-14    6.24e-04</span></span>
-<span><span class="co">#&gt; signature_c    1.03e-03    1.61e-03    5.78e-14</span></span>
+<span><span class="co">#&gt; signature_c    1.03e-03    3.44e-05    5.78e-14</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">toy_ks_score</span><span class="op">$</span><span class="va">comparisons</span><span class="op">$</span><span class="va">level2_vs_level2</span><span class="op">$</span><span class="va">score</span>, <span class="fl">3</span><span class="op">)</span></span>
 <span><span class="co">#&gt;             signature_a signature_b signature_c</span></span>
 <span><span class="co">#&gt; signature_a         1.0         0.8         0.5</span></span>
@@ -267,7 +285,7 @@ define the second level.</p>
 <span><span class="co">#&gt;             signature_a signature_b signature_c</span></span>
 <span><span class="co">#&gt; signature_a    5.78e-14    2.83e-10    6.27e-04</span></span>
 <span><span class="co">#&gt; signature_b    2.83e-10    5.78e-14    6.27e-04</span></span>
-<span><span class="co">#&gt; signature_c    3.44e-05    3.44e-05    5.78e-14</span></span></code></pre></div>
+<span><span class="co">#&gt; signature_c    3.44e-05    1.61e-03    5.78e-14</span></span></code></pre></div>
 <p>GSEA requires the optional <code>fgsea</code> package.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">gsea_res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/compare_omic_signatures.html">compare_omic_signatures</a></span><span class="op">(</span></span>

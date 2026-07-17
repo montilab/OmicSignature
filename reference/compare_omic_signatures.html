@@ -43,7 +43,7 @@ rank-position KS, score-distribution KS, or fgsea."></head><body>
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Compare OmicSignature objects</h1>
-      <small class="dont-index">Source: <a href="https://github.com/montilab/OmicSignature/blob/main/R/compare_omic_signatures.R" class="external-link"><code>R/compare_omic_signatures.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/montilab/OmicSignature/blob/fix/label-order-mismatch/R/compare_omic_signatures.R" class="external-link"><code>R/compare_omic_signatures.R</code></a></small>
       <div class="d-none name"><code>compare_omic_signatures.Rd</code></div>
     </div>
 
@@ -138,12 +138,19 @@ signature.</p></dd>
 
 <dt id="arg-label-pairing">label_pairing<a class="anchor" aria-label="anchor" href="#arg-label-pairing"></a></dt>
 <dd><p>Optional named list giving the two group-label levels
-to use for each signature in `sig_list1`.</p></dd>
+to use for each signature in `sig_list1`. Signatures not named in
+`label_pairing` fall back to their own `group_label` factor-level order;
+if two or more of those signatures disagree on that order (e.g. one
+signature's factor levels are `c("control", "treated")` and another's are
+`c("treated", "control")`), a warning is issued, since `level1_vs_level1`/
+`level2_vs_level2` pairing is purely positional and may then compare
+mismatched conditions across signatures.</p></dd>
 
 
 <dt id="arg-label-pairing-">label_pairing2<a class="anchor" aria-label="anchor" href="#arg-label-pairing-"></a></dt>
 <dd><p>Optional named list giving the two group-label levels
-to use for each signature in `sig_list2`.</p></dd>
+to use for each signature in `sig_list2`. Same fallback and warning
+behavior as `label_pairing`.</p></dd>
 
 
 <dt id="arg-feature-col">feature_col<a class="anchor" aria-label="anchor" href="#arg-feature-col"></a></dt>

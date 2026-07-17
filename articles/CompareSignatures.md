@@ -28,28 +28,37 @@ overlap_res <- compare_omic_signatures(
   score_cutoff = log2(1.25),
   adj_p_cutoff = 0.05,
   min_features = 25,
-  max_feature = 500
+  max_feature = 2000
 )
-
+## show the label order
+overlap_res$label_order
+#> $sig_list1
+#>              level1 level2  
+#> e7386_hsc3   "DMSO" "E7386" 
+#> e7386_cal27  "DMSO" "E7386" 
+#> icg001_hsc3  "DMSO" "ICG001"
+#> icg001_cal27 "DMSO" "ICG001"
+## list the comparisons being performed
 names(overlap_res$comparisons)
 #> [1] "level1_vs_level1" "level2_vs_level2"
+## show the comparison results for level 1 (jaccard and counts)
 overlap_res$comparisons$level1_vs_level1$jaccard
-#>               e7386_hsc3 e7386_cal27 icg001_hsc3 icg001_cal27
-#> e7386_hsc3   1.000000000  0.23915737  0.01626016  0.007360673
-#> e7386_cal27  0.239157373  1.00000000  0.02774923  0.002092050
-#> icg001_hsc3  0.016260163  0.02774923  1.00000000  0.198998748
-#> icg001_cal27 0.007360673  0.00209205  0.19899875  1.000000000
+#>              e7386_hsc3 e7386_cal27 icg001_hsc3 icg001_cal27
+#> e7386_hsc3    1.0000000   0.3023088   0.4600457    0.2535613
+#> e7386_cal27   0.3023088   1.0000000   0.2141944    0.2862150
+#> icg001_hsc3   0.4600457   0.2141944   1.0000000    0.2384770
+#> icg001_cal27  0.2535613   0.2862150   0.2384770    1.0000000
 overlap_res$comparisons$level1_vs_level1$counts
-#>              e7386_hsc3        e7386_cal27       icg001_hsc3      
-#> e7386_hsc3   "500 | 500 | 500" "193 | 500 | 500" "16 | 500 | 500" 
-#> e7386_cal27  "193 | 500 | 500" "500 | 500 | 500" "27 | 500 | 500" 
-#> icg001_hsc3  "16 | 500 | 500"  "27 | 500 | 500"  "500 | 500 | 500"
-#> icg001_cal27 "7 | 500 | 458"   "2 | 500 | 458"   "159 | 500 | 458"
-#>              icg001_cal27     
-#> e7386_hsc3   "7 | 500 | 458"  
-#> e7386_cal27  "2 | 500 | 458"  
-#> icg001_hsc3  "159 | 500 | 458"
-#> icg001_cal27 "458 | 458 | 458"
+#>              e7386_hsc3           e7386_cal27        icg001_hsc3         
+#> e7386_hsc3   "1232 | 1232 | 1232" "419 | 1232 | 573" "806 | 1232 | 1326" 
+#> e7386_cal27  "419 | 1232 | 573"   "573 | 573 | 573"  "335 | 573 | 1326"  
+#> icg001_hsc3  "806 | 1232 | 1326"  "335 | 573 | 1326" "1326 | 1326 | 1326"
+#> icg001_cal27 "356 | 1232 | 528"   "245 | 573 | 528"  "357 | 1326 | 528"  
+#>              icg001_cal27      
+#> e7386_hsc3   "356 | 1232 | 528"
+#> e7386_cal27  "245 | 573 | 528" 
+#> icg001_hsc3  "357 | 1326 | 528"
+#> icg001_cal27 "528 | 528 | 528"
 ```
 
 The overlap method returns three matrices for each compared factor
@@ -82,9 +91,9 @@ cross_res <- compare_omic_signatures(
 )
 
 cross_res$comparisons$level1_vs_level1$jaccard
-#>               e7386_hsc3 e7386_cal27
-#> icg001_hsc3  0.016260163  0.02774923
-#> icg001_cal27 0.007360673  0.00209205
+#>              e7386_hsc3 e7386_cal27
+#> icg001_hsc3   0.2048193   0.1415525
+#> icg001_cal27  0.2437811   0.2804097
 ```
 
 When `background` is not supplied, the feature universe is inferred from
@@ -102,6 +111,16 @@ signatures need explicit matching.
 
 data(compare_label_pairing_example)
 
+## let's see the order of the signatures' group_label's
+compare_label_pairing_example |>
+  sapply(\(x) levels(x$difexp$group_label)) |> t() |>
+  as.data.frame() |> setNames(c("level1", "level2"))
+#>                level1    level2
+#> signature_a   treated   control
+#> signature_b      down        up
+#> signature_c resistant sensitive
+
+## compare signatures and provide the desired label pairing
 paired_res <- compare_omic_signatures(
   sig_list1 = compare_label_pairing_example,
   method = "overlap",
@@ -111,7 +130,6 @@ paired_res <- compare_omic_signatures(
     signature_c = c("resistant", "sensitive")
   )
 )
-
 paired_res$comparisons$level1_vs_level1$jaccard
 #>             signature_a signature_b signature_c
 #> signature_a   1.0000000   0.6666667   0.3333333
@@ -149,16 +167,16 @@ ks_res <- compare_omic_signatures(
 
 ks_res$comparisons$level1_vs_level1$score
 #>              e7386_hsc3 e7386_cal27 icg001_hsc3 icg001_cal27
-#> e7386_hsc3    0.8592342   0.4160968  -0.4110618   -0.4287572
-#> e7386_cal27   0.4201126   0.8589527  -0.3177972   -0.4384881
-#> icg001_hsc3  -0.3259009  -0.2914977   0.8509243    0.2925748
-#> icg001_cal27 -0.3816186  -0.5426392   0.3425747    0.8634466
+#> e7386_hsc3    0.8592342   0.4160968   0.4107636    0.4287572
+#> e7386_cal27   0.4201126   0.8589527   0.3174991    0.4384881
+#> icg001_hsc3   0.4059002   0.3219889   0.8509243    0.4114431
+#> icg001_cal27  0.4019190   0.4744036   0.3374776    0.8509243
 ks_res$comparisons$level1_vs_level1$pvalue
 #>              e7386_hsc3 e7386_cal27 icg001_hsc3 icg001_cal27
-#> e7386_hsc3            0   0.0000000   0.9997206    0.9982553
-#> e7386_cal27           0   0.0000000   0.9999303    0.9982588
-#> icg001_hsc3           1   0.9639617   0.0000000    0.0000000
-#> icg001_cal27          1   1.0000000   0.0000000    0.0000000
+#> e7386_hsc3            0           0           0            0
+#> e7386_cal27           0           0           0            0
+#> icg001_hsc3           0           0           0            0
+#> icg001_cal27          0           0           0            0
 ```
 
 The simulated label-pairing data can also be compared with `ks_score`.
@@ -187,7 +205,7 @@ signif(toy_ks_score$comparisons$level1_vs_level1$pvalue, 3)
 #>             signature_a signature_b signature_c
 #> signature_a    5.78e-14    2.83e-10    6.24e-04
 #> signature_b    2.83e-10    5.78e-14    6.24e-04
-#> signature_c    1.03e-03    1.61e-03    5.78e-14
+#> signature_c    1.03e-03    3.44e-05    5.78e-14
 round(toy_ks_score$comparisons$level2_vs_level2$score, 3)
 #>             signature_a signature_b signature_c
 #> signature_a         1.0         0.8         0.5
@@ -197,7 +215,7 @@ signif(toy_ks_score$comparisons$level2_vs_level2$pvalue, 3)
 #>             signature_a signature_b signature_c
 #> signature_a    5.78e-14    2.83e-10    6.27e-04
 #> signature_b    2.83e-10    5.78e-14    6.27e-04
-#> signature_c    3.44e-05    3.44e-05    5.78e-14
+#> signature_c    3.44e-05    1.61e-03    5.78e-14
 ```
 
 GSEA requires the optional `fgsea` package.

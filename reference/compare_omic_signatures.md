@@ -88,12 +88,20 @@ compare_omic_signatures(
 - label_pairing:
 
   Optional named list giving the two group-label levels to use for each
-  signature in \`sig_list1\`.
+  signature in \`sig_list1\`. Signatures not named in \`label_pairing\`
+  fall back to their own \`group_label\` factor-level order; if two or
+  more of those signatures disagree on that order (e.g. one signature's
+  factor levels are \`c("control", "treated")\` and another's are
+  \`c("treated", "control")\`), a warning is issued, since
+  \`level1_vs_level1\`/ \`level2_vs_level2\` pairing is purely
+  positional and may then compare mismatched conditions across
+  signatures.
 
 - label_pairing2:
 
   Optional named list giving the two group-label levels to use for each
-  signature in \`sig_list2\`.
+  signature in \`sig_list2\`. Same fallback and warning behavior as
+  \`label_pairing\`.
 
 - feature_col:
 
