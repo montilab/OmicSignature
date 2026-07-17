@@ -210,9 +210,12 @@ therefore indicate stronger overlap enrichment.
 
 Rank-based KS and GSEA outputs can be visualized with `measure = "score"` or
 `measure = "pvalue"`. Because these matrices are directional rather than
-symmetric, `mode = "combined"` draws only the upper triangle and splits each
-cell between the two label levels. `mode = "separate"` draws one full heatmap
-for each label level.
+symmetric, `mode = "combined"` draws the full square matrix (not just one
+triangle), splitting each cell into two triangles that superimpose the two
+`mode = "separate"` matrices: the bottom-left triangle shows
+`level1_vs_level1` and the top-right triangle shows `level2_vs_level2`.
+`mode = "separate"` draws those same two matrices as separate, full
+heatmaps instead.
 
 ```{r}
 signature_similarity_heatmap(
