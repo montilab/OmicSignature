@@ -2,7 +2,7 @@ destination: docs
 
 template:
   bootstrap: 5
-  bootswatch: spacelab
+  bootswatch: cosmo
 
 url: https://montilab.github.io/OmicSignature/
 
