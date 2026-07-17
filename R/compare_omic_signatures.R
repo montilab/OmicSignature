@@ -99,8 +99,13 @@
 #'   `method = "overlap"`, in which case `comparisons` directly contains
 #'   `jaccard`, `pvalue`, and `counts` (no `level1_vs_level1` nesting, and
 #'   `label_order` is `NULL`). Otherwise, for `method = "overlap"` each
-#'   element contains `jaccard`, `pvalue`, and `counts` matrices. `counts`
-#'   entries are formatted as `"ov | n1 | n2"`. For `method = "ks_rank"`,
+#'   element contains `jaccard`, `pvalue`, and `counts` matrices. `counts` is
+#'   an integer matrix with one extra final `"size"` row and column beyond
+#'   `jaccard`/`pvalue`'s dimensions: entry `[i, j]` is the overlap size
+#'   between signature `i` and signature `j`, the extra `"size"` column
+#'   reports each row signature's own retained feature-set size, the extra
+#'   `"size"` row reports each column signature's, and the corner entry is
+#'   `NA`. For `method = "ks_rank"`,
 #'   `method = "ks_score"`, `method = "ks"`, and
 #'   `method = "gsea"` each element contains `score` and `pvalue` matrices;
 #'   columns for `sig_list2` signatures without a difexp table, or that are
@@ -323,10 +328,10 @@ compare_omic_signatures <- function(
 
   jaccard <- pvalue <- matrix(NA_real_, length(set_list1), length(set_list2),
                               dimnames = list(names(set_list1), names(set_list2)))
-  counts <- matrix(NA_character_, length(set_list1), length(set_list2),
-                   dimnames = list(names(set_list1), names(set_list2)))
+  overlap <- matrix(NA_integer_, length(set_list1), length(set_list2),
+                    dimnames = list(names(set_list1), names(set_list2)))
 
-  ## Fill pairwise overlap, enrichment p-value, and count summary matrices.
+  ## Fill pairwise overlap, enrichment p-value, and overlap-size matrices.
   for (i in seq_along(set_list1)) {
     for (j in seq_along(set_list2)) {
       if (compare_self && j < i) next
@@ -334,7 +339,7 @@ compare_omic_signatures <- function(
       y <- intersect(set_list2[[j]], background)
       jaccard[i, j] <- .cos_jaccard(x, y)
       pvalue[i, j] <- .cos_fisher_overlap(x, y, background, alternative)
-      counts[i, j] <- paste(length(intersect(x, y)), length(x), length(y), sep = " | ")
+      overlap[i, j] <- length(intersect(x, y))
     }
   }
 
@@ -342,9 +347,19 @@ compare_omic_signatures <- function(
   if (compare_self) {
     jaccard <- .cos_fill_symmetric(jaccard, diag_value = 1)
     pvalue <- .cos_fill_symmetric(pvalue, diag_value = 0)
-    counts <- .cos_fill_symmetric(counts, diag_value = diag(counts))
+    overlap <- .cos_fill_symmetric(overlap, diag_value = diag(overlap))
   }
   pvalue <- .cos_adjust_matrix(pvalue, adjust, p_adjust_method, compare_self)
+
+  ## counts appends each signature's own (background-constrained) retained
+  ## feature-set size as an extra "size" row/column, so overlap counts can be
+  ## read alongside the set sizes they're drawn from without a separate call.
+  ## The corner entry (row size vs column size) isn't a meaningful overlap, so
+  ## it's left NA.
+  sizes1 <- vapply(set_list1, function(s) length(intersect(s, background)), integer(1))
+  sizes2 <- vapply(set_list2, function(s) length(intersect(s, background)), integer(1))
+  counts <- rbind(cbind(overlap, size = sizes1), size = c(sizes2, NA_integer_))
+  dimnames(counts) <- list(c(names(set_list1), "size"), c(names(set_list2), "size"))
 
   list(jaccard = jaccard, pvalue = pvalue, counts = counts)
 }
