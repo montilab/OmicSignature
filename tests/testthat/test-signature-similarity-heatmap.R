@@ -138,6 +138,49 @@ test_that("combined heatmap supports two-list overlap comparisons", {
   )
 })
 
+test_that("combined triangle placement is consistent between overlap and rank-based comparisons", {
+  skip_if_not_installed("ComplexHeatmap")
+  skip_if_not_installed("circlize")
+
+  ## level1 and level2 use clearly distinguishable values so the triangle
+  ## receiving each one can be identified from which color function fires.
+  level1_mat <- matrix(0.9, 2, 2, dimnames = list(c("a", "b"), c("a", "b")))
+  level2_mat <- matrix(0.1, 2, 2, dimnames = list(c("a", "b"), c("a", "b")))
+  comparison <- list(
+    method = "overlap",
+    comparisons = list(
+      level1_vs_level1 = list(jaccard = level1_mat),
+      level2_vs_level2 = list(jaccard = level2_mat)
+    )
+  )
+
+  seen <- character()
+  pos_col_fun <- function(x) { seen <<- c(seen, paste0("level1:", x)); "#000000" }
+  neg_col_fun <- function(x) { seen <<- c(seen, paste0("level2:", x)); "#111111" }
+
+  combined_ht <- signature_similarity_heatmap(
+    comparison,
+    measure = "jaccard",
+    mode = "combined",
+    draw = FALSE,
+    pos_col_fun = pos_col_fun,
+    neg_col_fun = neg_col_fun
+  )
+
+  seen <- character()
+  grid::grid.newpage()
+  ## Cell (row 1, col 2): top-right is filled first in source order and must
+  ## be level2 (0.1, via neg_col_fun); bottom-left is filled second and must
+  ## be level1 (0.9, via pos_col_fun) - matching rank-based.
+  combined_ht@matrix_param$cell_fun(
+    2, 1,
+    grid::unit(0.5, "npc"), grid::unit(0.5, "npc"),
+    grid::unit(1, "npc"), grid::unit(1, "npc"),
+    NA
+  )
+  expect_equal(seen, c("level2:0.1", "level1:0.9"))
+})
+
 test_that("rank-based heatmaps support combined and separate modes only", {
   skip_if_not_installed("ComplexHeatmap")
   skip_if_not_installed("circlize")

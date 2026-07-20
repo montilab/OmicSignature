@@ -8,13 +8,13 @@
 #' `compare_omic_signatures()`. Overlap comparisons can show Jaccard
 #' similarity or p-value-based similarity on a `-log10(p-value)` scale.
 #' Asymmetric KS and GSEA comparisons can show score or `-log10(p-value)`
-#' matrices. For these comparisons, `mode = "combined"` draws split cells: the
-#' top-right triangle shows `level2_vs_level2` and the bottom-left triangle
-#' shows `level1_vs_level1`. `mode = "separate"` draws one full heatmap per
-#' level, each panel titled with an abbreviated label such as
-#' `"lev1_vs_lev1"`; since both panels use the same color scale, they share a
-#' single combined legend rather than showing two identical ones.
-#' `mode = "split"` is invalid for rank-based comparisons.
+#' matrices. For both, `mode = "combined"` draws split cells: the top-right
+#' triangle shows `level2_vs_level2` and the bottom-left triangle shows
+#' `level1_vs_level1`. `mode = "separate"` draws one full heatmap per level,
+#' each panel titled with an abbreviated label such as `"lev1_vs_lev1"`;
+#' since both panels use the same color scale, they share a single combined
+#' legend rather than showing two identical ones. `mode = "split"` is
+#' invalid for rank-based comparisons.
 #'
 #' @param comparison Output from `compare_omic_signatures()`.
 #' @param measure One of `"jaccard"`, `"score"`, or `"pvalue"`.
@@ -288,16 +288,11 @@ signature_similarity_heatmap <- function(
             rect_gp = grid::gpar(type = "none"),
             cell_fun = function(j, i, x, y, width, height, fill) {
               if (!is_visible_triangle_cell(i, j)) return(NULL)
-              top_right_value <- if (is_rank_based) {
-                sim$negative[i, j]
-              } else {
-                sim$positive[i, j]
-              }
-              bottom_left_value <- if (is_rank_based) {
-                sim$positive[i, j]
-              } else {
-                sim$negative[i, j]
-              }
+              ## Consistent across overlap and rank-based comparisons: level1
+              ## (sim$positive) always bottom-left, level2 (sim$negative)
+              ## always top-right.
+              top_right_value <- sim$negative[i, j]
+              bottom_left_value <- sim$positive[i, j]
               top_right_x <- grid::unit.c(x - width / 2, x + width / 2, x + width / 2)
               top_right_y <- grid::unit.c(y + height / 2, y + height / 2, y - height / 2)
               bottom_left_x <- grid::unit.c(x - width / 2, x - width / 2, x + width / 2)
