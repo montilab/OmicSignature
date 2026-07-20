@@ -17,3 +17,12 @@ h3 {
 h4 {
   font-size: 1.05rem;
 }
+
+// pkgdown's default .dropdown-menu caps every navbar dropdown at a fixed
+// 280px, forcing a scrollbar on the Articles menu even though its content
+// fits comfortably on screen. Scale the cap to the viewport instead: it
+// stays scrollable if the menu grows past most of the screen's height, but
+// doesn't truncate it prematurely at the current length.
+.dropdown-menu {
+  max-height: 85vh;
+}
