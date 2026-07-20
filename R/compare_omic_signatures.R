@@ -100,12 +100,10 @@
 #'   `jaccard`, `pvalue`, and `counts` (no `level1_vs_level1` nesting, and
 #'   `label_order` is `NULL`). Otherwise, for `method = "overlap"` each
 #'   element contains `jaccard`, `pvalue`, and `counts` matrices. `counts` is
-#'   an integer matrix with one extra final `"size"` row and column beyond
-#'   `jaccard`/`pvalue`'s dimensions: entry `[i, j]` is the overlap size
-#'   between signature `i` and signature `j`, the extra `"size"` column
-#'   reports each row signature's own retained feature-set size, the extra
-#'   `"size"` row reports each column signature's, and the corner entry is
-#'   `NA`. For `method = "ks_rank"`,
+#'   an integer matrix with the same dimensions as `jaccard`/`pvalue`: entry
+#'   `[i, j]` is the overlap size between signature `i` and signature `j`.
+#'   For self-comparisons, the diagonal is therefore each signature's own
+#'   retained feature-set size. For `method = "ks_rank"`,
 #'   `method = "ks_score"`, `method = "ks"`, and
 #'   `method = "gsea"` each element contains `score` and `pvalue` matrices;
 #'   columns for `sig_list2` signatures without a difexp table, or that are
@@ -351,17 +349,7 @@ compare_omic_signatures <- function(
   }
   pvalue <- .cos_adjust_matrix(pvalue, adjust, p_adjust_method, compare_self)
 
-  ## counts appends each signature's own (background-constrained) retained
-  ## feature-set size as an extra "size" row/column, so overlap counts can be
-  ## read alongside the set sizes they're drawn from without a separate call.
-  ## The corner entry (row size vs column size) isn't a meaningful overlap, so
-  ## it's left NA.
-  sizes1 <- vapply(set_list1, function(s) length(intersect(s, background)), integer(1))
-  sizes2 <- vapply(set_list2, function(s) length(intersect(s, background)), integer(1))
-  counts <- rbind(cbind(overlap, size = sizes1), size = c(sizes2, NA_integer_))
-  dimnames(counts) <- list(c(names(set_list1), "size"), c(names(set_list2), "size"))
-
-  list(jaccard = jaccard, pvalue = pvalue, counts = counts)
+  list(jaccard = jaccard, pvalue = pvalue, counts = overlap)
 }
 
 .cos_drop_small_sets <- function(set_list1, set_list2, min_features, compare_self) {
