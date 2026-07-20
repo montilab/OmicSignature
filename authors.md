@@ -9,7 +9,7 @@
 ## Citation
 
 Source:
-[`DESCRIPTION`](https://github.com/montilab/OmicSignature/blob/docs/dropdown-height-and-counts-matrix/DESCRIPTION)
+[`DESCRIPTION`](https://github.com/montilab/OmicSignature/blob/main/DESCRIPTION)
 
 Li V, Monti S (2026). *OmicSignature: An R package to store omics
 signatures as an R6 object*. R package version 1.3.0,
