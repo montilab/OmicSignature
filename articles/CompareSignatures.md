@@ -38,9 +38,11 @@ overlap_res$label_order
 #> e7386_cal27  "DMSO" "E7386" 
 #> icg001_hsc3  "DMSO" "ICG001"
 #> icg001_cal27 "DMSO" "ICG001"
+
 ## list the comparisons being performed
 names(overlap_res$comparisons)
 #> [1] "level1_vs_level1" "level2_vs_level2"
+
 ## show the comparison results for level 1 (jaccard and counts)
 overlap_res$comparisons$level1_vs_level1$jaccard
 #>              e7386_hsc3 e7386_cal27 icg001_hsc3 icg001_cal27
@@ -48,13 +50,14 @@ overlap_res$comparisons$level1_vs_level1$jaccard
 #> e7386_cal27   0.3023088   1.0000000   0.2141944    0.2862150
 #> icg001_hsc3   0.4600457   0.2141944   1.0000000    0.2384770
 #> icg001_cal27  0.2535613   0.2862150   0.2384770    1.0000000
+
+## in the counts matrix, you can see the signature sizes in the diagonal
 overlap_res$comparisons$level1_vs_level1$counts
-#>              e7386_hsc3 e7386_cal27 icg001_hsc3 icg001_cal27 size
-#> e7386_hsc3         1232         419         806          356 1232
-#> e7386_cal27         419         573         335          245  573
-#> icg001_hsc3         806         335        1326          357 1326
-#> icg001_cal27        356         245         357          528  528
-#> size               1232         573        1326          528   NA
+#>              e7386_hsc3 e7386_cal27 icg001_hsc3 icg001_cal27
+#> e7386_hsc3         1232         419         806          356
+#> e7386_cal27         419         573         335          245
+#> icg001_hsc3         806         335        1326          357
+#> icg001_cal27        356         245         357          528
 ```
 
 The overlap method returns three matrices for each compared factor
@@ -62,12 +65,10 @@ level:
 
 - `jaccard`: Jaccard similarity between retained feature sets.
 - `pvalue`: Fisher exact test p-values for overlap enrichment.
-- `counts`: an integer matrix with an extra final `size` row and column
-  beyond `jaccard`/`pvalue`’s dimensions. Entry `[i, j]` is the overlap
-  size between signature `i` and signature `j`; the extra `size` column
-  reports each row signature’s own retained feature-set size, the extra
-  `size` row reports each column signature’s, and the corner entry is
-  `NA`.
+- `counts`: an integer matrix with the same dimensions as
+  `jaccard`/`pvalue`. Entry `[i, j]` is the overlap size between
+  signature `i` and signature `j`; for self-comparisons, the diagonal is
+  therefore each signature’s own retained feature-set size.
 
 ## Compare two lists of signatures
 
@@ -130,11 +131,14 @@ paired_res <- compare_omic_signatures(
     signature_c = c("resistant", "sensitive")
   )
 )
+## level1 vs. level1
 paired_res$comparisons$level1_vs_level1$jaccard
 #>             signature_a signature_b signature_c
 #> signature_a   1.0000000   0.6666667   0.3333333
 #> signature_b   0.6666667   1.0000000   0.3333333
 #> signature_c   0.3333333   0.3333333   1.0000000
+
+## level2 vs. level2
 paired_res$comparisons$level2_vs_level2$jaccard
 #>             signature_a signature_b signature_c
 #> signature_a   1.0000000   0.6666667   0.3333333
@@ -201,16 +205,19 @@ round(toy_ks_score$comparisons$level1_vs_level1$score, 3)
 #> signature_a         1.0         0.8       0.556
 #> signature_b         0.8         1.0       0.556
 #> signature_c         0.5         0.5       1.000
+
 signif(toy_ks_score$comparisons$level1_vs_level1$pvalue, 3)
 #>             signature_a signature_b signature_c
 #> signature_a    5.78e-14    2.83e-10    6.24e-04
 #> signature_b    2.83e-10    5.78e-14    6.24e-04
 #> signature_c    1.03e-03    3.44e-05    5.78e-14
+
 round(toy_ks_score$comparisons$level2_vs_level2$score, 3)
 #>             signature_a signature_b signature_c
 #> signature_a         1.0         0.8         0.5
 #> signature_b         0.8         1.0         0.5
 #> signature_c         0.5         0.5         1.0
+
 signif(toy_ks_score$comparisons$level2_vs_level2$pvalue, 3)
 #>             signature_a signature_b signature_c
 #> signature_a    5.78e-14    2.83e-10    6.27e-04
@@ -256,8 +263,11 @@ signature_similarity_heatmap(
 
 ![](CompareSignatures_files/figure-html/unnamed-chunk-8-1.png)
 
-``` r
+With `mode="combined"`, a single triangular matrix is shown, with each
+entry divided into two triangles displaying the level2 (top-right) and
+level1 (bottom-left) similarity.
 
+``` r
 
 signature_similarity_heatmap(
   overlap_res,
@@ -270,7 +280,7 @@ signature_similarity_heatmap(
 )
 ```
 
-![](CompareSignatures_files/figure-html/unnamed-chunk-8-2.png)
+![](CompareSignatures_files/figure-html/unnamed-chunk-9-1.png)
 
 For `measure = "pvalue"`, values are plotted as `-log10(pvalue)`. Larger
 values therefore indicate stronger overlap enrichment.
@@ -297,7 +307,7 @@ signature_similarity_heatmap(
 )
 ```
 
-![](CompareSignatures_files/figure-html/unnamed-chunk-9-1.png)
+![](CompareSignatures_files/figure-html/unnamed-chunk-10-1.png)
 
 ``` r
 
@@ -312,4 +322,4 @@ signature_similarity_heatmap(
 )
 ```
 
-![](CompareSignatures_files/figure-html/unnamed-chunk-9-2.png)
+![](CompareSignatures_files/figure-html/unnamed-chunk-10-2.png)

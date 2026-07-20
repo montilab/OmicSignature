@@ -73,7 +73,7 @@
       <h1>Comparing OmicSignature Lists</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/montilab/OmicSignature/blob/main/vignettes/CompareSignatures.Rmd" class="external-link"><code>vignettes/CompareSignatures.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/montilab/OmicSignature/blob/docs/dropdown-height-and-counts-matrix/vignettes/CompareSignatures.Rmd" class="external-link"><code>vignettes/CompareSignatures.Rmd</code></a></small>
       <div class="d-none name"><code>CompareSignatures.Rmd</code></div>
     </div>
 
@@ -114,9 +114,11 @@ and the second factor level against the second factor level.</p>
 <span><span class="co">#&gt; e7386_cal27  "DMSO" "E7386" </span></span>
 <span><span class="co">#&gt; icg001_hsc3  "DMSO" "ICG001"</span></span>
 <span><span class="co">#&gt; icg001_cal27 "DMSO" "ICG001"</span></span>
+<span></span>
 <span><span class="co">## list the comparisons being performed</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">overlap_res</span><span class="op">$</span><span class="va">comparisons</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "level1_vs_level1" "level2_vs_level2"</span></span>
+<span></span>
 <span><span class="co">## show the comparison results for level 1 (jaccard and counts)</span></span>
 <span><span class="va">overlap_res</span><span class="op">$</span><span class="va">comparisons</span><span class="op">$</span><span class="va">level1_vs_level1</span><span class="op">$</span><span class="va">jaccard</span></span>
 <span><span class="co">#&gt;              e7386_hsc3 e7386_cal27 icg001_hsc3 icg001_cal27</span></span>
@@ -124,13 +126,14 @@ and the second factor level against the second factor level.</p>
 <span><span class="co">#&gt; e7386_cal27   0.3023088   1.0000000   0.2141944    0.2862150</span></span>
 <span><span class="co">#&gt; icg001_hsc3   0.4600457   0.2141944   1.0000000    0.2384770</span></span>
 <span><span class="co">#&gt; icg001_cal27  0.2535613   0.2862150   0.2384770    1.0000000</span></span>
+<span></span>
+<span><span class="co">## in the counts matrix, you can see the signature sizes in the diagonal</span></span>
 <span><span class="va">overlap_res</span><span class="op">$</span><span class="va">comparisons</span><span class="op">$</span><span class="va">level1_vs_level1</span><span class="op">$</span><span class="va">counts</span></span>
-<span><span class="co">#&gt;              e7386_hsc3 e7386_cal27 icg001_hsc3 icg001_cal27 size</span></span>
-<span><span class="co">#&gt; e7386_hsc3         1232         419         806          356 1232</span></span>
-<span><span class="co">#&gt; e7386_cal27         419         573         335          245  573</span></span>
-<span><span class="co">#&gt; icg001_hsc3         806         335        1326          357 1326</span></span>
-<span><span class="co">#&gt; icg001_cal27        356         245         357          528  528</span></span>
-<span><span class="co">#&gt; size               1232         573        1326          528   NA</span></span></code></pre></div>
+<span><span class="co">#&gt;              e7386_hsc3 e7386_cal27 icg001_hsc3 icg001_cal27</span></span>
+<span><span class="co">#&gt; e7386_hsc3         1232         419         806          356</span></span>
+<span><span class="co">#&gt; e7386_cal27         419         573         335          245</span></span>
+<span><span class="co">#&gt; icg001_hsc3         806         335        1326          357</span></span>
+<span><span class="co">#&gt; icg001_cal27        356         245         357          528</span></span></code></pre></div>
 <p>The overlap method returns three matrices for each compared factor
 level:</p>
 <ul>
@@ -141,14 +144,11 @@ sets.</li>
 <code>pvalue</code>: Fisher exact test p-values for overlap
 enrichment.</li>
 <li>
-<code>counts</code>: an integer matrix with an extra final
-<code>size</code> row and column beyond
-<code>jaccard</code>/<code>pvalue</code>’s dimensions. Entry
-<code>[i, j]</code> is the overlap size between signature <code>i</code>
-and signature <code>j</code>; the extra <code>size</code> column reports
-each row signature’s own retained feature-set size, the extra
-<code>size</code> row reports each column signature’s, and the corner
-entry is <code>NA</code>.</li>
+<code>counts</code>: an integer matrix with the same dimensions as
+<code>jaccard</code>/<code>pvalue</code>. Entry <code>[i, j]</code> is
+the overlap size between signature <code>i</code> and signature
+<code>j</code>; for self-comparisons, the diagonal is therefore each
+signature’s own retained feature-set size.</li>
 </ul>
 </div>
 <div class="section level2">
@@ -210,11 +210,14 @@ signatures need explicit matching.</p>
 <span>    signature_c <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"resistant"</span>, <span class="st">"sensitive"</span><span class="op">)</span></span>
 <span>  <span class="op">)</span></span>
 <span><span class="op">)</span></span>
+<span><span class="co">## level1 vs. level1</span></span>
 <span><span class="va">paired_res</span><span class="op">$</span><span class="va">comparisons</span><span class="op">$</span><span class="va">level1_vs_level1</span><span class="op">$</span><span class="va">jaccard</span></span>
 <span><span class="co">#&gt;             signature_a signature_b signature_c</span></span>
 <span><span class="co">#&gt; signature_a   1.0000000   0.6666667   0.3333333</span></span>
 <span><span class="co">#&gt; signature_b   0.6666667   1.0000000   0.3333333</span></span>
 <span><span class="co">#&gt; signature_c   0.3333333   0.3333333   1.0000000</span></span>
+<span></span>
+<span><span class="co">## level2 vs. level2</span></span>
 <span><span class="va">paired_res</span><span class="op">$</span><span class="va">comparisons</span><span class="op">$</span><span class="va">level2_vs_level2</span><span class="op">$</span><span class="va">jaccard</span></span>
 <span><span class="co">#&gt;             signature_a signature_b signature_c</span></span>
 <span><span class="co">#&gt; signature_a   1.0000000   0.6666667   0.3333333</span></span>
@@ -279,16 +282,19 @@ define the second level.</p>
 <span><span class="co">#&gt; signature_a         1.0         0.8       0.556</span></span>
 <span><span class="co">#&gt; signature_b         0.8         1.0       0.556</span></span>
 <span><span class="co">#&gt; signature_c         0.5         0.5       1.000</span></span>
+<span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">signif</a></span><span class="op">(</span><span class="va">toy_ks_score</span><span class="op">$</span><span class="va">comparisons</span><span class="op">$</span><span class="va">level1_vs_level1</span><span class="op">$</span><span class="va">pvalue</span>, <span class="fl">3</span><span class="op">)</span></span>
 <span><span class="co">#&gt;             signature_a signature_b signature_c</span></span>
 <span><span class="co">#&gt; signature_a    5.78e-14    2.83e-10    6.24e-04</span></span>
 <span><span class="co">#&gt; signature_b    2.83e-10    5.78e-14    6.24e-04</span></span>
 <span><span class="co">#&gt; signature_c    1.03e-03    3.44e-05    5.78e-14</span></span>
+<span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">toy_ks_score</span><span class="op">$</span><span class="va">comparisons</span><span class="op">$</span><span class="va">level2_vs_level2</span><span class="op">$</span><span class="va">score</span>, <span class="fl">3</span><span class="op">)</span></span>
 <span><span class="co">#&gt;             signature_a signature_b signature_c</span></span>
 <span><span class="co">#&gt; signature_a         1.0         0.8         0.5</span></span>
 <span><span class="co">#&gt; signature_b         0.8         1.0         0.5</span></span>
 <span><span class="co">#&gt; signature_c         0.5         0.5         1.0</span></span>
+<span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">signif</a></span><span class="op">(</span><span class="va">toy_ks_score</span><span class="op">$</span><span class="va">comparisons</span><span class="op">$</span><span class="va">level2_vs_level2</span><span class="op">$</span><span class="va">pvalue</span>, <span class="fl">3</span><span class="op">)</span></span>
 <span><span class="co">#&gt;             signature_a signature_b signature_c</span></span>
 <span><span class="co">#&gt; signature_a    5.78e-14    2.83e-10    6.27e-04</span></span>
@@ -325,9 +331,11 @@ function requires the optional <code>ComplexHeatmap</code> and
 <span>  column_names_rot <span class="op">=</span> <span class="fl">45</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p><img src="CompareSignatures_files/figure-html/unnamed-chunk-8-1.png" class="r-plt" alt="" width="700"></p>
+<p>With <code>mode="combined"</code>, a single triangular matrix is
+shown, with each entry divided into two triangles displaying the level2
+(top-right) and level1 (bottom-left) similarity.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span></span>
-<span><span class="fu"><a href="../reference/signature_similarity_heatmap.html">signature_similarity_heatmap</a></span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/signature_similarity_heatmap.html">signature_similarity_heatmap</a></span><span class="op">(</span></span>
 <span>  <span class="va">overlap_res</span>,</span>
 <span>  measure <span class="op">=</span> <span class="st">"jaccard"</span>,</span>
 <span>  mode <span class="op">=</span> <span class="st">"combined"</span>,</span>
@@ -336,7 +344,7 @@ function requires the optional <code>ComplexHeatmap</code> and
 <span>  row_names_gp <span class="op">=</span> <span class="fu">grid</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/grid/gpar.html" class="external-link">gpar</a></span><span class="op">(</span>fontsize <span class="op">=</span> <span class="fl">9</span><span class="op">)</span>,</span>
 <span>  column_names_rot <span class="op">=</span> <span class="fl">45</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p><img src="CompareSignatures_files/figure-html/unnamed-chunk-8-2.png" class="r-plt" alt="" width="700"></p>
+<p><img src="CompareSignatures_files/figure-html/unnamed-chunk-9-1.png" class="r-plt" alt="" width="700"></p>
 <p>For <code>measure = "pvalue"</code>, values are plotted as
 <code>-log10(pvalue)</code>. Larger values therefore indicate stronger
 overlap enrichment.</p>
@@ -359,7 +367,7 @@ draws those same two matrices as separate, full heatmaps instead.</p>
 <span>  row_names_gp <span class="op">=</span> <span class="fu">grid</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/grid/gpar.html" class="external-link">gpar</a></span><span class="op">(</span>fontsize <span class="op">=</span> <span class="fl">9</span><span class="op">)</span>,</span>
 <span>  column_names_rot <span class="op">=</span> <span class="fl">45</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p><img src="CompareSignatures_files/figure-html/unnamed-chunk-9-1.png" class="r-plt" alt="" width="700"></p>
+<p><img src="CompareSignatures_files/figure-html/unnamed-chunk-10-1.png" class="r-plt" alt="" width="700"></p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="fu"><a href="../reference/signature_similarity_heatmap.html">signature_similarity_heatmap</a></span><span class="op">(</span></span>
@@ -370,7 +378,7 @@ draws those same two matrices as separate, full heatmaps instead.</p>
 <span>  row_names_gp <span class="op">=</span> <span class="fu">grid</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/grid/gpar.html" class="external-link">gpar</a></span><span class="op">(</span>fontsize <span class="op">=</span> <span class="fl">9</span><span class="op">)</span>,</span>
 <span>  column_names_rot <span class="op">=</span> <span class="fl">45</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p><img src="CompareSignatures_files/figure-html/unnamed-chunk-9-2.png" class="r-plt" alt="" width="700"></p>
+<p><img src="CompareSignatures_files/figure-html/unnamed-chunk-10-2.png" class="r-plt" alt="" width="700"></p>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
