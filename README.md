@@ -1,12 +1,8 @@
 OmicSignature
 =============
 
-Contact: Vanessa Mengze Li \
-`vmli@bu.edu`
-
-### Last update
-
-Oct 17th 2025
+Contact: Monti Lab \
+`montilab@bu.edu`
 
 ### Github Link
 [montilab/OmicSignature](https://github.com/montilab/OmicSignature) 
