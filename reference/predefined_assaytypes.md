@@ -10,4 +10,4 @@ predefined_assaytypes
 
 ## Format
 
-An object of class `character` of length 7.
+A character vector.

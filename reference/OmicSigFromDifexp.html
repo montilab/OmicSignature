@@ -47,7 +47,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>create an OmicSignature object from differential expression matrix</h1>
-      <small class="dont-index">Source: <a href="https://github.com/montilab/OmicSignature/blob/main/R/OmicSigFromDifexp.R" class="external-link"><code>R/OmicSigFromDifexp.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/montilab/OmicSignature/blob/fix/medium-priority-cleanup/R/OmicSigFromDifexp.R" class="external-link"><code>R/OmicSigFromDifexp.R</code></a></small>
       <div class="d-none name"><code>OmicSigFromDifexp.Rd</code></div>
     </div>
 
@@ -76,9 +76,14 @@ They can be specified in metadata fields as one or more of the followings:
 
 
 <dt id="arg-criteria">criteria<a class="anchor" aria-label="anchor" href="#arg-criteria"></a></dt>
-<dd><p>A character string to specify criterias used to extract
-signatures from difexp. e.g. "logfc &gt; 5; score &gt; 10". Alternatively,
-they can be provided in metadata fields: list("logfc_cutoff" = 5, "score_cutoff" = 10)</p></dd>
+<dd><p>A character string of R expressions used to extract
+signatures from difexp, e.g. "logfc &gt; 5; score &gt; 10", evaluated as R code
+(via `rlang::parse_exprs()`) against `difexp` - `criteria` must only ever
+come from a trusted source, not from untrusted/external input.
+Alternatively, they can be provided in metadata fields:
+list("logfc_cutoff" = 5, "score_cutoff" = 10). At least one of `criteria`
+or a metadata cutoff field is required; without any, every row of
+`difexp` would silently become the signature.</p></dd>
 
 </dl></div>
     <div class="section level2">

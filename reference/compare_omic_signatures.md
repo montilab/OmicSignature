@@ -43,16 +43,16 @@ compare_omic_signatures(
 - sig_list2:
 
   Optional second list of OmicSignature objects or collection. Names
-  must be unique within the list and must not overlap with `sig_list1`'s
-  names, so that a cross-list comparison can never be mistaken for a
-  self-comparison. For `method = "ks_rank"`, `method = "ks_score"`, and
-  `method = "gsea"`, `sig_list2` is the ranking side and each element
-  needs to be bi-directional with a difexp table; elements that aren't
-  (including uni-directional signatures, which have no group_label
-  contrast to rank from) are excluded from `sig_list2` (with a warning)
-  but remain usable as `sig_list1` genesets, which never require difexp
-  or a group_label contrast. If no element of `sig_list2` can rank, this
-  errors instead.
+  must be unique within the list and must not overlap with
+  \`sig_list1\`'s names, so that a cross-list comparison can never be
+  mistaken for a self-comparison. For \`method = "ks_rank"\`, \`method =
+  "ks_score"\`, and \`method = "gsea"\`, \`sig_list2\` is the ranking
+  side and each element needs to be bi-directional with a difexp table;
+  elements that aren't (including uni-directional signatures, which have
+  no group_label contrast to rank from) are excluded from \`sig_list2\`
+  (with a warning) but remain usable as \`sig_list1\` genesets, which
+  never require difexp or a group_label contrast. If no element of
+  \`sig_list2\` can rank, this errors instead.
 
 - method:
 
@@ -66,23 +66,23 @@ compare_omic_signatures(
 
   Minimum absolute score to include in a signature. For signatures
   without a difexp table, this can only be applied if the signature
-  table itself has a `score_col` column; otherwise a warning is issued
+  table itself has a \`score_col\` column; otherwise a warning is issued
   and the cutoff is skipped.
 
 - adj_p_cutoff:
 
   Maximum adjusted p-value to include in a signature. For signatures
   without a difexp table, this can only be applied if the signature
-  table itself has an `adj_p_col` column; otherwise a warning is issued
-  and the cutoff is skipped.
+  table itself has an \`adj_p_col\` column; otherwise a warning is
+  issued and the cutoff is skipped.
 
 - min_features:
 
   Minimum number of features retained per label-specific signature. Must
-  be at least 3. For `method = "overlap"`, any signature/label that
-  cannot reach `min_features` retained features (even after backfilling)
-  is dropped from the comparison with a warning, rather than being
-  scored against a near-empty or empty feature set.
+  be at least 3. For \`method = "overlap"\`, any signature/label that
+  cannot reach \`min_features\` retained features (even after
+  backfilling) is dropped from the comparison with a warning, rather
+  than being scored against a near-empty or empty feature set.
 
 - max_feature:
 
@@ -137,9 +137,9 @@ compare_omic_signatures(
 
 - alternative:
 
-  Alternative hypothesis for Fisher and KS tests. For KS, `"greater"`
+  Alternative hypothesis for Fisher and KS tests. For KS, \`"greater"\`
   tests whether the feature set is enriched at the top of the signed
-  ranking, and `"less"` tests enrichment at the bottom.
+  ranking, and \`"less"\` tests enrichment at the bottom.
 
 - gsea_score:
 
@@ -160,6 +160,24 @@ compare_omic_signatures(
 - ...:
 
   Additional arguments passed to fgsea.
+
+## Value
+
+A list with one element per label pairing, except when every signature
+in both \`sig_list1\` and \`sig_list2\` is uni-directional and \`method
+= "overlap"\`, in which case \`comparisons\` directly contains
+\`jaccard\`, \`pvalue\`, and \`counts\` (no \`level1_vs_level1\`
+nesting, and \`label_order\` is \`NULL\`). Otherwise, for \`method =
+"overlap"\` each element contains \`jaccard\`, \`pvalue\`, and
+\`counts\` matrices. \`counts\` is an integer matrix with the same
+dimensions as \`jaccard\`/\`pvalue\`: entry \`\[i, j\]\` is the overlap
+size between signature \`i\` and signature \`j\`. For self-comparisons,
+the diagonal is therefore each signature's own retained feature-set
+size. For \`method = "ks_rank"\`, \`method = "ks_score"\`, \`method =
+"ks"\`, and \`method = "gsea"\` each element contains \`score\` and
+\`pvalue\` matrices; columns for \`sig_list2\` signatures without a
+difexp table, or that are uni-directional, are entirely \`NA\`, since
+those signatures cannot serve as the ranking side.
 
 ## Details
 
@@ -189,24 +207,6 @@ compared against both levels of every bi-directional signature. For
 a two-group contrast; if \`sig_list2\` contains no bi-directional
 signature with a difexp table (e.g. it is entirely uni-directional), the
 comparison is not possible and this errors.
-
-## Value
-
-A list with one element per label pairing, except when every signature
-in both \`sig_list1\` and \`sig_list2\` is uni-directional and \`method
-= "overlap"\`, in which case \`comparisons\` directly contains
-\`jaccard\`, \`pvalue\`, and \`counts\` (no \`level1_vs_level1\`
-nesting, and \`label_order\` is \`NULL\`). Otherwise, for \`method =
-"overlap"\` each element contains \`jaccard\`, \`pvalue\`, and
-\`counts\` matrices. \`counts\` is an integer matrix with the same
-dimensions as \`jaccard\`/\`pvalue\`: entry \`\[i, j\]\` is the overlap
-size between signature \`i\` and signature \`j\`. For self-comparisons,
-the diagonal is therefore each signature's own retained feature-set
-size. For \`method = "ks_rank"\`, \`method = "ks_score"\`, \`method =
-"ks"\`, and \`method = "gsea"\` each element contains \`score\` and
-\`pvalue\` matrices; columns for \`sig_list2\` signatures without a
-difexp table, or that are uni-directional, are entirely \`NA\`, since
-those signatures cannot serve as the ranking side.
 
 ## Examples
 

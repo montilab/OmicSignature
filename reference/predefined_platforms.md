@@ -10,4 +10,4 @@ predefined_platforms
 
 ## Format
 
-An object of class `character` of length 28.
+A character vector.
