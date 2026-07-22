@@ -299,7 +299,7 @@ OmicSignature <-
         return(difexp)
       },
       checkMetadata = function(metadata, signatureType = NULL, v = FALSE) {
-        stopifnot(is(metadata, "list"))
+        if (!is(metadata, "list")) stop("metadata must be a list. See createMetadata() for details.")
 
         # check required metadata fields
         metadataRequired <- c("signature_name", "phenotype", "organism", "direction_type", "assay_type")
@@ -351,7 +351,7 @@ OmicSignature <-
         # check covariates
         if (!is.null(metadata$covariates)) {
           if (!all(is.na(metadata$covariates))) {
-            stopifnot(is.character(metadata$covariates))
+            if (!is.character(metadata$covariates)) stop("covariates must be a character vector.")
             metadata$covariates <- paste(metadata$covariates, collapse = ", ")
           }
         }
@@ -359,24 +359,26 @@ OmicSignature <-
         # check keywords
         if (!is.null(metadata$keywords)) {
           if (!all(is.na(metadata$keywords))) {
-            stopifnot(is.character(metadata$keywords))
+            if (!is.character(metadata$keywords)) stop("keywords must be a character vector.")
             metadata$keywords <- paste(metadata$keywords, collapse = ", ")
           }
         }
 
         # check PMID
         if (!is.null(metadata$PMID)) {
-          if (!is.na(metadata$PMID)) {
-            stopifnot(is.character(metadata$PMID))
-            stopifnot(length(metadata$PMID) == 1)
+          ## Check length before is.na(): is.na() on a length > 1 vector
+          ## returns a length > 1 logical, which if() cannot evaluate.
+          if (length(metadata$PMID) != 1) stop("PMID must be a single-length character value.")
+          if (!is.na(metadata$PMID) && !is.character(metadata$PMID)) {
+            stop("PMID must be a character value.")
           }
         }
 
         # check description
         if (!is.null(metadata$description)) {
-          if (!is.na(metadata$description)) {
-            stopifnot(is.character(metadata$description))
-            stopifnot(length(metadata$description) == 1)
+          if (length(metadata$description) != 1) stop("description must be a single-length character value.")
+          if (!is.na(metadata$description) && !is.character(metadata$description)) {
+            stop("description must be a character value.")
           }
         }
 
@@ -407,7 +409,6 @@ OmicSignature <-
         } else {
           stop("Signature is not valid.")
         }
-        remove(input)
 
         ## starting this point, signature should be a dataframe
         if (nrow(signature) == 0) {

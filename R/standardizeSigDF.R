@@ -21,8 +21,8 @@ standardizeSigDF <- function(sigdf) {
     )
   if ("score" %in% colnames(sigdf)) {
     sigdf <- sigdf %>%
-      dplyr::filter(score != "") %>%
-      dplyr::mutate(score = as.numeric(as.character(score))) %>%
+      dplyr::mutate(score = suppressWarnings(as.numeric(as.character(score)))) %>%
+      dplyr::filter(!is.na(score)) %>%
       dplyr::arrange(desc(abs(score)))
   }
   if ("group_label" %in% colnames(sigdf)) {
