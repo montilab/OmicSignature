@@ -5,7 +5,7 @@
 \alias{predefined_organisms}
 \title{predefined organism list}
 \format{
-An object of class \code{character} of length 9.
+A character vector.
 }
 \usage{
 predefined_organisms

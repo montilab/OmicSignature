@@ -136,6 +136,7 @@
 #' )
 #' round(toy_ks_score$comparisons$level1_vs_level1$score, 3)
 #'
+#' @importFrom rlang .data
 #' @export
 compare_omic_signatures <- function(
     sig_list1,

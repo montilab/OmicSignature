@@ -1,21 +1,33 @@
 #' @title BRENDA tissue ontology obo file. using version 2021/10
 #' @description BTO:0000000 is set to be "unknown"
+#' @format A data frame with columns `ID` and `Name`.
+#' @docType data
+#' @keywords datasets
 #' @export
 BRENDA <- readRDS(file.path(system.file("extdata", package = "OmicSignature"), "BRENDA_2021.rds"))
 
 #' @title predefined platform list
-#' @description a list of predefined platform names 
+#' @description a list of predefined platform names
+#' @format A character vector.
+#' @docType data
+#' @keywords datasets
 #' @export
 # GEOplatform <- readRDS(file.path(system.file("extdata", package = "OmicSignature"), "GEOplatform_2024.rds"))
 predefined_platforms <- readLines(file.path(system.file("extdata", package = "OmicSignature"), "predefined_platforms.txt"))
 
 #' @title predefined organism list
-#' @description a list of predefined organism names 
+#' @description a list of predefined organism names
+#' @format A character vector.
+#' @docType data
+#' @keywords datasets
 #' @export
 predefined_organisms <- readLines(file.path(system.file("extdata", package = "OmicSignature"), "predefined_organisms.txt"))
 
 #' @title predefined assay type list
-#' @description a list of predefined assay type names 
+#' @description a list of predefined assay type names
+#' @format A character vector.
+#' @docType data
+#' @keywords datasets
 #' @export
 predefined_assaytypes <- readLines(file.path(system.file("extdata", package = "OmicSignature"), "predefined_assaytypes.txt"))
 

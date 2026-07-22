@@ -12,10 +12,9 @@ Depends: R (>= 3.5.0)
 License: GPL-3 + file LICENSE
 URL: https://github.com/montilab/OmicSignature
 Encoding: UTF-8
-RoxygenNote: 7.2.3
 LazyData: false
 Imports:
-	dplyr,
+	dplyr (>= 1.2.0),
 	rlang,
 	methods,
 	limma,
@@ -35,3 +34,4 @@ Suggests:
 VignetteBuilder: knitr
 Config/testthat/edition: 3
 BugReports: https://github.com/montilab/OmicSignature/issues
+Config/roxygen2/version: 8.0.0

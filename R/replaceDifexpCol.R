@@ -22,19 +22,20 @@ replaceDifexpCol <- function(x) {
   if (!methods::is(x, "character")) {
     stop("Input should be the column names of a difexp matrix, e.g. xs(difexp)")
   }
-  x <- x %>%
-    tolower() %>%
-    dplyr::recode(
-      # old = new
-      "t" = "score",
-      "gene.symbol" = "gene_symbol", "hgnc_symbol" = "gene_symbol",
-      "aveexpr" = "mean", "average" = "mean",
-      "probe.id" = "probe_id", "probe" = "probe_id", "id" = "probe_id",
-      "log2fc" = "logfc", "log.fold.change" = "logfc",
-      "p.value" = "p_value", "pval" = "p_value",
-      "adj.p.val" = "adj_p", "adj.p.value" = "adj_p", "adj.p" = "adj_p", "fdr" = "adj_p",
-      "q.value" = "q_value", "qval" = "q_value"
-    )
+  x <- tolower(x)
+  x <- dplyr::recode_values(
+    x,
+    # old ~ new
+    "t" ~ "score",
+    "gene.symbol" ~ "gene_symbol", "hgnc_symbol" ~ "gene_symbol",
+    "aveexpr" ~ "mean", "average" ~ "mean",
+    "probe.id" ~ "probe_id", "probe" ~ "probe_id", "id" ~ "probe_id",
+    "log2fc" ~ "logfc", "log.fold.change" ~ "logfc",
+    "p.value" ~ "p_value", "pval" ~ "p_value",
+    "adj.p.val" ~ "adj_p", "adj.p.value" ~ "adj_p", "adj.p" ~ "adj_p", "fdr" ~ "adj_p",
+    "q.value" ~ "q_value", "qval" ~ "q_value",
+    default = x
+  )
   xMissing <- setdiff(difexp_required_columns, x)
   if (length(xMissing) > 0) {
     warning(
@@ -49,6 +50,7 @@ replaceDifexpCol <- function(x) {
   if (is.null(difexp)) {
     return(x)
   } else {
+    colnames(difexp) <- x
     return(difexp)
   }
 }

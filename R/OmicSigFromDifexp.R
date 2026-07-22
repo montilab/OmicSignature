@@ -6,9 +6,14 @@
 #' the criterias to extract signatures will need to be provided in metadata.
 #' They can be specified in metadata fields as one or more of the followings:
 #' `logfc_cutoff`, `score_cutoff`, `adj_p_cutoff`, `p_value_cutoff`.
-#' @param criteria A character string to specify criterias used to extract
-#' signatures from difexp. e.g. "logfc > 5; score > 10". Alternatively,
-#' they can be provided in metadata fields: list("logfc_cutoff" = 5, "score_cutoff" = 10)
+#' @param criteria A character string of R expressions used to extract
+#' signatures from difexp, e.g. "logfc > 5; score > 10", evaluated as R code
+#' (via `rlang::parse_exprs()`) against `difexp` - `criteria` must only ever
+#' come from a trusted source, not from untrusted/external input.
+#' Alternatively, they can be provided in metadata fields:
+#' list("logfc_cutoff" = 5, "score_cutoff" = 10). At least one of `criteria`
+#' or a metadata cutoff field is required; without any, every row of
+#' `difexp` would silently become the signature.
 #' @importFrom dplyr filter select mutate arrange pull desc across everything %>%
 #' @importFrom rlang parse_exprs
 #' @return OmicSignature object
@@ -16,10 +21,7 @@
 
 OmicSigFromDifexp <- function(difexp, metadata, criteria = NULL) {
   ## define the following to pass R check since they are viewed as variables in dplyr functions
-  probe_id <- NULL
-  feature_name <- NULL
   score <- NULL
-  group_label <- NULL
 
   signatureType <- metadata$direction_type
 
@@ -31,7 +33,7 @@ OmicSigFromDifexp <- function(difexp, metadata, criteria = NULL) {
   if (signatureType == "bi-directional") {
     if (!"group_label" %in% colnames(difexp)) {
       if (!"score" %in% colnames(difexp)) stop("difexp must contain group_label or score column.")
-      difexp <- difexp %>% dplyr::mutate(group_label = ifelse(score < 0, "-", "+"), .after = score)
+      difexp <- difexp %>% dplyr::mutate(group_label = factor(ifelse(score < 0, "-", "+"), levels = c("+", "-")), .after = score)
     }
   }
 
@@ -43,35 +45,17 @@ OmicSigFromDifexp <- function(difexp, metadata, criteria = NULL) {
     if (!is.null(metadata$p_value_cutoff)) criteria <- c(criteria, paste("p_value <=", metadata$p_value_cutoff))
     criteria <- paste(criteria, collapse = "; ")
   }
-  cat(paste("-- criterias used to extract signatures: ", criteria, ". \n\n"))
-  v <- rlang::parse_exprs(criteria)
-
-  ## extract signatures according to criteria
-  signatures <- difexp %>%
-    dplyr::filter(!!!v)
-
-  if ("score" %in% colnames(difexp)) {
-    if (signatureType %in% c("bi-directional", "categorical")) {
-      signatures <- signatures %>%
-        dplyr::select(probe_id, feature_name, score, group_label) %>%
-        dplyr::arrange(dplyr::desc(abs(score)))
-    } else {
-      signatures <- signatures %>%
-        dplyr::select(probe_id, feature_name, score)
-    }
-  } else {
-    if (signatureType %in% c("bi-directional", "categorical")) {
-      signatures <- signatures %>%
-        dplyr::select(probe_id, feature_name, group_label)
-    } else {
-      signatures <- signatures %>%
-        dplyr::select(probe_id, feature_name)
-    }
+  if (!nzchar(trimws(criteria))) {
+    stop(
+      "No filtering criteria available: pass `criteria` explicitly, or set at least one of ",
+      "metadata$logfc_cutoff, metadata$score_cutoff, metadata$adj_p_cutoff, ",
+      "metadata$p_value_cutoff. Without any criteria, every row of difexp would silently ",
+      "become the signature."
+    )
   }
+  cat(paste("-- criterias used to extract signatures: ", criteria, ". \n\n"))
 
-  signatures <- signatures %>%
-    dplyr::distinct(feature_name, .keep_all = TRUE) %>%
-    filter(feature_name != "", complete.cases(across(everything())))
+  signatures <- .extract_signature_rows(difexp, criteria, signatureType)
 
   OmicSig <- OmicSignature$new(
     metadata = metadata,
