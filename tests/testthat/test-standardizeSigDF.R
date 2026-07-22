@@ -41,3 +41,12 @@ test_that("standardizeSigDF() falls back to first-appearance order for non-facto
   result <- standardizeSigDF(df)
   expect_equal(levels(result$group_label), c("ICG001", "DMSO"))
 })
+
+test_that("standardizeSigDF() drops rows with non-numeric or missing score", {
+  df <- data.frame(
+    probe_id = 1:3, feature_name = c("a", "b", "c"), score = c(2, NA, -1)
+  )
+  result <- standardizeSigDF(df)
+  expect_equal(nrow(result), 2)
+  expect_setequal(result$feature_name, c("a", "c"))
+})

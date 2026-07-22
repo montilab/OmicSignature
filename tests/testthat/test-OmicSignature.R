@@ -19,6 +19,38 @@ test_that("signature and difexp active bindings accept updates after constructio
   expect_equal(levels(sig$signature$group_label), c("down", "up"))
 })
 
+test_that("checkMetadata() gives descriptive errors for invalid optional fields", {
+  base_metadata <- list(
+    signature_name = "t", phenotype = "test",
+    organism = predefined_organisms[1], direction_type = "uni-directional",
+    assay_type = predefined_assaytypes[1]
+  )
+  signature <- data.frame(feature_name = "a", score = 1)
+
+  ## Regression test: these used to raise a generic stopifnot() error instead
+  ## of a descriptive message explaining what's expected.
+  expect_error(
+    OmicSignature$new(metadata = modifyList(base_metadata, list(covariates = 5)), signature = signature),
+    "covariates must be a character vector"
+  )
+  expect_error(
+    OmicSignature$new(metadata = modifyList(base_metadata, list(keywords = 5)), signature = signature),
+    "keywords must be a character vector"
+  )
+  expect_error(
+    OmicSignature$new(metadata = modifyList(base_metadata, list(PMID = 123)), signature = signature),
+    "PMID must be a character value"
+  )
+  expect_error(
+    OmicSignature$new(metadata = modifyList(base_metadata, list(PMID = c("1", "2"))), signature = signature),
+    "PMID must be a single-length character value"
+  )
+  expect_error(
+    OmicSignature$new(metadata = modifyList(base_metadata, list(description = 5)), signature = signature),
+    "description must be a character value"
+  )
+})
+
 test_that("checkDifexp() does not require group_label for uni-directional signatures", {
   metadata <- list(
     signature_name = "u", phenotype = "test",
