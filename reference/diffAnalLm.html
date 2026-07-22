@@ -47,7 +47,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>differential expression analysis using limma package</h1>
-      <small class="dont-index">Source: <a href="https://github.com/montilab/OmicSignature/blob/main/R/diffAnalLm.R" class="external-link"><code>R/diffAnalLm.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/montilab/OmicSignature/blob/fix/low-priority-cleanup/R/diffAnalLm.R" class="external-link"><code>R/diffAnalLm.R</code></a></small>
       <div class="d-none name"><code>diffAnalLm.Rd</code></div>
     </div>
 
@@ -57,7 +57,7 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">diffAnalLm</span><span class="op">(</span><span class="va">dat</span>, ctrl_columns <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span><span class="op">:</span><span class="fl">4</span><span class="op">)</span>, trt_columns <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">5</span><span class="op">:</span><span class="fl">7</span><span class="op">)</span>, id <span class="op">=</span> <span class="st">"ID_REF"</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">diffAnalLm</span><span class="op">(</span><span class="va">dat</span>, <span class="va">ctrl_columns</span>, <span class="va">trt_columns</span>, <span class="va">id</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -69,15 +69,15 @@
 
 
 <dt id="arg-ctrl-columns">ctrl_columns<a class="anchor" aria-label="anchor" href="#arg-ctrl-columns"></a></dt>
-<dd><p>column names (character vector) or column numbers (numeric vector) of control samples. input type need to be consistant with trt_columns.</p></dd>
+<dd><p>required. column names (character vector) or column numbers (numeric vector) of control samples. input type need to be consistant with trt_columns.</p></dd>
 
 
 <dt id="arg-trt-columns">trt_columns<a class="anchor" aria-label="anchor" href="#arg-trt-columns"></a></dt>
-<dd><p>column names (character vector) or column numbers (numeric vector) of treatment samples. input type need to be consistant with ctrl_columns.</p></dd>
+<dd><p>required. column names (character vector) or column numbers (numeric vector) of treatment samples. input type need to be consistant with ctrl_columns.</p></dd>
 
 
 <dt id="arg-id">id<a class="anchor" aria-label="anchor" href="#arg-id"></a></dt>
-<dd><p>the id for the features, usually probe id. either the column name of the input dataframe contains the id, or character vector of the actual ids for all features.</p></dd>
+<dd><p>required. the id for the features, usually probe id. either the column name of the input dataframe contains the id, or character vector of the actual ids for all features.</p></dd>
 
 </dl></div>
     <div class="section level2">
