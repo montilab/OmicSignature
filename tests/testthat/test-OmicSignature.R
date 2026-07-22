@@ -114,3 +114,58 @@ test_that("metadata<- re-validates signature/difexp when direction_type changes"
   capture.output(bi$metadata <- modifyList(bi_metadata, list(author = "someone")))
   expect_equal(bi$metadata$author, "someone")
 })
+
+test_that("print() reports a clear message when difexp is NULL", {
+  metadata <- list(
+    signature_name = "no_difexp", phenotype = "test",
+    organism = predefined_organisms[1], direction_type = "uni-directional",
+    assay_type = predefined_assaytypes[1]
+  )
+  signature <- data.frame(feature_name = c("a", "b"), score = c(1, 2))
+  capture.output(sig <- OmicSignature$new(metadata = metadata, signature = signature))
+
+  ## Regression test: print() used to unconditionally call nrow()/ncol() on
+  ## private$.difexp, which is NULL when no difexp was provided, producing
+  ## garbled/blank output instead of an explicit "no difexp" message.
+  out <- capture.output(sig$print())
+  expect_true(any(grepl("no difexp", out, fixed = TRUE)))
+})
+
+test_that("extractSignature() filters, orders by |score|, and dedupes by feature_name", {
+  difexp <- data.frame(
+    probe_id = paste0("p", 1:5),
+    feature_name = c("a", "b", "b", "c", "d"),
+    score = c(5, -3, -3, 1, 6),
+    p_value = c(0.001, 0.01, 0.01, 0.5, 0.001),
+    group_label = factor(c("up", "down", "down", "up", "up"), levels = c("up", "down"))
+  )
+  metadata <- list(
+    signature_name = "extract_test", phenotype = "test",
+    organism = predefined_organisms[1], direction_type = "bi-directional",
+    assay_type = predefined_assaytypes[1]
+  )
+  capture.output(sig <- OmicSignature$new(metadata = metadata, signature = difexp, difexp = difexp))
+
+  res <- sig$extractSignature("p_value < 0.1")
+
+  ## Regression test (#64): extractSignature() and OmicSigFromDifexp() now
+  ## share .extract_signature_rows(), which dedupes by feature_name (keeping
+  ## the first row after sorting by descending |score|) and orders by
+  ## descending |score|.
+  expect_equal(nrow(res), 3)
+  expect_equal(sum(res$feature_name == "b"), 1)
+  expect_equal(res$feature_name, c("d", "a", "b"))
+  expect_true("group_label" %in% colnames(res))
+})
+
+test_that("extractSignature() errors when difexp is NULL", {
+  metadata <- list(
+    signature_name = "no_difexp2", phenotype = "test",
+    organism = predefined_organisms[1], direction_type = "uni-directional",
+    assay_type = predefined_assaytypes[1]
+  )
+  signature <- data.frame(feature_name = c("a", "b"), score = c(1, 2))
+  capture.output(sig <- OmicSignature$new(metadata = metadata, signature = signature))
+
+  expect_error(sig$extractSignature("score > 0"), "Difexp data frame not found")
+})

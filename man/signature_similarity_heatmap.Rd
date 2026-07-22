@@ -59,7 +59,7 @@ self-comparison matrix, which always stays fully transparent.}
 }
 \value{
 A ComplexHeatmap Heatmap or HeatmapList object, invisibly if
-`draw = TRUE`.
+  `draw = TRUE`.
 }
 \description{
 Plot one or more ComplexHeatmap heatmaps from the object returned by
@@ -106,4 +106,5 @@ if (requireNamespace("ComplexHeatmap", quietly = TRUE) &&
     draw = FALSE
   )
 }
+
 }

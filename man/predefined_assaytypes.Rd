@@ -5,7 +5,7 @@
 \alias{predefined_assaytypes}
 \title{predefined assay type list}
 \format{
-An object of class \code{character} of length 7.
+A character vector.
 }
 \usage{
 predefined_assaytypes

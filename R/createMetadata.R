@@ -36,46 +36,50 @@ createMetadata <- function(signature_name, organism, phenotype = "unknown", assa
                            adj_p_cutoff = NULL, score_cutoff = NULL,
                            cutoff_description = NULL, others = NULL) {
   # check sig direction type
-  direction_type <- direction_type %>%
-    tolower() %>%
-    dplyr::case_match(
-      .default = direction_type,
-      "bi" ~ "bi-directional",
-      "uni" ~ "uni-directional"
-    )
+  ## lowercase first as its own statement so `default = direction_type` below
+  ## refers to the already-lowercased value, not the original mixed-case
+  ## input (recode_values() evaluates `default` eagerly against whatever
+  ## `direction_type` is bound to at call time).
+  direction_type <- tolower(direction_type)
+  direction_type <- dplyr::recode_values(
+    direction_type,
+    default = direction_type,
+    "bi" ~ "bi-directional",
+    "uni" ~ "uni-directional"
+  )
   if (!direction_type %in% c("bi-directional", "uni-directional", "categorical")) {
     stop("direction_type should be uni-directional, bi-directional or categorical.")
   }
 
   # check assey type
-  assay_type <- assay_type %>%
-    tolower() %>%
-    dplyr::case_match(
-      .default = assay_type,
-      "rna" ~ "transcriptomics",
-      "gene" ~ "transcriptomics",
-      "transcript" ~ "transcriptomics",
-      "transcripts" ~ "transcriptomics",
-      "transcriptomic" ~ "transcriptomics",
-      "protein" ~ "proteomics",
-      "proteomic" ~ "proteomics",
-      "metab" ~ "metabolomics",
-      "metabolite" ~ "metabolomics",
-      "metabolites" ~ "metabolomics",
-      "metabolome" ~ "metabolomics",
-      "metabolomic" ~ "metabolomics",
-      "methyl" ~ "methylomics",
-      "methylation" ~ "methylomics",
-      "methylomic" ~ "methylomics",
-      "snp" ~ "genetic_variations",
-      "snps" ~ "genetic_variations",
-      "genetic" ~ "genetic_variations",
-      "genetics" ~ "genetic_variations",
-      "genetic_variation" ~ "genetic_variations",
-      "chip-seq" ~ "DNA_binding_sites",
-      "chip seq" ~ "DNA_binding_sites",
-      "dna binding" ~ "DNA_binding_sites",
-      "dna_binding_site" ~ "DNA_binding_sites"
+  assay_type <- tolower(assay_type)
+  assay_type <- dplyr::recode_values(
+    assay_type,
+    default = assay_type,
+    "rna" ~ "transcriptomics",
+    "gene" ~ "transcriptomics",
+    "transcript" ~ "transcriptomics",
+    "transcripts" ~ "transcriptomics",
+    "transcriptomic" ~ "transcriptomics",
+    "protein" ~ "proteomics",
+    "proteomic" ~ "proteomics",
+    "metab" ~ "metabolomics",
+    "metabolite" ~ "metabolomics",
+    "metabolites" ~ "metabolomics",
+    "metabolome" ~ "metabolomics",
+    "metabolomic" ~ "metabolomics",
+    "methyl" ~ "methylomics",
+    "methylation" ~ "methylomics",
+    "methylomic" ~ "methylomics",
+    "snp" ~ "genetic_variations",
+    "snps" ~ "genetic_variations",
+    "genetic" ~ "genetic_variations",
+    "genetics" ~ "genetic_variations",
+    "genetic_variation" ~ "genetic_variations",
+    "chip-seq" ~ "DNA_binding_sites",
+    "chip seq" ~ "DNA_binding_sites",
+    "dna binding" ~ "DNA_binding_sites",
+    "dna_binding_site" ~ "DNA_binding_sites"
     )
   if (!assay_type %in% predefined_assaytypes) {
     warning("assay_type is not one of the commonly used assay_type terms. Ignore this message if intentional.\n")
@@ -92,7 +96,7 @@ createMetadata <- function(signature_name, organism, phenotype = "unknown", assa
   }
 
   # check if platform is valid
-  if (is.null(platform) | platform == "unknown") {
+  if (is.null(platform) || platform == "unknown") {
     platform <- "unknown"
     warning("Platform information unknown. Ignore this message if intentional. ")
   } else if (!platform %in% predefined_platforms) {
@@ -103,7 +107,7 @@ createMetadata <- function(signature_name, organism, phenotype = "unknown", assa
   }
 
   # check if organism is valid
-  if (is.null(organism) | organism == "unknown") {
+  if (is.null(organism) || organism == "unknown") {
     organism <- "unknown"
     warning("Organism information unknown. Ignore this message if intentional. ")
   } else if (!organism %in% predefined_organisms) {
@@ -114,7 +118,7 @@ createMetadata <- function(signature_name, organism, phenotype = "unknown", assa
   }
 
   # check phenotype
-  if (is.null(phenotype) | phenotype == "unknown") {
+  if (is.null(phenotype) || phenotype == "unknown") {
     phenotype <- "unknown"
     warning("Phenotype information unknown. Ignore this message if intentional. ")
   }

@@ -1,5 +1,37 @@
 #### OmicSigObj ####
 
+.extract_signature_rows <- function(difexp, conditions, direction_type) {
+  ## Shared by OmicSignature$extractSignature() and OmicSigFromDifexp():
+  ## filter a difexp-shaped table by a condition string (evaluated as R
+  ## expressions via rlang::parse_exprs() - conditions must only ever come
+  ## from a trusted source, never from untrusted/external input), then
+  ## select the columns relevant to direction_type, order by score when
+  ## present, and dedupe by feature_name.
+  probe_id <- NULL
+  feature_name <- NULL
+  score <- NULL
+  group_label <- NULL
+
+  v <- rlang::parse_exprs(conditions)
+  res <- difexp %>% dplyr::filter(!!!v)
+
+  has_score <- "score" %in% colnames(difexp)
+  is_grouped <- direction_type %in% c("bi-directional", "categorical")
+
+  cols <- c("probe_id", "feature_name")
+  if (has_score) cols <- c(cols, "score")
+  if (is_grouped) cols <- c(cols, "group_label")
+  res <- res %>% dplyr::select(dplyr::all_of(cols))
+
+  if (has_score) {
+    res <- res %>% dplyr::arrange(dplyr::desc(abs(score)))
+  }
+
+  res %>%
+    dplyr::filter(feature_name != "", complete.cases(dplyr::across(dplyr::everything()))) %>%
+    dplyr::distinct(feature_name, .keep_all = TRUE)
+}
+
 #' @title OmicSignature R6 object
 #' @description An R6 object to store signatures generated from experiments,
 #' including metadata, signature, and an optional differential expression
@@ -98,55 +130,25 @@ OmicSignature <-
           cat("    Length (", nrow(private$.signature), ")\n")
         }
         cat("  Differential Expression Data: \n")
-        cat("    ", nrow(private$.difexp), " x ", ncol(private$.difexp), "\n", sep = "")
+        if (is.null(private$.difexp)) {
+          cat("    * no difexp *\n")
+        } else {
+          cat("    ", nrow(private$.difexp), " x ", ncol(private$.difexp), "\n", sep = "")
+        }
         invisible(self)
       },
-      #' @param conditions conditions for new signatures
+      #' @param conditions A character string of R expressions passed to
+      #'   `dplyr::filter()`, e.g. `"score > 5; adj_p < 0.01"`. Evaluated as
+      #'   R code (via `rlang::parse_exprs()`) against `difexp`, so
+      #'   `conditions` must only ever come from a trusted source, not from
+      #'   untrusted/external input.
       #' @return a dataframe of new signatures
       #' @export
       extractSignature = function(conditions) {
         if (is.null(private$.difexp)) {
           stop("Error: Difexp data frame not found.")
         }
-        v <- rlang::parse_exprs(conditions)
-
-        direction_type <- private$.metadata$direction_type
-        difexp <- private$.difexp
-        res <- difexp %>% dplyr::filter(!!!v)
-
-        if ("score" %in% colnames(difexp)) {
-          if (direction_type == "uni-directional") {
-            res <- res %>%
-              dplyr::select(probe_id, feature_name, score) %>%
-              dplyr::filter(score != "") %>%
-              dplyr::arrange(desc(abs(score)))
-          } else if (direction_type == "bi-directional") {
-            res <- res %>%
-              dplyr::select(probe_id, feature_name, score, group_label) %>%
-              dplyr::filter(score != "") %>%
-              dplyr::arrange(desc(abs(score)))
-          } else if (direction_type == "categorical") {
-            res <- res %>%
-              dplyr::select(probe_id, feature_name, score, group_label) %>%
-              dplyr::filter(score != "", ) %>%
-              dplyr::arrange(desc(abs(score)))
-          }
-        } else {
-          if (direction_type == "uni-directional") {
-            res <- res %>%
-              dplyr::select(probe_id, feature_name)
-          } else {
-            res <- res %>%
-              dplyr::filter(!!!v) %>%
-              dplyr::select(probe_id, feature_name, group_label)
-          }
-        }
-
-        res <- res %>%
-          dplyr::filter(feature_name != "", complete.cases(across(everything()))) %>%
-          dplyr::distinct(feature_name, .keep_all = TRUE)
-
-        return(res)
+        .extract_signature_rows(private$.difexp, conditions, private$.metadata$direction_type)
       }
     ),
 

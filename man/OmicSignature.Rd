@@ -4,105 +4,115 @@
 \alias{OmicSignature}
 \title{OmicSignature R6 object}
 \description{
-An R6 object to store signatures generated from experiments, including
-metadata, signature, and an optional differential expression analysis result
-dataframe.
+An R6 object to store signatures generated from experiments,
+including metadata, signature, and an optional differential expression
+analysis result dataframe.
 
 `OmicSignature` uses R6 reference semantics: assigning an object to a new
 variable does not make an independent copy. Both variables point to the same
-mutable object, so changes through one variable are visible through the other.
-Use `$clone()` when an independent copy is needed, and `$clone(deep = TRUE)`
-when nested R6 objects also need to be copied.
+mutable object, so changes through one variable are visible through the
+other. Use `$clone()` when an independent copy is needed, and
+`$clone(deep = TRUE)` when nested R6 objects also need to be copied.
+updated 10/2025
 }
 \section{Active bindings}{
-\if{html}{\out{<div class="r6-active-bindings">}}
-\describe{
-\item{\code{metadata}}{a list to describe the metadata}
+  \if{html}{\out{<div class="r6-active-bindings">}}
+  \describe{
+    \item{\code{metadata}}{a list to describe the metadata}
 
-\item{\code{signature}}{a dataframe contains probe_id, feature_name, score (optional) and group_label (optional)}
+    \item{\code{signature}}{a dataframe contains probe_id, feature_name, score (optional) and group_label (optional)}
 
-\item{\code{difexp}}{a dataframe for differential expression result}
+    \item{\code{difexp}}{a dataframe for differential expression result}
 
-\item{\code{removeDifexp}}{a function to remove difexp from the object}
-}
-\if{html}{\out{</div>}}
+    \item{\code{removeDifexp}}{a function to remove difexp from the object}
+  }
+  \if{html}{\out{</div>}}
 }
 \section{Methods}{
 \subsection{Public methods}{
-\itemize{
-\item \href{#method-OmicSignature-new}{\code{OmicSignature$new()}}
-\item \href{#method-OmicSignature-print}{\code{OmicSignature$print()}}
-\item \href{#method-OmicSignature-extractSignature}{\code{OmicSignature$extractSignature()}}
-\item \href{#method-OmicSignature-clone}{\code{OmicSignature$clone()}}
-}
+  \itemize{
+    \item \href{#method-OmicSignature-initialize}{\code{OmicSignature$new()}}
+    \item \href{#method-OmicSignature-print}{\code{OmicSignature$print()}}
+    \item \href{#method-OmicSignature-extractSignature}{\code{OmicSignature$extractSignature()}}
+    \item \href{#method-OmicSignature-clone}{\code{OmicSignature$clone()}}
+  }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-OmicSignature-new"></a>}}
-\if{latex}{\out{\hypertarget{method-OmicSignature-new}{}}}
-\subsection{Method \code{new()}}{
-Create a new OmicSignature object
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{OmicSignature$new(metadata, signature, difexp = NULL, print_message = FALSE)}\if{html}{\out{</div>}}
+\if{html}{\out{<a id="method-OmicSignature-initialize"></a>}}
+\if{latex}{\out{\hypertarget{method-OmicSignature-initialize}{}}}
+\subsection{\code{OmicSignature$new()}}{
+  Create a new OmicSignature object
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{OmicSignature$new(metadata, signature, difexp = NULL, print_message = FALSE)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{metadata}}{required. a list. See `createMetadata` for more information}
+      \item{\code{signature}}{required. a vector, or a dataframe including columns: "probe_id", "feature_name" and "group_label", and an optional column "score"}
+      \item{\code{difexp}}{optional}
+      \item{\code{print_message}}{use TRUE if want to see all messages printed}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{metadata}}{required. a list. See `createMetadata` for more information}
-
-\item{\code{signature}}{required. a vector, or a dataframe including columns: "probe_id", "feature_name" and "group_label", and an optional column "score"}
-
-\item{\code{difexp}}{optional}
-
-\item{\code{print_message}}{use TRUE if want to see all messages printed}
-}
-\if{html}{\out{</div>}}
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-OmicSignature-print"></a>}}
 \if{latex}{\out{\hypertarget{method-OmicSignature-print}{}}}
-\subsection{Method \code{print()}}{
-Print an OmicSignature object
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{OmicSignature$print()}\if{html}{\out{</div>}}
+\subsection{\code{OmicSignature$print()}}{
+  Print an OmicSignature object
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{OmicSignature$print()}
+    \if{html}{\out{</div>}}
+  }
 }
 
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-OmicSignature-extractSignature"></a>}}
 \if{latex}{\out{\hypertarget{method-OmicSignature-extractSignature}{}}}
-\subsection{Method \code{extractSignature()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{OmicSignature$extractSignature(conditions)}\if{html}{\out{</div>}}
+\subsection{\code{OmicSignature$extractSignature()}}{
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{OmicSignature$extractSignature(conditions)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{conditions}}{A character string of R expressions passed to
+`dplyr::filter()`, e.g. `"score > 5; adj_p < 0.01"`. Evaluated as
+R code (via `rlang::parse_exprs()`) against `difexp`, so
+`conditions` must only ever come from a trusted source, not from
+untrusted/external input.}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    a dataframe of new signatures
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{conditions}}{conditions for new signatures}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-a dataframe of new signatures
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-OmicSignature-clone"></a>}}
 \if{latex}{\out{\hypertarget{method-OmicSignature-clone}{}}}
-\subsection{Method \code{clone()}}{
-The objects of this class are cloneable with this method.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{OmicSignature$clone(deep = FALSE)}\if{html}{\out{</div>}}
+\subsection{\code{OmicSignature$clone()}}{
+  The objects of this class are cloneable with this method.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{OmicSignature$clone(deep = FALSE)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{deep}}{Whether to make a deep clone.}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{deep}}{Whether to make a deep clone.}
-}
-\if{html}{\out{</div>}}
-}
-}
 }
