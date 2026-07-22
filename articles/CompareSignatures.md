@@ -1,7 +1,9 @@
 # Comparing OmicSignature Lists
 
 This vignette outlines the workflow for comparing `OmicSignature`
-objects and visualizing similarity among signatures.
+objects and visualizing similarity among signatures. It is prepared for
+later publication with the package website and uses small illustrative
+snippets rather than bundled example signature files.
 
 ## Compare one list of signatures
 
