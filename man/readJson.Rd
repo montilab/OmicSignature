@@ -16,5 +16,5 @@ OmicSignature object
 To avoid confusion, in the json text file, assume the column
 names in signature dataframe and difexp dataframe have prefix "sig_"
 and "difexp". This corresponds to writeJson() function.
-updated 04/2024
+updated 08/2025
 }
