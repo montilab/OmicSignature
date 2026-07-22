@@ -157,7 +157,25 @@ OmicSignature <-
         if (missing(value)) {
           private$.metadata
         } else {
-          private$.metadata <- private$checkMetadata(value, v = print_message)
+          new_metadata <- private$checkMetadata(value, v = print_message)
+          if (!identical(new_metadata$direction_type, private$.metadata$direction_type)) {
+            ## direction_type governs what's required/meaningful in signature
+            ## and difexp (e.g. group_label); re-validate both against the
+            ## new type instead of letting metadata and data go structurally
+            ## out of sync silently.
+            private$.signature <- private$checkSignature(
+              private$.signature, signatureType = new_metadata$direction_type, v = print_message
+            )
+            if (!is.null(private$.difexp)) {
+              private$.difexp <- private$checkDifexp(
+                private$.difexp, signatureType = new_metadata$direction_type, v = print_message
+              )
+            }
+            if (new_metadata$direction_type == "uni-directional") {
+              private$checkNoStaleGroupLabel(private$.signature, private$.difexp)
+            }
+          }
+          private$.metadata <- new_metadata
         }
       },
       #' @field signature a dataframe contains probe_id, feature_name, score (optional) and group_label (optional)
@@ -199,6 +217,26 @@ OmicSignature <-
       verbose = function(v, ...) {
         if (v) cat(...)
       },
+      checkNoStaleGroupLabel = function(signature, difexp) {
+        ## checkSignature()/checkDifexp() only enforce required columns for
+        ## the new direction_type; a multi-level group_label column left
+        ## over from a prior bi-directional/categorical direction_type is
+        ## structurally harmless under uni-directional's laxer requirements,
+        ## but would be silently ignored by anything that trusts
+        ## metadata$direction_type alone (e.g. compare_omic_signatures()).
+        has_stale <- function(df) {
+          !is.null(df) && "group_label" %in% colnames(df) && nlevels(df$group_label) > 1
+        }
+        if (has_stale(signature) || has_stale(difexp)) {
+          stop(
+            "Cannot change direction_type to 'uni-directional': signature and/or difexp ",
+            "still has a multi-level group_label column, which would be silently ignored ",
+            "downstream. Remove group_label from signature/difexp first, or construct a ",
+            "new OmicSignature object instead."
+          )
+        }
+        invisible(TRUE)
+      },
       checkDifexp = function(difexp, signatureType = NULL, v = FALSE) {
         if (is.null(difexp)) stop("Please use build-in function $removeDifexp.")
         if (is(difexp, "OmicSignature")) difexp <- difexp$difexp
@@ -209,7 +247,7 @@ OmicSignature <-
         if (nrow(difexp) == 0) stop("difexp is empty. ")
 
         ## check column names:
-        difexpColRequired <- c("probe_id", "feature_name", "score", "group_label")
+        difexpColRequired <- c("probe_id", "feature_name", "score")
         if (signatureType != "uni-directional") {
           difexpColRequired <- c(difexpColRequired, "group_label")
         }
