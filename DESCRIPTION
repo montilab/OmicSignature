@@ -3,9 +3,9 @@ Type: Package
 Title: An R package to store omics signatures as an R6 object
 Version: 1.3.0
 Authors@R: c(person(given="Vanessa Mengze", family="Li", email="vmli@bu.edu", 
-             role=c("aut", "cre")),
-             person(given="Stefano", family="Monti", email="smonti@bu.edu", 
-             role=c("aut")))
+             role=c("aut")),
+             person(given="Monti", family="Lab", email="montilab@bu.edu", 
+             role=c("aut","cre")))
 Description: As high-throughput technology evolves, a large number of omics-signatures are being derived. 
     This package contains OmicSignature and OmicSignatureCollection R6 objects, and can help to store signatures efficiently and retrieve them conveniently.
 Depends: R (>= 3.5.0)
