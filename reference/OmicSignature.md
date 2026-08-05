@@ -9,7 +9,7 @@ new variable does not make an independent copy. Both variables point to
 the same mutable object, so changes through one variable are visible
 through the other. Use \`\$clone()\` when an independent copy is needed,
 and \`\$clone(deep = TRUE)\` when nested R6 objects also need to be
-copied. updated 10/2025
+copied.
 
 ## Active bindings
 
@@ -34,7 +34,7 @@ copied. updated 10/2025
 
 ### Public methods
 
-- [`OmicSignature$new()`](#method-OmicSignature-initialize)
+- [`OmicSignature$new()`](#method-OmicSignature-new)
 
 - [`OmicSignature$print()`](#method-OmicSignature-print)
 
@@ -44,7 +44,7 @@ copied. updated 10/2025
 
 ------------------------------------------------------------------------
 
-### `OmicSignature$new()`
+### Method `new()`
 
 Create a new OmicSignature object
 
@@ -73,7 +73,7 @@ Create a new OmicSignature object
 
 ------------------------------------------------------------------------
 
-### `OmicSignature$print()`
+### Method [`print()`](https://rdrr.io/r/base/print.html)
 
 Print an OmicSignature object
 
@@ -83,7 +83,7 @@ Print an OmicSignature object
 
 ------------------------------------------------------------------------
 
-### `OmicSignature$extractSignature()`
+### Method `extractSignature()`
 
 #### Usage
 
@@ -93,11 +93,7 @@ Print an OmicSignature object
 
 - `conditions`:
 
-  A character string of R expressions passed to \`dplyr::filter()\`,
-  e.g. \`"score \> 5; adj_p \< 0.01"\`. Evaluated as R code (via
-  \`rlang::parse_exprs()\`) against \`difexp\`, so \`conditions\` must
-  only ever come from a trusted source, not from untrusted/external
-  input.
+  conditions for new signatures
 
 #### Returns
 
@@ -105,7 +101,7 @@ a dataframe of new signatures
 
 ------------------------------------------------------------------------
 
-### `OmicSignature$clone()`
+### Method `clone()`
 
 The objects of this class are cloneable with this method.
 

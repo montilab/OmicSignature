@@ -5,7 +5,7 @@ updated 08/2020
 ## Usage
 
 ``` r
-diffAnalLm(dat, ctrl_columns, trt_columns, id)
+diffAnalLm(dat, ctrl_columns = c(2:4), trt_columns = c(5:7), id = "ID_REF")
 ```
 
 ## Arguments
@@ -17,21 +17,19 @@ diffAnalLm(dat, ctrl_columns, trt_columns, id)
 
 - ctrl_columns:
 
-  required. column names (character vector) or column numbers (numeric
-  vector) of control samples. input type need to be consistant with
-  trt_columns.
+  column names (character vector) or column numbers (numeric vector) of
+  control samples. input type need to be consistant with trt_columns.
 
 - trt_columns:
 
-  required. column names (character vector) or column numbers (numeric
-  vector) of treatment samples. input type need to be consistant with
-  ctrl_columns.
+  column names (character vector) or column numbers (numeric vector) of
+  treatment samples. input type need to be consistant with ctrl_columns.
 
 - id:
 
-  required. the id for the features, usually probe id. either the column
-  name of the input dataframe contains the id, or character vector of
-  the actual ids for all features.
+  the id for the features, usually probe id. either the column name of
+  the input dataframe contains the id, or character vector of the actual
+  ids for all features.
 
 ## Value
 

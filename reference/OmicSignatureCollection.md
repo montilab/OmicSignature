@@ -24,7 +24,7 @@ objects also need to be copied.
 
 ### Public methods
 
-- [`OmicSignatureCollection$new()`](#method-OmicSignatureCollection-initialize)
+- [`OmicSignatureCollection$new()`](#method-OmicSignatureCollection-new)
 
 - [`OmicSignatureCollection$print()`](#method-OmicSignatureCollection-print)
 
@@ -36,7 +36,7 @@ objects also need to be copied.
 
 ------------------------------------------------------------------------
 
-### `OmicSignatureCollection$new()`
+### Method `new()`
 
 Create an OmicSignatureCollection object
 
@@ -60,7 +60,7 @@ Create an OmicSignatureCollection object
 
 ------------------------------------------------------------------------
 
-### `OmicSignatureCollection$print()`
+### Method [`print()`](https://rdrr.io/r/base/print.html)
 
 Print an OmicSignatureCollection object
 
@@ -70,7 +70,7 @@ Print an OmicSignatureCollection object
 
 ------------------------------------------------------------------------
 
-### `OmicSignatureCollection$extractSignature()`
+### Method `extractSignature()`
 
 #### Usage
 
@@ -93,7 +93,7 @@ a dataframe or a list of new signatures
 
 ------------------------------------------------------------------------
 
-### `OmicSignatureCollection$metadataSummary()`
+### Method `metadataSummary()`
 
 #### Usage
 
@@ -112,7 +112,7 @@ a dataframe of the summary of the metadata
 
 ------------------------------------------------------------------------
 
-### `OmicSignatureCollection$clone()`
+### Method `clone()`
 
 The objects of this class are cloneable with this method.
 
