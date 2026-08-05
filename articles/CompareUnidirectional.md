@@ -58,11 +58,10 @@ uni_res$comparisons$jaccard
 #> uni_y 0.3333333 1.0000000     0
 #> uni_z 0.0000000 0.0000000     1
 uni_res$comparisons$counts
-#>       uni_x uni_y uni_z size
-#> uni_x    10     5     0   10
-#> uni_y     5    10     0   10
-#> uni_z     0     0    10   10
-#> size     10    10    10   NA
+#>       uni_x uni_y uni_z
+#> uni_x    10     5     0
+#> uni_y     5    10     0
+#> uni_z     0     0    10
 ```
 
 ## KS and GSEA are not possible without a ranking

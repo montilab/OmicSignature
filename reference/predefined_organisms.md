@@ -10,4 +10,4 @@ predefined_organisms
 
 ## Format
 
-An object of class `character` of length 9.
+A character vector.

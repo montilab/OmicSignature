@@ -2,7 +2,7 @@
 
 To avoid confusion, in the json text file, assume the column names in
 signature dataframe and difexp dataframe have prefix "sig\_" and
-"difexp". This corresponds to writeJson() function. updated 04/2024
+"difexp". This corresponds to writeJson() function. updated 08/2025
 
 ## Usage
 

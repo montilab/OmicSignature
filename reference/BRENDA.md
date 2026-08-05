@@ -10,4 +10,4 @@ BRENDA
 
 ## Format
 
-An object of class `data.frame` with 6565 rows and 2 columns.
+A data frame with columns \`ID\` and \`Name\`.
