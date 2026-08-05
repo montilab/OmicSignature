@@ -19,32 +19,153 @@ test_that("signature and difexp active bindings accept updates after constructio
   expect_equal(levels(sig$signature$group_label), c("down", "up"))
 })
 
-test_that("auto-generated probe_id is unique when difexp is NULL", {
-  ## Regression test: the difexp = NULL branch had seq() and paste0()
-  ## transposed -- seq(paste0("feature_", nrow(signature))) collapses to
-  ## seq("feature_N") == 1, assigning probe_id = "1" to every row. The object
-  ## still built and validated, so its rows were mutually indistinguishable by
-  ## probe. Curated / membership-only signatures (which take difexp = NULL) were
-  ## the ones affected.
-  metadata <- list(
-    signature_name = "no_difexp",
-    phenotype = "test",
-    organism = predefined_organisms[1],
-    direction_type = "bi-directional",
+test_that("checkMetadata() gives descriptive errors for invalid optional fields", {
+  base_metadata <- list(
+    signature_name = "t", phenotype = "test",
+    organism = predefined_organisms[1], direction_type = "uni-directional",
     assay_type = predefined_assaytypes[1]
   )
-  signature <- data.frame(
-    feature_name = c("A", "B", "C", "D"),
-    score = c(2, 1, -1, -2),
-    group_label = factor(c("up", "up", "down", "down"), levels = c("up", "down")),
-    stringsAsFactors = FALSE
+  signature <- data.frame(feature_name = "a", score = 1)
+
+  ## Regression test: these used to raise a generic stopifnot() error instead
+  ## of a descriptive message explaining what's expected.
+  expect_error(
+    OmicSignature$new(metadata = modifyList(base_metadata, list(covariates = 5)), signature = signature),
+    "covariates must be a character vector"
+  )
+  expect_error(
+    OmicSignature$new(metadata = modifyList(base_metadata, list(keywords = 5)), signature = signature),
+    "keywords must be a character vector"
+  )
+  expect_error(
+    OmicSignature$new(metadata = modifyList(base_metadata, list(PMID = 123)), signature = signature),
+    "PMID must be a character value"
+  )
+  expect_error(
+    OmicSignature$new(metadata = modifyList(base_metadata, list(PMID = c("1", "2"))), signature = signature),
+    "PMID must be a single-length character value"
+  )
+  expect_error(
+    OmicSignature$new(metadata = modifyList(base_metadata, list(description = 5)), signature = signature),
+    "description must be a character value"
+  )
+})
+
+test_that("checkDifexp() does not require group_label for uni-directional signatures", {
+  metadata <- list(
+    signature_name = "u", phenotype = "test",
+    organism = predefined_organisms[1], direction_type = "uni-directional",
+    assay_type = predefined_assaytypes[1]
+  )
+  signature <- data.frame(feature_name = c("A", "B"), score = c(1, 2))
+  difexp <- data.frame(
+    probe_id = 1:2, feature_name = c("A", "B"), score = c(1, 2), p_value = c(0.01, 0.02)
   )
 
-  capture.output(
-    sig <- OmicSignature$new(metadata = metadata, signature = signature, difexp = NULL)
+  ## Regression test: checkDifexp()'s required-columns list included
+  ## group_label unconditionally, contradicting checkSignature()'s handling
+  ## of the signature table and forcing a meaningless placeholder column.
+  expect_no_error(
+    capture.output(
+      sig <- OmicSignature$new(metadata = metadata, signature = signature, difexp = difexp)
+    )
+  )
+  expect_false("group_label" %in% colnames(sig$difexp))
+})
+
+test_that("metadata<- re-validates signature/difexp when direction_type changes", {
+  bi_metadata <- list(
+    signature_name = "bi", phenotype = "test",
+    organism = predefined_organisms[1], direction_type = "bi-directional",
+    assay_type = predefined_assaytypes[1]
+  )
+  bi_signature <- data.frame(
+    probe_id = 1:4, feature_name = c("a", "b", "c", "d"),
+    group_label = factor(c("up", "up", "down", "down"), levels = c("up", "down"))
+  )
+  capture.output(bi <- OmicSignature$new(metadata = bi_metadata, signature = bi_signature))
+
+  ## Regression test: demoting direction_type to uni-directional used to
+  ## succeed silently even though signature still had a multi-level
+  ## group_label column, which compare_omic_signatures() would then ignore
+  ## entirely based on metadata$direction_type alone.
+  expect_error(
+    bi$metadata <- modifyList(bi_metadata, list(direction_type = "uni-directional")),
+    "multi-level group_label"
+  )
+  expect_equal(bi$metadata$direction_type, "bi-directional")
+
+  uni_metadata <- list(
+    signature_name = "u", phenotype = "test",
+    organism = predefined_organisms[1], direction_type = "uni-directional",
+    assay_type = predefined_assaytypes[1]
+  )
+  uni_signature <- data.frame(feature_name = c("a", "b"), score = c(1, 2))
+  capture.output(uni <- OmicSignature$new(metadata = uni_metadata, signature = uni_signature))
+
+  ## Promoting to bi-directional without a group_label column should also
+  ## be rejected (re-validated via checkSignature()).
+  expect_error(
+    uni$metadata <- modifyList(uni_metadata, list(direction_type = "bi-directional")),
+    "group_label"
   )
 
-  expect_false(any(duplicated(sig$signature$probe_id)))
-  expect_true(all(grepl("^feature_[0-9]+$", sig$signature$probe_id)))
-  expect_equal(length(unique(sig$signature$probe_id)), nrow(signature))
+  ## An unrelated metadata change (same direction_type) is unaffected.
+  capture.output(bi$metadata <- modifyList(bi_metadata, list(author = "someone")))
+  expect_equal(bi$metadata$author, "someone")
+})
+
+test_that("print() reports a clear message when difexp is NULL", {
+  metadata <- list(
+    signature_name = "no_difexp", phenotype = "test",
+    organism = predefined_organisms[1], direction_type = "uni-directional",
+    assay_type = predefined_assaytypes[1]
+  )
+  signature <- data.frame(feature_name = c("a", "b"), score = c(1, 2))
+  capture.output(sig <- OmicSignature$new(metadata = metadata, signature = signature))
+
+  ## Regression test: print() used to unconditionally call nrow()/ncol() on
+  ## private$.difexp, which is NULL when no difexp was provided, producing
+  ## garbled/blank output instead of an explicit "no difexp" message.
+  out <- capture.output(sig$print())
+  expect_true(any(grepl("no difexp", out, fixed = TRUE)))
+})
+
+test_that("extractSignature() filters, orders by |score|, and dedupes by feature_name", {
+  difexp <- data.frame(
+    probe_id = paste0("p", 1:5),
+    feature_name = c("a", "b", "b", "c", "d"),
+    score = c(5, -3, -3, 1, 6),
+    p_value = c(0.001, 0.01, 0.01, 0.5, 0.001),
+    group_label = factor(c("up", "down", "down", "up", "up"), levels = c("up", "down"))
+  )
+  metadata <- list(
+    signature_name = "extract_test", phenotype = "test",
+    organism = predefined_organisms[1], direction_type = "bi-directional",
+    assay_type = predefined_assaytypes[1]
+  )
+  capture.output(sig <- OmicSignature$new(metadata = metadata, signature = difexp, difexp = difexp))
+
+  res <- sig$extractSignature("p_value < 0.1")
+
+  ## Regression test (#64): extractSignature() and OmicSigFromDifexp() now
+  ## share .extract_signature_rows(), which dedupes by feature_name (keeping
+  ## the first row after sorting by descending |score|) and orders by
+  ## descending |score|.
+  expect_equal(nrow(res), 3)
+  expect_equal(sum(res$feature_name == "b"), 1)
+  expect_equal(res$feature_name, c("d", "a", "b"))
+  expect_true("group_label" %in% colnames(res))
+})
+
+test_that("extractSignature() errors when difexp is NULL", {
+  metadata <- list(
+    signature_name = "no_difexp2", phenotype = "test",
+    organism = predefined_organisms[1], direction_type = "uni-directional",
+    assay_type = predefined_assaytypes[1]
+  )
+  signature <- data.frame(feature_name = c("a", "b"), score = c(1, 2))
+  capture.output(sig <- OmicSignature$new(metadata = metadata, signature = signature))
+
+  expect_error(sig$extractSignature("score > 0"), "Difexp data frame not found")
 })

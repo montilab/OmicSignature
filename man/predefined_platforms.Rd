@@ -5,7 +5,7 @@
 \alias{predefined_platforms}
 \title{predefined platform list}
 \format{
-An object of class \code{character} of length 28.
+A character vector.
 }
 \usage{
 predefined_platforms

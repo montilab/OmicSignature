@@ -1,5 +1,37 @@
 #### OmicSigObj ####
 
+.extract_signature_rows <- function(difexp, conditions, direction_type) {
+  ## Shared by OmicSignature$extractSignature() and OmicSigFromDifexp():
+  ## filter a difexp-shaped table by a condition string (evaluated as R
+  ## expressions via rlang::parse_exprs() - conditions must only ever come
+  ## from a trusted source, never from untrusted/external input), then
+  ## select the columns relevant to direction_type, order by score when
+  ## present, and dedupe by feature_name.
+  probe_id <- NULL
+  feature_name <- NULL
+  score <- NULL
+  group_label <- NULL
+
+  v <- rlang::parse_exprs(conditions)
+  res <- difexp %>% dplyr::filter(!!!v)
+
+  has_score <- "score" %in% colnames(difexp)
+  is_grouped <- direction_type %in% c("bi-directional", "categorical")
+
+  cols <- c("probe_id", "feature_name")
+  if (has_score) cols <- c(cols, "score")
+  if (is_grouped) cols <- c(cols, "group_label")
+  res <- res %>% dplyr::select(dplyr::all_of(cols))
+
+  if (has_score) {
+    res <- res %>% dplyr::arrange(dplyr::desc(abs(score)))
+  }
+
+  res %>%
+    dplyr::filter(feature_name != "", complete.cases(dplyr::across(dplyr::everything()))) %>%
+    dplyr::distinct(feature_name, .keep_all = TRUE)
+}
+
 #' @title OmicSignature R6 object
 #' @description An R6 object to store signatures generated from experiments,
 #' including metadata, signature, and an optional differential expression
@@ -98,55 +130,25 @@ OmicSignature <-
           cat("    Length (", nrow(private$.signature), ")\n")
         }
         cat("  Differential Expression Data: \n")
-        cat("    ", nrow(private$.difexp), " x ", ncol(private$.difexp), "\n", sep = "")
+        if (is.null(private$.difexp)) {
+          cat("    * no difexp *\n")
+        } else {
+          cat("    ", nrow(private$.difexp), " x ", ncol(private$.difexp), "\n", sep = "")
+        }
         invisible(self)
       },
-      #' @param conditions conditions for new signatures
+      #' @param conditions A character string of R expressions passed to
+      #'   `dplyr::filter()`, e.g. `"score > 5; adj_p < 0.01"`. Evaluated as
+      #'   R code (via `rlang::parse_exprs()`) against `difexp`, so
+      #'   `conditions` must only ever come from a trusted source, not from
+      #'   untrusted/external input.
       #' @return a dataframe of new signatures
       #' @export
       extractSignature = function(conditions) {
         if (is.null(private$.difexp)) {
           stop("Error: Difexp data frame not found.")
         }
-        v <- rlang::parse_exprs(conditions)
-
-        direction_type <- private$.metadata$direction_type
-        difexp <- private$.difexp
-        res <- difexp %>% dplyr::filter(!!!v)
-
-        if ("score" %in% colnames(difexp)) {
-          if (direction_type == "uni-directional") {
-            res <- res %>%
-              dplyr::select(probe_id, feature_name, score) %>%
-              dplyr::filter(score != "") %>%
-              dplyr::arrange(desc(abs(score)))
-          } else if (direction_type == "bi-directional") {
-            res <- res %>%
-              dplyr::select(probe_id, feature_name, score, group_label) %>%
-              dplyr::filter(score != "") %>%
-              dplyr::arrange(desc(abs(score)))
-          } else if (direction_type == "categorical") {
-            res <- res %>%
-              dplyr::select(probe_id, feature_name, score, group_label) %>%
-              dplyr::filter(score != "", ) %>%
-              dplyr::arrange(desc(abs(score)))
-          }
-        } else {
-          if (direction_type == "uni-directional") {
-            res <- res %>%
-              dplyr::select(probe_id, feature_name)
-          } else {
-            res <- res %>%
-              dplyr::filter(!!!v) %>%
-              dplyr::select(probe_id, feature_name, group_label)
-          }
-        }
-
-        res <- res %>%
-          dplyr::filter(feature_name != "", complete.cases(across(everything()))) %>%
-          dplyr::distinct(feature_name, .keep_all = TRUE)
-
-        return(res)
+        .extract_signature_rows(private$.difexp, conditions, private$.metadata$direction_type)
       }
     ),
 
@@ -157,7 +159,25 @@ OmicSignature <-
         if (missing(value)) {
           private$.metadata
         } else {
-          private$.metadata <- private$checkMetadata(value, v = print_message)
+          new_metadata <- private$checkMetadata(value, v = print_message)
+          if (!identical(new_metadata$direction_type, private$.metadata$direction_type)) {
+            ## direction_type governs what's required/meaningful in signature
+            ## and difexp (e.g. group_label); re-validate both against the
+            ## new type instead of letting metadata and data go structurally
+            ## out of sync silently.
+            private$.signature <- private$checkSignature(
+              private$.signature, signatureType = new_metadata$direction_type, v = print_message
+            )
+            if (!is.null(private$.difexp)) {
+              private$.difexp <- private$checkDifexp(
+                private$.difexp, signatureType = new_metadata$direction_type, v = print_message
+              )
+            }
+            if (new_metadata$direction_type == "uni-directional") {
+              private$checkNoStaleGroupLabel(private$.signature, private$.difexp)
+            }
+          }
+          private$.metadata <- new_metadata
         }
       },
       #' @field signature a dataframe contains probe_id, feature_name, score (optional) and group_label (optional)
@@ -199,6 +219,26 @@ OmicSignature <-
       verbose = function(v, ...) {
         if (v) cat(...)
       },
+      checkNoStaleGroupLabel = function(signature, difexp) {
+        ## checkSignature()/checkDifexp() only enforce required columns for
+        ## the new direction_type; a multi-level group_label column left
+        ## over from a prior bi-directional/categorical direction_type is
+        ## structurally harmless under uni-directional's laxer requirements,
+        ## but would be silently ignored by anything that trusts
+        ## metadata$direction_type alone (e.g. compare_omic_signatures()).
+        has_stale <- function(df) {
+          !is.null(df) && "group_label" %in% colnames(df) && nlevels(df$group_label) > 1
+        }
+        if (has_stale(signature) || has_stale(difexp)) {
+          stop(
+            "Cannot change direction_type to 'uni-directional': signature and/or difexp ",
+            "still has a multi-level group_label column, which would be silently ignored ",
+            "downstream. Remove group_label from signature/difexp first, or construct a ",
+            "new OmicSignature object instead."
+          )
+        }
+        invisible(TRUE)
+      },
       checkDifexp = function(difexp, signatureType = NULL, v = FALSE) {
         if (is.null(difexp)) stop("Please use build-in function $removeDifexp.")
         if (is(difexp, "OmicSignature")) difexp <- difexp$difexp
@@ -209,7 +249,7 @@ OmicSignature <-
         if (nrow(difexp) == 0) stop("difexp is empty. ")
 
         ## check column names:
-        difexpColRequired <- c("probe_id", "feature_name", "score", "group_label")
+        difexpColRequired <- c("probe_id", "feature_name", "score")
         if (signatureType != "uni-directional") {
           difexpColRequired <- c(difexpColRequired, "group_label")
         }
@@ -261,7 +301,7 @@ OmicSignature <-
         return(difexp)
       },
       checkMetadata = function(metadata, signatureType = NULL, v = FALSE) {
-        stopifnot(is(metadata, "list"))
+        if (!is(metadata, "list")) stop("metadata must be a list. See createMetadata() for details.")
 
         # check required metadata fields
         metadataRequired <- c("signature_name", "phenotype", "organism", "direction_type", "assay_type")
@@ -313,7 +353,7 @@ OmicSignature <-
         # check covariates
         if (!is.null(metadata$covariates)) {
           if (!all(is.na(metadata$covariates))) {
-            stopifnot(is.character(metadata$covariates))
+            if (!is.character(metadata$covariates)) stop("covariates must be a character vector.")
             metadata$covariates <- paste(metadata$covariates, collapse = ", ")
           }
         }
@@ -321,24 +361,26 @@ OmicSignature <-
         # check keywords
         if (!is.null(metadata$keywords)) {
           if (!all(is.na(metadata$keywords))) {
-            stopifnot(is.character(metadata$keywords))
+            if (!is.character(metadata$keywords)) stop("keywords must be a character vector.")
             metadata$keywords <- paste(metadata$keywords, collapse = ", ")
           }
         }
 
         # check PMID
         if (!is.null(metadata$PMID)) {
-          if (!is.na(metadata$PMID)) {
-            stopifnot(is.character(metadata$PMID))
-            stopifnot(length(metadata$PMID) == 1)
+          ## Check length before is.na(): is.na() on a length > 1 vector
+          ## returns a length > 1 logical, which if() cannot evaluate.
+          if (length(metadata$PMID) != 1) stop("PMID must be a single-length character value.")
+          if (!is.na(metadata$PMID) && !is.character(metadata$PMID)) {
+            stop("PMID must be a character value.")
           }
         }
 
         # check description
         if (!is.null(metadata$description)) {
-          if (!is.na(metadata$description)) {
-            stopifnot(is.character(metadata$description))
-            stopifnot(length(metadata$description) == 1)
+          if (length(metadata$description) != 1) stop("description must be a single-length character value.")
+          if (!is.na(metadata$description) && !is.character(metadata$description)) {
+            stop("description must be a character value.")
           }
         }
 
@@ -369,7 +411,6 @@ OmicSignature <-
         } else {
           stop("Signature is not valid.")
         }
-        remove(input)
 
         ## starting this point, signature should be a dataframe
         if (nrow(signature) == 0) {

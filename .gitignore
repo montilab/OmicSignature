@@ -1,5 +1,3 @@
-.gitignore
-
 # mac
 .DS_Store
 # R studio files
@@ -10,7 +8,6 @@
 .Rproj.user/
 .Rproj
 dev.Rproj
-.Rbuildignore
 # Jelly notes
 *_example.R
 Ex*.R

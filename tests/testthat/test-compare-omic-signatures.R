@@ -18,15 +18,12 @@ test_that("overlap comparison returns symmetric Jaccard and count matrices", {
   expect_equal(positive$jaccard["sig_a", "sig_b"], 1 / 3)
   expect_equal(positive$jaccard["sig_b", "sig_a"], 1 / 3)
 
-  ## counts is an integer matrix with an extra "size" row/column: the
-  ## overlap count in the core block, and each signature's own retained
-  ## feature-set size in the size row/column, with an NA corner.
-  expect_equal(dim(positive$counts), c(3L, 3L))
-  expect_equal(dimnames(positive$counts), list(c("sig_a", "sig_b", "size"), c("sig_a", "sig_b", "size")))
+  ## counts is an integer matrix with the same dimensions as jaccard/pvalue;
+  ## for self-comparisons the diagonal is each signature's own size.
+  expect_equal(dim(positive$counts), c(2L, 2L))
+  expect_equal(dimnames(positive$counts), list(c("sig_a", "sig_b"), c("sig_a", "sig_b")))
   expect_equal(positive$counts["sig_a", "sig_b"], 2L)
-  expect_equal(positive$counts["sig_a", "size"], 4L)
-  expect_equal(positive$counts["size", "sig_b"], 4L)
-  expect_true(is.na(positive$counts["size", "size"]))
+  expect_equal(unname(diag(positive$counts)), c(4L, 4L))
 })
 
 test_that("overlap comparison supports comparing two signature lists", {
@@ -420,8 +417,7 @@ test_that("overlap comparison of all uni-directional signatures drops the level 
   expect_null(res$label_order)
   expect_equal(res$comparisons$jaccard["uni_a", "uni_b"], 3 / 7)
   expect_equal(res$comparisons$counts["uni_a", "uni_b"], 3L)
-  expect_equal(res$comparisons$counts["uni_a", "size"], 5L)
-  expect_equal(res$comparisons$counts["size", "uni_b"], 5L)
+  expect_equal(unname(diag(res$comparisons$counts)), c(5L, 5L))
 })
 
 test_that("overlap comparison compares a uni-directional signature against both levels of a bi-directional one", {
