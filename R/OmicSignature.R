@@ -85,7 +85,7 @@ OmicSignature <-
           if (!"probe_id" %in% colnames(signature)) {
             ## in signature, if probe_id is missing, use numeric counter as probe id
             signature <- signature %>%
-              dplyr::mutate(probe_id = seq(paste0("feature_", nrow(signature))), .before = everything())
+              dplyr::mutate(probe_id = paste0("feature_", seq(nrow(signature))), .before = everything())
           }
         }
 
