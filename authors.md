@@ -9,7 +9,7 @@
 ## Citation
 
 Source:
-[`DESCRIPTION`](https://github.com/montilab/OmicSignature/blob/77-compare_omic_signatures-accept-pvalue-as-well-as-p_value-and-fall-back-to-adj_p-for-ranking/DESCRIPTION)
+[`DESCRIPTION`](https://github.com/montilab/OmicSignature/blob/77-compare_omic_signatures-accept-pvalue-as-well-as-p_value-and-fall-back-to-adj_p-for-ranking-1/DESCRIPTION)
 
 Li V, Lab M (2026). *OmicSignature: An R package to store omics
 signatures as an R6 object*. R package version 1.3.0,
