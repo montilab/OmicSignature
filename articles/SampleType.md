@@ -1,9 +1,7 @@
 # Sample Type & Platform Info
 
-``` r
-
-library(OmicSignature)
-```
+\
+[`library`](https://rdrr.io/r/base/library.html)`(`[`OmicSignature`](https://github.com/montilab/OmicSignature)`)`
 
 We use BRENDA tissue ontology to indicate the tissue or cell-line of a
 signature. BRENDA tissue ontology version: **10/2021**. The OBO file was
@@ -23,10 +21,8 @@ Set `contain_all = TRUE` to show results include all search terms.\
 Set `contain_all = FALSE` to show results include any of the search
 terms.\
 
-``` r
-
-OmicS_searchSampleType("mcf cell", contain_all = TRUE)
-```
+\
+[`OmicS_searchSampleType`](https://montilab.github.io/OmicSignature/reference/OmicS_searchSampleType.md)`(``"mcf cell"``, contain_all ``=`` ``TRUE``)`
 
     ##               ID              Name
     ## 95   BTO:0000093        MCF-7 cell
@@ -40,10 +36,8 @@ OmicS_searchSampleType("mcf cell", contain_all = TRUE)
     ## 5967 BTO:0005970   MCF-7/LCC9 cell
     ## 6395 BTO:0006398    MCF-10-2A cell
 
-``` r
-
-OmicS_searchSampleType("MCF-10 MCF-7", contain_all = FALSE)
-```
+\
+[`OmicS_searchSampleType`](https://montilab.github.io/OmicSignature/reference/OmicS_searchSampleType.md)`(``"MCF-10 MCF-7"``, contain_all ``=`` ``FALSE``)`
 
     ##               ID              Name
     ## 95   BTO:0000093        MCF-7 cell
@@ -57,10 +51,8 @@ OmicS_searchSampleType("MCF-10 MCF-7", contain_all = FALSE)
 
 Search for a single word:
 
-``` r
-
-OmicS_searchPlatform("proteomics")
-```
+\
+[`OmicS_searchPlatform`](https://montilab.github.io/OmicSignature/reference/OmicS_searchPlatform.md)`(``"proteomics"``)`
 
     ## [1] "proteomics by array"                        
     ## [2] "proteomics by mass spectrometry"            
@@ -71,10 +63,8 @@ OmicS_searchPlatform("proteomics")
 
 Search for multiple words:
 
-``` r
-
-OmicS_searchPlatform(c("transcript", "single-cell"), contain_all = TRUE)
-```
+\
+[`OmicS_searchPlatform`](https://montilab.github.io/OmicSignature/reference/OmicS_searchPlatform.md)`(`[`c`](https://rdrr.io/r/base/c.html)`(``"transcript"``, ``"single-cell"``)``, contain_all ``=`` ``TRUE``)`
 
     ## [1] "transcriptomics by single-cell RNA-seq"
     ## [2] "single-cell spatial transcriptomics"
@@ -82,10 +72,8 @@ OmicS_searchPlatform(c("transcript", "single-cell"), contain_all = TRUE)
 If `contain_all = FALSE`, results matching any of the key words will be
 returned.\
 
-``` r
-
-OmicS_searchPlatform(c("transcript", "single-cell"), contain_all = FALSE)
-```
+\
+[`OmicS_searchPlatform`](https://montilab.github.io/OmicSignature/reference/OmicS_searchPlatform.md)`(`[`c`](https://rdrr.io/r/base/c.html)`(``"transcript"``, ``"single-cell"``)``, contain_all ``=`` ``FALSE``)`
 
     ## [1] "transcriptomics by single-cell RNA-seq"     
     ## [2] "single-cell spatial transcriptomics"        

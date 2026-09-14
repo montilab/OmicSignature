@@ -1,10 +1,8 @@
 # Create OmicSignature
 
-``` r
-
-library(OmicSignature)
-library(dplyr)
-```
+\
+[`library`](https://rdrr.io/r/base/library.html)`(`[`OmicSignature`](https://github.com/montilab/OmicSignature)`)`\
+[`library`](https://rdrr.io/r/base/library.html)`(`[`dplyr`](https://dplyr.tidyverse.org)`)`
 
 ## 1. Cheatsheet
 
@@ -94,39 +92,37 @@ of current built-in attributes is shown
 You can also provide your own customized attributes using the “others”
 field.\
 
-``` r
-
-metadata <- createMetadata(
-  # required attributes:
-  signature_name = "Myc_reduce_mice_liver_24m",
-  organism = "Mus musculus",
-  direction_type = "bi-directional",
-  assay_type = "transcriptomics",
-  phenotype = "Myc_reduce",
-  author = "researcher@institute.edu",
-
-  # optional and recommended attributes:
-  covariates = "age, gender",
-  description = "mice Myc haploinsufficient (Myc(+/-))",
-  platform = "transcriptomics by array",
-  sample_type = "liver", # recommended using BRENDA ontology
-
-  # optional cut-off attributes:
-  # specifying them can facilitate the extraction of signatures.
-  logfc_cutoff = NULL,
-  p_value_cutoff = NULL,
-  adj_p_cutoff = 0.05,
-  score_cutoff = 5,
-
-  # other optional built-in attributes:
-  keywords = "Myc, KO, longevity",
-  PMID = "25619689",
-  year = 2015,
-
-  # example of other customized attributes:
-  others = list("animal_strain" = "C57BL/6")
-)
-```
+\
+`metadata`` ``<-`` `[`createMetadata`](https://montilab.github.io/OmicSignature/reference/createMetadata.md)`(`\
+`  ``# required attributes:`\
+`  signature_name ``=`` ``"Myc_reduce_mice_liver_24m"``,`\
+`  organism ``=`` ``"Mus musculus"``,`\
+`  direction_type ``=`` ``"bi-directional"``,`\
+`  assay_type ``=`` ``"transcriptomics"``,`\
+`  phenotype ``=`` ``"Myc_reduce"``,`\
+`  author ``=`` ``"researcher@institute.edu"``,`\
+\
+`  ``# optional and recommended attributes:`\
+`  covariates ``=`` ``"age, gender"``,`\
+`  description ``=`` ``"mice Myc haploinsufficient (Myc(+/-))"``,`\
+`  platform ``=`` ``"transcriptomics by array"``,`\
+`  sample_type ``=`` ``"liver"``, ``# recommended using BRENDA ontology`\
+\
+`  ``# optional cut-off attributes:`\
+`  ``# specifying them can facilitate the extraction of signatures.`\
+`  logfc_cutoff ``=`` ``NULL``,`\
+`  p_value_cutoff ``=`` ``NULL``,`\
+`  adj_p_cutoff ``=`` ``0.05``,`\
+`  score_cutoff ``=`` ``5``,`\
+\
+`  ``# other optional built-in attributes:`\
+`  keywords ``=`` ``"Myc, KO, longevity"``,`\
+`  PMID ``=`` ``"25619689"``,`\
+`  year ``=`` ``2015``,`\
+\
+`  ``# example of other customized attributes:`\
+`  others ``=`` `[`list`](https://rdrr.io/r/base/list.html)`(``"animal_strain"`` ``=`` ``"C57BL/6"``)`\
+`)`
 
 #### 2.1.1 “phenotype”
 
@@ -148,11 +144,9 @@ organisms, which you can search using
 Other entries are allowed, but please use standard naming conventions
 (e.g., “Homo sapiens”, “Mus musculus”) to ensure consistency.\
 
-``` r
-
-OmicS_searchOrganism("homo")
-#> [1] "Homo sapiens"
-```
+\
+[`OmicS_searchOrganism`](https://montilab.github.io/OmicSignature/reference/OmicS_searchOrganism.md)`(``"homo"``)`\
+`#> [1] "Homo sapiens"`
 
 #### 2.1.3 “sample_type” and “platform”
 
@@ -250,38 +244,34 @@ Limma).\
 
 We can then extract the significant features as follows:
 
-``` r
-
-signature <- difexp %>%
-  dplyr::filter(abs(score) > metadata$score_cutoff & adj_p < metadata$adj_p_cutoff) %>%
-  dplyr::select(probe_id, feature_name, score) %>%
-  dplyr::mutate(group_label = as.factor(ifelse(score > 0, "MYC Reduce", "WT")))
-head(signature)
-#>   probe_id       feature_name   score group_label
-#> 1 10346882 ENSMUSG00000025964  -6.990          WT
-#> 2 10353878 ENSMUSG00000067653  -7.867          WT
-#> 3 10349648 ENSMUSG00000004552  14.762  MYC Reduce
-#> 4 10355278 ENSMUSG00000062209   6.083  MYC Reduce
-#> 5 10353192 ENSMUSG00000025932  10.487  MYC Reduce
-#> 6 10345762 ENSMUSG00000026072 -13.543          WT
-```
+\
+`signature`` ``<-`` ``difexp`` `[`%>%`](https://magrittr.tidyverse.org/reference/pipe.html)\
+`  ``dplyr``::`[`filter`](https://dplyr.tidyverse.org/reference/filter.html)`(`[`abs`](https://rdrr.io/r/base/MathFun.html)`(``score``)`` ``>`` ``metadata``$``score_cutoff`` ``&`` ``adj_p`` ``<`` ``metadata``$``adj_p_cutoff``)`` `[`%>%`](https://magrittr.tidyverse.org/reference/pipe.html)\
+`  ``dplyr``::`[`select`](https://dplyr.tidyverse.org/reference/select.html)`(``probe_id``, ``feature_name``, ``score``)`` `[`%>%`](https://magrittr.tidyverse.org/reference/pipe.html)\
+`  ``dplyr``::`[`mutate`](https://dplyr.tidyverse.org/reference/mutate.html)`(``group_label ``=`` `[`as.factor`](https://rdrr.io/r/base/factor.html)`(`[`ifelse`](https://rdrr.io/r/base/ifelse.html)`(``score`` ``>`` ``0``, ``"MYC Reduce"``, ``"WT"``)``)``)`\
+[`head`](https://rdrr.io/r/utils/head.html)`(``signature``)`\
+`#>   probe_id       feature_name   score group_label`\
+`#> 1 10346882 ENSMUSG00000025964  -6.990          WT`\
+`#> 2 10353878 ENSMUSG00000067653  -7.867          WT`\
+`#> 3 10349648 ENSMUSG00000004552  14.762  MYC Reduce`\
+`#> 4 10355278 ENSMUSG00000062209   6.083  MYC Reduce`\
+`#> 5 10353192 ENSMUSG00000025932  10.487  MYC Reduce`\
+`#> 6 10345762 ENSMUSG00000026072 -13.543          WT`
 
 Function
 [`standardizeSigDF()`](https://montilab.github.io/OmicSignature/reference/standardizeSigDF.md)
 can help remove duplicated and empty names.
 
-``` r
-
-signature <- standardizeSigDF(signature)
-head(signature)
-#>   probe_id       feature_name   score group_label
-#> 1 10349648 ENSMUSG00000004552  14.762  MYC Reduce
-#> 2 10345762 ENSMUSG00000026072 -13.543          WT
-#> 3 10353192 ENSMUSG00000025932  10.487  MYC Reduce
-#> 4 10355259 ENSMUSG00000061816 -10.315          WT
-#> 5 10351477 ENSMUSG00000102418   8.818  MYC Reduce
-#> 6 10353878 ENSMUSG00000067653  -7.867          WT
-```
+\
+`signature`` ``<-`` `[`standardizeSigDF`](https://montilab.github.io/OmicSignature/reference/standardizeSigDF.md)`(``signature``)`\
+[`head`](https://rdrr.io/r/utils/head.html)`(``signature``)`\
+`#>   probe_id       feature_name   score group_label`\
+`#> 1 10349648 ENSMUSG00000004552  14.762  MYC Reduce`\
+`#> 2 10345762 ENSMUSG00000026072 -13.543          WT`\
+`#> 3 10353192 ENSMUSG00000025932  10.487  MYC Reduce`\
+`#> 4 10355259 ENSMUSG00000061816 -10.315          WT`\
+`#> 5 10351477 ENSMUSG00000102418   8.818  MYC Reduce`\
+`#> 6 10353878 ENSMUSG00000067653  -7.867          WT`
 
 **Option 2**: Manually create signature dataframe.\
 For uni-directional signature:\
@@ -329,39 +319,37 @@ statistics.\
 Here we use an example from the differential expression analysis using
 the `limma` package.
 
-``` r
-
-# Version reading from a txt file
-# difexp <- read.table(
-#   file.path(
-#     system.file("extdata", package = "OmicSignature"),
-#     "difmatrix_Myc_mice_liver_24m.txt"
-#   ),
-#   header = TRUE, sep = "\t", stringsAsFactors = FALSE
-# )
-# Version reading from a binary file
-difexp <- readRDS(
-  file.path(
-    system.file("extdata", package = "OmicSignature"),
-    "difmatrix_Myc_mice_liver_24m.rds"
-  )
-)
-head(difexp)
-#>   Probe.ID  logFC AveExpr      t P.Value adj.P.Val      b            ensembl
-#> 1 10345228 -0.167   7.106 -1.470   0.186     0.560 -5.866 ENSMUSG00000103746
-#> 2 10354534  0.041   4.351  0.520   0.620     0.870 -6.780 ENSMUSG00000060715
-#> 3 10354529 -0.175   4.955 -0.941   0.379     0.731 -6.458 ENSMUSG00000043629
-#> 4 10346337  0.025   8.621  0.188   0.857     0.962 -6.911 ENSMUSG00000038323
-#> 5 10353792 -0.025   6.063 -0.284   0.785     0.936 -6.885 ENSMUSG00000045815
-#> 6 10350848 -0.055   7.595 -0.630   0.549     0.836 -6.712 ENSMUSG00000049881
-#>     gene_symbol
-#> 1 1700001G17Rik
-#> 2 1700019A02Rik
-#> 3 1700019D03Rik
-#> 4 1700066M21Rik
-#> 5 1700101I19Rik
-#> 6 2810025M15Rik
-```
+\
+`# Version reading from a txt file`\
+`# difexp <- read.table(`\
+`#   file.path(`\
+`#     system.file("extdata", package = "OmicSignature"),`\
+`#     "difmatrix_Myc_mice_liver_24m.txt"`\
+`#   ),`\
+`#   header = TRUE, sep = "\t", stringsAsFactors = FALSE`\
+`# )`\
+`# Version reading from a binary file`\
+`difexp`` ``<-`` `[`readRDS`](https://rdrr.io/r/base/readRDS.html)`(`\
+`  `[`file.path`](https://rdrr.io/r/base/file.path.html)`(`\
+`    `[`system.file`](https://rdrr.io/r/base/system.file.html)`(``"extdata"``, package ``=`` ``"OmicSignature"``)``,`\
+`    ``"difmatrix_Myc_mice_liver_24m.rds"`\
+`  ``)`\
+`)`\
+[`head`](https://rdrr.io/r/utils/head.html)`(``difexp``)`\
+`#>   Probe.ID  logFC AveExpr      t P.Value adj.P.Val      b            ensembl`\
+`#> 1 10345228 -0.167   7.106 -1.470   0.186     0.560 -5.866 ENSMUSG00000103746`\
+`#> 2 10354534  0.041   4.351  0.520   0.620     0.870 -6.780 ENSMUSG00000060715`\
+`#> 3 10354529 -0.175   4.955 -0.941   0.379     0.731 -6.458 ENSMUSG00000043629`\
+`#> 4 10346337  0.025   8.621  0.188   0.857     0.962 -6.911 ENSMUSG00000038323`\
+`#> 5 10353792 -0.025   6.063 -0.284   0.785     0.936 -6.885 ENSMUSG00000045815`\
+`#> 6 10350848 -0.055   7.595 -0.630   0.549     0.836 -6.712 ENSMUSG00000049881`\
+`#>     gene_symbol`\
+`#> 1 1700001G17Rik`\
+`#> 2 1700019A02Rik`\
+`#> 3 1700019D03Rik`\
+`#> 4 1700066M21Rik`\
+`#> 5 1700101I19Rik`\
+`#> 6 2810025M15Rik`
 
 Manually change the column names to match the requirement. The built-in
 function
@@ -371,49 +359,43 @@ names.\
 If some required columns are not in the difexp, it will give you a
 warning:\
 
-``` r
-
-colnames(difexp) <- replaceDifexpCol(colnames(difexp))
-#> Warning in replaceDifexpCol(colnames(difexp)): Required column for
-#> OmicSignature object difexp: feature_name, group_label, is not found in your
-#> input. This may cause problem when creating your OmicSignature object.
-```
+\
+[`colnames`](https://rdrr.io/r/base/colnames.html)`(``difexp``)`` ``<-`` `[`replaceDifexpCol`](https://montilab.github.io/OmicSignature/reference/replaceDifexpCol.md)`(`[`colnames`](https://rdrr.io/r/base/colnames.html)`(``difexp``)``)`\
+`#> Warning in replaceDifexpCol(colnames(difexp)): Required column for`\
+`#> OmicSignature object difexp: feature_name, group_label, is not found in your`\
+`#> input. This may cause problem when creating your OmicSignature object.`
 
 Create the required columns “feature_name” and “group_label”:
 
-``` r
-
-difexp <- difexp %>%
-  rename(feature_name = ensembl) %>%
-  mutate(group_label = as.factor(ifelse(score > 0, "MYC Reduce", "WT")))
-head(difexp)
-#>   probe_id  logfc  mean  score p_value adj_p      b       feature_name
-#> 1 10345228 -0.167 7.106 -1.470   0.186 0.560 -5.866 ENSMUSG00000103746
-#> 2 10354534  0.041 4.351  0.520   0.620 0.870 -6.780 ENSMUSG00000060715
-#> 3 10354529 -0.175 4.955 -0.941   0.379 0.731 -6.458 ENSMUSG00000043629
-#> 4 10346337  0.025 8.621  0.188   0.857 0.962 -6.911 ENSMUSG00000038323
-#> 5 10353792 -0.025 6.063 -0.284   0.785 0.936 -6.885 ENSMUSG00000045815
-#> 6 10350848 -0.055 7.595 -0.630   0.549 0.836 -6.712 ENSMUSG00000049881
-#>     gene_symbol group_label
-#> 1 1700001G17Rik          WT
-#> 2 1700019A02Rik  MYC Reduce
-#> 3 1700019D03Rik          WT
-#> 4 1700066M21Rik  MYC Reduce
-#> 5 1700101I19Rik          WT
-#> 6 2810025M15Rik          WT
-```
+\
+`difexp`` ``<-`` ``difexp`` `[`%>%`](https://magrittr.tidyverse.org/reference/pipe.html)\
+`  `[`rename`](https://dplyr.tidyverse.org/reference/rename.html)`(``feature_name ``=`` ``ensembl``)`` `[`%>%`](https://magrittr.tidyverse.org/reference/pipe.html)\
+`  `[`mutate`](https://dplyr.tidyverse.org/reference/mutate.html)`(``group_label ``=`` `[`as.factor`](https://rdrr.io/r/base/factor.html)`(`[`ifelse`](https://rdrr.io/r/base/ifelse.html)`(``score`` ``>`` ``0``, ``"MYC Reduce"``, ``"WT"``)``)``)`\
+[`head`](https://rdrr.io/r/utils/head.html)`(``difexp``)`\
+`#>   probe_id  logfc  mean  score p_value adj_p      b       feature_name`\
+`#> 1 10345228 -0.167 7.106 -1.470   0.186 0.560 -5.866 ENSMUSG00000103746`\
+`#> 2 10354534  0.041 4.351  0.520   0.620 0.870 -6.780 ENSMUSG00000060715`\
+`#> 3 10354529 -0.175 4.955 -0.941   0.379 0.731 -6.458 ENSMUSG00000043629`\
+`#> 4 10346337  0.025 8.621  0.188   0.857 0.962 -6.911 ENSMUSG00000038323`\
+`#> 5 10353792 -0.025 6.063 -0.284   0.785 0.936 -6.885 ENSMUSG00000045815`\
+`#> 6 10350848 -0.055 7.595 -0.630   0.549 0.836 -6.712 ENSMUSG00000049881`\
+`#>     gene_symbol group_label`\
+`#> 1 1700001G17Rik          WT`\
+`#> 2 1700019A02Rik  MYC Reduce`\
+`#> 3 1700019D03Rik          WT`\
+`#> 4 1700066M21Rik  MYC Reduce`\
+`#> 5 1700101I19Rik          WT`\
+`#> 6 2810025M15Rik          WT`
 
 ### 2.4. Create the `OmicSignature` object
 
-``` r
-
-OmS <- OmicSignature$new(
-  metadata = metadata,
-  signature = signature,
-  difexp = difexp
-)
-#>   [Success] OmicSignature object Myc_reduce_mice_liver_24m created.
-```
+\
+`OmS`` ``<-`` `[`OmicSignature`](https://montilab.github.io/OmicSignature/reference/OmicSignature.md)`$``new``(`\
+`  metadata ``=`` ``metadata``,`\
+`  signature ``=`` ``signature``,`\
+`  difexp ``=`` ``difexp`\
+`)`\
+`#>   [Success] OmicSignature object Myc_reduce_mice_liver_24m created.`
 
 `OmicSignature` is an R6 object, so assignment is by reference. For
 example, `OmS2 <- OmS` makes `OmS2` point to the same mutable object as
@@ -422,65 +404,59 @@ before modifying an object when you need to keep the original unchanged.
 
 Set `print_message` = `TRUE` to see all the messages.\
 
-``` r
-
-OmS <- OmicSignature$new(
-  metadata = metadata,
-  signature = signature,
-  difexp = difexp,
-  print_message = TRUE
-)
-#>   -- Required attributes for metadata: signature_name, phenotype, organism, direction_type, assay_type --
-#>   [Success] Metadata is saved. 
-#>   [Success] Signature is valid. 
-#>   [Success] difexp is valid. 
-#>   [Success] OmicSignature object Myc_reduce_mice_liver_24m created.
-```
+\
+`OmS`` ``<-`` `[`OmicSignature`](https://montilab.github.io/OmicSignature/reference/OmicSignature.md)`$``new``(`\
+`  metadata ``=`` ``metadata``,`\
+`  signature ``=`` ``signature``,`\
+`  difexp ``=`` ``difexp``,`\
+`  print_message ``=`` ``TRUE`\
+`)`\
+`#>   -- Required attributes for metadata: signature_name, phenotype, organism, direction_type, assay_type --`\
+`#>   [Success] Metadata is saved. `\
+`#>   [Success] Signature is valid. `\
+`#>   [Success] difexp is valid. `\
+`#>   [Success] OmicSignature object Myc_reduce_mice_liver_24m created.`
 
 See the created object information:
 
-``` r
-
-print(OmS)
-#> Signature Object: 
-#>   Metadata: 
-#>     adj_p_cutoff = 0.05 
-#>     assay_type = transcriptomics 
-#>     author = researcher@institute.edu 
-#>     covariates = age, gender 
-#>     description = mice Myc haploinsufficient (Myc(+/-)) 
-#>     direction_type = bi-directional 
-#>     keywords = Myc, KO, longevity 
-#>     organism = Mus musculus 
-#>     others = C57BL/6 
-#>     phenotype = Myc_reduce 
-#>     platform = transcriptomics by array 
-#>     PMID = 25619689 
-#>     sample_type = liver 
-#>     score_cutoff = 5 
-#>     signature_name = Myc_reduce_mice_liver_24m 
-#>     year = 2015 
-#>   Metadata user defined fields: 
-#>     animal_strain = C57BL/6 
-#>   Signature: 
-#>     MYC Reduce (5)
-#>     WT (10)
-#>   Differential Expression Data: 
-#>     884 x 10
-```
+\
+[`print`](https://rdrr.io/r/base/print.html)`(``OmS``)`\
+`#> Signature Object: `\
+`#>   Metadata: `\
+`#>     adj_p_cutoff = 0.05 `\
+`#>     assay_type = transcriptomics `\
+`#>     author = researcher@institute.edu `\
+`#>     covariates = age, gender `\
+`#>     description = mice Myc haploinsufficient (Myc(+/-)) `\
+`#>     direction_type = bi-directional `\
+`#>     keywords = Myc, KO, longevity `\
+`#>     organism = Mus musculus `\
+`#>     others = C57BL/6 `\
+`#>     phenotype = Myc_reduce `\
+`#>     platform = transcriptomics by array `\
+`#>     PMID = 25619689 `\
+`#>     sample_type = liver `\
+`#>     score_cutoff = 5 `\
+`#>     signature_name = Myc_reduce_mice_liver_24m `\
+`#>     year = 2015 `\
+`#>   Metadata user defined fields: `\
+`#>     animal_strain = C57BL/6 `\
+`#>   Signature: `\
+`#>     MYC Reduce (5)`\
+`#>     WT (10)`\
+`#>   Differential Expression Data: `\
+`#>     884 x 10`
 
 Use new criteria to extract significant features:\
 (this does *not* change the `signature` saved in the object)
 
-``` r
-
-OmS$extractSignature("abs(score) > 10; adj_p < 0.01")
-#>   probe_id       feature_name   score group_label
-#> 1 10349648 ENSMUSG00000004552  14.762  MYC Reduce
-#> 2 10345762 ENSMUSG00000026072 -13.543          WT
-#> 3 10353192 ENSMUSG00000025932  10.487  MYC Reduce
-#> 4 10355259 ENSMUSG00000061816 -10.315          WT
-```
+\
+`OmS``$``extractSignature``(``"abs(score) > 10; adj_p < 0.01"``)`\
+`#>   probe_id       feature_name   score group_label`\
+`#> 1 10349648 ENSMUSG00000004552  14.762  MYC Reduce`\
+`#> 2 10345762 ENSMUSG00000026072 -13.543          WT`\
+`#> 3 10353192 ENSMUSG00000025932  10.487  MYC Reduce`\
+`#> 4 10355259 ENSMUSG00000061816 -10.315          WT`
 
 Besides saving and reading OmicSignature object in `.rds` format, you
 can export the object as a text file in json format.\
@@ -502,38 +478,36 @@ columns, and use
 to automatically extract significant features and create the
 `OmicSignature` object.\
 
-``` r
-
-OmS1 <- OmicSigFromDifexp(difexp, metadata)
-#> -- criterias used to extract signatures:  abs(score) >= 5; adj_p <= 0.05 . 
-#> 
-#>   [Success] OmicSignature object Myc_reduce_mice_liver_24m created.
-OmS1
-#> Signature Object: 
-#>   Metadata: 
-#>     adj_p_cutoff = 0.05 
-#>     assay_type = transcriptomics 
-#>     author = researcher@institute.edu 
-#>     covariates = age, gender 
-#>     description = mice Myc haploinsufficient (Myc(+/-)) 
-#>     direction_type = bi-directional 
-#>     keywords = Myc, KO, longevity 
-#>     organism = Mus musculus 
-#>     others = C57BL/6 
-#>     phenotype = Myc_reduce 
-#>     platform = transcriptomics by array 
-#>     PMID = 25619689 
-#>     sample_type = liver 
-#>     score_cutoff = 5 
-#>     signature_name = Myc_reduce_mice_liver_24m 
-#>     year = 2015 
-#>   Metadata user defined fields: 
-#>     animal_strain = C57BL/6 
-#>   Signature: 
-#>     MYC Reduce (5)
-#>     WT (10)
-#>   Differential Expression Data: 
-#>     884 x 10
-```
+\
+`OmS1`` ``<-`` `[`OmicSigFromDifexp`](https://montilab.github.io/OmicSignature/reference/OmicSigFromDifexp.md)`(``difexp``, ``metadata``)`\
+`#> -- criterias used to extract signatures:  abs(score) >= 5; adj_p <= 0.05 . `\
+`#> `\
+`#>   [Success] OmicSignature object Myc_reduce_mice_liver_24m created.`\
+`OmS1`\
+`#> Signature Object: `\
+`#>   Metadata: `\
+`#>     adj_p_cutoff = 0.05 `\
+`#>     assay_type = transcriptomics `\
+`#>     author = researcher@institute.edu `\
+`#>     covariates = age, gender `\
+`#>     description = mice Myc haploinsufficient (Myc(+/-)) `\
+`#>     direction_type = bi-directional `\
+`#>     keywords = Myc, KO, longevity `\
+`#>     organism = Mus musculus `\
+`#>     others = C57BL/6 `\
+`#>     phenotype = Myc_reduce `\
+`#>     platform = transcriptomics by array `\
+`#>     PMID = 25619689 `\
+`#>     sample_type = liver `\
+`#>     score_cutoff = 5 `\
+`#>     signature_name = Myc_reduce_mice_liver_24m `\
+`#>     year = 2015 `\
+`#>   Metadata user defined fields: `\
+`#>     animal_strain = C57BL/6 `\
+`#>   Signature: `\
+`#>     MYC Reduce (5)`\
+`#>     WT (10)`\
+`#>   Differential Expression Data: `\
+`#>     884 x 10`
 
 ## 

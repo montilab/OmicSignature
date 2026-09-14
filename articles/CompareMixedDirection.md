@@ -21,17 +21,15 @@ features overlap strongly with `signature_a`’s `treated` label,
 `signature_b`’s `up` label, and `signature_c`’s `resistant` label, and
 not at all with any signature’s `control`/`down`/`sensitive` label.
 
-``` r
-
-library(OmicSignature)
-
-data(compare_mixed_direction_example)
-
-## direction_type per signature
-sapply(compare_mixed_direction_example, \(x) x$metadata$direction_type)
-#>       signature_a       signature_b       signature_c       signature_d 
-#>  "bi-directional"  "bi-directional"  "bi-directional" "uni-directional"
-```
+\
+[`library`](https://rdrr.io/r/base/library.html)`(`[`OmicSignature`](https://github.com/montilab/OmicSignature)`)`\
+\
+[`data`](https://rdrr.io/r/utils/data.html)`(``compare_mixed_direction_example``)`\
+\
+`## direction_type per signature`\
+[`sapply`](https://rdrr.io/r/base/lapply.html)`(``compare_mixed_direction_example``, \``(``x``)`` ``x``$``metadata``$``direction_type``)`\
+`#>       signature_a       signature_b       signature_c       signature_d `\
+`#>  "bi-directional"  "bi-directional"  "bi-directional" "uni-directional"`
 
 ## Overlap: a uni-directional signature is compared against both levels
 
@@ -47,37 +45,35 @@ levels are stored in a different order than `signature_a`’s and
 `signature_c`’s, so `label_pairing` is used here too, to align matching
 conditions:
 
-``` r
-
-mixed_res <- compare_omic_signatures(
-  sig_list1 = compare_mixed_direction_example,
-  method = "overlap",
-  label_pairing = list(
-    signature_a = c("treated", "control"),
-    signature_b = c("up", "down"),
-    signature_c = c("resistant", "sensitive")
-  ),
-  min_features = 3
-)
-
-## signature_d has no group_label levels, so label_pairing does not apply to
-## it; its row is NA/NA in label_order, and it is compared unchanged against
-## whichever level is being evaluated in each pass.
-mixed_res$label_order
-#> $sig_list1
-#>             level1      level2     
-#> signature_a "treated"   "control"  
-#> signature_b "up"        "down"     
-#> signature_c "resistant" "sensitive"
-#> signature_d NA          NA
-
-mixed_res$comparisons$level1_vs_level1$jaccard["signature_d", ]
-#> signature_a signature_b signature_c signature_d 
-#>   0.6000000   0.6000000   0.4545455   1.0000000
-mixed_res$comparisons$level2_vs_level2$jaccard["signature_d", ]
-#> signature_a signature_b signature_c signature_d 
-#>           0           0           0           1
-```
+\
+`mixed_res`` ``<-`` `[`compare_omic_signatures`](https://montilab.github.io/OmicSignature/reference/compare_omic_signatures.md)`(`\
+`  sig_list1 ``=`` ``compare_mixed_direction_example``,`\
+`  method ``=`` ``"overlap"``,`\
+`  label_pairing ``=`` `[`list`](https://rdrr.io/r/base/list.html)`(`\
+`    signature_a ``=`` `[`c`](https://rdrr.io/r/base/c.html)`(``"treated"``, ``"control"``)``,`\
+`    signature_b ``=`` `[`c`](https://rdrr.io/r/base/c.html)`(``"up"``, ``"down"``)``,`\
+`    signature_c ``=`` `[`c`](https://rdrr.io/r/base/c.html)`(``"resistant"``, ``"sensitive"``)`\
+`  ``)``,`\
+`  min_features ``=`` ``3`\
+`)`\
+\
+`## signature_d has no group_label levels, so label_pairing does not apply to`\
+`## it; its row is NA/NA in label_order, and it is compared unchanged against`\
+`## whichever level is being evaluated in each pass.`\
+`mixed_res``$``label_order`\
+`#> $sig_list1`\
+`#>             level1      level2     `\
+`#> signature_a "treated"   "control"  `\
+`#> signature_b "up"        "down"     `\
+`#> signature_c "resistant" "sensitive"`\
+`#> signature_d NA          NA`\
+\
+`mixed_res``$``comparisons``$``level1_vs_level1``$``jaccard``[``"signature_d"``, ``]`\
+`#> signature_a signature_b signature_c signature_d `\
+`#>   0.6000000   0.6000000   0.4545455   1.0000000`\
+`mixed_res``$``comparisons``$``level2_vs_level2``$``jaccard``[``"signature_d"``, ``]`\
+`#> signature_a signature_b signature_c signature_d `\
+`#>           0           0           0           1`
 
 `signature_d` overlaps strongly (jaccard 0.45-0.6) with the
 `treated`/`up`/`resistant` level (`level1`, after pairing) of each
@@ -95,30 +91,28 @@ excludes it from the ranking side with a warning, and its column in the
 result matrices is entirely `NA`, while it remains fully usable as a
 geneset row.
 
-``` r
-
-ks_res <- compare_omic_signatures(
-  sig_list1 = compare_mixed_direction_example,
-  method = "ks_rank",
-  label_pairing = list(
-    signature_a = c("treated", "control"),
-    signature_b = c("up", "down"),
-    signature_c = c("resistant", "sensitive")
-  ),
-  min_features = 3
-)
-#> Warning in .cos_check_ranking_capable(sig_list2, method): Excluding
-#> signature(s) from the ranking side (sig_list2) for method = 'ks_rank' because
-#> they are uni-directional or have no difexp table: signature_d. They remain
-#> available as the geneset side (sig_list1).
-
-## signature_d as a ranking (column) is impossible: entirely NA.
-ks_res$comparisons$level1_vs_level1$score[, "signature_d"]
-#> signature_a signature_b signature_c signature_d 
-#>          NA          NA          NA          NA
-
-## signature_d as a geneset (row) against the other signatures' rankings works.
-ks_res$comparisons$level1_vs_level1$score["signature_d", ]
-#> signature_a signature_b signature_c signature_d 
-#>   0.9400000   0.9400000   0.7833333          NA
-```
+\
+`ks_res`` ``<-`` `[`compare_omic_signatures`](https://montilab.github.io/OmicSignature/reference/compare_omic_signatures.md)`(`\
+`  sig_list1 ``=`` ``compare_mixed_direction_example``,`\
+`  method ``=`` ``"ks_rank"``,`\
+`  label_pairing ``=`` `[`list`](https://rdrr.io/r/base/list.html)`(`\
+`    signature_a ``=`` `[`c`](https://rdrr.io/r/base/c.html)`(``"treated"``, ``"control"``)``,`\
+`    signature_b ``=`` `[`c`](https://rdrr.io/r/base/c.html)`(``"up"``, ``"down"``)``,`\
+`    signature_c ``=`` `[`c`](https://rdrr.io/r/base/c.html)`(``"resistant"``, ``"sensitive"``)`\
+`  ``)``,`\
+`  min_features ``=`` ``3`\
+`)`\
+`#> Warning in .cos_check_ranking_capable(sig_list2, method): Excluding`\
+`#> signature(s) from the ranking side (sig_list2) for method = 'ks_rank' because`\
+`#> they are uni-directional or have no difexp table: signature_d. They remain`\
+`#> available as the geneset side (sig_list1).`\
+\
+`## signature_d as a ranking (column) is impossible: entirely NA.`\
+`ks_res``$``comparisons``$``level1_vs_level1``$``score``[``, ``"signature_d"``]`\
+`#> signature_a signature_b signature_c signature_d `\
+`#>          NA          NA          NA          NA`\
+\
+`## signature_d as a geneset (row) against the other signatures' rankings works.`\
+`ks_res``$``comparisons``$``level1_vs_level1``$``score``[``"signature_d"``, ``]`\
+`#> signature_a signature_b signature_c signature_d `\
+`#>   0.9400000   0.9400000   0.7833333          NA`

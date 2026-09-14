@@ -16,17 +16,15 @@ uni-directional signatures sharing a 100-gene universe. `uni_x` and
 `uni_y` share 5 of their 10 features each; `uni_z` shares nothing with
 either.
 
-``` r
-
-library(OmicSignature)
-
-data(compare_unidirectional_example)
-
-## direction_type per signature
-sapply(compare_unidirectional_example, \(x) x$metadata$direction_type)
-#>             uni_x             uni_y             uni_z 
-#> "uni-directional" "uni-directional" "uni-directional"
-```
+\
+[`library`](https://rdrr.io/r/base/library.html)`(`[`OmicSignature`](https://github.com/montilab/OmicSignature)`)`\
+\
+[`data`](https://rdrr.io/r/utils/data.html)`(``compare_unidirectional_example``)`\
+\
+`## direction_type per signature`\
+[`sapply`](https://rdrr.io/r/base/lapply.html)`(``compare_unidirectional_example``, \``(``x``)`` ``x``$``metadata``$``direction_type``)`\
+`#>             uni_x             uni_y             uni_z `\
+`#> "uni-directional" "uni-directional" "uni-directional"`
 
 ## Overlap: a flat comparison, with no level structure
 
@@ -39,30 +37,28 @@ such pairing to make, so when *every* signature in both `sig_list1` and
 returns one flat comparison instead: `comparisons` directly holds
 `jaccard`, `pvalue`, and `counts`, and `label_order` is `NULL`.
 
-``` r
-
-uni_res <- compare_omic_signatures(
-  sig_list1 = compare_unidirectional_example,
-  method = "overlap",
-  min_features = 3
-)
-
-names(uni_res$comparisons)
-#> [1] "jaccard" "pvalue"  "counts"
-uni_res$label_order
-#> NULL
-
-uni_res$comparisons$jaccard
-#>           uni_x     uni_y uni_z
-#> uni_x 1.0000000 0.3333333     0
-#> uni_y 0.3333333 1.0000000     0
-#> uni_z 0.0000000 0.0000000     1
-uni_res$comparisons$counts
-#>       uni_x uni_y uni_z
-#> uni_x    10     5     0
-#> uni_y     5    10     0
-#> uni_z     0     0    10
-```
+\
+`uni_res`` ``<-`` `[`compare_omic_signatures`](https://montilab.github.io/OmicSignature/reference/compare_omic_signatures.md)`(`\
+`  sig_list1 ``=`` ``compare_unidirectional_example``,`\
+`  method ``=`` ``"overlap"``,`\
+`  min_features ``=`` ``3`\
+`)`\
+\
+[`names`](https://rdrr.io/r/base/names.html)`(``uni_res``$``comparisons``)`\
+`#> [1] "jaccard" "pvalue"  "counts"`\
+`uni_res``$``label_order`\
+`#> NULL`\
+\
+`uni_res``$``comparisons``$``jaccard`\
+`#>           uni_x     uni_y uni_z`\
+`#> uni_x 1.0000000 0.3333333     0`\
+`#> uni_y 0.3333333 1.0000000     0`\
+`#> uni_z 0.0000000 0.0000000     1`\
+`uni_res``$``comparisons``$``counts`\
+`#>       uni_x uni_y uni_z`\
+`#> uni_x    10     5     0`\
+`#> uni_y     5    10     0`\
+`#> uni_z     0     0    10`
 
 ## KS and GSEA are not possible without a ranking
 
@@ -72,9 +68,7 @@ provide. If none of `sig_list2` is bi-directional with a `difexp` table,
 [`compare_omic_signatures()`](https://montilab.github.io/OmicSignature/reference/compare_omic_signatures.md)
 cannot construct a ranking side at all, and errors accordingly:
 
-``` r
-
-compare_omic_signatures(compare_unidirectional_example, method = "ks_rank")
-#> Error in `.cos_check_ranking_capable()`:
-#> ! No signatures in sig_list2 are bi-directional with a difexp table, required as the ranking side for method = 'ks_rank'.
-```
+\
+[`compare_omic_signatures`](https://montilab.github.io/OmicSignature/reference/compare_omic_signatures.md)`(``compare_unidirectional_example``, method ``=`` ``"ks_rank"``)`\
+`#> ``Error```  in `.cos_check_ranking_capable()`: ``\
+`#> ``!`` No signatures in sig_list2 are bi-directional with a difexp table, required as the ranking side for method = 'ks_rank'.`
