@@ -21,8 +21,8 @@ either.
 \
 [`data`](https://rdrr.io/r/utils/data.html)`(``compare_unidirectional_example``)`\
 \
-`## direction_type per signature`\
-[`sapply`](https://rdrr.io/r/base/lapply.html)`(``compare_unidirectional_example``, \``(``x``)`` ``x``$``metadata``$``direction_type``)`\
+`## type per signature`\
+[`sapply`](https://rdrr.io/r/base/lapply.html)`(``compare_unidirectional_example``, \``(``x``)`` ``x``$``metadata``$``type``)`\
 `#>             uni_x             uni_y             uni_z `\
 `#> "uni-directional" "uni-directional" "uni-directional"`
 

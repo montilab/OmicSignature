@@ -28,7 +28,6 @@ other R objects.
 `#>     assay_type = transcriptomics `\
 `#>     author = vmli `\
 `#>     description = mice MYC reduced expression `\
-`#>     direction_type = bi-directional `\
 `#>     keywords = Myc, KO, longevity `\
 `#>     organism = Mus musculus `\
 `#>     others = C57BL/6 `\
@@ -38,6 +37,7 @@ other R objects.
 `#>     sample_type = liver `\
 `#>     score_cutoff = 5 `\
 `#>     signature_name = Myc_reduce_mice_liver_24m `\
+`#>     type = bi-directional `\
 `#>     year = 2015 `\
 `#>   Metadata user defined fields: `\
 `#>     animal_strain = C57BL/6 `\

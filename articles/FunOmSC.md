@@ -46,7 +46,6 @@ all metadata fields will be included.
 `#> assay_type     "transcriptomics"          "transcriptomics"         `\
 `#> author         "vmli"                     "vmli"                    `\
 `#> covariates     "age, gender"              "age, gender"             `\
-`#> direction_type "bi-directional"           "bi-directional"          `\
 `#> organism       "Mus musculus"             "Mus musculus"            `\
 `#> p_cutoff       0.05                       0.05                      `\
 `#> phenotype      "new_experiment"           "new_experiment"          `\
@@ -54,18 +53,19 @@ all metadata fields will be included.
 `#> sample_type    "liver"                    "brain"                   `\
 `#> score_cutoff   3                          3                         `\
 `#> signature_name "Experiment in liver"      "Experiment in brain"     `\
+`#> type           "bi-directional"           "bi-directional"          `\
 `#>                Experiment in heart       `\
 `#> assay_type     "transcriptomics"         `\
 `#> author         "vmli"                    `\
 `#> covariates     "age, gender"             `\
-`#> direction_type "bi-directional"          `\
 `#> organism       "Mus musculus"            `\
 `#> p_cutoff       0.05                      `\
 `#> phenotype      "new_experiment"          `\
 `#> platform       "transcriptomics by array"`\
 `#> sample_type    "heart"                   `\
 `#> score_cutoff   3                         `\
-`#> signature_name "Experiment in heart"`
+`#> signature_name "Experiment in heart"     `\
+`#> type           "bi-directional"`
 
 ## Extract new signatures from the `OmicSignatureCollection` object
 

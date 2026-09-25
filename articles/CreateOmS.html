@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">OmicSignature</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.3.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.4.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -94,7 +94,7 @@ Li</h4>
 <li><p><strong>metadata</strong>, a list.<br>
 Required fields:<br>
 “<strong>signature_name</strong>”, “<strong>organism</strong>”,
-“<strong>direction_type</strong>”, “<strong>assay_type</strong>”,
+“<strong>type</strong>”, “<strong>assay_type</strong>”,
 “<strong>phenotype</strong>”, “<strong>author</strong>”.<br>
 Recommended optional fields, if applicable:<br>
 “platform”, “sample_type”, “description”, “covariates”, “score_cutoff”,
@@ -145,7 +145,7 @@ here included.<br></p>
 </h3>
 <p>A list with the following required fields:<br>
 “<strong>signature_name</strong>”, “<strong>organism</strong>”,
-“<strong>direction_type</strong>”, “<strong>assay_type</strong>”,
+“<strong>type</strong>”, “<strong>assay_type</strong>”,
 “<strong>phenotype</strong>”, “<strong>author</strong>”.<br><br>
 To make collaboration easier, we recommend including your work email
 address along with your name in the author field.<br><br>
@@ -161,7 +161,7 @@ because typos can occur.<br></p>
 <span>  <span class="st">"organism"</span> <span class="op">=</span> <span class="st">"Mus musculus"</span>,</span>
 <span>  <span class="st">"sample_type"</span> <span class="op">=</span> <span class="st">"liver"</span>,</span>
 <span>  <span class="st">"phenotype"</span> <span class="op">=</span> <span class="st">"Myc_reduce"</span>,</span>
-<span>  <span class="st">"direction_type"</span> <span class="op">=</span> <span class="st">"bi-directional"</span>,</span>
+<span>  <span class="st">"type"</span> <span class="op">=</span> <span class="st">"bi-directional"</span>,</span>
 <span>  <span class="st">"assay_type"</span> <span class="op">=</span> <span class="st">"transcriptomics"</span>, </span>
 <span>  <span class="st">"platform"</span> <span class="op">=</span> <span class="st">"transcriptomics by array"</span>,</span>
 <span>  <span class="st">"author"</span> <span class="op">=</span> <span class="st">"researcher@institute.edu"</span></span>
@@ -176,7 +176,7 @@ field.<br></p>
 <span>  <span class="co"># required attributes:</span></span>
 <span>  signature_name <span class="op">=</span> <span class="st">"Myc_reduce_mice_liver_24m"</span>,</span>
 <span>  organism <span class="op">=</span> <span class="st">"Mus musculus"</span>,</span>
-<span>  direction_type <span class="op">=</span> <span class="st">"bi-directional"</span>,</span>
+<span>  type <span class="op">=</span> <span class="st">"bi-directional"</span>,</span>
 <span>  assay_type <span class="op">=</span> <span class="st">"transcriptomics"</span>,</span>
 <span>  phenotype <span class="op">=</span> <span class="st">"Myc_reduce"</span>,</span>
 <span>  author <span class="op">=</span> <span class="st">"researcher@institute.edu"</span>,</span>
@@ -238,9 +238,9 @@ terms via the <code>OmicS_searchSampleType</code> and
 Type &amp; Platform Info”</a> for details.<br></p>
 </div>
 <div class="section level4">
-<h4 id="direction_type">2.1.4 “direction_type”<a class="anchor" aria-label="anchor" href="#direction_type"></a>
+<h4 id="type">2.1.4 “type”<a class="anchor" aria-label="anchor" href="#type"></a>
 </h4>
-<p><code>direction_type</code> must be one of the following:<br></p>
+<p><code>type</code> must be one of the following:<br></p>
 <ul>
 <li><p>“uni-directional”. Only a list of significant feature names is
 available. Examples including “genes mutated in a disease” and “markers
@@ -256,6 +256,22 @@ will increase with age, while others will decrease with age.<br></p></li>
 (e.g., “A” <em>vs.</em> “B” <em>vs.</em> “C”), usually analyzed by
 ANOVA.<br></p></li>
 </ul>
+<p>This field was named <code>direction_type</code> in older versions of
+the package. <code>direction_type</code> is still accepted when creating
+metadata by hand, via <code><a href="../reference/createMetadata.html">createMetadata()</a></code>, or when reading an
+older JSON file written by <code><a href="../reference/writeJson.html">writeJson()</a></code>; the package renames
+it to <code>type</code> automatically and emits a warning, so those
+metadata lists and JSON files keep working, but new metadata should use
+<code>type</code>. This does <em>not</em> extend to an
+<code>OmicSignature</code> object saved to an <code>.rds</code> file
+under an older package version: R’s serialization captures that object’s
+methods as they were at save time, so a reloaded <code>.rds</code>
+object has no opportunity to run the rename and instead raises an
+actionable error. Rebuild it with <code>OmicSignature$new()</code> from
+its original inputs, or, if you still have the <code>.rds</code> file
+from a version where it worked, round-trip it through
+<code><a href="../reference/writeJson.html">writeJson()</a></code> and then <code><a href="../reference/readJson.html">readJson()</a></code> under the
+current package version.<br></p>
 </div>
 <div class="section level4">
 <h4 id="assay_type">2.1.5 “assay_type”<a class="anchor" aria-label="anchor" href="#assay_type"></a>
@@ -278,8 +294,8 @@ above.<br></p>
 <p><strong>signature</strong> is a dataframe with the columns
 <strong>“probe_id”</strong> and <strong>“feature_name”</strong>. If the
 signature is bi-directional or categorical (as specified in
-<code>direction_type</code> within <code>metadata</code>), an additional
-column, <strong>“group_label”</strong>, is also required.<br>
+<code>type</code> within <code>metadata</code>), an additional column,
+<strong>“group_label”</strong>, is also required.<br>
 An optional column <strong>“score”</strong> is highly recommended when
 applicable.<br><br>
 “<strong>probe_id</strong>” is a unique identifier, usually a
@@ -475,7 +491,7 @@ messages.<br></p>
 <span>  difexp <span class="op">=</span> <span class="va">difexp</span>,</span>
 <span>  print_message <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt;   -- Required attributes for metadata: signature_name, phenotype, organism, direction_type, assay_type --</span></span>
+<span><span class="co">#&gt;   -- Required attributes for metadata: signature_name, phenotype, organism, type, assay_type --</span></span>
 <span><span class="co">#&gt;   [Success] Metadata is saved. </span></span>
 <span><span class="co">#&gt;   [Success] Signature is valid. </span></span>
 <span><span class="co">#&gt;   [Success] difexp is valid. </span></span>
@@ -490,7 +506,6 @@ messages.<br></p>
 <span><span class="co">#&gt;     author = researcher@institute.edu </span></span>
 <span><span class="co">#&gt;     covariates = age, gender </span></span>
 <span><span class="co">#&gt;     description = mice Myc haploinsufficient (Myc(+/-)) </span></span>
-<span><span class="co">#&gt;     direction_type = bi-directional </span></span>
 <span><span class="co">#&gt;     keywords = Myc, KO, longevity </span></span>
 <span><span class="co">#&gt;     organism = Mus musculus </span></span>
 <span><span class="co">#&gt;     others = C57BL/6 </span></span>
@@ -500,6 +515,7 @@ messages.<br></p>
 <span><span class="co">#&gt;     sample_type = liver </span></span>
 <span><span class="co">#&gt;     score_cutoff = 5 </span></span>
 <span><span class="co">#&gt;     signature_name = Myc_reduce_mice_liver_24m </span></span>
+<span><span class="co">#&gt;     type = bi-directional </span></span>
 <span><span class="co">#&gt;     year = 2015 </span></span>
 <span><span class="co">#&gt;   Metadata user defined fields: </span></span>
 <span><span class="co">#&gt;     animal_strain = C57BL/6 </span></span>
@@ -550,7 +566,6 @@ object.<br></p>
 <span><span class="co">#&gt;     author = researcher@institute.edu </span></span>
 <span><span class="co">#&gt;     covariates = age, gender </span></span>
 <span><span class="co">#&gt;     description = mice Myc haploinsufficient (Myc(+/-)) </span></span>
-<span><span class="co">#&gt;     direction_type = bi-directional </span></span>
 <span><span class="co">#&gt;     keywords = Myc, KO, longevity </span></span>
 <span><span class="co">#&gt;     organism = Mus musculus </span></span>
 <span><span class="co">#&gt;     others = C57BL/6 </span></span>
@@ -560,6 +575,7 @@ object.<br></p>
 <span><span class="co">#&gt;     sample_type = liver </span></span>
 <span><span class="co">#&gt;     score_cutoff = 5 </span></span>
 <span><span class="co">#&gt;     signature_name = Myc_reduce_mice_liver_24m </span></span>
+<span><span class="co">#&gt;     type = bi-directional </span></span>
 <span><span class="co">#&gt;     year = 2015 </span></span>
 <span><span class="co">#&gt;   Metadata user defined fields: </span></span>
 <span><span class="co">#&gt;     animal_strain = C57BL/6 </span></span>

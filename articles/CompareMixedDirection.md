@@ -26,8 +26,8 @@ not at all with any signature’s `control`/`down`/`sensitive` label.
 \
 [`data`](https://rdrr.io/r/utils/data.html)`(``compare_mixed_direction_example``)`\
 \
-`## direction_type per signature`\
-[`sapply`](https://rdrr.io/r/base/lapply.html)`(``compare_mixed_direction_example``, \``(``x``)`` ``x``$``metadata``$``direction_type``)`\
+`## type per signature`\
+[`sapply`](https://rdrr.io/r/base/lapply.html)`(``compare_mixed_direction_example``, \``(``x``)`` ``x``$``metadata``$``type``)`\
 `#>       signature_a       signature_b       signature_c       signature_d `\
 `#>  "bi-directional"  "bi-directional"  "bi-directional" "uni-directional"`
 

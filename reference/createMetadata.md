@@ -12,7 +12,7 @@ createMetadata(
   assay_type,
   covariates = NULL,
   platform = "unknown",
-  direction_type,
+  type,
   sample_type = NULL,
   signature_collection = NULL,
   author = NULL,
@@ -26,7 +26,8 @@ createMetadata(
   adj_p_cutoff = NULL,
   score_cutoff = NULL,
   cutoff_description = NULL,
-  others = NULL
+  others = NULL,
+  direction_type = NULL
 )
 ```
 
@@ -63,7 +64,7 @@ createMetadata(
   optional but highly recommended. input as a single string. e.g.
   "transcriptomics by single-cell RNA-seq".
 
-- direction_type:
+- type:
 
   required. the direction information of the signature. "uni" or
   "uni-directional" if the signature is derived from one category. "bi"
@@ -108,8 +109,8 @@ createMetadata(
 
 - category_num:
 
-  required when direction_type = "categorical". numeric. a number
-  indicates how many categories or class the signature contains.
+  required when type = "categorical". numeric. a number indicates how
+  many categories or class the signature contains.
 
 - logfc_cutoff:
 
@@ -140,6 +141,11 @@ createMetadata(
   provide additional user-defined metadata fields as a list. for
   example, others = list("animal_strain" = "C57BL/6", "lab" =
   "new_lab").
+
+- direction_type:
+
+  deprecated. the former name of \`type\`. Supplying it warns and
+  forwards to \`type\`. Supplying both is an error.
 
 ## Value
 

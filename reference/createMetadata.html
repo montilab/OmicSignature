@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">OmicSignature</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.3.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.4.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -64,7 +64,7 @@
 <span>  <span class="va">assay_type</span>,</span>
 <span>  covariates <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  platform <span class="op">=</span> <span class="st">"unknown"</span>,</span>
-<span>  <span class="va">direction_type</span>,</span>
+<span>  <span class="va">type</span>,</span>
 <span>  sample_type <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  signature_collection <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  author <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -78,7 +78,8 @@
 <span>  adj_p_cutoff <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  score_cutoff <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  cutoff_description <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  others <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  others <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  direction_type <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -110,7 +111,7 @@
 <dd><p>optional but highly recommended. input as a single string. e.g. "transcriptomics by single-cell RNA-seq".</p></dd>
 
 
-<dt id="arg-direction-type">direction_type<a class="anchor" aria-label="anchor" href="#arg-direction-type"></a></dt>
+<dt id="arg-type">type<a class="anchor" aria-label="anchor" href="#arg-type"></a></dt>
 <dd><p>required. the direction information of the signature.
 "uni" or "uni-directional" if the signature is derived from one category.
 "bi" or "bi-directional" if the signature is derived from group A vs group B, or it contains "up" and "down" regulated features for a continuous phenotype.
@@ -146,7 +147,7 @@
 
 
 <dt id="arg-category-num">category_num<a class="anchor" aria-label="anchor" href="#arg-category-num"></a></dt>
-<dd><p>required when direction_type = "categorical". numeric. a number indicates how many categories or class the signature contains.</p></dd>
+<dd><p>required when type = "categorical". numeric. a number indicates how many categories or class the signature contains.</p></dd>
 
 
 <dt id="arg-logfc-cutoff">logfc_cutoff<a class="anchor" aria-label="anchor" href="#arg-logfc-cutoff"></a></dt>
@@ -171,6 +172,10 @@
 
 <dt id="arg-others">others<a class="anchor" aria-label="anchor" href="#arg-others"></a></dt>
 <dd><p>provide additional user-defined metadata fields as a list. for example, others = list("animal_strain" = "C57BL/6", "lab" = "new_lab").</p></dd>
+
+
+<dt id="arg-direction-type">direction_type<a class="anchor" aria-label="anchor" href="#arg-direction-type"></a></dt>
+<dd><p>deprecated. the former name of `type`. Supplying it warns and forwards to `type`. Supplying both is an error.</p></dd>
 
 </dl></div>
     <div class="section level2">

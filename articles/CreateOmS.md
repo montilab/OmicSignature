@@ -10,8 +10,8 @@ An `OmicSignature` object contains three parts:\
 
 - **metadata**, a list.\
   Required fields:\
-  “**signature_name**”, “**organism**”, “**direction_type**”,
-  “**assay_type**”, “**phenotype**”, “**author**”.\
+  “**signature_name**”, “**organism**”, “**type**”, “**assay_type**”,
+  “**phenotype**”, “**author**”.\
   Recommended optional fields, if applicable:\
   “platform”, “sample_type”, “description”, “covariates”,
   “score_cutoff”, “adj_p_cutoff”.\
@@ -59,8 +59,8 @@ only the top 1000 genes are here included.\
 ### 2.1. Metadata
 
 A list with the following required fields:\
-“**signature_name**”, “**organism**”, “**direction_type**”,
-“**assay_type**”, “**phenotype**”, “**author**”.\
+“**signature_name**”, “**organism**”, “**type**”, “**assay_type**”,
+“**phenotype**”, “**author**”.\
 \
 To make collaboration easier, we recommend including your work email
 address along with your name in the author field.\
@@ -77,7 +77,7 @@ typos can occur.\
       "organism" = "Mus musculus",
       "sample_type" = "liver",
       "phenotype" = "Myc_reduce",
-      "direction_type" = "bi-directional",
+      "type" = "bi-directional",
       "assay_type" = "transcriptomics", 
       "platform" = "transcriptomics by array",
       "author" = "researcher@institute.edu"
@@ -97,7 +97,7 @@ field.\
 `  ``# required attributes:`\
 `  signature_name ``=`` ``"Myc_reduce_mice_liver_24m"``,`\
 `  organism ``=`` ``"Mus musculus"``,`\
-`  direction_type ``=`` ``"bi-directional"``,`\
+`  type ``=`` ``"bi-directional"``,`\
 `  assay_type ``=`` ``"transcriptomics"``,`\
 `  phenotype ``=`` ``"Myc_reduce"``,`\
 `  author ``=`` ``"researcher@institute.edu"``,`\
@@ -159,9 +159,9 @@ platforms, if appropriate. You can search for predefined terms via the
 Info”](https://montilab.github.io/OmicSignature/articles/SampleType.html)
 for details.\
 
-#### 2.1.4 “direction_type”
+#### 2.1.4 “type”
 
-`direction_type` must be one of the following:\
+`type` must be one of the following:\
 
 - “uni-directional”. Only a list of significant feature names is
   available. Examples including “genes mutated in a disease” and
@@ -177,6 +177,25 @@ for details.\
 
 - “categorical”. Used with multi-valued categorical phenotypes (e.g.,
   “A” *vs.* “B” *vs.* “C”), usually analyzed by ANOVA.\
+
+This field was named `direction_type` in older versions of the package.
+`direction_type` is still accepted when creating metadata by hand, via
+[`createMetadata()`](https://montilab.github.io/OmicSignature/reference/createMetadata.md),
+or when reading an older JSON file written by
+[`writeJson()`](https://montilab.github.io/OmicSignature/reference/writeJson.md);
+the package renames it to `type` automatically and emits a warning, so
+those metadata lists and JSON files keep working, but new metadata
+should use `type`. This does *not* extend to an `OmicSignature` object
+saved to an `.rds` file under an older package version: R’s
+serialization captures that object’s methods as they were at save time,
+so a reloaded `.rds` object has no opportunity to run the rename and
+instead raises an actionable error. Rebuild it with
+`OmicSignature$new()` from its original inputs, or, if you still have
+the `.rds` file from a version where it worked, round-trip it through
+[`writeJson()`](https://montilab.github.io/OmicSignature/reference/writeJson.md)
+and then
+[`readJson()`](https://montilab.github.io/OmicSignature/reference/readJson.md)
+under the current package version.\
 
 #### 2.1.5 “assay_type”
 
@@ -197,8 +216,8 @@ to see the list above.\
 
 **signature** is a dataframe with the columns **“probe_id”** and
 **“feature_name”**. If the signature is bi-directional or categorical
-(as specified in `direction_type` within `metadata`), an additional
-column, **“group_label”**, is also required.\
+(as specified in `type` within `metadata`), an additional column,
+**“group_label”**, is also required.\
 An optional column **“score”** is highly recommended when applicable.\
 \
 “**probe_id**” is a unique identifier, usually a platform-specific
@@ -411,7 +430,7 @@ Set `print_message` = `TRUE` to see all the messages.\
 `  difexp ``=`` ``difexp``,`\
 `  print_message ``=`` ``TRUE`\
 `)`\
-`#>   -- Required attributes for metadata: signature_name, phenotype, organism, direction_type, assay_type --`\
+`#>   -- Required attributes for metadata: signature_name, phenotype, organism, type, assay_type --`\
 `#>   [Success] Metadata is saved. `\
 `#>   [Success] Signature is valid. `\
 `#>   [Success] difexp is valid. `\
@@ -428,7 +447,6 @@ See the created object information:
 `#>     author = researcher@institute.edu `\
 `#>     covariates = age, gender `\
 `#>     description = mice Myc haploinsufficient (Myc(+/-)) `\
-`#>     direction_type = bi-directional `\
 `#>     keywords = Myc, KO, longevity `\
 `#>     organism = Mus musculus `\
 `#>     others = C57BL/6 `\
@@ -438,6 +456,7 @@ See the created object information:
 `#>     sample_type = liver `\
 `#>     score_cutoff = 5 `\
 `#>     signature_name = Myc_reduce_mice_liver_24m `\
+`#>     type = bi-directional `\
 `#>     year = 2015 `\
 `#>   Metadata user defined fields: `\
 `#>     animal_strain = C57BL/6 `\
@@ -491,7 +510,6 @@ to automatically extract significant features and create the
 `#>     author = researcher@institute.edu `\
 `#>     covariates = age, gender `\
 `#>     description = mice Myc haploinsufficient (Myc(+/-)) `\
-`#>     direction_type = bi-directional `\
 `#>     keywords = Myc, KO, longevity `\
 `#>     organism = Mus musculus `\
 `#>     others = C57BL/6 `\
@@ -501,6 +519,7 @@ to automatically extract significant features and create the
 `#>     sample_type = liver `\
 `#>     score_cutoff = 5 `\
 `#>     signature_name = Myc_reduce_mice_liver_24m `\
+`#>     type = bi-directional `\
 `#>     year = 2015 `\
 `#>   Metadata user defined fields: `\
 `#>     animal_strain = C57BL/6 `\
