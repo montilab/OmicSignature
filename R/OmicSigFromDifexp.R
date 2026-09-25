@@ -23,6 +23,11 @@ OmicSigFromDifexp <- function(difexp, metadata, criteria = NULL) {
   ## define the following to pass R check since they are viewed as variables in dplyr functions
   score <- NULL
 
+  ## accept the pre-1.4.0 field name `direction_type` before anything below
+  ## reads metadata$type directly; OmicSignature$new() will receive an
+  ## already-normalized list, so it will not warn a second time.
+  metadata <- .normalize_metadata_names(metadata)
+
   signatureType <- metadata$type
 
   ## if probe_id is not provided in difexp, setup numeric counter as probe_id

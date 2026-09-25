@@ -562,13 +562,41 @@ compare_omic_signatures <- function(
   invisible(TRUE)
 }
 
+.cos_signature_type <- function(sig) {
+  ## Accessor for an OmicSignature object's direction/type field. Guards
+  ## against an object restored from a pre-1.4.0 .rds file: R6 objects
+  ## serialize their own bound methods, so such an object still carries
+  ## `direction_type` in its metadata and a stale checkMetadata() that never
+  ## calls .normalize_metadata_names(). $metadata$type is then NULL even
+  ## though the object is perfectly usable otherwise, and the natural repair
+  ## `obj$metadata <- obj$metadata` does NOT work, because the stale
+  ## serialized closure runs instead of the current one.
+  ##
+  ## Stop rather than silently falling back to direction_type: an object
+  ## like this, if it also has a placeholder single-level group_label column
+  ## (which this package's own data-raw builders create for uni-directional
+  ## difexp tables), would otherwise be silently compared as bi-directional
+  ## with no error at all instead of failing loudly.
+  type <- sig$metadata$type
+  if (!is.null(type)) {
+    return(as.character(type)[1])
+  }
+  if (!is.null(sig$metadata$direction_type)) {
+    stop(
+      "This OmicSignature object was built by OmicSignature < 1.4.0: its ",
+      "metadata still uses the deprecated field 'direction_type' instead of ",
+      "'type', and its serialized methods predate the rename, so ",
+      "`obj$metadata <- obj$metadata` will not repair it. Rebuild it with ",
+      "OmicSignature$new(), or round-trip it through writeJson() and ",
+      "readJson()."
+    )
+  }
+  NA_character_
+}
+
 .cos_stop_if_categorical <- function(sig_list, arg_name) {
   ## Exclude categorical signatures until comparison semantics are defined.
-  signature_types <- vapply(sig_list, function(sig) {
-    type <- sig$metadata$type
-    if (is.null(type)) return(NA_character_)
-    as.character(type)[1]
-  }, character(1))
+  signature_types <- vapply(sig_list, .cos_signature_type, character(1))
   if (any(signature_types == "categorical", na.rm = TRUE)) {
     stop("Categorical signatures are not implemented yet: ",
          paste(names(sig_list)[signature_types == "categorical"], collapse = ", "))
@@ -580,7 +608,7 @@ compare_omic_signatures <- function(
   ## Uni-directional signatures have no group_label contrast: no "level" to
   ## pair on, so they're compared as a single, whole feature set instead of
   ## being split by group_label like bi-directional signatures.
-  identical(sig$metadata$type, "uni-directional")
+  identical(.cos_signature_type(sig), "uni-directional")
 }
 
 .cos_signature_name <- function(sig) {

@@ -488,3 +488,39 @@ test_that("label_pairing given for a uni-directional signature errors clearly", 
     "uni-directional"
   )
 })
+
+test_that("comparing an object restored from a pre-1.4.0 .rds file errors with an actionable message", {
+  ## R6 objects serialize their own bound methods, so an OmicSignature object
+  ## saved to .rds under < 1.4.0 and reloaded now keeps `direction_type` in
+  ## its stored metadata and a stale checkMetadata() that never calls
+  ## .normalize_metadata_names(). We simulate that by constructing normally
+  ## and then writing directly into the private field -- sig$metadata <-
+  ## sig$metadata would just re-run the CURRENT checkMetadata() and
+  ## normalize it right back, which is exactly why that "natural repair"
+  ## does not work on a genuinely stale object either.
+  stale_uni <- make_uni_test_signature(
+    "stale_uni", features = c("A", "B", "C", "D"), scores = c(4, 3, 2, 1)
+  )
+  stale_metadata <- stale_uni$metadata
+  names(stale_metadata)[names(stale_metadata) == "type"] <- "direction_type"
+  stale_uni$.__enclos_env__$private$.metadata <- stale_metadata
+
+  expect_null(stale_uni$metadata$type)
+  expect_equal(stale_uni$metadata$direction_type, "uni-directional")
+
+  ## Without the guard, this used to either die downstream with the
+  ## unrelated "Column 'group_label' not found" (because .cos_is_uni()
+  ## silently returned FALSE for a genuinely uni-directional object), or --
+  ## because make_uni_test_signature()'s difexp carries the same
+  ## single-level placeholder group_label column this package's own
+  ## data-raw builders create -- return a result with no error at all,
+  ## silently comparing it as bi-directional.
+  expect_error(
+    compare_omic_signatures(list(a = stale_uni), method = "overlap"),
+    "OmicSignature < 1.4.0"
+  )
+  expect_error(
+    compare_omic_signatures(list(a = stale_uni), method = "overlap"),
+    "writeJson"
+  )
+})
