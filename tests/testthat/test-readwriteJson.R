@@ -95,3 +95,27 @@ test_that("readJson() correctly reconstructs group_label for files without *_gro
     obj$signature$feature_name[obj$signature$group_label == "down"], c("c", "d")
   )
 })
+
+test_that("readJson() loads a legacy file whose metadata uses direction_type", {
+  path <- system.file("extdata", "OmS_legacy_direction_type.json", package = "OmicSignature")
+  expect_true(file.exists(path))
+  warns <- testthat::capture_warnings(capture.output(sig <- readJson(path)))
+  expect_true(any(grepl("direction_type.*deprecated", warns)))
+  expect_true(inherits(sig, "OmicSignature"))
+  expect_equal(sig$metadata$type, "bi-directional")
+  expect_false("direction_type" %in% names(sig$metadata))
+})
+
+test_that("a legacy file round-trips out under the new field name", {
+  path <- system.file("extdata", "OmS_legacy_direction_type.json", package = "OmicSignature")
+  sig <- suppressWarnings(readJson(path))
+  ## tempfile() rather than withr::local_tempfile(): withr is not in this
+  ## package's Suggests, and the rest of this file already uses tempfile().
+  out <- tempfile(fileext = ".json")
+  ## writeJson() and readJson() both print; the rest of this file wraps them in
+  ## capture.output() for that reason. Do not use expect_silent() here.
+  capture.output(writeJson(sig, out))
+  capture.output(reread <- readJson(out))
+  expect_equal(reread$metadata$type, "bi-directional")
+  expect_false("direction_type" %in% names(reread$metadata))
+})
