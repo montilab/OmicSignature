@@ -154,7 +154,7 @@ While both "sample_type" and "platform" are free text, it is recommended that pr
 
 -   "categorical". Used with multi-valued categorical phenotypes (e.g., "A" *vs.* "B" *vs.* "C"), usually analyzed by ANOVA.\
 
-This field was named `direction_type` in older versions of the package. `direction_type` is still accepted when creating metadata by hand, via `createMetadata()`, or when reading an older JSON file; the package renames it to `type` automatically and emits a warning, so existing scripts and saved files keep working, but new metadata should use `type`.\
+This field was named `direction_type` in older versions of the package. `direction_type` is still accepted when creating metadata by hand, via `createMetadata()`, or when reading an older JSON file written by `writeJson()`; the package renames it to `type` automatically and emits a warning, so those metadata lists and JSON files keep working, but new metadata should use `type`. This does *not* extend to an `OmicSignature` object saved to an `.rds` file under an older package version: R's serialization captures that object's methods as they were at save time, so a reloaded `.rds` object has no opportunity to run the rename and instead raises an actionable error. Rebuild it with `OmicSignature$new()` from its original inputs, or, if you still have the `.rds` file from a version where it worked, round-trip it through `writeJson()` and then `readJson()` under the current package version.\
 
 #### 2.1.5 "assay_type"
 

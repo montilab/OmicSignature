@@ -73,7 +73,7 @@ test_that("checkDifexp() does not require group_label for uni-directional signat
   expect_false("group_label" %in% colnames(sig$difexp))
 })
 
-test_that("metadata<- re-validates signature/difexp when direction_type changes", {
+test_that("metadata<- re-validates signature/difexp when type changes", {
   bi_metadata <- list(
     signature_name = "bi", phenotype = "test",
     organism = predefined_organisms[1], type = "bi-directional",
@@ -85,10 +85,10 @@ test_that("metadata<- re-validates signature/difexp when direction_type changes"
   )
   capture.output(bi <- OmicSignature$new(metadata = bi_metadata, signature = bi_signature))
 
-  ## Regression test: demoting direction_type to uni-directional used to
+  ## Regression test: demoting type to uni-directional used to
   ## succeed silently even though signature still had a multi-level
   ## group_label column, which compare_omic_signatures() would then ignore
-  ## entirely based on metadata$direction_type alone.
+  ## entirely based on metadata$type alone.
   expect_error(
     bi$metadata <- modifyList(bi_metadata, list(type = "uni-directional")),
     "multi-level group_label"
@@ -110,7 +110,7 @@ test_that("metadata<- re-validates signature/difexp when direction_type changes"
     "group_label"
   )
 
-  ## An unrelated metadata change (same direction_type) is unaffected.
+  ## An unrelated metadata change (same type) is unaffected.
   capture.output(bi$metadata <- modifyList(bi_metadata, list(author = "someone")))
   expect_equal(bi$metadata$author, "someone")
 })

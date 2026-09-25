@@ -56,6 +56,12 @@ make_uni_simulated_signature <- function(signature_name, features, all_features)
   )
 }
 
+## Fixed so the rnorm() noise in make_uni_simulated_signature()'s difexp
+## tables (and therefore data/compare_unidirectional_example.rda) is
+## reproducible from this script, matching the pattern used in
+## create_compare_label_pairing_data.R.
+set.seed(20260925)
+
 all_features <- paste0("gene_", sprintf("%03d", 1:100))
 
 feature_sets <- list(
