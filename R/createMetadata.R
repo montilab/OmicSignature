@@ -3,7 +3,7 @@
 #' @importFrom dplyr recode %>%
 #' @param signature_name required. name of the signature.
 #' @param signature_collection optional. the collection name that the signature belongs to.
-#' @param direction_type required. the direction information of the signature.
+#' @param type required. the direction information of the signature.
 #' "uni" or "uni-directional" if the signature is derived from one category.
 #' "bi" or "bi-directional" if the signature is derived from group A vs group B, or it contains "up" and "down" regulated features for a continuous phenotype.
 #' "categorical" if the signature is derived from comparisons between multiple groups, e.g. A vs B vs C.
@@ -18,37 +18,51 @@
 #' @param PMID optional. a single-length character value. the PubMed ID if the signature is from a published article.
 #' @param keywords optional. key words for the signature. input as a multi-length character vector, e.g. c("longevity", "perturbation", "health").
 #' @param description optional. free text to describe the signature. input as a single-length string. the character limit (including all spaces and symbols) is 65,535.
-#' @param category_num required when direction_type = "categorical". numeric. a number indicates how many categories or class the signature contains.
+#' @param category_num required when type = "categorical". numeric. a number indicates how many categories or class the signature contains.
 #' @param logfc_cutoff optional. a single-length numeric value. log fold change cutoff used to generate the signature, if applicable.
 #' @param p_value_cutoff optional. a single-length numeric value. p value cutoff used to generate the signature, if applicable.
 #' @param adj_p_cutoff optional. a single-length numeric value. adjusted p-value, e.g. fdr, cutoff used to generate the signature, if applicable.
 #' @param score_cutoff optional. a single-length numeric value. score cutoff used to generate the signature, if applicable.
 #' @param cutoff_description optional. description of the cutoff, if applicable.
 #' @param others provide additional user-defined metadata fields as a list. for example, others = list("animal_strain" = "C57BL/6", "lab" = "new_lab").
+#' @param direction_type deprecated. the former name of `type`. Supplying it warns and forwards to `type`. Supplying both is an error.
 #' @return a metadata list to create an OmicSignature R6 object.
 #' @export
 createMetadata <- function(signature_name, organism, phenotype = "unknown", assay_type,
-                           covariates = NULL, platform = "unknown", direction_type,
+                           covariates = NULL, platform = "unknown", type,
                            sample_type = NULL, signature_collection = NULL,
                            author = NULL, year = NULL, PMID = NULL,
                            keywords = NULL, description = NULL, category_num = NULL,
                            logfc_cutoff = NULL, p_value_cutoff = NULL,
                            adj_p_cutoff = NULL, score_cutoff = NULL,
-                           cutoff_description = NULL, others = NULL) {
-  # check sig direction type
-  ## lowercase first as its own statement so `default = direction_type` below
+                           cutoff_description = NULL, others = NULL,
+                           direction_type = NULL) {
+  ## accept the pre-1.4.0 argument name
+  if (!is.null(direction_type)) {
+    if (!missing(type)) {
+      stop("Supply only 'type'. The 'direction_type' argument is deprecated.")
+    }
+    warning("The 'direction_type' argument is deprecated; use 'type' instead.")
+    type <- direction_type
+  }
+  if (missing(type)) {
+    stop("'type' is required.")
+  }
+
+  # check sig type
+  ## lowercase first as its own statement so `default = type` below
   ## refers to the already-lowercased value, not the original mixed-case
   ## input (recode_values() evaluates `default` eagerly against whatever
-  ## `direction_type` is bound to at call time).
-  direction_type <- tolower(direction_type)
-  direction_type <- dplyr::recode_values(
-    direction_type,
-    default = direction_type,
+  ## `type` is bound to at call time).
+  type <- tolower(type)
+  type <- dplyr::recode_values(
+    type,
+    default = type,
     "bi" ~ "bi-directional",
     "uni" ~ "uni-directional"
   )
-  if (!direction_type %in% c("bi-directional", "uni-directional", "categorical")) {
-    stop("direction_type should be uni-directional, bi-directional or categorical.")
+  if (!type %in% c("bi-directional", "uni-directional", "categorical")) {
+    stop("type should be uni-directional, bi-directional or categorical.")
   }
 
   # check assey type
@@ -132,7 +146,7 @@ createMetadata <- function(signature_name, organism, phenotype = "unknown", assa
   result <- list(
     "signature_name" = signature_name,
     "signature_collection" = signature_collection,
-    "direction_type" = direction_type,
+    "type" = type,
     "assay_type" = assay_type,
     "organism" = organism,
     "platform" = platform,
@@ -149,7 +163,7 @@ createMetadata <- function(signature_name, organism, phenotype = "unknown", assa
     "cutoff_description" = cutoff_description,
     "others" = others
   )
-  if (direction_type == "categorical") {
+  if (type == "categorical") {
     if (!is.null(category_num)) {
       result$category_num <- category_num
     } else {
