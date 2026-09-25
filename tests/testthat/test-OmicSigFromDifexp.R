@@ -8,7 +8,7 @@ test_that("OmicSigFromDifexp() errors when no criteria are available", {
   )
   metadata <- list(
     signature_name = "no_criteria", phenotype = "test",
-    organism = predefined_organisms[1], direction_type = "bi-directional",
+    organism = predefined_organisms[1], type = "bi-directional",
     assay_type = predefined_assaytypes[1]
   )
 
@@ -35,7 +35,7 @@ test_that("OmicSigFromDifexp() builds a signature from an explicit criteria stri
   )
   metadata <- list(
     signature_name = "explicit_criteria", phenotype = "test",
-    organism = predefined_organisms[1], direction_type = "bi-directional",
+    organism = predefined_organisms[1], type = "bi-directional",
     assay_type = predefined_assaytypes[1]
   )
 
@@ -55,7 +55,7 @@ test_that("OmicSigFromDifexp() derives criteria from metadata cutoff fields", {
   )
   metadata <- list(
     signature_name = "metadata_criteria", phenotype = "test",
-    organism = predefined_organisms[1], direction_type = "bi-directional",
+    organism = predefined_organisms[1], type = "bi-directional",
     assay_type = predefined_assaytypes[1],
     score_cutoff = 3, adj_p_cutoff = 0.01
   )
@@ -75,7 +75,7 @@ test_that("OmicSigFromDifexp() derives group_label from score sign when missing"
   )
   metadata <- list(
     signature_name = "derived_group_label", phenotype = "test",
-    organism = predefined_organisms[1], direction_type = "bi-directional",
+    organism = predefined_organisms[1], type = "bi-directional",
     assay_type = predefined_assaytypes[1]
   )
 
@@ -93,7 +93,7 @@ test_that("OmicSigFromDifexp() errors when group_label and score are both missin
   )
   metadata <- list(
     signature_name = "no_score_no_group", phenotype = "test",
-    organism = predefined_organisms[1], direction_type = "bi-directional",
+    organism = predefined_organisms[1], type = "bi-directional",
     assay_type = predefined_assaytypes[1]
   )
 
@@ -101,6 +101,43 @@ test_that("OmicSigFromDifexp() errors when group_label and score are both missin
     OmicSigFromDifexp(difexp, metadata, criteria = "p_value < 0.01"),
     "group_label or score"
   )
+})
+
+test_that("OmicSigFromDifexp() accepts legacy direction_type metadata and warns exactly once", {
+  ## Regression test: OmicSigFromDifexp() used to read `metadata$type`
+  ## directly, before OmicSignature$new() (and its checkMetadata() ->
+  ## .normalize_metadata_names() shim) ever saw the metadata. With a legacy
+  ## metadata list, that made signatureType NULL, and
+  ## `if (signatureType == "bi-directional")` died with "argument is of
+  ## length zero" -- naming neither `type` nor `direction_type`. This is the
+  ## same bypass already fixed in initialize(), mechanically reintroduced
+  ## here when the field was renamed.
+  difexp <- data.frame(
+    probe_id = paste0("p", 1:4),
+    feature_name = c("a", "b", "c", "d"),
+    score = c(5, -5, 1, -1),
+    p_value = c(0.001, 0.001, 0.5, 0.5),
+    group_label = factor(c("up", "down", "up", "down"), levels = c("up", "down"))
+  )
+  legacy_metadata <- list(
+    signature_name = "legacy_from_difexp", phenotype = "test",
+    organism = predefined_organisms[1], direction_type = "bi-directional",
+    assay_type = predefined_assaytypes[1]
+  )
+
+  ## capture_warnings() rather than expect_warning(): if the normalization
+  ## happened twice (e.g. once here and once inside $new()), or if some
+  ## other unrelated checkMetadata() warning crept in, this fails.
+  warns <- testthat::capture_warnings(
+    capture.output(
+      sig <- OmicSigFromDifexp(difexp, legacy_metadata, criteria = "p_value < 0.01")
+    )
+  )
+  expect_length(warns, 1)
+  expect_true(any(grepl("direction_type.*deprecated", warns)))
+  expect_equal(sig$metadata$type, "bi-directional")
+  expect_false("direction_type" %in% names(sig$metadata))
+  expect_setequal(sig$signature$feature_name, c("a", "b"))
 })
 
 test_that("OmicSigFromDifexp() and OmicSignature$extractSignature() agree on retained rows", {
@@ -116,7 +153,7 @@ test_that("OmicSigFromDifexp() and OmicSignature$extractSignature() agree on ret
   )
   metadata <- list(
     signature_name = "cross_check", phenotype = "test",
-    organism = predefined_organisms[1], direction_type = "bi-directional",
+    organism = predefined_organisms[1], type = "bi-directional",
     assay_type = predefined_assaytypes[1]
   )
 

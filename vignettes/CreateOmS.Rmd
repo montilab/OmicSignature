@@ -29,7 +29,7 @@ An `OmicSignature` object contains three parts:\
 
 -   **metadata**, a list.\
     Required fields:\
-    "**signature_name**", "**organism**", "**direction_type**", "**assay_type**", "**phenotype**", "**author**".\
+    "**signature_name**", "**organism**", "**type**", "**assay_type**", "**phenotype**", "**author**".\
     Recommended optional fields, if applicable:\
     "platform", "sample_type", "description", "covariates", "score_cutoff", "adj_p_cutoff".\
     All of the above information should be provided as a string (spaces and punctuation are allowed) or one numeric value, not as a multi-length vector. \
@@ -67,7 +67,7 @@ The example provided below is from an experiment evaluating the effects of Myc r
 ### 2.1. Metadata
 
 A list with the following required fields:\
-"**signature_name**", "**organism**", "**direction_type**", "**assay_type**", "**phenotype**", "**author**".\
+"**signature_name**", "**organism**", "**type**", "**assay_type**", "**phenotype**", "**author**".\
  \
 To make collaboration easier, we recommend including your work email address along with your name in the author field. \
  \
@@ -82,7 +82,7 @@ metadata <- list(
   "organism" = "Mus musculus",
   "sample_type" = "liver",
   "phenotype" = "Myc_reduce",
-  "direction_type" = "bi-directional",
+  "type" = "bi-directional",
   "assay_type" = "transcriptomics", 
   "platform" = "transcriptomics by array",
   "author" = "researcher@institute.edu"
@@ -98,7 +98,7 @@ metadata <- createMetadata(
   # required attributes:
   signature_name = "Myc_reduce_mice_liver_24m",
   organism = "Mus musculus",
-  direction_type = "bi-directional",
+  type = "bi-directional",
   assay_type = "transcriptomics",
   phenotype = "Myc_reduce",
   author = "researcher@institute.edu",
@@ -144,15 +144,17 @@ OmicS_searchOrganism("homo")
 
 While both "sample_type" and "platform" are free text, it is recommended that predefined terms are used. Thus, "sample_type" should be a BRENDA ontology term, and "platform" should be one of a set of predefined platforms, if appropriate. You can search for predefined terms via the `OmicS_searchSampleType` and `OmicS_searchPlatform` functions. See ["Sample Type & Platform Info"](https://montilab.github.io/OmicSignature/articles/SampleType.html) for details.\
 
-#### 2.1.4 "direction_type"
+#### 2.1.4 "type"
 
-`direction_type` must be one of the following:\
+`type` must be one of the following:\
 
 -   "uni-directional". Only a list of significant feature names is available. Examples including "genes mutated in a disease" and "markers of a specific cell type".\
 
 -   "bi-directional". Significant features are derived from comparison of two groups, or a single continuous trait. Thus, the resulting significant features can be grouped into two categories. For example, when comparing treatment *vs.* control groups, some features will be higher and some will be lower in the treatment group. When the phenotype is a continuous trait, such as age, some features will increase with age, while others will decrease with age.\
 
 -   "categorical". Used with multi-valued categorical phenotypes (e.g., "A" *vs.* "B" *vs.* "C"), usually analyzed by ANOVA.\
+
+This field was named `direction_type` in older versions of the package. `direction_type` is still accepted when creating metadata by hand, via `createMetadata()`, or when reading an older JSON file written by `writeJson()`; the package renames it to `type` automatically and emits a warning, so those metadata lists and JSON files keep working, but new metadata should use `type`. This does *not* extend to an `OmicSignature` object saved to an `.rds` file under an older package version: R's serialization captures that object's methods as they were at save time, so a reloaded `.rds` object has no opportunity to run the rename and instead raises an actionable error. Rebuild it with `OmicSignature$new()` from its original inputs, or, if you still have the `.rds` file from a version where it worked, round-trip it through `writeJson()` and then `readJson()` under the current package version.\
 
 #### 2.1.5 "assay_type"
 
@@ -169,7 +171,7 @@ You can also use `OmicS_searchAssayType()` to see the list above. \
 
 ### 2.2. Signature
 
-**signature** is a dataframe with the columns **"probe_id"** and **"feature_name"**. If the signature is bi-directional or categorical (as specified in `direction_type` within `metadata`), an additional column, **"group_label"**, is also required. \
+**signature** is a dataframe with the columns **"probe_id"** and **"feature_name"**. If the signature is bi-directional or categorical (as specified in `type` within `metadata`), an additional column, **"group_label"**, is also required. \
 An optional column **"score"** is highly recommended when applicable.\
  \
 "**probe_id**" is a unique identifier, usually a platform-specific identifider (e.g., probe IDs for Affymetrix microarrays, or aptamer IDs for SomaScan assays). If not provided, it will be automatically generated.\

@@ -22,7 +22,7 @@ test_that("signature and difexp active bindings accept updates after constructio
 test_that("checkMetadata() gives descriptive errors for invalid optional fields", {
   base_metadata <- list(
     signature_name = "t", phenotype = "test",
-    organism = predefined_organisms[1], direction_type = "uni-directional",
+    organism = predefined_organisms[1], type = "uni-directional",
     assay_type = predefined_assaytypes[1]
   )
   signature <- data.frame(feature_name = "a", score = 1)
@@ -54,7 +54,7 @@ test_that("checkMetadata() gives descriptive errors for invalid optional fields"
 test_that("checkDifexp() does not require group_label for uni-directional signatures", {
   metadata <- list(
     signature_name = "u", phenotype = "test",
-    organism = predefined_organisms[1], direction_type = "uni-directional",
+    organism = predefined_organisms[1], type = "uni-directional",
     assay_type = predefined_assaytypes[1]
   )
   signature <- data.frame(feature_name = c("A", "B"), score = c(1, 2))
@@ -73,10 +73,10 @@ test_that("checkDifexp() does not require group_label for uni-directional signat
   expect_false("group_label" %in% colnames(sig$difexp))
 })
 
-test_that("metadata<- re-validates signature/difexp when direction_type changes", {
+test_that("metadata<- re-validates signature/difexp when type changes", {
   bi_metadata <- list(
     signature_name = "bi", phenotype = "test",
-    organism = predefined_organisms[1], direction_type = "bi-directional",
+    organism = predefined_organisms[1], type = "bi-directional",
     assay_type = predefined_assaytypes[1]
   )
   bi_signature <- data.frame(
@@ -85,19 +85,19 @@ test_that("metadata<- re-validates signature/difexp when direction_type changes"
   )
   capture.output(bi <- OmicSignature$new(metadata = bi_metadata, signature = bi_signature))
 
-  ## Regression test: demoting direction_type to uni-directional used to
+  ## Regression test: demoting type to uni-directional used to
   ## succeed silently even though signature still had a multi-level
   ## group_label column, which compare_omic_signatures() would then ignore
-  ## entirely based on metadata$direction_type alone.
+  ## entirely based on metadata$type alone.
   expect_error(
-    bi$metadata <- modifyList(bi_metadata, list(direction_type = "uni-directional")),
+    bi$metadata <- modifyList(bi_metadata, list(type = "uni-directional")),
     "multi-level group_label"
   )
-  expect_equal(bi$metadata$direction_type, "bi-directional")
+  expect_equal(bi$metadata$type, "bi-directional")
 
   uni_metadata <- list(
     signature_name = "u", phenotype = "test",
-    organism = predefined_organisms[1], direction_type = "uni-directional",
+    organism = predefined_organisms[1], type = "uni-directional",
     assay_type = predefined_assaytypes[1]
   )
   uni_signature <- data.frame(feature_name = c("a", "b"), score = c(1, 2))
@@ -106,11 +106,11 @@ test_that("metadata<- re-validates signature/difexp when direction_type changes"
   ## Promoting to bi-directional without a group_label column should also
   ## be rejected (re-validated via checkSignature()).
   expect_error(
-    uni$metadata <- modifyList(uni_metadata, list(direction_type = "bi-directional")),
+    uni$metadata <- modifyList(uni_metadata, list(type = "bi-directional")),
     "group_label"
   )
 
-  ## An unrelated metadata change (same direction_type) is unaffected.
+  ## An unrelated metadata change (same type) is unaffected.
   capture.output(bi$metadata <- modifyList(bi_metadata, list(author = "someone")))
   expect_equal(bi$metadata$author, "someone")
 })
@@ -118,7 +118,7 @@ test_that("metadata<- re-validates signature/difexp when direction_type changes"
 test_that("print() reports a clear message when difexp is NULL", {
   metadata <- list(
     signature_name = "no_difexp", phenotype = "test",
-    organism = predefined_organisms[1], direction_type = "uni-directional",
+    organism = predefined_organisms[1], type = "uni-directional",
     assay_type = predefined_assaytypes[1]
   )
   signature <- data.frame(feature_name = c("a", "b"), score = c(1, 2))
@@ -141,7 +141,7 @@ test_that("extractSignature() filters, orders by |score|, and dedupes by feature
   )
   metadata <- list(
     signature_name = "extract_test", phenotype = "test",
-    organism = predefined_organisms[1], direction_type = "bi-directional",
+    organism = predefined_organisms[1], type = "bi-directional",
     assay_type = predefined_assaytypes[1]
   )
   capture.output(sig <- OmicSignature$new(metadata = metadata, signature = difexp, difexp = difexp))
@@ -161,11 +161,125 @@ test_that("extractSignature() filters, orders by |score|, and dedupes by feature
 test_that("extractSignature() errors when difexp is NULL", {
   metadata <- list(
     signature_name = "no_difexp2", phenotype = "test",
-    organism = predefined_organisms[1], direction_type = "uni-directional",
+    organism = predefined_organisms[1], type = "uni-directional",
     assay_type = predefined_assaytypes[1]
   )
   signature <- data.frame(feature_name = c("a", "b"), score = c(1, 2))
   capture.output(sig <- OmicSignature$new(metadata = metadata, signature = signature))
 
   expect_error(sig$extractSignature("score > 0"), "Difexp data frame not found")
+})
+
+test_that("OmicSignature$new() constructs from metadata using the field name type", {
+  ## This is the guard for the initialize() bypass. Before the fix, initialize()
+  ## reads metadata$direction_type, which is NULL on a modern metadata list, so
+  ## checkSignature() receives signatureType = NULL and stops with
+  ## "Signature type not specified" -- the new field name does not work at all.
+  modern_metadata <- list(
+    signature_name = "modern_sig",
+    phenotype = "test",
+    organism = predefined_organisms[1],
+    type = "uni-directional",
+    assay_type = predefined_assaytypes[1]
+  )
+  signature <- data.frame(
+    probe_id = c("probe_1", "probe_2"),
+    feature_name = c("A", "B"),
+    score = c(2, -2),
+    stringsAsFactors = FALSE
+  )
+  capture.output(sig <- OmicSignature$new(metadata = modern_metadata, signature = signature))
+  expect_equal(sig$metadata$type, "uni-directional")
+  expect_equal(nrow(sig$signature), 2)
+})
+
+test_that("OmicSignature$new() accepts legacy direction_type metadata with a warning", {
+  legacy_metadata <- list(
+    signature_name = "legacy_sig",
+    phenotype = "test",
+    organism = predefined_organisms[1],
+    direction_type = "uni-directional",
+    assay_type = predefined_assaytypes[1]
+  )
+  signature <- data.frame(
+    probe_id = c("probe_1", "probe_2"),
+    feature_name = c("A", "B"),
+    score = c(2, -2),
+    stringsAsFactors = FALSE
+  )
+  ## capture_warnings() rather than expect_warning(): checkMetadata() also
+  ## warns about the platform and sample_type defaults this metadata omits.
+  warns <- testthat::capture_warnings(
+    capture.output(sig <- OmicSignature$new(metadata = legacy_metadata, signature = signature))
+  )
+  expect_true(any(grepl("direction_type.*deprecated", warns)))
+  expect_equal(sig$metadata$type, "uni-directional")
+  expect_false("direction_type" %in% names(sig$metadata))
+})
+
+test_that("OmicSignature$new() errors when metadata omits type", {
+  bad_metadata <- list(
+    signature_name = "no_type",
+    phenotype = "test",
+    organism = predefined_organisms[1],
+    assay_type = predefined_assaytypes[1]
+  )
+  signature <- data.frame(
+    probe_id = "probe_1", feature_name = "A", score = 1, stringsAsFactors = FALSE
+  )
+  expect_error(
+    OmicSignature$new(metadata = bad_metadata, signature = signature),
+    "does not contain attribute\\(s\\): type"
+  )
+})
+
+test_that("a bi-directional signature is still validated when metadata uses type", {
+  ## Proves the direction value actually reaches checkSignature(), rather than
+  ## the construction merely succeeding: a bi-directional signature requires a
+  ## group_label column.
+  modern_bi <- list(
+    signature_name = "modern_bi",
+    phenotype = "test",
+    organism = predefined_organisms[1],
+    type = "bi-directional",
+    assay_type = predefined_assaytypes[1]
+  )
+  no_group <- data.frame(
+    probe_id = c("probe_1", "probe_2"),
+    feature_name = c("A", "B"),
+    score = c(2, -2),
+    stringsAsFactors = FALSE
+  )
+  expect_error(
+    OmicSignature$new(metadata = modern_bi, signature = no_group),
+    "group_label"
+  )
+})
+
+test_that("assigning a legacy metadata list through the active binding normalizes it", {
+  ## Builds its own object rather than using make_uni_test_signature() so it
+  ## controls the exact metadata keys it is about to rewrite to the legacy
+  ## direction_type name below, instead of depending on the shared helper's
+  ## shape.
+  modern_metadata <- list(
+    signature_name = "binding_sig",
+    phenotype = "test",
+    organism = predefined_organisms[1],
+    type = "uni-directional",
+    assay_type = predefined_assaytypes[1]
+  )
+  signature <- data.frame(
+    probe_id = c("probe_1", "probe_2"),
+    feature_name = c("A", "B"),
+    score = c(2, 1),
+    stringsAsFactors = FALSE
+  )
+  capture.output(sig <- OmicSignature$new(metadata = modern_metadata, signature = signature))
+
+  replacement <- sig$metadata
+  names(replacement)[names(replacement) == "type"] <- "direction_type"
+  warns <- testthat::capture_warnings(sig$metadata <- replacement)
+  expect_true(any(grepl("direction_type.*deprecated", warns)))
+  expect_equal(sig$metadata$type, "uni-directional")
+  expect_false("direction_type" %in% names(sig$metadata))
 })

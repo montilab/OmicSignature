@@ -37,8 +37,8 @@ library(OmicSignature)
 
 data(compare_mixed_direction_example)
 
-## direction_type per signature
-sapply(compare_mixed_direction_example, \(x) x$metadata$direction_type)
+## type per signature
+sapply(compare_mixed_direction_example, \(x) x$metadata$type)
 ```
 
 ## Overlap: a uni-directional signature is compared against both levels

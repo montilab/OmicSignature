@@ -54,7 +54,7 @@ make_simulated_signature <- function(signature_name, label_features, all_feature
     signature_name = signature_name,
     phenotype = "simulated_label_pairing",
     organism = predefined_organisms[1],
-    direction_type = "bi-directional",
+    type = "bi-directional",
     assay_type = predefined_assaytypes[1]
   )
 

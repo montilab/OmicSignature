@@ -17,7 +17,7 @@ make_test_signature <- function(name, positive_features, negative_features, posi
     signature_name = name,
     phenotype = "test",
     organism = predefined_organisms[1],
-    direction_type = "bi-directional",
+    type = "bi-directional",
     assay_type = predefined_assaytypes[1]
   )
   capture.output(
@@ -43,13 +43,13 @@ make_uni_test_signature <- function(name, features, scores, with_difexp = TRUE) 
     signature_name = name,
     phenotype = "test",
     organism = predefined_organisms[1],
-    direction_type = "uni-directional",
+    type = "uni-directional",
     assay_type = predefined_assaytypes[1]
   )
   difexp <- NULL
   if (with_difexp) {
     ## checkDifexp() currently requires a group_label column to exist
-    ## regardless of direction_type (unlike checkSignature(), which only
+    ## regardless of type (unlike checkSignature(), which only
     ## requires it for non-uni-directional signatures); its contents aren't
     ## validated for uni-directional signatures, so a constant placeholder
     ## column is enough to satisfy that requirement.

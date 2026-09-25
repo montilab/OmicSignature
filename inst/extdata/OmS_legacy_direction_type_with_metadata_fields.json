@@ -1,0 +1,23 @@
+{
+  "signature_name": ["Legacy fields experiment"],
+  "phenotype": ["new_experiment_2"],
+  "organism": ["Homo sapiens"],
+  "direction_type": ["uni-directional"],
+  "assay_type": ["transcriptomics"],
+  "platform": ["transcriptomics by array"],
+  "sample_type": ["liver"],
+  "author": ["vmli"],
+  "covariates": ["age, gender"],
+  "score_cutoff": [2],
+  "p_cutoff": [0.05],
+  "metadata_length": [11],
+  "metadata_fields": ["signature_name", "phenotype", "organism", "direction_type", "assay_type", "platform", "sample_type", "author", "covariates", "score_cutoff", "p_cutoff"],
+  "sig_probe_id": [1, 2, 3, 4, 5, 6],
+  "sig_feature_name": ["gene1", "gene2", "gene3", "gene4", "gene5", "gene6"],
+  "sig_score": [5.1, 4.8, 4.2, 3.9, 3.7, 3.5],
+  "difexp_colnames": ["difexp_probe_id", "difexp_feature_name", "difexp_score", "difexp_p_value"],
+  "difexp_probe_id": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+  "difexp_feature_name": ["gene1", "gene2", "gene3", "gene4", "gene5", "gene6", "gene7", "gene8", "gene9", "gene10"],
+  "difexp_score": [5.1, 4.8, 4.2, 3.9, 3.7, 3.5, 1.1, -1.2, 0.4, -0.3],
+  "difexp_p_value": [0.001, 0.002, 0.001, 0.003, 0.004, 0.002, 0.4, 0.3, 0.6, 0.7]
+}

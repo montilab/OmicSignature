@@ -164,7 +164,7 @@ test_that("group label levels are read from difexp when signature has fewer leve
   signature <- difexp[difexp$group_label == "up", c("probe_id", "feature_name", "score", "group_label")]
   metadata <- list(
     signature_name = "sig_biased", phenotype = "test",
-    organism = predefined_organisms[1], direction_type = "bi-directional",
+    organism = predefined_organisms[1], type = "bi-directional",
     assay_type = predefined_assaytypes[1]
   )
   capture.output(
@@ -189,7 +189,7 @@ test_that("group label levels are read from difexp when signature has fewer leve
 test_that("cutoffs that can't be honored without difexp warn instead of being silently skipped", {
   metadata <- list(
     signature_name = "sig_no_difexp", phenotype = "test",
-    organism = predefined_organisms[1], direction_type = "bi-directional",
+    organism = predefined_organisms[1], type = "bi-directional",
     assay_type = predefined_assaytypes[1]
   )
   ## 5 "up" candidates so a strict adj_p_cutoff (0 pass) backfilling to
@@ -238,7 +238,7 @@ test_that("cutoffs that can't be honored without difexp warn instead of being si
 test_that("no-difexp branch backfills to min_features like the difexp branch does", {
   metadata <- list(
     signature_name = "sig", phenotype = "test",
-    organism = predefined_organisms[1], direction_type = "bi-directional",
+    organism = predefined_organisms[1], type = "bi-directional",
     assay_type = predefined_assaytypes[1]
   )
   feature_name <- c("A", "B", "C", "D", "E", "V", "W", "X", "Y", "Z")
@@ -321,7 +321,7 @@ test_that("compare_omic_signatures warns when signatures disagree on group_label
   )
   metadata_b <- list(
     signature_name = "sig_b", phenotype = "test",
-    organism = predefined_organisms[1], direction_type = "bi-directional",
+    organism = predefined_organisms[1], type = "bi-directional",
     assay_type = predefined_assaytypes[1]
   )
   capture.output(
@@ -357,7 +357,7 @@ test_that("KS/GSEA can't rank a signature without difexp, but it can still be a 
   )
   metadata <- list(
     signature_name = "sig_thin", phenotype = "test",
-    organism = predefined_organisms[1], direction_type = "bi-directional",
+    organism = predefined_organisms[1], type = "bi-directional",
     assay_type = predefined_assaytypes[1]
   )
   capture.output(
@@ -486,5 +486,41 @@ test_that("label_pairing given for a uni-directional signature errors clearly", 
       label_pairing = list(uni_a = c("A", "B"))
     ),
     "uni-directional"
+  )
+})
+
+test_that("comparing an object restored from a pre-1.4.0 .rds file errors with an actionable message", {
+  ## R6 objects serialize their own bound methods, so an OmicSignature object
+  ## saved to .rds under < 1.4.0 and reloaded now keeps `direction_type` in
+  ## its stored metadata and a stale checkMetadata() that never calls
+  ## .normalize_metadata_names(). We simulate that by constructing normally
+  ## and then writing directly into the private field -- sig$metadata <-
+  ## sig$metadata would just re-run the CURRENT checkMetadata() and
+  ## normalize it right back, which is exactly why that "natural repair"
+  ## does not work on a genuinely stale object either.
+  stale_uni <- make_uni_test_signature(
+    "stale_uni", features = c("A", "B", "C", "D"), scores = c(4, 3, 2, 1)
+  )
+  stale_metadata <- stale_uni$metadata
+  names(stale_metadata)[names(stale_metadata) == "type"] <- "direction_type"
+  stale_uni$.__enclos_env__$private$.metadata <- stale_metadata
+
+  expect_null(stale_uni$metadata$type)
+  expect_equal(stale_uni$metadata$direction_type, "uni-directional")
+
+  ## Without the guard, this used to either die downstream with the
+  ## unrelated "Column 'group_label' not found" (because .cos_is_uni()
+  ## silently returned FALSE for a genuinely uni-directional object), or --
+  ## because make_uni_test_signature()'s difexp carries the same
+  ## single-level placeholder group_label column this package's own
+  ## data-raw builders create -- return a result with no error at all,
+  ## silently comparing it as bi-directional.
+  expect_error(
+    compare_omic_signatures(list(a = stale_uni), method = "overlap"),
+    "OmicSignature < 1.4.0"
+  )
+  expect_error(
+    compare_omic_signatures(list(a = stale_uni), method = "overlap"),
+    "writeJson"
   )
 })
