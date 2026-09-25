@@ -1,11 +1,11 @@
 #### OmicSigObj ####
 
-.extract_signature_rows <- function(difexp, conditions, direction_type) {
+.extract_signature_rows <- function(difexp, conditions, type) {
   ## Shared by OmicSignature$extractSignature() and OmicSigFromDifexp():
   ## filter a difexp-shaped table by a condition string (evaluated as R
   ## expressions via rlang::parse_exprs() - conditions must only ever come
   ## from a trusted source, never from untrusted/external input), then
-  ## select the columns relevant to direction_type, order by score when
+  ## select the columns relevant to type, order by score when
   ## present, and dedupe by feature_name.
   probe_id <- NULL
   feature_name <- NULL
@@ -16,7 +16,7 @@
   res <- difexp %>% dplyr::filter(!!!v)
 
   has_score <- "score" %in% colnames(difexp)
-  is_grouped <- direction_type %in% c("bi-directional", "categorical")
+  is_grouped <- type %in% c("bi-directional", "categorical")
 
   cols <- c("probe_id", "feature_name")
   if (has_score) cols <- c(cols, "score")
@@ -89,10 +89,15 @@ OmicSignature <-
           }
         }
 
-        private$.metadata <- private$checkMetadata(metadata, signatureType = metadata$direction_type, v = print_message)
-        private$.signature <- private$checkSignature(signature, signatureType = metadata$direction_type, v = print_message)
+        ## check metadata first, then read the direction field from the
+        ## normalized result: reading it off the raw `metadata` argument would
+        ## bypass .normalize_metadata_names() for legacy inputs and would be
+        ## NULL for modern ones, which checkSignature() rejects outright.
+        private$.metadata <- private$checkMetadata(metadata, v = print_message)
+        signature_type <- private$.metadata$type
+        private$.signature <- private$checkSignature(signature, signatureType = signature_type, v = print_message)
         if (!is.null(difexp)) {
-          difexp <- private$checkDifexp(difexp, signatureType = metadata$direction_type, v = print_message)
+          difexp <- private$checkDifexp(difexp, signatureType = signature_type, v = print_message)
           private$.difexp <- difexp
 
           ## check signature feature name is a subset of difexp feature name
@@ -119,7 +124,7 @@ OmicSignature <-
           }, names(private$.metadata$others), private$.metadata$others)
         }
         cat("  Signature: \n")
-        if (private$.metadata$direction_type %in% c("bi-directional", "categorical")) {
+        if (private$.metadata$type %in% c("bi-directional", "categorical")) {
           sh <- mapply(
             function(k, v) {
               cat("    ", k, " (", v, ")", "\n", sep = "")
@@ -148,7 +153,7 @@ OmicSignature <-
         if (is.null(private$.difexp)) {
           stop("Error: Difexp data frame not found.")
         }
-        .extract_signature_rows(private$.difexp, conditions, private$.metadata$direction_type)
+        .extract_signature_rows(private$.difexp, conditions, private$.metadata$type)
       }
     ),
 
@@ -160,20 +165,20 @@ OmicSignature <-
           private$.metadata
         } else {
           new_metadata <- private$checkMetadata(value, v = print_message)
-          if (!identical(new_metadata$direction_type, private$.metadata$direction_type)) {
-            ## direction_type governs what's required/meaningful in signature
+          if (!identical(new_metadata$type, private$.metadata$type)) {
+            ## type governs what's required/meaningful in signature
             ## and difexp (e.g. group_label); re-validate both against the
             ## new type instead of letting metadata and data go structurally
             ## out of sync silently.
             private$.signature <- private$checkSignature(
-              private$.signature, signatureType = new_metadata$direction_type, v = print_message
+              private$.signature, signatureType = new_metadata$type, v = print_message
             )
             if (!is.null(private$.difexp)) {
               private$.difexp <- private$checkDifexp(
-                private$.difexp, signatureType = new_metadata$direction_type, v = print_message
+                private$.difexp, signatureType = new_metadata$type, v = print_message
               )
             }
-            if (new_metadata$direction_type == "uni-directional") {
+            if (new_metadata$type == "uni-directional") {
               private$checkNoStaleGroupLabel(private$.signature, private$.difexp)
             }
           }
@@ -186,7 +191,7 @@ OmicSignature <-
           private$.signature
         } else {
           private$.signature <- private$checkSignature(
-            value, signatureType = private$.metadata$direction_type, v = print_message
+            value, signatureType = private$.metadata$type, v = print_message
           )
         }
       },
@@ -196,7 +201,7 @@ OmicSignature <-
           private$.difexp
         } else {
           private$.difexp <- private$checkDifexp(
-            value, signatureType = private$.metadata$direction_type, v = print_message
+            value, signatureType = private$.metadata$type, v = print_message
           )
         }
       },
@@ -221,17 +226,17 @@ OmicSignature <-
       },
       checkNoStaleGroupLabel = function(signature, difexp) {
         ## checkSignature()/checkDifexp() only enforce required columns for
-        ## the new direction_type; a multi-level group_label column left
-        ## over from a prior bi-directional/categorical direction_type is
+        ## the new type; a multi-level group_label column left
+        ## over from a prior bi-directional/categorical type is
         ## structurally harmless under uni-directional's laxer requirements,
         ## but would be silently ignored by anything that trusts
-        ## metadata$direction_type alone (e.g. compare_omic_signatures()).
+        ## metadata$type alone (e.g. compare_omic_signatures()).
         has_stale <- function(df) {
           !is.null(df) && "group_label" %in% colnames(df) && nlevels(df$group_label) > 1
         }
         if (has_stale(signature) || has_stale(difexp)) {
           stop(
-            "Cannot change direction_type to 'uni-directional': signature and/or difexp ",
+            "Cannot change type to 'uni-directional': signature and/or difexp ",
             "still has a multi-level group_label column, which would be silently ignored ",
             "downstream. Remove group_label from signature/difexp first, or construct a ",
             "new OmicSignature object instead."
@@ -300,11 +305,16 @@ OmicSignature <-
         private$verbose(v, "  [Success] difexp is valid. \n")
         return(difexp)
       },
-      checkMetadata = function(metadata, signatureType = NULL, v = FALSE) {
+      checkMetadata = function(metadata, v = FALSE) {
         if (!is(metadata, "list")) stop("metadata must be a list. See createMetadata() for details.")
 
+        ## accept the pre-1.4.0 field name `direction_type`; every construction
+        ## and assignment path reaches checkMetadata(), so normalizing here
+        ## covers $new(), the metadata<- binding and readJson() at once.
+        metadata <- .normalize_metadata_names(metadata)
+
         # check required metadata fields
-        metadataRequired <- c("signature_name", "phenotype", "organism", "direction_type", "assay_type")
+        metadataRequired <- c("signature_name", "phenotype", "organism", "type", "assay_type")
         metadataMissing <- setdiff(metadataRequired, names(metadata))
         private$verbose(v, paste("  -- Required attributes for metadata: ",
           paste(metadataRequired, collapse = ", "), " --\n",
@@ -317,9 +327,9 @@ OmicSignature <-
           )
         }
 
-        # check direction_type
-        if (!metadata$direction_type %in% c("uni-directional", "bi-directional", "categorical")) {
-          stop("direction_type must be uni-directional, bi-directional, or categorical. ")
+        # check type
+        if (!metadata$type %in% c("uni-directional", "bi-directional", "categorical")) {
+          stop("type must be uni-directional, bi-directional, or categorical. ")
         }
 
         # check assay_type
