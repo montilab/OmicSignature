@@ -11,7 +11,7 @@ createMetadata(
   assay_type,
   covariates = NULL,
   platform = "unknown",
-  direction_type,
+  type,
   sample_type = NULL,
   signature_collection = NULL,
   author = NULL,
@@ -25,7 +25,8 @@ createMetadata(
   adj_p_cutoff = NULL,
   score_cutoff = NULL,
   cutoff_description = NULL,
-  others = NULL
+  others = NULL,
+  direction_type = NULL
 )
 }
 \arguments{
@@ -41,7 +42,7 @@ createMetadata(
 
 \item{platform}{optional but highly recommended. input as a single string. e.g. "transcriptomics by single-cell RNA-seq".}
 
-\item{direction_type}{required. the direction information of the signature.
+\item{type}{required. the direction information of the signature.
 "uni" or "uni-directional" if the signature is derived from one category.
 "bi" or "bi-directional" if the signature is derived from group A vs group B, or it contains "up" and "down" regulated features for a continuous phenotype.
 "categorical" if the signature is derived from comparisons between multiple groups, e.g. A vs B vs C.}
@@ -60,7 +61,7 @@ createMetadata(
 
 \item{description}{optional. free text to describe the signature. input as a single-length string. the character limit (including all spaces and symbols) is 65,535.}
 
-\item{category_num}{required when direction_type = "categorical". numeric. a number indicates how many categories or class the signature contains.}
+\item{category_num}{required when type = "categorical". numeric. a number indicates how many categories or class the signature contains.}
 
 \item{logfc_cutoff}{optional. a single-length numeric value. log fold change cutoff used to generate the signature, if applicable.}
 
@@ -73,6 +74,8 @@ createMetadata(
 \item{cutoff_description}{optional. description of the cutoff, if applicable.}
 
 \item{others}{provide additional user-defined metadata fields as a list. for example, others = list("animal_strain" = "C57BL/6", "lab" = "new_lab").}
+
+\item{direction_type}{deprecated. the former name of `type`. Supplying it warns and forwards to `type`. Supplying both is an error.}
 }
 \value{
 a metadata list to create an OmicSignature R6 object.

@@ -257,9 +257,10 @@ test_that("a bi-directional signature is still validated when metadata uses type
 })
 
 test_that("assigning a legacy metadata list through the active binding normalizes it", {
-  ## Builds its own object rather than using make_uni_test_signature(), whose
-  ## metadata is still keyed direction_type until Task 4. Keeping this test
-  ## self-contained means every test in this task passes by the end of it.
+  ## Builds its own object rather than using make_uni_test_signature() so it
+  ## controls the exact metadata keys it is about to rewrite to the legacy
+  ## direction_type name below, instead of depending on the shared helper's
+  ## shape.
   modern_metadata <- list(
     signature_name = "binding_sig",
     phenotype = "test",

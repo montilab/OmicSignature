@@ -32,8 +32,8 @@ library(OmicSignature)
 
 data(compare_unidirectional_example)
 
-## direction_type per signature
-sapply(compare_unidirectional_example, \(x) x$metadata$direction_type)
+## type per signature
+sapply(compare_unidirectional_example, \(x) x$metadata$type)
 ```
 
 ## Overlap: a flat comparison, with no level structure
