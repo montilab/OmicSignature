@@ -9,7 +9,7 @@
 ## Citation
 
 Source:
-[`DESCRIPTION`](https://github.com/montilab/OmicSignature/blob/78-rename-direction-type-to-type/DESCRIPTION)
+[`DESCRIPTION`](https://github.com/montilab/OmicSignature/blob/main/DESCRIPTION)
 
 Li V, Lab M (2026). *OmicSignature: An R package to store omics
 signatures as an R6 object*. R package version 1.4.0,
