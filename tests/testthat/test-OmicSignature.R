@@ -22,7 +22,7 @@ test_that("signature and difexp active bindings accept updates after constructio
 test_that("checkMetadata() gives descriptive errors for invalid optional fields", {
   base_metadata <- list(
     signature_name = "t", phenotype = "test",
-    organism = predefined_organisms[1], direction_type = "uni-directional",
+    organism = predefined_organisms[1], type = "uni-directional",
     assay_type = predefined_assaytypes[1]
   )
   signature <- data.frame(feature_name = "a", score = 1)
@@ -54,7 +54,7 @@ test_that("checkMetadata() gives descriptive errors for invalid optional fields"
 test_that("checkDifexp() does not require group_label for uni-directional signatures", {
   metadata <- list(
     signature_name = "u", phenotype = "test",
-    organism = predefined_organisms[1], direction_type = "uni-directional",
+    organism = predefined_organisms[1], type = "uni-directional",
     assay_type = predefined_assaytypes[1]
   )
   signature <- data.frame(feature_name = c("A", "B"), score = c(1, 2))
@@ -76,7 +76,7 @@ test_that("checkDifexp() does not require group_label for uni-directional signat
 test_that("metadata<- re-validates signature/difexp when direction_type changes", {
   bi_metadata <- list(
     signature_name = "bi", phenotype = "test",
-    organism = predefined_organisms[1], direction_type = "bi-directional",
+    organism = predefined_organisms[1], type = "bi-directional",
     assay_type = predefined_assaytypes[1]
   )
   bi_signature <- data.frame(
@@ -90,14 +90,14 @@ test_that("metadata<- re-validates signature/difexp when direction_type changes"
   ## group_label column, which compare_omic_signatures() would then ignore
   ## entirely based on metadata$direction_type alone.
   expect_error(
-    bi$metadata <- modifyList(bi_metadata, list(direction_type = "uni-directional")),
+    bi$metadata <- modifyList(bi_metadata, list(type = "uni-directional")),
     "multi-level group_label"
   )
   expect_equal(bi$metadata$type, "bi-directional")
 
   uni_metadata <- list(
     signature_name = "u", phenotype = "test",
-    organism = predefined_organisms[1], direction_type = "uni-directional",
+    organism = predefined_organisms[1], type = "uni-directional",
     assay_type = predefined_assaytypes[1]
   )
   uni_signature <- data.frame(feature_name = c("a", "b"), score = c(1, 2))
@@ -106,7 +106,7 @@ test_that("metadata<- re-validates signature/difexp when direction_type changes"
   ## Promoting to bi-directional without a group_label column should also
   ## be rejected (re-validated via checkSignature()).
   expect_error(
-    uni$metadata <- modifyList(uni_metadata, list(direction_type = "bi-directional")),
+    uni$metadata <- modifyList(uni_metadata, list(type = "bi-directional")),
     "group_label"
   )
 
@@ -118,7 +118,7 @@ test_that("metadata<- re-validates signature/difexp when direction_type changes"
 test_that("print() reports a clear message when difexp is NULL", {
   metadata <- list(
     signature_name = "no_difexp", phenotype = "test",
-    organism = predefined_organisms[1], direction_type = "uni-directional",
+    organism = predefined_organisms[1], type = "uni-directional",
     assay_type = predefined_assaytypes[1]
   )
   signature <- data.frame(feature_name = c("a", "b"), score = c(1, 2))
@@ -141,7 +141,7 @@ test_that("extractSignature() filters, orders by |score|, and dedupes by feature
   )
   metadata <- list(
     signature_name = "extract_test", phenotype = "test",
-    organism = predefined_organisms[1], direction_type = "bi-directional",
+    organism = predefined_organisms[1], type = "bi-directional",
     assay_type = predefined_assaytypes[1]
   )
   capture.output(sig <- OmicSignature$new(metadata = metadata, signature = difexp, difexp = difexp))
@@ -161,7 +161,7 @@ test_that("extractSignature() filters, orders by |score|, and dedupes by feature
 test_that("extractSignature() errors when difexp is NULL", {
   metadata <- list(
     signature_name = "no_difexp2", phenotype = "test",
-    organism = predefined_organisms[1], direction_type = "uni-directional",
+    organism = predefined_organisms[1], type = "uni-directional",
     assay_type = predefined_assaytypes[1]
   )
   signature <- data.frame(feature_name = c("a", "b"), score = c(1, 2))
