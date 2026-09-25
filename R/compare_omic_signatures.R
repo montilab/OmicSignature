@@ -564,14 +564,14 @@ compare_omic_signatures <- function(
 
 .cos_stop_if_categorical <- function(sig_list, arg_name) {
   ## Exclude categorical signatures until comparison semantics are defined.
-  direction_type <- vapply(sig_list, function(sig) {
-    type <- sig$metadata$direction_type
+  signature_types <- vapply(sig_list, function(sig) {
+    type <- sig$metadata$type
     if (is.null(type)) return(NA_character_)
     as.character(type)[1]
   }, character(1))
-  if (any(direction_type == "categorical", na.rm = TRUE)) {
+  if (any(signature_types == "categorical", na.rm = TRUE)) {
     stop("Categorical signatures are not implemented yet: ",
-         paste(names(sig_list)[direction_type == "categorical"], collapse = ", "))
+         paste(names(sig_list)[signature_types == "categorical"], collapse = ", "))
   }
   invisible(TRUE)
 }
@@ -580,7 +580,7 @@ compare_omic_signatures <- function(
   ## Uni-directional signatures have no group_label contrast: no "level" to
   ## pair on, so they're compared as a single, whole feature set instead of
   ## being split by group_label like bi-directional signatures.
-  identical(sig$metadata$direction_type, "uni-directional")
+  identical(sig$metadata$type, "uni-directional")
 }
 
 .cos_signature_name <- function(sig) {

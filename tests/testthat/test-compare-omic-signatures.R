@@ -164,7 +164,7 @@ test_that("group label levels are read from difexp when signature has fewer leve
   signature <- difexp[difexp$group_label == "up", c("probe_id", "feature_name", "score", "group_label")]
   metadata <- list(
     signature_name = "sig_biased", phenotype = "test",
-    organism = predefined_organisms[1], direction_type = "bi-directional",
+    organism = predefined_organisms[1], type = "bi-directional",
     assay_type = predefined_assaytypes[1]
   )
   capture.output(
@@ -189,7 +189,7 @@ test_that("group label levels are read from difexp when signature has fewer leve
 test_that("cutoffs that can't be honored without difexp warn instead of being silently skipped", {
   metadata <- list(
     signature_name = "sig_no_difexp", phenotype = "test",
-    organism = predefined_organisms[1], direction_type = "bi-directional",
+    organism = predefined_organisms[1], type = "bi-directional",
     assay_type = predefined_assaytypes[1]
   )
   ## 5 "up" candidates so a strict adj_p_cutoff (0 pass) backfilling to
@@ -238,7 +238,7 @@ test_that("cutoffs that can't be honored without difexp warn instead of being si
 test_that("no-difexp branch backfills to min_features like the difexp branch does", {
   metadata <- list(
     signature_name = "sig", phenotype = "test",
-    organism = predefined_organisms[1], direction_type = "bi-directional",
+    organism = predefined_organisms[1], type = "bi-directional",
     assay_type = predefined_assaytypes[1]
   )
   feature_name <- c("A", "B", "C", "D", "E", "V", "W", "X", "Y", "Z")
@@ -321,7 +321,7 @@ test_that("compare_omic_signatures warns when signatures disagree on group_label
   )
   metadata_b <- list(
     signature_name = "sig_b", phenotype = "test",
-    organism = predefined_organisms[1], direction_type = "bi-directional",
+    organism = predefined_organisms[1], type = "bi-directional",
     assay_type = predefined_assaytypes[1]
   )
   capture.output(
@@ -357,7 +357,7 @@ test_that("KS/GSEA can't rank a signature without difexp, but it can still be a 
   )
   metadata <- list(
     signature_name = "sig_thin", phenotype = "test",
-    organism = predefined_organisms[1], direction_type = "bi-directional",
+    organism = predefined_organisms[1], type = "bi-directional",
     assay_type = predefined_assaytypes[1]
   )
   capture.output(

@@ -23,7 +23,7 @@ OmicSigFromDifexp <- function(difexp, metadata, criteria = NULL) {
   ## define the following to pass R check since they are viewed as variables in dplyr functions
   score <- NULL
 
-  signatureType <- metadata$direction_type
+  signatureType <- metadata$type
 
   ## if probe_id is not provided in difexp, setup numeric counter as probe_id
   if (!"probe_id" %in% colnames(difexp)) {

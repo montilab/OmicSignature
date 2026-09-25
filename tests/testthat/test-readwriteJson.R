@@ -4,7 +4,7 @@ test_that("writeJson()/readJson() round trip preserves group_label factor level 
   ## object had, for both signature and difexp.
   metadata <- list(
     signature_name = "rt", phenotype = "test",
-    organism = predefined_organisms[1], direction_type = "bi-directional",
+    organism = predefined_organisms[1], type = "bi-directional",
     assay_type = predefined_assaytypes[1]
   )
   signature <- data.frame(
@@ -29,7 +29,7 @@ test_that("writeJson()/readJson() round trip preserves group_label factor level 
 test_that("writeJson()/readJson() round trip recovers metadata by name, not position", {
   metadata <- list(
     signature_name = "rt2", phenotype = "test",
-    organism = predefined_organisms[1], direction_type = "uni-directional",
+    organism = predefined_organisms[1], type = "uni-directional",
     assay_type = predefined_assaytypes[1], author = "someone"
   )
   signature <- data.frame(feature_name = c("a", "b"), score = c(1, 2))
@@ -41,7 +41,7 @@ test_that("writeJson()/readJson() round trip recovers metadata by name, not posi
 
   expect_equal(obj2$metadata$signature_name, "rt2")
   expect_equal(obj2$metadata$author, "someone")
-  expect_equal(obj2$metadata$direction_type, "uni-directional")
+  expect_equal(obj2$metadata$type, "uni-directional")
 })
 
 test_that("readJson() falls back to positional metadata lookup for files without metadata_fields", {
@@ -49,7 +49,7 @@ test_that("readJson() falls back to positional metadata lookup for files without
   ## old files remain readable.
   raw <- jsonlite::fromJSON(jsonlite::toJSON(list(
     signature_name = "legacy", phenotype = "test",
-    organism = predefined_organisms[1], direction_type = "uni-directional",
+    organism = predefined_organisms[1], type = "uni-directional",
     assay_type = predefined_assaytypes[1],
     metadata_length = 5,
     sig_probe_id = c("p1", "p2"),
@@ -72,7 +72,7 @@ test_that("readJson() correctly reconstructs group_label for files without *_gro
   ## existed - exactly the files this fallback is supposed to support.
   raw <- jsonlite::fromJSON(jsonlite::toJSON(list(
     signature_name = "legacy_bi", phenotype = "test",
-    organism = predefined_organisms[1], direction_type = "bi-directional",
+    organism = predefined_organisms[1], type = "bi-directional",
     assay_type = predefined_assaytypes[1],
     metadata_length = 5,
     sig_probe_id = c("p1", "p2", "p3", "p4"),

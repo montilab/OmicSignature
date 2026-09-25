@@ -8,7 +8,7 @@ test_that("OmicSigFromDifexp() errors when no criteria are available", {
   )
   metadata <- list(
     signature_name = "no_criteria", phenotype = "test",
-    organism = predefined_organisms[1], direction_type = "bi-directional",
+    organism = predefined_organisms[1], type = "bi-directional",
     assay_type = predefined_assaytypes[1]
   )
 
@@ -35,7 +35,7 @@ test_that("OmicSigFromDifexp() builds a signature from an explicit criteria stri
   )
   metadata <- list(
     signature_name = "explicit_criteria", phenotype = "test",
-    organism = predefined_organisms[1], direction_type = "bi-directional",
+    organism = predefined_organisms[1], type = "bi-directional",
     assay_type = predefined_assaytypes[1]
   )
 
@@ -55,7 +55,7 @@ test_that("OmicSigFromDifexp() derives criteria from metadata cutoff fields", {
   )
   metadata <- list(
     signature_name = "metadata_criteria", phenotype = "test",
-    organism = predefined_organisms[1], direction_type = "bi-directional",
+    organism = predefined_organisms[1], type = "bi-directional",
     assay_type = predefined_assaytypes[1],
     score_cutoff = 3, adj_p_cutoff = 0.01
   )
@@ -75,7 +75,7 @@ test_that("OmicSigFromDifexp() derives group_label from score sign when missing"
   )
   metadata <- list(
     signature_name = "derived_group_label", phenotype = "test",
-    organism = predefined_organisms[1], direction_type = "bi-directional",
+    organism = predefined_organisms[1], type = "bi-directional",
     assay_type = predefined_assaytypes[1]
   )
 
@@ -93,7 +93,7 @@ test_that("OmicSigFromDifexp() errors when group_label and score are both missin
   )
   metadata <- list(
     signature_name = "no_score_no_group", phenotype = "test",
-    organism = predefined_organisms[1], direction_type = "bi-directional",
+    organism = predefined_organisms[1], type = "bi-directional",
     assay_type = predefined_assaytypes[1]
   )
 
@@ -116,7 +116,7 @@ test_that("OmicSigFromDifexp() and OmicSignature$extractSignature() agree on ret
   )
   metadata <- list(
     signature_name = "cross_check", phenotype = "test",
-    organism = predefined_organisms[1], direction_type = "bi-directional",
+    organism = predefined_organisms[1], type = "bi-directional",
     assay_type = predefined_assaytypes[1]
   )
 

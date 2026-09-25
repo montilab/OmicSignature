@@ -40,7 +40,7 @@ make_uni_simulated_signature <- function(signature_name, features, all_features)
   difexp$adj_p[idx] <- seq(1e-5, 1e-3, length.out = length(idx))
 
   ## checkDifexp() currently requires a group_label column regardless of
-  ## direction_type (a pre-existing inconsistency with checkSignature(),
+  ## type (a pre-existing inconsistency with checkSignature(),
   ## which only requires it for non-uni-directional signatures); its
   ## contents aren't validated for uni-directional signatures, so a
   ## constant placeholder column is enough to satisfy that requirement.
@@ -50,7 +50,7 @@ make_uni_simulated_signature <- function(signature_name, features, all_features)
     signature_name = signature_name,
     phenotype = "simulated_label_pairing",
     organism = predefined_organisms[1],
-    direction_type = "uni-directional",
+    type = "uni-directional",
     assay_type = predefined_assaytypes[1]
   )
 
