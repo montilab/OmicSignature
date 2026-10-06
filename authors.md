@@ -9,7 +9,7 @@
 ## Citation
 
 Source:
-[`DESCRIPTION`](https://github.com/montilab/OmicSignature/blob/main/DESCRIPTION)
+[`DESCRIPTION`](https://github.com/montilab/OmicSignature/blob/80-standardizesigdf-silently-drops-every-row-whose-score-is-na-after-the-emptiness-check/DESCRIPTION)
 
 Li V, Lab M (2026). *OmicSignature: An R package to store omics
 signatures as an R6 object*. R package version 1.4.0,
