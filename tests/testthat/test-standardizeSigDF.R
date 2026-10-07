@@ -42,11 +42,26 @@ test_that("standardizeSigDF() falls back to first-appearance order for non-facto
   expect_equal(levels(result$group_label), c("ICG001", "DMSO"))
 })
 
-test_that("standardizeSigDF() drops rows with non-numeric or missing score", {
+test_that("standardizeSigDF() keeps rows with a missing score and sorts them last (#80)", {
+  ## Regression test: rows whose score was NA (or non-numeric) used to be
+  ## filtered out, which turned a scoreless uni-directional signature into an
+  ## empty one without any error.
   df <- data.frame(
     probe_id = 1:3, feature_name = c("a", "b", "c"), score = c(2, NA, -1)
   )
   result <- standardizeSigDF(df)
+  expect_equal(nrow(result), 3)
+  expect_equal(result$feature_name, c("a", "c", "b"))
+  expect_true(is.na(result$score[3]))
+})
+
+test_that("standardizeSigDF() keeps every row when no score can be parsed (#80)", {
+  df <- data.frame(
+    probe_id = 1:2, feature_name = c("a", "b"), score = c("", ""),
+    stringsAsFactors = FALSE
+  )
+  result <- standardizeSigDF(df)
   expect_equal(nrow(result), 2)
-  expect_setequal(result$feature_name, c("a", "c"))
+  expect_type(result$score, "double")
+  expect_true(all(is.na(result$score)))
 })

@@ -283,3 +283,50 @@ test_that("assigning a legacy metadata list through the active binding normalize
   expect_equal(sig$metadata$type, "uni-directional")
   expect_false("direction_type" %in% names(sig$metadata))
 })
+
+test_that("OmicSignature$new() keeps a uni-directional signature whose scores are all NA (#80)", {
+  ## Regression test: SigRepo_Server#89. A gene list with no usable scores used
+  ## to come out of the constructor with zero rows and no error, because the
+  ## emptiness check ran before standardizeSigDF() dropped the NA-score rows.
+  metadata <- list(
+    signature_name = "gene_list", phenotype = "test",
+    organism = predefined_organisms[1], type = "uni-directional",
+    assay_type = predefined_assaytypes[1]
+  )
+  signature <- data.frame(
+    probe_id = c("p1", "p2", "p3"), feature_name = c("A", "B", "C"),
+    score = NA_real_, stringsAsFactors = FALSE
+  )
+  capture.output(sig <- OmicSignature$new(metadata = metadata, signature = signature))
+  expect_equal(nrow(sig$signature), 3)
+  expect_setequal(sig$signature$feature_name, c("A", "B", "C"))
+  expect_true(all(is.na(sig$signature$score)))
+})
+
+test_that("OmicSignature$new() keeps a uni-directional signature with no score column (#80)", {
+  metadata <- list(
+    signature_name = "gene_list", phenotype = "test",
+    organism = predefined_organisms[1], type = "uni-directional",
+    assay_type = predefined_assaytypes[1]
+  )
+  signature <- data.frame(probe_id = c("p1", "p2"), feature_name = c("A", "B"), stringsAsFactors = FALSE)
+  capture.output(sig <- OmicSignature$new(metadata = metadata, signature = signature))
+  expect_equal(nrow(sig$signature), 2)
+})
+
+test_that("OmicSignature$new() keeps a bi-directional row whose score is NA (#80)", {
+  ## checkSignature() only validates feature_name and group_label for missing
+  ## values, so an NA score reaches standardizeSigDF(); it used to drop the row.
+  metadata <- list(
+    signature_name = "bi", phenotype = "test",
+    organism = predefined_organisms[1], type = "bi-directional",
+    assay_type = predefined_assaytypes[1]
+  )
+  signature <- data.frame(
+    probe_id = c("p1", "p2"), feature_name = c("A", "B"), score = c(1, NA),
+    group_label = factor(c("up", "down")), stringsAsFactors = FALSE
+  )
+  capture.output(sig <- OmicSignature$new(metadata = metadata, signature = signature))
+  expect_equal(nrow(sig$signature), 2)
+  expect_equal(sig$signature$feature_name, c("A", "B"))
+})

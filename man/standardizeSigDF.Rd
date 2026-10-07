@@ -10,8 +10,13 @@ standardizeSigDF(sigdf)
 \item{sigdf}{signature dataframe}
 }
 \value{
-signature dataframe with empty, duplicate rows removed and ordered by score
+signature dataframe with empty feature names removed and ordered by
+absolute score, NA scores last
 }
 \description{
-remove missing and duplicated symbols. updated 08/2025.
+remove rows with an empty feature name, coerce score to
+numeric and order by absolute score. Rows whose score is missing or
+cannot be parsed are kept (with an NA score) and sorted last, so a
+uni-directional gene list without scores keeps all its features.
+updated 10/2026.
 }

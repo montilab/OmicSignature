@@ -1,10 +1,15 @@
 #' @title Standardize signature data frame
-#' @description remove missing and duplicated symbols. updated 08/2025.
+#' @description remove rows with an empty feature name, coerce score to
+#' numeric and order by absolute score. Rows whose score is missing or
+#' cannot be parsed are kept (with an NA score) and sorted last, so a
+#' uni-directional gene list without scores keeps all its features.
+#' updated 10/2026.
 #'
 #' @importFrom dplyr filter arrange mutate %>%
 #' @importFrom stats complete.cases
 #' @param sigdf signature dataframe
-#' @return signature dataframe with empty, duplicate rows removed and ordered by score
+#' @return signature dataframe with empty feature names removed and ordered by
+#' absolute score, NA scores last
 #' @export
 standardizeSigDF <- function(sigdf) {
   ## define the following to pass R check since they are viewed as variables in dplyr functions
@@ -22,8 +27,7 @@ standardizeSigDF <- function(sigdf) {
   if ("score" %in% colnames(sigdf)) {
     sigdf <- sigdf %>%
       dplyr::mutate(score = suppressWarnings(as.numeric(as.character(score)))) %>%
-      dplyr::filter(!is.na(score)) %>%
-      dplyr::arrange(desc(abs(score)))
+      dplyr::arrange(is.na(score), desc(abs(score)))
   }
   if ("group_label" %in% colnames(sigdf)) {
     ## Preserve the caller's factor level order (e.g. control-first) instead
